@@ -197,7 +197,45 @@
                     }
                 }
 
-                // 2. DASHBOARD GIA SƯ
+                // 2. CHI TIẾT HỌC SINH CHO GIA SƯ (BIỂU ĐỒ, LỊCH SỬ ĐÁNH GIÁ & HÓA ĐƠN)
+                else if (functionName === 'getStudentDetailsForTutor' || functionName === 'getStudentDetails') {
+                    const studentPhone = String(args[0] || "");
+                    const studentName = String(args[1] || "");
+                    const norm = normalizePhone(studentPhone);
+                    let target = store.students.find(s => normalizePhone(s.phone) === norm || (studentName && s.name.toLowerCase() === studentName.toLowerCase()));
+                    if (!target) target = store.students[1] || store.students[0];
+
+                    let formattedLogs = (target.logs || []).map((l, idx) => ({
+                        rowIndex: idx + 1,
+                        tuan: l.tuan || (idx + 1),
+                        ngay: l.ngay || "15/08/2026",
+                        mon: target.subject || "Toán",
+                        noiDung: l.topic || "Luyện tập cực trị hàm số & tích phân",
+                        danhGiaBTVN: l.btvn || "Đạt",
+                        btvn: l.btvn || "Đạt",
+                        diemDauGio: l.diemDG || "9.0",
+                        diemDinhKi: l.diemDK || "9.5",
+                        nhanXet: l.nhanXet || "Tư duy giải toán nhanh, làm tốt các câu phân loại 8.5+.",
+                        trangThai: l.chuyenCan || "Có mặt",
+                        tienDong: "Đã đóng",
+                        ngayDongTien: "05/08/2026"
+                    }));
+
+                    result = {
+                        success: true,
+                        student: {
+                            name: target.name,
+                            phone: target.phone,
+                            parentName: "Phụ huynh em " + target.name,
+                            classLevel: target.classLevel,
+                            subject: target.subject,
+                            tuition: 2000000
+                        },
+                        logs: formattedLogs
+                    };
+                }
+
+                // 3. DASHBOARD GIA SƯ TỔNG QUAN
                 else if (functionName === 'getTutorDashboardData') {
                     let tutor = store.tutors[0];
                     result = {
@@ -220,7 +258,113 @@
                     };
                 }
 
-                // 3. DASHBOARD ADMIN
+                // 4. DANH SÁCH Ý KIẾN PHẢN HỒI CỦA PHỤ HUYNH
+                else if (functionName === 'getFeedbacks') {
+                    result = [
+                        {
+                            studentName: "Lê Minh Thư",
+                            parentPhone: "0987654321",
+                            time: "16/08/2026 21:30",
+                            content: "Gia đình rất cảm ơn Thầy Nam, cháu Thư tiến bộ môn Toán và Vật Lý rất nhiều sau khóa học ạ!"
+                        },
+                        {
+                            studentName: "Nguyễn Hoàng Nam",
+                            parentPhone: "0912345678",
+                            time: "15/08/2026 19:45",
+                            content: "Thầy giảng bài rất dễ hiểu và tận tâm, cháu Nam đã tự tin làm đề kiểm tra trên lớp."
+                        },
+                        {
+                            studentName: "Phạm Hải Đăng",
+                            parentPhone: "0905123456",
+                            time: "14/08/2026 20:10",
+                            content: "Cháu Đăng rất hào hứng với các bài mô phỏng Vật Lý 4K của Thầy."
+                        }
+                    ];
+                }
+
+                // 5. THỜI KHÓA BIỂU & LỊCH DẠY GIA SƯ
+                else if (functionName === 'getTutorSchedule') {
+                    result = [
+                        {
+                            rowIndex: 1,
+                            studentName: "Lê Minh Thư",
+                            color: "#8E4DFF",
+                            mon: "18:00 - 19:30",
+                            tue: "",
+                            wed: "",
+                            thu: "",
+                            fri: "",
+                            sat: "",
+                            sun: "08:30 - 10:00"
+                        },
+                        {
+                            rowIndex: 2,
+                            studentName: "Nguyễn Hoàng Nam",
+                            color: "#10B981",
+                            mon: "",
+                            tue: "",
+                            wed: "19:30 - 21:00",
+                            thu: "",
+                            fri: "",
+                            sat: "18:00 - 19:30",
+                            sun: ""
+                        },
+                        {
+                            rowIndex: 3,
+                            studentName: "Phạm Hải Đăng",
+                            color: "#F59E0B",
+                            mon: "",
+                            tue: "18:00 - 19:30",
+                            wed: "",
+                            thu: "",
+                            fri: "18:00 - 19:30",
+                            sat: "",
+                            sun: ""
+                        }
+                    ];
+                }
+
+                // 6. QUẢN LÝ BÀI TẬP ĐÃ GIAO CHO HỌC SINH
+                else if (functionName === 'getAssignedHomework' || functionName === 'getTutorHomeworkList') {
+                    result = store.homework.map(h => ({
+                        hwId: h.id,
+                        title: h.title,
+                        deadline: h.deadline,
+                        fileUrl: h.file,
+                        classLevel: "Lớp 12",
+                        assignedDate: "15/08/2026"
+                    }));
+                }
+
+                // 7. QUẢN LÝ BÀI NỘP CỦA HỌC SINH
+                else if (functionName === 'getSubmittedHomework' || functionName === 'getTutorSubmissions') {
+                    result = [
+                        {
+                            subId: "SUB_01",
+                            studentName: "Lê Minh Thư",
+                            hwTitle: "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị",
+                            submittedAt: "16/08/2026 21:15",
+                            fileName: "leminhthu_dao_ham_done.pdf",
+                            fileUrl: "leminhthu_dao_ham_done.pdf",
+                            score: "9.5",
+                            comment: "Bài giải rất chuẩn xác, trình bày sạch đẹp. Chú ý thêm câu 48 có thể dùng phương pháp loại trừ nhanh hơn nhé.",
+                            status: "Đã chấm"
+                        },
+                        {
+                            subId: "SUB_02",
+                            studentName: "Nguyễn Hoàng Nam",
+                            hwTitle: "Chuyên đề: Hệ thức lượng trong tam giác",
+                            submittedAt: "15/08/2026 22:00",
+                            fileName: "nguyenhoangnam_he_thuc.jpg",
+                            fileUrl: "nguyenhoangnam_he_thuc.jpg",
+                            score: "9.0",
+                            comment: "Làm bài tốt, nhớ vẽ hình bằng thước thẳng rõ nét.",
+                            status: "Đã chấm"
+                        }
+                    ];
+                }
+
+                // 8. DASHBOARD ADMIN
                 else if (functionName === 'getAdminDashboardData') {
                     result = {
                         tutors: store.tutors.map(t => ({
@@ -246,7 +390,7 @@
                     };
                 }
 
-                // 4. XÁC THỰC MÃ BÀI TẬP (HOMEWORK GATEWAY)
+                // 9. XÁC THỰC MÃ BÀI TẬP (HOMEWORK GATEWAY)
                 else if (functionName === 'xacThucMaBaiTap' || functionName === 'checkHomework') {
                     const code = String(args[0] || "").trim();
                     const norm = normalizePhone(code);
@@ -291,23 +435,7 @@
                     };
                 }
 
-                // 5. THỜI KHÓA BIỂU & LỊCH DẠY
-                else if (functionName === 'getTutorSchedule') {
-                    result = store.students.map((s, idx) => ({
-                        rowIndex: idx + 1,
-                        studentName: s.name,
-                        color: idx === 0 ? "#8E4DFF" : (idx === 1 ? "#10B981" : "#F59E0B"),
-                        mon: idx === 1 ? "18:00 - 19:30" : "",
-                        tue: "",
-                        wed: idx === 0 ? "19:30 - 21:00" : "",
-                        thu: "",
-                        fri: idx === 2 ? "18:00 - 19:30" : "",
-                        sat: "",
-                        sun: idx === 1 ? "08:30 - 10:00" : ""
-                    }));
-                }
-
-                // 6. NHẬT KÝ & GHI ĐIỂM
+                // 10. NHẬT KÝ & GHI ĐIỂM
                 else if (functionName === 'getStudentLogs') {
                     const studentPhone = String(args[0] || "");
                     const norm = normalizePhone(studentPhone);
@@ -326,12 +454,22 @@
                     }));
                 }
 
-                // 7. GỬI PHẢN HỒI PHỤ HUYNH
+                // 11. CÁC TÁC VỤ THÊM / SỬA / XÓA GIẢ LẬP
+                else if (functionName === 'saveEvaluation' || functionName === 'deleteEvaluation') {
+                    result = { success: true, thongBao: "Cập nhật đánh giá buổi học thành công!" };
+                }
+                else if (functionName === 'saveScheduleToBackend') {
+                    result = { success: true, thongBao: "Đã lưu lịch dạy thành công!" };
+                }
+                else if (functionName === 'updateAnnouncement') {
+                    result = { success: true, thongBao: "Cập nhật thông báo học sinh thành công!" };
+                }
+                else if (functionName === 'updateStudentTuitionStatus') {
+                    result = { success: true, thongBao: "Đã cập nhật trạng thái học phí thành công!" };
+                }
                 else if (functionName === 'guiPhanHoiPhuHuynh') {
                     result = { success: true, thongBao: "Cảm ơn Quý Phụ huynh đã gửi phản hồi! Gia sư đã nhận được tin nhắn." };
                 }
-
-                // 8. NỘP BÀI TẬP
                 else if (functionName === 'submitHomework' || functionName === 'uploadHomework') {
                     result = { success: true, thongBao: "Nộp bài tập thành công! Gia sư sẽ chấm và phản hồi sớm nhất." };
                 }

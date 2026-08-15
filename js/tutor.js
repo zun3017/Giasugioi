@@ -149,6 +149,11 @@ function formatScheduleCell(val) {
             
             // Load ý kiến phản hồi của phụ huynh
             loadTutorFeedbacks();
+
+            // Tự động chọn học sinh đầu tiên để hiển thị chi tiết biểu đồ & lịch sử
+            if (data.students && data.students.length > 0) {
+                selectTutorStudent(0);
+            }
         }
 
         function toggleTutorScheduleAccordion(idx) {
