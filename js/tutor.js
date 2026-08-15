@@ -327,7 +327,7 @@ function formatScheduleCell(val) {
         function renderInvoice() {
             if(!currentTutorStudent || !currentTutorStudent.logs) return;
             var logs = currentTutorStudent.logs;
-            var feePerClass = parseFloat(currentTutorStudent.tuition) || 75000;
+            var feePerClass = (parseFloat(currentTutorStudent.tuition) / 10) || 200000;
             
             var presentClasses = 0;
             var absentClasses = 0;
@@ -340,24 +340,15 @@ function formatScheduleCell(val) {
             var missingHwCount = 0;
             var doneHwCount = 0;
             
-            var logsToProcess = [];
-            
-            // Tìm buổi học đã đóng gần nhất và lấy tất cả các buổi sau đó (chưa đóng)
-            var lastPaidIndex = -1;
-            for (var i = 0; i < logs.length; i++) {
-                var isPaid = (logs[i].tienDong || "").trim().toLowerCase().indexOf("đã đóng") !== -1;
-                if (isPaid) lastPaidIndex = i;
-            }
-            logsToProcess = logs.slice(lastPaidIndex + 1);
-            
-            logsToProcess.forEach(function(log) {
+            // Xử lý toàn bộ các buổi học của học sinh này
+            logs.forEach(function(log) {
                 if (!log) return;
                 var dateText = log.ngay || "";
                 var cleanStr = dateText.split(" ")[0].trim();
                 
                 var tt = (log.trangThai || "").trim().toLowerCase();
                 var isDaBu = (tt.indexOf("đã bù") !== -1 || tt === "học bù");
-                var isPresent = (tt.indexOf("đã học") !== -1 || tt === "có mặt" || tt === "có");
+                var isPresent = (tt.indexOf("đã học") !== -1 || tt === "có mặt" || tt === "có" || tt === "");
                 var isAbsent = (tt.indexOf("nghỉ") !== -1 || tt.indexOf("hủy") !== -1 || tt.indexOf("vắng") !== -1) && !isDaBu;
                 
                 if (isDaBu) {
@@ -371,13 +362,16 @@ function formatScheduleCell(val) {
                 
                 var isPaid = (log.tienDong || "").trim().toLowerCase().indexOf("đã đóng") !== -1;
                 if(isPresent || isDaBu) {
-                    if (isPaid) paidTotal += feePerClass;
-                    else unpaidClasses++;
+                    if (isPaid) {
+                        paidTotal += feePerClass;
+                    } else {
+                        unpaidClasses++;
+                    }
                 }
                 
                 var btvn = (log.btvn || "").trim().toLowerCase();
                 if(btvn) {
-                    if (btvn.indexOf("hoàn thành") !== -1 || btvn === "có") doneHwCount++;
+                    if (btvn.indexOf("hoàn thành") !== -1 || btvn === "có" || btvn === "đạt") doneHwCount++;
                     if (btvn.indexOf("thiếu") !== -1 || btvn === "không") {
                         missingHwCount++;
                         missingHwDates.push(cleanStr + " (" + log.btvn + ")");
@@ -385,12 +379,16 @@ function formatScheduleCell(val) {
                 }
             });
             
-            var expectedRev = unpaidClasses * feePerClass;
+            // Nếu toàn bộ đã đóng thì doanh thu dự kiến lấy theo tổng học phí gói
+            var expectedRev = (unpaidClasses > 0) ? (unpaidClasses * feePerClass) : (parseFloat(currentTutorStudent.tuition) || 2000000);
+            if (paidTotal === 0 && logs.length > 0) {
+                paidTotal = parseFloat(currentTutorStudent.tuition) || 2000000;
+            }
             
             document.getElementById('tutorExpRev').innerText = expectedRev.toLocaleString('vi-VN') + "đ";
             document.getElementById('tutorPaidRev').innerText = paidTotal.toLocaleString('vi-VN') + "đ";
             var totalClasses = presentClasses + absentClasses;
-            document.getElementById('tutorAttendance').innerText = totalClasses > 0 ? Math.round(presentClasses/totalClasses*100) + "%" : "0%";
+            document.getElementById('tutorAttendance').innerText = totalClasses > 0 ? Math.round(presentClasses/totalClasses*100) + "%" : "100%";
             
             document.getElementById('invAttP').innerText = presentClasses;
             document.getElementById('invAttA').innerText = absentClasses;
