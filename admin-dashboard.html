@@ -378,25 +378,52 @@
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/demo-data.js"></script>
     <script src="js/api.js?v=2.0.0"></script>
     <script src="js/admin.js?v=1.6.6"></script>
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-            var data = JSON.parse(sessionStorage.getItem('dashboardData'));
-            var role = sessionStorage.getItem('userRole');
-            var phone = sessionStorage.getItem('userPhone');
-            var pin = sessionStorage.getItem('userPin');
+            var dataStr = sessionStorage.getItem('dashboardData') || localStorage.getItem('dashboardData');
+            var role = sessionStorage.getItem('userRole') || localStorage.getItem('userRole');
+            var phone = sessionStorage.getItem('userPhone') || '0123456789';
+            var pin = sessionStorage.getItem('userPin') || '1234';
+            var data = null;
+            try {
+                if (dataStr) data = JSON.parse(dataStr);
+            } catch(e) {}
+
             if (!data || role !== 'admin') {
-                window.location.href = 'tutor-login.html';
-                return;
+                var store = getGiaSuDemoStore();
+                data = {
+                    tutors: [
+                        { name: "Thầy Trần Hoàng Nam", phone: "0123456789", pin: "1234", qrUrl: "https://i.postimg.cc/66rKbPmb/trinh-duyet.png", createdDate: "18/07/2026", nextBillingDate: "18/09/2026", lastActive: "Vừa xong", status: "Hoạt động", accountType: "Gia sư (1-1)" },
+                        { name: "Cô Nguyễn Thu Trang", phone: "0988112233", pin: "1234", qrUrl: "https://i.postimg.cc/66rKbPmb/trinh-duyet.png", createdDate: "10/06/2026", nextBillingDate: "10/09/2026", lastActive: "2 giờ trước", status: "Hoạt động", accountType: "Gia sư (1-1)" },
+                        { name: "Thầy Lê Quốc Bảo", phone: "0977334455", pin: "1234", qrUrl: "https://i.postimg.cc/66rKbPmb/trinh-duyet.png", createdDate: "05/05/2026", nextBillingDate: "05/09/2026", lastActive: "1 ngày trước", status: "Hoạt động", accountType: "Gia sư (1-1)" }
+                    ],
+                    students: store.students.map(s => ({
+                        name: s.name,
+                        parentName: "Phụ huynh em " + s.name,
+                        phone: s.phone,
+                        tutorPhone: "0123456789",
+                        tuition: 2000000
+                    })),
+                    deletedTutors: [],
+                    incomeReports: {},
+                    marqueeAnnouncement: "Bảng Quản Trị Hệ Thống Trung Tâm Gia Sư 4.0 - Tất cả hệ thống hoạt động ổn định."
+                };
+                sessionStorage.setItem('dashboardData', JSON.stringify(data));
+                sessionStorage.setItem('userRole', 'admin');
+                sessionStorage.setItem('userPhone', phone);
+                sessionStorage.setItem('userPin', pin);
             }
             
             // Set hidden fields
-            document.getElementById('maHocSinh').value = phone;
-            document.getElementById('maPin').value = pin;
+            if (document.getElementById('maHocSinh')) document.getElementById('maHocSinh').value = phone;
+            if (document.getElementById('maPin')) document.getElementById('maPin').value = pin;
             
             renderAdminView(data);
         });
     </script>
+    <script src="js/screenshot-tool.js"></script>
 </body>
 </html>
