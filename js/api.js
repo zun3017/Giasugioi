@@ -259,27 +259,30 @@
                 }
 
                 // 4. DANH SÁCH Ý KIẾN PHẢN HỒI CỦA PHỤ HUYNH
-                else if (functionName === 'getFeedbacks') {
-                    result = [
-                        {
-                            studentName: "Lê Minh Thư",
-                            parentPhone: "0987654321",
-                            time: "16/08/2026 21:30",
-                            content: "Gia đình rất cảm ơn Thầy Nam, cháu Thư tiến bộ môn Toán và Vật Lý rất nhiều sau khóa học ạ!"
-                        },
-                        {
-                            studentName: "Nguyễn Hoàng Nam",
-                            parentPhone: "0912345678",
-                            time: "15/08/2026 19:45",
-                            content: "Thầy giảng bài rất dễ hiểu và tận tâm, cháu Nam đã tự tin làm đề kiểm tra trên lớp."
-                        },
-                        {
-                            studentName: "Phạm Hải Đăng",
-                            parentPhone: "0905123456",
-                            time: "14/08/2026 20:10",
-                            content: "Cháu Đăng rất hào hứng với các bài mô phỏng Vật Lý 4K của Thầy."
-                        }
-                    ];
+                else if (functionName === 'getTutorFeedback' || functionName === 'getFeedbacks') {
+                    result = {
+                        success: true,
+                        feedbacks: [
+                            {
+                                studentName: "Lê Minh Thư",
+                                studentPhone: "0987654321",
+                                timestamp: "16/08/2026 21:30",
+                                content: "Gia đình rất cảm ơn Thầy Nam, cháu Thư tiến bộ môn Toán và Vật Lý rất nhiều sau khóa học ạ!"
+                            },
+                            {
+                                studentName: "Nguyễn Hoàng Nam",
+                                studentPhone: "0912345678",
+                                timestamp: "15/08/2026 19:45",
+                                content: "Thầy giảng bài rất dễ hiểu và tận tâm, cháu Nam đã tự tin làm đề kiểm tra trên lớp."
+                            },
+                            {
+                                studentName: "Phạm Hải Đăng",
+                                studentPhone: "0905123456",
+                                timestamp: "14/08/2026 20:10",
+                                content: "Cháu Đăng rất hào hứng với các bài mô phỏng Vật Lý 4K của Thầy."
+                            }
+                        ]
+                    };
                 }
 
                 // 5. THỜI KHÓA BIỂU & LỊCH DẠY GIA SƯ
