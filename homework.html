@@ -529,6 +529,21 @@
                     Đăng nhập cổng <i class="fa-solid fa-arrow-right-long"></i>
                 </button>
             </div>
+            <!-- Gợi ý mã bài tập demo 1 chạm -->
+            <div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 12.5px; color: #94A3B8; text-align: left;">
+                <div style="margin-bottom: 6px; font-weight: 600; color: #CBD5E1;"><i class="fa-solid fa-bolt" style="color:#F59E0B;"></i> Mã bài tập Dùng thử nhanh:</div>
+                <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                    <button type="button" onclick="fillQuickHw('0987654321')" style="background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #34D399; padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer;">
+                        👧 Lê Minh Thư (0987654321)
+                    </button>
+                    <button type="button" onclick="fillQuickHw('0912345678')" style="background: rgba(142,77,255,0.15); border: 1px solid rgba(142,77,255,0.3); color: #C084FC; padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer;">
+                        👦 Nguyễn Hoàng Nam (0912345678)
+                    </button>
+                    <button type="button" onclick="fillQuickHw('BT101')" style="background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); color: #FBBF24; padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer;">
+                        📑 Mã Đề Mẫu (BT101)
+                    </button>
+                </div>
+            </div>
             <p id="error" class="error-msg"></p>
             <p id="loadingText" class="loading-text"><i class="fa-solid fa-circle-notch fa-spin"></i> Hệ thống đang xác thực tài khoản...</p>
         </div>
@@ -706,6 +721,7 @@
         </div>
     </div>
 
+    <script src="js/demo-data.js"></script>
     <script src="js/api.js?v=2.0.0"></script>
     <script>
         // --- Web App Notification and Confirmation Dialogs ---
@@ -1528,19 +1544,13 @@
             }
         })();
 
-        // Tự động khôi phục trạng thái đăng nhập khi làm mới trang
-        window.addEventListener('DOMContentLoaded', function() {
-            var savedCode = sessionStorage.getItem('currentHwCode');
-            if (savedCode) {
-                document.getElementById('loadingText').style.display = 'block';
-                google.script.run
-                    .withSuccessHandler(showHomeworkDashboard)
-                    .withFailureHandler(function(err) {
-                        document.getElementById('loadingText').style.display = 'none';
-                    })
-                    .xacThucMaBaiTap(savedCode);
+        function fillQuickHw(code) {
+            document.getElementById("maInput").value = code;
+            if (typeof check === 'function') {
+                check();
             }
-        });
+        }
     </script>
+    <script src="js/screenshot-tool.js"></script>
 </body>
 </html>

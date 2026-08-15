@@ -52,6 +52,21 @@
                         Tiếp tục <i class="fa-solid fa-arrow-right"></i>
                     </button>
                 </div>
+                <!-- Gợi ý tra cứu demo 1 chạm -->
+                <div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 12.5px; color: #94A3B8; text-align: left;">
+                    <div style="margin-bottom: 6px; font-weight: 600; color: #CBD5E1;"><i class="fa-solid fa-bolt" style="color:#F59E0B;"></i> Tra cứu Dùng thử nhanh:</div>
+                    <div style="display: flex; gap: 8px; flex-wrap: wrap;">
+                        <button type="button" onclick="fillQuickStudent('0912345678')" style="background: rgba(142,77,255,0.15); border: 1px solid rgba(142,77,255,0.3); color: #C084FC; padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer;">
+                            👦 Nguyễn Hoàng Nam (0912345678)
+                        </button>
+                        <button type="button" onclick="fillQuickStudent('0987654321')" style="background: rgba(16,185,129,0.15); border: 1px solid rgba(16,185,129,0.3); color: #34D399; padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer;">
+                            👧 Lê Minh Thư (0987654321)
+                        </button>
+                        <button type="button" onclick="fillQuickStudent('0905123456')" style="background: rgba(245,158,11,0.15); border: 1px solid rgba(245,158,11,0.3); color: #FBBF24; padding: 6px 12px; border-radius: 8px; font-size: 12px; cursor: pointer;">
+                            👦 Phạm Hải Đăng (0905123456)
+                        </button>
+                    </div>
+                </div>
                 <p id="thongBaoLoi" class="error-msg"></p>
                 <p id="loadingText" class="loading-text"><i class="fa-solid fa-circle-notch fa-spin"></i> Hệ thống đang trích xuất dữ liệu...</p>
             </div>
@@ -111,7 +126,7 @@
     <img src="https://i.postimg.cc/sDp8SmLJ/anh-be-trai-removebg-preview.png" class="character char-boy" alt="Boy" onerror="this.style.display='none'">
     <img src="https://i.postimg.cc/1tJc0nQw/anh-be-gai-removebg-preview.png" class="character char-girl" alt="Girl" onerror="this.style.display='none'">
 
-        <!-- Background decorations -->
+    <!-- Background decorations -->
     <div class="decor planet-left"></div>
     <div class="decor planet-right"></div>
     <div class="decor rocket"></div>
@@ -122,7 +137,17 @@
     <div class="star twinkle-1" style="top: 70%; right: 15%; width: 3px; height: 3px;"></div>
     <div class="star twinkle-2" style="top: 85%; left: 30%; width: 2px; height: 2px;"></div>
 
+    <script src="js/demo-data.js"></script>
     <script src="js/api.js?v=2.0.0"></script>
     <script src="js/navigation.js?v=1.6.4"></script>
+    <script>
+        function fillQuickStudent(code) {
+            document.getElementById("maHocSinh").value = code;
+            if (typeof xuLyTraCuu === 'function') {
+                xuLyTraCuu('student');
+            }
+        }
+    </script>
+    <script src="js/screenshot-tool.js"></script>
 </body>
 </html>

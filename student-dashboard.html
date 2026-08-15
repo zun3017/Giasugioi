@@ -157,18 +157,37 @@
     <div class="star twinkle-2" style="top: 85%; left: 30%; width: 2px; height: 2px;"></div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/demo-data.js"></script>
     <script src="js/api.js?v=2.0.0"></script>
     <script src="js/student.js?v=1.7.0"></script>
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-            var data = JSON.parse(sessionStorage.getItem('dashboardData'));
-            var role = sessionStorage.getItem('userRole');
-            if (!data || role !== 'student') {
-                window.location.href = 'student-login.html';
-                return;
+            var dataStr = sessionStorage.getItem('dashboardData') || localStorage.getItem('dashboardData');
+            var role = sessionStorage.getItem('userRole') || localStorage.getItem('userRole');
+            var data = null;
+            try {
+                if (dataStr) data = JSON.parse(dataStr);
+            } catch(e) {}
+
+            if (!data) {
+                // Tự động nạp dữ liệu mẫu của học sinh đầu tiên (Lê Minh Thư) khi mở trực tiếp
+                var store = getGiaSuDemoStore();
+                var s = store.students[1] || store.students[0];
+                data = {
+                    timThay: true,
+                    tenHocSinh: s.name,
+                    sdt: s.phone,
+                    lop: s.classLevel + ' ' + s.subject,
+                    giaSu: s.tutorName,
+                    danhSachNhatKy: s.logs,
+                    danhSachHuyChuong: []
+                };
+                sessionStorage.setItem('dashboardData', JSON.stringify(data));
+                sessionStorage.setItem('userRole', 'student');
             }
             renderStudentView(data);
         });
     </script>
+    <script src="js/screenshot-tool.js"></script>
 </body>
 </html>
