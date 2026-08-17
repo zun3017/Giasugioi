@@ -156,15 +156,15 @@
                             let formattedLogs = (target.logs || []).map((l, idx) => ({
                                 rowIndex: idx + 1,
                                 tuan: l.tuan || (idx + 1),
-                                ngay: l.ngay || "15/08/2026",
+                                ngay: l.ngay || (typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(idx * 3) : "15/08/2026"),
                                 mon: target.subject || "Toán",
-                                noiDung: l.topic || "Luyện tập chuyên đề",
-                                danhGiaBTVN: l.btvn || "Đạt",
-                                btvn: l.btvn || "Đạt",
-                                diemDauGio: l.diemDG || "9.0",
-                                diemDinhKi: l.diemDK || "9.5",
+                                noiDung: l.topic || l.noiDung || "Luyện tập chuyên đề",
+                                danhGiaBTVN: l.btvn || l.danhGiaBTVN || "Hoàn thành",
+                                btvn: l.btvn || l.danhGiaBTVN || "Hoàn thành",
+                                diemDauGio: l.diemDG || l.diemDauGio || "9.0",
+                                diemDinhKi: l.diemDK || l.diemDinhKi || "9.5",
                                 nhanXet: l.nhanXet || "Tiếp thu bài nhanh.",
-                                trangThai: l.chuyenCan || "Có mặt"
+                                trangThai: l.chuyenCan || l.trangThai || "Có mặt"
                             }));
 
                             result = {
@@ -208,17 +208,17 @@
                     let formattedLogs = (target.logs || []).map((l, idx) => ({
                         rowIndex: idx + 1,
                         tuan: l.tuan || (idx + 1),
-                        ngay: l.ngay || "15/08/2026",
+                        ngay: l.ngay || (typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(idx * 3) : "15/08/2026"),
                         mon: target.subject || "Toán",
-                        noiDung: l.topic || "Luyện tập cực trị hàm số & tích phân",
-                        danhGiaBTVN: l.btvn || "Đạt",
-                        btvn: l.btvn || "Đạt",
-                        diemDauGio: l.diemDG || "9.0",
-                        diemDinhKi: l.diemDK || "9.5",
+                        noiDung: l.topic || l.noiDung || "Luyện tập cực trị hàm số & tích phân",
+                        danhGiaBTVN: l.btvn || l.danhGiaBTVN || "Hoàn thành",
+                        btvn: l.btvn || l.danhGiaBTVN || "Hoàn thành",
+                        diemDauGio: l.diemDG || l.diemDauGio || "9.0",
+                        diemDinhKi: l.diemDK || l.diemDinhKi || "9.5",
                         nhanXet: l.nhanXet || "Tư duy giải toán nhanh, làm tốt các câu phân loại 8.5+.",
-                        trangThai: l.chuyenCan || "Có mặt",
+                        trangThai: l.chuyenCan || l.trangThai || "Có mặt",
                         tienDong: "Đã đóng",
-                        ngayDongTien: "05/08/2026"
+                        ngayDongTien: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(10) : "05/08/2026"
                     }));
 
                     result = {
@@ -266,19 +266,19 @@
                             {
                                 studentName: "Lê Minh Thư",
                                 studentPhone: "0987654321",
-                                timestamp: "16/08/2026 21:30",
+                                timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(1) + " 21:30" : "Hôm qua 21:30",
                                 content: "Gia đình rất cảm ơn Thầy Nam, cháu Thư tiến bộ môn Toán và Vật Lý rất nhiều sau khóa học ạ!"
                             },
                             {
                                 studentName: "Nguyễn Hoàng Nam",
                                 studentPhone: "0912345678",
-                                timestamp: "15/08/2026 19:45",
+                                timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(2) + " 19:45" : "2 ngày trước",
                                 content: "Thầy giảng bài rất dễ hiểu và tận tâm, cháu Nam đã tự tin làm đề kiểm tra trên lớp."
                             },
                             {
                                 studentName: "Phạm Hải Đăng",
                                 studentPhone: "0905123456",
-                                timestamp: "14/08/2026 20:10",
+                                timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(3) + " 20:10" : "3 ngày trước",
                                 content: "Cháu Đăng rất hào hứng với các bài mô phỏng Vật Lý 4K của Thầy."
                             }
                         ]
@@ -335,7 +335,7 @@
                         deadline: h.deadline,
                         fileUrl: h.file,
                         classLevel: "Lớp 12",
-                        assignedDate: "15/08/2026"
+                        assignedDate: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(5) : "15/08/2026"
                     }));
                 }
 
@@ -346,7 +346,7 @@
                             subId: "SUB_01",
                             studentName: "Lê Minh Thư",
                             hwTitle: "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị",
-                            submittedAt: "16/08/2026 21:15",
+                            submittedAt: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(1) + " 21:15" : "16/08/2026 21:15",
                             fileName: "leminhthu_dao_ham_done.pdf",
                             fileUrl: "leminhthu_dao_ham_done.pdf",
                             score: "9.5",
@@ -357,7 +357,7 @@
                             subId: "SUB_02",
                             studentName: "Nguyễn Hoàng Nam",
                             hwTitle: "Chuyên đề: Hệ thức lượng trong tam giác",
-                            submittedAt: "15/08/2026 22:00",
+                            submittedAt: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(2) + " 22:00" : "15/08/2026 22:00",
                             fileName: "nguyenhoangnam_he_thuc.jpg",
                             fileUrl: "nguyenhoangnam_he_thuc.jpg",
                             score: "9.0",
