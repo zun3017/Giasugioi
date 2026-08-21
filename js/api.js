@@ -540,9 +540,21 @@
                     let fileUrl = "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&auto=format&fit=crop";
                     let fileName = "bai_lam.jpg";
                     if (filesList && filesList.length > 0) {
-                        fileName = filesList[0].fileName || "bai_lam.jpg";
-                        if (filesList[0].fileBase64) {
-                            fileUrl = "data:" + (filesList[0].mimeType || "image/jpeg") + ";base64," + filesList[0].fileBase64;
+                        if (filesList.length === 1) {
+                            fileName = filesList[0].fileName || "bai_lam.jpg";
+                            if (filesList[0].fileBase64) {
+                                fileUrl = "data:" + (filesList[0].mimeType || "image/jpeg") + ";base64," + filesList[0].fileBase64;
+                            }
+                        } else {
+                            fileName = filesList.length + " ảnh bài nộp";
+                            fileUrl = JSON.stringify(filesList.map((f, fIdx) => {
+                                const mime = f.mimeType || "image/jpeg";
+                                return {
+                                    name: f.fileName || (`Ảnh ${fIdx + 1}`),
+                                    url: f.url || `data:${mime};base64,${f.fileBase64}`,
+                                    isImage: !mime.includes("pdf") && !mime.includes("zip")
+                                };
+                            }));
                         }
                     }
 
