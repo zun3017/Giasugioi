@@ -105,7 +105,7 @@ function generateInitialGiaSuDemoData() {
                 id: "HW_01",
                 title: "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị",
                 deadline: getGiaSuDemoDate(-3),
-                file: "de_on_tap_dao_ham.pdf",
+                file: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
                 status: "Đã nộp",
                 score: "9.5",
                 submittedAt: getGiaSuDemoDate(1) + " 21:15",
@@ -115,7 +115,7 @@ function generateInitialGiaSuDemoData() {
                 id: "HW_02",
                 title: "Chuyên đề: Giao thoa sóng cơ học nâng cao (40 câu)",
                 deadline: getGiaSuDemoDate(-5),
-                file: "giao_thoa_song_co.pdf",
+                file: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
                 status: "Chưa nộp",
                 score: "-",
                 submittedAt: "-",
@@ -123,7 +123,53 @@ function generateInitialGiaSuDemoData() {
             }
         ],
 
-        // 4. Lịch dạy tuần
+        // 4. Bài nộp của học sinh (Submissions)
+        submissions: [
+            {
+                subId: "SUB_01",
+                rowIndex: 1,
+                studentName: "Lê Minh Thư",
+                studentPhone: "0987654321",
+                lessonName: "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị",
+                timestamp: getGiaSuDemoDate(1) + " 21:15:30",
+                submissionDate: getGiaSuDemoDate(1),
+                fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
+                fileName: "leminhthu_dao_ham_done.pdf",
+                score: "9.5",
+                comment: "Bài giải rất chuẩn xác, trình bày sạch đẹp. Chú ý thêm câu 48 có thể dùng phương pháp loại trừ nhanh hơn nhé.",
+                status: "Active"
+            },
+            {
+                subId: "SUB_02",
+                rowIndex: 2,
+                studentName: "Nguyễn Hoàng Nam",
+                studentPhone: "0912345678",
+                lessonName: "Chuyên đề: Hệ thức lượng trong tam giác",
+                timestamp: getGiaSuDemoDate(2) + " 22:00:15",
+                submissionDate: getGiaSuDemoDate(2),
+                fileUrl: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&auto=format&fit=crop",
+                fileName: "nguyenhoangnam_he_thuc.jpg",
+                score: "9.0",
+                comment: "Làm bài tốt, nhớ vẽ hình bằng thước thẳng rõ nét.",
+                status: "Active"
+            },
+            {
+                subId: "SUB_03",
+                rowIndex: 3,
+                studentName: "Phạm Hải Đăng",
+                studentPhone: "0905123456",
+                lessonName: "Bài tập 03: Khúc xạ ánh sáng & Lăng kính",
+                timestamp: getGiaSuDemoDate(0) + " 19:30:00",
+                submissionDate: getGiaSuDemoDate(0),
+                fileUrl: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&auto=format&fit=crop",
+                fileName: "phamhaidang_vatly.jpg",
+                score: "",
+                comment: "",
+                status: "Active"
+            }
+        ],
+
+        // 5. Lịch dạy tuần
         schedules: [
             { day: "Thứ 2 (" + getGiaSuDemoShortDate(2) + ")", time: "18:00 - 19:30", student: "Lê Minh Thư", subject: "Toán 12", topic: "Đạo hàm & Cực trị", status: "Đã dạy" },
             { day: "Thứ 4 (" + getGiaSuDemoShortDate(0) + ")", time: "19:30 - 21:00", student: "Nguyễn Hoàng Nam", subject: "Toán 9", topic: "Hệ thức lượng trong tam giác", status: "Đã dạy" },
