@@ -340,31 +340,76 @@
                 }
 
                 // 7. QUẢN LÝ BÀI NỘP CỦA HỌC SINH
-                else if (functionName === 'getSubmittedHomework' || functionName === 'getTutorSubmissions') {
-                    result = [
+                else if (functionName === 'getStudentSubmissionsForTutor' || functionName === 'getSubmittedHomework' || functionName === 'getTutorSubmissions') {
+                    const maBaiTap = String(args[0] || "");
+                    const studentName = String(args[1] || "");
+                    
+                    let demoSubs = [
                         {
                             subId: "SUB_01",
+                            rowIndex: 1,
                             studentName: "Lê Minh Thư",
+                            lessonName: "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị",
                             hwTitle: "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị",
+                            timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(1) + " 21:15" : "16/08/2026 21:15",
                             submittedAt: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(1) + " 21:15" : "16/08/2026 21:15",
                             fileName: "leminhthu_dao_ham_done.pdf",
-                            fileUrl: "leminhthu_dao_ham_done.pdf",
+                            fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
                             score: "9.5",
                             comment: "Bài giải rất chuẩn xác, trình bày sạch đẹp. Chú ý thêm câu 48 có thể dùng phương pháp loại trừ nhanh hơn nhé.",
                             status: "Đã chấm"
                         },
                         {
                             subId: "SUB_02",
+                            rowIndex: 2,
                             studentName: "Nguyễn Hoàng Nam",
+                            lessonName: "Chuyên đề: Hệ thức lượng trong tam giác",
                             hwTitle: "Chuyên đề: Hệ thức lượng trong tam giác",
+                            timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(2) + " 22:00" : "15/08/2026 22:00",
                             submittedAt: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(2) + " 22:00" : "15/08/2026 22:00",
                             fileName: "nguyenhoangnam_he_thuc.jpg",
-                            fileUrl: "nguyenhoangnam_he_thuc.jpg",
+                            fileUrl: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&auto=format&fit=crop",
                             score: "9.0",
                             comment: "Làm bài tốt, nhớ vẽ hình bằng thước thẳng rõ nét.",
                             status: "Đã chấm"
+                        },
+                        {
+                            subId: "SUB_03",
+                            rowIndex: 3,
+                            studentName: "Phạm Hải Đăng",
+                            lessonName: "Bài tập 03: Khúc xạ ánh sáng & Lăng kính",
+                            hwTitle: "Bài tập 03: Khúc xạ ánh sáng & Lăng kính",
+                            timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(0) + " 19:30" : "17/08/2026 19:30",
+                            submittedAt: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(0) + " 19:30" : "17/08/2026 19:30",
+                            fileName: "phamhaidang_vatly.jpg",
+                            fileUrl: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&auto=format&fit=crop",
+                            score: "",
+                            comment: "",
+                            status: "Chưa chấm"
                         }
                     ];
+
+                    if (studentName) {
+                        let filtered = demoSubs.filter(s => s.studentName.toLowerCase().includes(studentName.toLowerCase()));
+                        if (filtered.length > 0) demoSubs = filtered;
+                    }
+
+                    if (functionName === 'getStudentSubmissionsForTutor') {
+                        result = {
+                            submissions: demoSubs
+                        };
+                    } else {
+                        result = demoSubs;
+                    }
+                }
+
+                else if (functionName === 'gradeSubmission') {
+                    const [subId, score, comment] = args;
+                    result = { success: true };
+                }
+
+                else if (functionName === 'getDriveFolderImages') {
+                    result = [];
                 }
 
                 // 8. DASHBOARD ADMIN
