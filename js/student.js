@@ -158,60 +158,70 @@ function renderStudentView(ketQua) {
     var tongBTVNThangNay = 0;
     var completedBTVNThangNay = 0;
 
-    lichSu.forEach(function(item) {
-        var parsedDate = parseLessonDate(item.ngay);
+    ketQua.lichSuHocTap.forEach(function(item) {
+        var parsedDate = null;
+        if (item.ngay) {
+            var rawDateStr = String(item.ngay || "").trim();
+            var mIso = rawDateStr.match(/(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
+            var mDmy = rawDateStr.match(/(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})/);
+            var mDm = rawDateStr.match(/(\d{1,2})[-/.](\d{1,2})/);
 
-        // Tính toán nếu buổi học nằm trong tháng mục tiêu
+            if (mIso) {
+                parsedDate = { year: parseInt(mIso[1], 10), month: parseInt(mIso[2], 10) - 1 };
+            } else if (mDmy) {
+                parsedDate = { year: parseInt(mDmy[3], 10), month: parseInt(mDmy[2], 10) - 1 };
+            } else if (mDm) {
+                parsedDate = { year: currentYear, month: parseInt(mDm[2], 10) - 1 };
+            } else {
+                var dateObj = new Date(rawDateStr);
+                if (!isNaN(dateObj.getTime())) {
+                    parsedDate = { year: dateObj.getFullYear(), month: dateObj.getMonth() };
+                }
+            }
+        }
+
+        // Chỉ tính toán nếu buổi học nằm trong tháng mục tiêu
         if (parsedDate && parsedDate.year === targetYear && parsedDate.month === targetMonth) {
             var tt = (item.trangThai || "").trim().toLowerCase();
-            // Buổi đã học (có mặt, học bù, đi muộn, đã học)
-            if (tt === "đã học" || tt === "học bù" || tt === "có mặt" || tt === "đi muộn" || tt === "có" || tt === "") {
-                buoiHocThangNay++;
-            } else if (tt.indexOf("hủy") !== -1 || tt.indexOf("nghỉ") !== -1 || tt === "vắng" || tt === "vắng mặt" || tt === "cả lớp nghỉ") {
+            var isAbsent = (tt.indexOf("hủy") !== -1 || tt.indexOf("nghỉ") !== -1 || tt.indexOf("vắng") !== -1);
+            var isPresent = !isAbsent && (tt.indexOf("đã học") !== -1 || tt === "học bù" || tt === "đã bù" || tt === "có mặt" || tt === "có" || tt === "đi muộn" || tt === "" || tt === "đã dạy");
+
+            if (isAbsent) {
                 buoiNghiThangNay++;
-            }
+            } else if (isPresent) {
+                buoiHocThangNay++;
 
-            // Điểm đầu giờ & định kì
-            var scoreDG = parseFloat(item.diemDauGio || item.diemDG);
-            var scoreDK = parseFloat(item.diemDinhKi || item.diemDK);
-            if (!isNaN(scoreDG) && scoreDG >= 0 && scoreDG <= 10) {
-                listDiemDauGioThangNay.push(scoreDG);
-            }
-            if (!isNaN(scoreDK) && scoreDK >= 0 && scoreDK <= 10) {
-                listDiemDinhKiThangNay.push(scoreDK);
-            }
+                // Điểm đầu giờ & định kì (chỉ tính cho buổi đã học)
+                var scoreDG = parseFloat(item.diemDauGio);
+                var scoreDK = parseFloat(item.diemDinhKi);
+                if (!isNaN(scoreDG) && scoreDG >= 0 && scoreDG <= 10) {
+                    listDiemDauGioThangNay.push(scoreDG);
+                }
+                if (!isNaN(scoreDK) && scoreDK >= 0 && scoreDK <= 10) {
+                    listDiemDinhKiThangNay.push(scoreDK);
+                }
 
-            // Đánh giá BTVN - Đồng bộ logic chuẩn với web chính
-            var btvnRaw = (item.danhGiaBTVN || item.btvn || "").trim();
-            var btvnStr = btvnRaw.toLowerCase();
-            if (btvnStr !== "") {
-                tongBTVNThangNay++;
-                if (btvnStr.indexOf("phụ huynh") !== -1 || btvnStr.indexOf("nhắc") !== -1) {
-                    // Lời nhắn/dặn dò phụ huynh luôn tính 100% hoàn thành
-                    completedBTVNThangNay += 1.0;
-                } else if (btvnStr.indexOf("thiếu") !== -1) {
-                    var match = btvnStr.match(/thiếu\s+(\d+)/);
-                    if (match) {
-                        var missingCount = parseInt(match[1], 10);
-                        var completedCount = 5 - missingCount;
-                        if (completedCount < 0) completedCount = 0;
-                        completedBTVNThangNay += (completedCount / 5.0);
+                // Đánh giá BTVN (chỉ tính cho buổi đã học)
+                var btvnStr = (item.danhGiaBTVN || item.btvn || "").trim().toLowerCase();
+                if (btvnStr !== "" && btvnStr !== "không có" && btvnStr !== "-" && btvnStr !== "chưa có") {
+                    tongBTVNThangNay++;
+                    if (btvnStr.indexOf("hoàn thành") !== -1 || btvnStr.indexOf("phụ huynh") !== -1 || btvnStr === "đạt" || btvnStr === "tốt") {
+                        completedBTVNThangNay += 1.0;
+                    } else if (btvnStr.indexOf("thiếu") !== -1) {
+                        var match = btvnStr.match(/thiếu\s+(\d+)/);
+                        if (match) {
+                            var missingCount = parseInt(match[1], 10);
+                            var completedCount = 5 - missingCount;
+                            if (completedCount < 0) completedCount = 0;
+                            completedBTVNThangNay += (completedCount / 5.0);
+                        } else {
+                            completedBTVNThangNay += 0.0;
+                        }
+                    } else if (btvnStr.indexOf("không làm") !== -1 || btvnStr.indexOf("chưa làm") !== -1 || btvnStr.indexOf("chưa nộp") !== -1) {
+                        completedBTVNThangNay += 0.0;
                     } else {
-                        // Ghi chung "Thiếu" -> tính 50% hoặc 0%
-                        completedBTVNThangNay += 0.5;
+                        completedBTVNThangNay += 1.0;
                     }
-                } else if (
-                    btvnStr.indexOf("không làm") !== -1 ||
-                    btvnStr.indexOf("chưa làm") !== -1 ||
-                    btvnStr.indexOf("chưa nộp") !== -1 ||
-                    btvnStr.indexOf("chưa đạt") !== -1 ||
-                    btvnStr === "không" ||
-                    btvnStr === "chưa"
-                ) {
-                    completedBTVNThangNay += 0.0;
-                } else {
-                    // Hoàn thành, Đạt, Tốt, Xuất sắc, Có, v.v. đều tính 100%
-                    completedBTVNThangNay += 1.0;
                 }
             }
         }
