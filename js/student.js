@@ -97,8 +97,14 @@ function renderStudentView(ketQua) {
     }
 
     // Hàm nhận diện buổi nghỉ (chỉ dựa trên thẻ / trạng thái điểm danh do người dùng chọn)
-    function isAbsentSession(trangThai) {
-        var normTt = normalizeStr(trangThai);
+    function isAbsentSession(statusOrItem) {
+        var rawStatus = "";
+        if (typeof statusOrItem === 'object' && statusOrItem !== null) {
+            rawStatus = statusOrItem.trangThai || statusOrItem.chuyenCan || statusOrItem.attendance_status || statusOrItem.attendance || statusOrItem.status || "";
+        } else {
+            rawStatus = String(statusOrItem || "");
+        }
+        var normTt = normalizeStr(rawStatus);
 
         // 1. Nếu là học bù / đã bù thì luôn tính là buổi có học
         if (normTt.includes('hoc bu') || normTt.includes('da bu')) {
@@ -184,7 +190,7 @@ function renderStudentView(ketQua) {
 
     lichSu.forEach(function(item) {
         var parsedDate = parseLessonDate(item.ngay);
-        var isAbsent = isAbsentSession(item.trangThai || item.chuyenCan);
+        var isAbsent = isAbsentSession(item);
         var isPresent = !isAbsent;
 
         // Tổng hợp toàn bộ lịch sử (All-time)
@@ -464,7 +470,7 @@ function renderStudentView(ketQua) {
             var btvnValue = item.danhGiaBTVN || item.btvn || "";
             var diemDau = item.diemDauGio || item.diemDG || "-";
             var diemDinh = item.diemDinhKi || item.diemDK || "-";
-            var badgeHtml = getStatusBadge(item.trangThai || item.chuyenCan);
+            var badgeHtml = getStatusBadge(item);
             
             // Desktop Row
             htmlLichSu += "<tr " + styleStr + ">";
