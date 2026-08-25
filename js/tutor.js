@@ -233,27 +233,30 @@ function formatScheduleCell(val) {
                 tutorChartInstance = null;
             }
             
+            var canvas = document.getElementById('tutorDiemChart');
+            if (!canvas || typeof Chart === 'undefined') return;
+            
+            var logs = (lichSuVe && Array.isArray(lichSuVe)) ? lichSuVe : [];
             var labels = [];
             var dataDauGio = [];
             var dataDinhKi = [];
             
-            lichSuVe.forEach(function(item, idx) {
-                // Dùng ngày thực tế thay vì số buổi
-                var rawDate = item.ngay || "";
+            logs.forEach(function(item, idx) {
+                var rawDate = (item && item.ngay) ? item.ngay : "";
                 var shortDate = rawDate;
                 var dateParts = rawDate.match(/(\d{1,2})\/(\d{1,2})/);
                 if (dateParts) shortDate = dateParts[1] + "/" + dateParts[2];
-                labels.push(shortDate);
+                labels.push(shortDate || ("B." + (idx + 1)));
                 
-                var valDG = parseFloat(item.diemDauGio);
-                var valDK = parseFloat(item.diemDinhKi);
+                var valDG = parseFloat(item ? item.diemDauGio : NaN);
+                var valDK = parseFloat(item ? item.diemDinhKi : NaN);
 
                 dataDauGio.push(!isNaN(valDG) && valDG >= 0 && valDG <= 10 ? valDG : null);
                 dataDinhKi.push(!isNaN(valDK) && valDK >= 0 && valDK <= 10 ? valDK : null);
             });
 
             if (labels.length > 0) {
-                var ctx = document.getElementById('tutorDiemChart').getContext('2d');
+                var ctx = canvas.getContext('2d');
                 tutorChartInstance = new Chart(ctx, {
                     type: 'line',
                     data: {
@@ -324,17 +327,16 @@ function formatScheduleCell(val) {
             }
         }
         
+        // --- Render Invoice / Stats ---
         function renderInvoice() {
-            if(!currentTutorStudent || !currentTutorStudent.logs) return;
-            var logs = currentTutorStudent.logs;
-            var feePerClass = (parseFloat(currentTutorStudent.tuition) / 10) || 200000;
+            var logs = currentTutorStudent.logs || [];
+            var feePerClass = parseInt(currentTutorStudent.fee) || 0;
             
             var presentClasses = 0;
             var absentClasses = 0;
             var makeupClasses = 0;
             var unpaidClasses = 0;
             var paidTotal = 0;
-            
             var absentDates = [];
             var missingHwDates = [];
             var missingHwCount = 0;
@@ -347,34 +349,25 @@ function formatScheduleCell(val) {
                 var cleanStr = dateText.split(" ")[0].trim();
                 
                 var normTt = (log.trangThai || "").toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').trim();
-                var normNd = (log.noiDung || log.topic || "").toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').trim();
-                var normNx = (log.nhanXetRieng || log.nhanXet || "").toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').trim();
-                var normBt = (log.btvn || log.danhGiaBTVN || "").toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').trim();
-                var combinedText = (normNd + " " + normNx + " " + normBt).trim();
                 
-                var isDaBu = (normTt.includes("da bu") || normTt.includes("hoc bu") || combinedText.includes("da bu") || combinedText.includes("hoc bu"));
-                var isExplicitAbsent = normTt.includes("nghi") || normTt.includes("huy") || normTt.includes("vang") || normTt.includes("off") || normTt.includes("khong hoc") || normTt === "v" || normTt === "n";
-                
-                var isAbsentInNotes = false;
-                if (combinedText) {
-                    var phrases = ['xin nghi', 'nghi hoc', 'bao nghi', 'hom nay nghi', 'cho be nghi', 'cho em nghi', 'cho chau nghi', 'duoc nghi', 'tam nghi', 'nghi phep', 'nghi om', 'nghi le', 'nghi tet', 'nghi 1 buoi', 'nghi mot buoi', 'nghi dot xuat', 'nghi co phep', 'ban nghi', 'ban viec nghi', 'mua bao nghi', 'mua bao nen nghi', 'nghi thi', 'vang mat', 'vang co phep', 'bao vang', 'huy buoi', 'huy lop', 'khong hoc', 'tam hoan'];
-                    for (var p = 0; p < phrases.length; p++) {
-                        if (combinedText.includes(phrases[p])) { isAbsentInNotes = true; break; }
-                    }
-                    if (!isAbsentInNotes) {
-                        var cleanText = combinedText.replace(/suy\s+nghi/g, '').replace(/nghien\s+cuu/g, '').replace(/nghi\s+luan/g, '').replace(/nghiem\s+tuc/g, '').replace(/dinh\s+nghia/g, '');
-                        if (/(^|\s|\W)(nghi|vang|huy|off)(\s|\W|$)/.test(cleanText)) { isAbsentInNotes = true; }
-                    }
-                }
-                
-                var isAbsent = !isDaBu && (isExplicitAbsent || isAbsentInNotes);
+                // Chỉ xét duy nhất trạng thái thẻ điểm danh, KHÔNG xét từ khóa trong nội dung bài
+                var isDaBu = (normTt.includes("da bu") || normTt.includes("hoc bu"));
+                var isAbsent = !isDaBu && (
+                    normTt.includes("nghi") || 
+                    normTt.includes("huy") || 
+                    normTt.includes("vang") || 
+                    normTt.includes("off") || 
+                    normTt.includes("khong hoc") ||
+                    normTt === "v" ||
+                    normTt === "n"
+                );
                 var isPresent = !isAbsent;
                 
                 if (isDaBu) {
                     makeupClasses++;
                 } else if (isAbsent) {
                     absentClasses++;
-                    absentDates.push(cleanStr);
+                    absentDates.push(cleanStr || ("Buổi " + (log.tuan || "")));
                 } else if (isPresent) {
                     presentClasses++;
                 }
