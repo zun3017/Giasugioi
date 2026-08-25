@@ -86,39 +86,66 @@ function renderStudentView(ketQua) {
         }
     }
 
+    // Hàm chuẩn hoá chuỗi loại bỏ dấu tiếng Việt để kiểm tra chính xác
+    function normalizeStr(str) {
+        if (!str) return "";
+        return String(str).toLowerCase()
+            .normalize('NFD')
+            .replace(/[\u0300-\u036f]/g, '')
+            .replace(/đ/g, 'd')
+            .trim();
+    }
+
+    // Hàm nhận diện thông minh buổi nghỉ (dựa trên trạng thái hoặc nội dung ghi chú của gia sư)
+    function isAbsentSession(trangThai, noiDung) {
+        var normTt = normalizeStr(trangThai);
+        var normNd = normalizeStr(noiDung);
+        
+        // 1. Kiểm tra trạng thái rõ ràng
+        if (normTt.includes('nghi') || normTt.includes('huy') || normTt.includes('vang')) {
+            if (normTt.includes('hoc bu') || normTt.includes('da bu')) {
+                return false; // Là buổi học bù
+            }
+            return true;
+        }
+        
+        // 2. Tự động phát hiện nếu gia sư ghi chú là nghỉ nhưng quên đổi dropdown trạng thái
+        if (
+            normNd.includes('xin nghi') ||
+            normNd.includes('nghi hoc') ||
+            normNd.includes('bao nghi') ||
+            normNd.includes('hom nay nghi') ||
+            normNd.includes('cho be nghi') ||
+            normNd.includes('cho chau nghi') ||
+            normNd.includes('mua bao nen nghi') ||
+            normNd.includes('nghi mot buoi') ||
+            normNd.includes('nghi 1 buoi') ||
+            normNd.includes('nghi le') ||
+            normNd.includes('nghi tet')
+        ) {
+            return true;
+        }
+        
+        return false;
+    }
+
     // --- 2. TÍNH TOÁN SỐ LIỆU TÓM TẮT THEO THÁNG ---
     var today = new Date();
     var currentMonth = today.getMonth(); // 0 - 11
     var currentYear = today.getFullYear();
     
-    // Helper phân tích ngày học
-    function parseLessonDate(ngayStr) {
-        if (!ngayStr) return null;
-        var cleanStr = String(ngayStr).split(" ")[0].trim();
-        var parts = cleanStr.split(/[-/]/);
-        if (parts.length === 3) {
-            var y, m;
-            if (parts[0].length === 4) { // YYYY-MM-DD
-                y = parseInt(parts[0], 10);
-                m = parseInt(parts[1], 10) - 1;
-            } else if (parts[2].length === 4) { // DD/MM/YYYY
-                y = parseInt(parts[2], 10);
-                m = parseInt(parts[1], 10) - 1;
-            } else if (parts[2].length === 2) { // DD/MM/YY
-                y = 2000 + parseInt(parts[2], 10);
-                m = parseInt(parts[1], 10) - 1;
-            }
-            if (!isNaN(y) && !isNaN(m)) return { year: y, month: m };
-        } else if (parts.length === 2) { // DD/MM
-            var m2 = parseInt(parts[1], 10) - 1;
-            var y2 = currentYear;
-            if (!isNaN(y2) && !isNaN(m2)) return { year: y2, month: m2 };
-        }
-        var dateObj = new Date(ngayStr);
-        if (!isNaN(dateObj.getTime())) {
-            return { year: dateObj.getFullYear(), month: dateObj.getMonth() };
-        }
-        return null;
+    // Helper phân tích ngày học linh hoạt từ mọi định dạng
+    function parseLessonDate(rawStr) {
+        if (!rawStr) return null;
+        var s = String(rawStr).trim();
+        var mIso = s.match(/(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
+        var mDmy = s.match(/(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})/);
+        var mDm = s.match(/(\d{1,2})[-/.](\d{1,2})/);
+        if (mIso) return { year: parseInt(mIso[1], 10), month: parseInt(mIso[2], 10) - 1 };
+        if (mDmy) return { year: parseInt(mDmy[3], 10), month: parseInt(mDmy[2], 10) - 1 };
+        if (mDm) return { year: currentYear, month: parseInt(mDm[2], 10) - 1 };
+        var d = new Date(s);
+        return isNaN(d.getTime()) ? null : { year: d.getFullYear(), month: d.getMonth() };
     }
 
     // Kiểm tra xem trong danh sách có bản ghi nào thuộc tháng hiện tại không
@@ -135,7 +162,7 @@ function renderStudentView(ketQua) {
 
     // Nếu không có buổi nào trong tháng hiện tại nhưng có logs, lấy tháng gần nhất có dữ liệu
     if (!hasCurrentMonthLogs && lichSu.length > 0) {
-        for (var idx = 0; idx < lichSu.length; idx++) {
+        for (var idx = lichSu.length - 1; idx >= 0; idx--) {
             var pDate = parseLessonDate(lichSu[idx].ngay);
             if (pDate) {
                 targetMonth = pDate.month;
@@ -153,39 +180,27 @@ function renderStudentView(ketQua) {
 
     var buoiHocThangNay = 0;
     var buoiNghiThangNay = 0;
+    var totalPresentAllTime = 0;
+    var totalAbsentAllTime = 0;
     var listDiemDauGioThangNay = [];
     var listDiemDinhKiThangNay = [];
     var tongBTVNThangNay = 0;
     var completedBTVNThangNay = 0;
 
-    ketQua.lichSuHocTap.forEach(function(item) {
-        var parsedDate = null;
-        if (item.ngay) {
-            var rawDateStr = String(item.ngay || "").trim();
-            var mIso = rawDateStr.match(/(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
-            var mDmy = rawDateStr.match(/(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})/);
-            var mDm = rawDateStr.match(/(\d{1,2})[-/.](\d{1,2})/);
+    lichSu.forEach(function(item) {
+        var parsedDate = parseLessonDate(item.ngay);
+        var isAbsent = isAbsentSession(item.trangThai, item.noiDung);
+        var isPresent = !isAbsent;
 
-            if (mIso) {
-                parsedDate = { year: parseInt(mIso[1], 10), month: parseInt(mIso[2], 10) - 1 };
-            } else if (mDmy) {
-                parsedDate = { year: parseInt(mDmy[3], 10), month: parseInt(mDmy[2], 10) - 1 };
-            } else if (mDm) {
-                parsedDate = { year: currentYear, month: parseInt(mDm[2], 10) - 1 };
-            } else {
-                var dateObj = new Date(rawDateStr);
-                if (!isNaN(dateObj.getTime())) {
-                    parsedDate = { year: dateObj.getFullYear(), month: dateObj.getMonth() };
-                }
-            }
+        // Tổng hợp toàn bộ lịch sử (All-time)
+        if (isAbsent) {
+            totalAbsentAllTime++;
+        } else {
+            totalPresentAllTime++;
         }
 
         // Chỉ tính toán nếu buổi học nằm trong tháng mục tiêu
         if (parsedDate && parsedDate.year === targetYear && parsedDate.month === targetMonth) {
-            var tt = (item.trangThai || "").trim().toLowerCase();
-            var isAbsent = (tt.indexOf("hủy") !== -1 || tt.indexOf("nghỉ") !== -1 || tt.indexOf("vắng") !== -1);
-            var isPresent = !isAbsent && (tt.indexOf("đã học") !== -1 || tt === "học bù" || tt === "đã bù" || tt === "có mặt" || tt === "có" || tt === "đi muộn" || tt === "" || tt === "đã dạy");
-
             if (isAbsent) {
                 buoiNghiThangNay++;
             } else if (isPresent) {
@@ -407,17 +422,19 @@ function renderStudentView(ketQua) {
     var htmlLichSu = "";
     var totalBuoi = lichSu.length;
     if (totalBuoi > 0) {
+        // Cập nhật tiêu đề Lịch sử có kèm tổng số buổi rõ ràng
+        var historyHeaderEl = document.querySelector('#resultBox .result-section h4');
+        if (historyHeaderEl && historyHeaderEl.innerHTML.includes('Lịch sử')) {
+            historyHeaderEl.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i> Lịch sử Đánh giá Học tập <span style="font-size: 12px; color: #E2D1FF; font-weight: normal; margin-left: 8px;">(Tổng đã học: <b style="color:#10B981;">' + totalPresentAllTime + ' buổi</b> • Nghỉ: <b style="color:#F59E0B;">' + totalAbsentAllTime + ' buổi</b>)</span>';
+        }
+
         // Đồng bộ hoàn toàn hàm getStatusBadge với web chính
-        var getStatusBadge = function(trangThai) {
-            var tt = (trangThai || "").trim().toLowerCase();
-            if (tt === "đã học" || tt === "có mặt" || tt === "có") return '<span class="status-badge badge-dahoc">Có mặt</span>';
-            if (tt === "học bù") return '<span class="status-badge badge-hocbu">Học bù</span>';
-            if (tt === "đi muộn") return '<span class="status-badge badge-hocbu" style="background:rgba(245,158,11,0.15); border-color:rgba(245,158,11,0.4); color:#F59E0B;">Đi muộn</span>';
-            if (tt.indexOf("hủy") !== -1 || tt.indexOf("nghỉ") !== -1 || tt === "vắng" || tt === "vắng mặt" || tt === "cả lớp nghỉ") {
-                var label = (tt === "cả lớp nghỉ") ? "Cả lớp nghỉ" : (tt.indexOf("hủy") !== -1 ? "Hủy/Nghỉ" : "Vắng");
-                return '<span class="status-badge badge-nghi">' + label + '</span>';
-            }
-            return '<span class="status-badge" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #FFF;">' + (trangThai || 'Có mặt') + '</span>';
+        var getStatusBadge = function(trangThai, noiDung) {
+            if (isAbsentSession(trangThai, noiDung)) return '<span class="status-badge badge-nghi">Hủy/Nghỉ</span>';
+            var normTt = normalizeStr(trangThai);
+            if (normTt.includes('hoc bu') || normTt.includes('da bu')) return '<span class="status-badge badge-hocbu">Học bù</span>';
+            if (normTt.includes('di muon')) return '<span class="status-badge badge-hocbu" style="background:rgba(245,158,11,0.15); border-color:rgba(245,158,11,0.4); color:#F59E0B;">Đi muộn</span>';
+            return '<span class="status-badge badge-dahoc">Có mặt</span>';
         };
 
         // Đồng bộ hoàn toàn hàm getBtvnBadge với web chính
@@ -452,6 +469,7 @@ function renderStudentView(ketQua) {
             var btvnValue = item.danhGiaBTVN || item.btvn || "";
             var diemDau = item.diemDauGio || item.diemDG || "-";
             var diemDinh = item.diemDinhKi || item.diemDK || "-";
+            var badgeHtml = getStatusBadge(item.trangThai || item.chuyenCan, item.noiDung || item.topic || "");
             
             // Desktop Row
             htmlLichSu += "<tr " + styleStr + ">";
@@ -462,7 +480,7 @@ function renderStudentView(ketQua) {
             htmlLichSu += "<td>" + getBtvnBadge(btvnValue) + "</td>";
             htmlLichSu += "<td>" + diemDau + "</td>";
             htmlLichSu += "<td>" + diemDinh + "</td>";
-            htmlLichSu += "<td>" + getStatusBadge(item.trangThai || item.chuyenCan) + "</td>";
+            htmlLichSu += "<td>" + badgeHtml + "</td>";
             htmlLichSu += "</tr>";
 
             // Mobile Row (Accordion Card)
@@ -474,7 +492,7 @@ function renderStudentView(ketQua) {
             htmlMobile += "      <span class='accordion-header-date'>" + (item.ngay || "") + "</span>";
             htmlMobile += "    </div>";
             htmlMobile += "    <div class='accordion-header-status'>";
-            htmlMobile += "      " + getStatusBadge(item.trangThai || item.chuyenCan);
+            htmlMobile += "      " + badgeHtml;
             htmlMobile += "      <i class='fa-solid fa-chevron-down' id='chevron-" + idx + "'></i>";
             htmlMobile += "    </div>";
             htmlMobile += "  </div>";
