@@ -189,7 +189,7 @@ const INITIAL_GIASU_DEMO_DATA = generateInitialGiaSuDemoData();
 
 // Quản lý sessionStorage cho phiên demo Gia Sư
 function getGiaSuDemoStore() {
-    var key = "DEMO_GIASU_DATA_V2";
+    var key = "DEMO_GIASU_DATA_V5";
     var data = sessionStorage.getItem(key);
     if (!data) {
         var freshData = generateInitialGiaSuDemoData();

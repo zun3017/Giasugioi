@@ -1355,52 +1355,39 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="js/demo-data.js?v=202608301730"></script>
-    <script src="js/api.js?v=202608301730"></script>
-    <script src="js/tutor.js?v=202608301730"></script>
+    <script src="js/demo-data.js?v=202608301735"></script>
+    <script src="js/api.js?v=202608301735"></script>
+    <script src="js/tutor.js?v=202608301735"></script>
     <script>
         window.addEventListener('DOMContentLoaded', () => {
-            var dataStr = sessionStorage.getItem('dashboardData') || localStorage.getItem('dashboardData');
-            var role = sessionStorage.getItem('userRole') || localStorage.getItem('userRole');
             var phone = sessionStorage.getItem('userPhone') || '0123456789';
             var pin = sessionStorage.getItem('userPin') || '1234';
-            try {
-                if (dataStr) data = JSON.parse(dataStr);
-            } catch(e) {}
-
-            if (data && data.students) {
-                data.students.forEach(s => {
-                    if (s.tuition === 2000000 || !s.tuition) s.tuition = 200000;
-                });
-                sessionStorage.setItem('dashboardData', JSON.stringify(data));
-            }
-
-            if (!data || role !== 'tutor') {
-                var store = getGiaSuDemoStore();
-                var t = store.tutors[0];
-                data = {
-                    tutorName: t.name,
-                    tutorPhone: t.phone,
-                    tutorPin: t.pin,
-                    qrCode: "https://i.postimg.cc/66rKbPmb/trinh-duyet.png",
-                    students: store.students.map(s => ({
-                        phone: s.phone,
-                        name: s.name,
-                        parentName: "Phụ huynh em " + s.name,
-                        tuition: s.tuition || 200000,
-                        maBaiTap: s.phone,
-                        thongBao: "Chúc mừng em hoàn thành xuất sắc bài kiểm tra."
-                    })),
-                    deletedStudents: [],
-                    totalUnpaidIncome: 0,
-                    classCount: store.students.length,
-                    marqueeAnnouncement: "Chào mừng Thầy Trần Hoàng Nam đến với Bảng Quản Lý Gia Sư 4.0!"
-                };
-                sessionStorage.setItem('dashboardData', JSON.stringify(data));
-                sessionStorage.setItem('userRole', 'tutor');
-                sessionStorage.setItem('userPhone', phone);
-                sessionStorage.setItem('userPin', pin);
-            }
+            
+            var store = getGiaSuDemoStore();
+            var t = store.tutors[0];
+            var data = {
+                tutorName: t.name,
+                tutorPhone: t.phone,
+                tutorPin: t.pin,
+                qrCode: "https://i.postimg.cc/66rKbPmb/trinh-duyet.png",
+                students: store.students.map(s => ({
+                    phone: s.phone,
+                    name: s.name,
+                    parentName: s.parentName || ("Phụ huynh em " + s.name),
+                    tuition: (s.tuition && s.tuition <= 500000) ? s.tuition : 200000,
+                    billing_type: s.billing_type || 'session',
+                    maBaiTap: s.phone,
+                    thongBao: "Chúc mừng em hoàn thành xuất sắc bài kiểm tra."
+                })),
+                deletedStudents: [],
+                totalUnpaidIncome: 0,
+                classCount: store.students.length,
+                marqueeAnnouncement: "Chào mừng Thầy Trần Hoàng Nam đến với Bảng Quản Lý Gia Sư 4.0!"
+            };
+            sessionStorage.setItem('dashboardData', JSON.stringify(data));
+            sessionStorage.setItem('userRole', 'tutor');
+            sessionStorage.setItem('userPhone', phone);
+            sessionStorage.setItem('userPin', pin);
             
             // Set hidden fields
             if (document.getElementById('maHocSinh')) document.getElementById('maHocSinh').value = phone;
