@@ -72,9 +72,9 @@ function generateInitialGiaSuDemoData() {
                 totalSessions: 10,
                 absentSessions: 0,
                 hwRate: "100%",
-                fee: "2.000.000đ/tháng",
-                tuition: 2000000,
-                billing_type: "month",
+                fee: "200.000đ/buổi",
+                tuition: 200000,
+                billing_type: "session",
                 feeStatus: "Đã đóng",
                 logs: [
                     { tuan: 10, ngay: getGiaSuDemoDate(1), topic: "Cực trị Hàm số & Tích phân ứng dụng", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.0", diemDK: "9.5", nhanXet: "Tư duy giải toán nhanh, làm tốt các câu phân loại 8.5+." },
@@ -93,8 +93,8 @@ function generateInitialGiaSuDemoData() {
                 totalSessions: 10,
                 absentSessions: 0,
                 hwRate: "100%",
-                fee: "250.000đ/buổi",
-                tuition: 250000,
+                fee: "200.000đ/buổi",
+                tuition: 200000,
                 billing_type: "session",
                 feeStatus: "Đã đóng",
                 logs: [

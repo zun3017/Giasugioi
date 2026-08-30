@@ -111,7 +111,7 @@
                                         parentName: "Phụ huynh em " + s.name,
                                         phone: s.phone,
                                         tutorPhone: "0123456789",
-                                        tuition: 2000000
+                                        tuition: s.tuition || 200000
                                     })),
                                     deletedTutors: [],
                                     incomeReports: {},
@@ -133,7 +133,7 @@
                                         phone: s.phone,
                                         name: s.name,
                                         parentName: "Phụ huynh em " + s.name,
-                                        tuition: 2000000,
+                                        tuition: s.tuition || 200000,
                                         maBaiTap: s.phone,
                                         thongBao: "Em học tập rất chăm chỉ và tiến bộ."
                                     })),
@@ -229,7 +229,7 @@
                             parentName: "Phụ huynh em " + target.name,
                             classLevel: target.classLevel,
                             subject: target.subject,
-                            tuition: target.tuition || 2000000,
+                            tuition: target.tuition || 200000,
                             billing_type: target.billing_type || 'session'
                         },
                         logs: formattedLogs
@@ -503,7 +503,7 @@
                             parentName: "Phụ huynh em " + s.name,
                             phone: s.phone,
                             tutorPhone: "0123456789",
-                            tuition: 2000000
+                            tuition: s.tuition || 200000
                         })),
                         deletedTutors: [],
                         incomeReports: {},

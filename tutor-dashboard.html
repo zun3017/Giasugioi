@@ -1364,10 +1364,16 @@
             var role = sessionStorage.getItem('userRole') || localStorage.getItem('userRole');
             var phone = sessionStorage.getItem('userPhone') || '0123456789';
             var pin = sessionStorage.getItem('userPin') || '1234';
-            var data = null;
             try {
                 if (dataStr) data = JSON.parse(dataStr);
             } catch(e) {}
+
+            if (data && data.students) {
+                data.students.forEach(s => {
+                    if (s.tuition === 2000000 || !s.tuition) s.tuition = 200000;
+                });
+                sessionStorage.setItem('dashboardData', JSON.stringify(data));
+            }
 
             if (!data || role !== 'tutor') {
                 var store = getGiaSuDemoStore();
@@ -1381,7 +1387,7 @@
                         phone: s.phone,
                         name: s.name,
                         parentName: "Phụ huynh em " + s.name,
-                        tuition: 2000000,
+                        tuition: s.tuition || 200000,
                         maBaiTap: s.phone,
                         thongBao: "Chúc mừng em hoàn thành xuất sắc bài kiểm tra."
                     })),
