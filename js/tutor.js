@@ -326,21 +326,48 @@ function formatScheduleCell(val) {
                 });
             }
         }
-        
+
+        function parseTuitionNumber(val) {
+            if (val === null || val === undefined) return 0;
+            if (typeof val === 'number') return isNaN(val) ? 0 : val;
+            var str = String(val).trim();
+            if (!str) return 0;
+            var cleaned = str.replace(/[đĐvVnNdD\s]/g, '');
+            if (cleaned.includes('.') && cleaned.includes(',')) {
+                cleaned = cleaned.replace(/\./g, '').replace(',', '.');
+            } else if (cleaned.includes('.')) {
+                var parts = cleaned.split('.');
+                if (parts.length > 1 && parts.every((p, i) => i === 0 || p.length === 3)) {
+                    cleaned = cleaned.replace(/\./g, '');
+                }
+            } else if (cleaned.includes(',')) {
+                var parts = cleaned.split(',');
+                if (parts.length > 1 && parts.every((p, i) => i === 0 || p.length === 3)) {
+                    cleaned = cleaned.replace(/,/g, '');
+                }
+            }
+            var num = parseFloat(cleaned);
+            return isNaN(num) ? 0 : num;
+        }
+
         // --- Render Invoice / Stats ---
         function renderInvoice() {
+            if (!currentTutorStudent) return;
             var logs = currentTutorStudent.logs || [];
-            var feePerClass = parseInt(currentTutorStudent.fee) || 0;
+            var rawFee = currentTutorStudent.tuition || currentTutorStudent.tuition_fee || currentTutorStudent.fee || currentTutorStudent.hocPhi || 0;
+            var feePerClass = parseTuitionNumber(rawFee);
             
             var presentClasses = 0;
             var absentClasses = 0;
             var makeupClasses = 0;
             var unpaidClasses = 0;
+            var paidClasses = 0;
             var paidTotal = 0;
             var absentDates = [];
-            var missingHwDates = [];
-            var missingHwCount = 0;
             var doneHwCount = 0;
+            var missingHwCount = 0;
+            var missingHwDates = [];
+            var unpaidLogs = [];
             
             // Xử lý toàn bộ các buổi học của học sinh này
             logs.forEach(function(log) {
@@ -379,9 +406,11 @@ function formatScheduleCell(val) {
                 var isPaid = (log.tienDong || "").trim().toLowerCase().indexOf("đã đóng") !== -1;
                 if(isPresent || isDaBu) {
                     if (isPaid) {
+                        paidClasses++;
                         paidTotal += feePerClass;
                     } else {
                         unpaidClasses++;
+                        unpaidLogs.push(log);
                     }
                 }
                 
@@ -399,56 +428,107 @@ function formatScheduleCell(val) {
                 }
             });
             
-            // Nếu toàn bộ đã đóng thì doanh thu dự kiến lấy theo tổng học phí gói
-            var expectedRev = (unpaidClasses > 0) ? (unpaidClasses * feePerClass) : (parseFloat(currentTutorStudent.tuition) || 2000000);
-            if (paidTotal === 0 && logs.length > 0) {
-                paidTotal = parseFloat(currentTutorStudent.tuition) || 2000000;
+            var expectedRev = (unpaidClasses > 0) ? (unpaidClasses * feePerClass) : (paidTotal > 0 ? paidTotal : feePerClass);
+            
+            var elExpRev = document.getElementById('tutorExpRev');
+            if (elExpRev) elExpRev.innerText = (unpaidClasses * feePerClass).toLocaleString('vi-VN') + "đ";
+            
+            var elPaidRev = document.getElementById('tutorPaidRev');
+            if (elPaidRev) elPaidRev.innerText = paidTotal.toLocaleString('vi-VN') + "đ";
+            
+            var totalClasses = presentClasses + absentClasses + makeupClasses;
+            var elAtt = document.getElementById('tutorAttendance');
+            if (elAtt) elAtt.innerText = totalClasses > 0 ? Math.round((presentClasses + makeupClasses)/totalClasses*100) + "%" : "100%";
+            
+            var elInvP = document.getElementById('invAttP');
+            if (elInvP) elInvP.innerText = presentClasses;
+            var elInvA = document.getElementById('invAttA');
+            if (elInvA) elInvA.innerText = absentClasses;
+            var elInvB = document.getElementById('invAttB');
+            if (elInvB) elInvB.innerText = makeupClasses;
+            var elInvDates = document.getElementById('invAbsentDates');
+            if (elInvDates) elInvDates.innerText = absentDates.length > 0 ? "Vắng ngày: " + absentDates.join(", ") : "Không có vắng";
+            
+            var elHwDone = document.getElementById('invHwDone');
+            if (elHwDone) elHwDone.innerText = doneHwCount + " buổi";
+            var elHwMiss = document.getElementById('invHwMiss');
+            if (elHwMiss) elHwMiss.innerText = missingHwCount + " buổi";
+            
+            var elHwMissDates = document.getElementById('invHwMissDates');
+            if (elHwMissDates) {
+                if (missingHwDates.length > 0) {
+                    elHwMissDates.innerHTML = "• " + missingHwDates.join("<br>• ");
+                } else {
+                    elHwMissDates.innerHTML = "• Không thiếu bài";
+                }
             }
             
-            document.getElementById('tutorExpRev').innerText = expectedRev.toLocaleString('vi-VN') + "đ";
-            document.getElementById('tutorPaidRev').innerText = paidTotal.toLocaleString('vi-VN') + "đ";
-            var totalClasses = presentClasses + absentClasses;
-            document.getElementById('tutorAttendance').innerText = totalClasses > 0 ? Math.round(presentClasses/totalClasses*100) + "%" : "100%";
-            
-            document.getElementById('invAttP').innerText = presentClasses;
-            document.getElementById('invAttA').innerText = absentClasses;
-            document.getElementById('invAttB').innerText = makeupClasses;
-            document.getElementById('invAbsentDates').innerText = absentDates.length > 0 ? "Vắng ngày: " + absentDates.join(", ") : "Không có vắng";
-            
-            document.getElementById('invHwDone').innerText = doneHwCount + " buổi";
-            document.getElementById('invHwMiss').innerText = missingHwCount + " buổi";
-            
-            if(missingHwDates.length > 0) {
-                document.getElementById('invHwMissDates').innerHTML = "• " + missingHwDates.join("<br>• ");
-            } else {
-                document.getElementById('invHwMissDates').innerHTML = "• Không thiếu bài";
-            }
-            
-            document.getElementById('invMonthDisplay').innerText = "TỔNG HỢP CÁC BUỔI ĐÃ HỌC";
+            var elMonth = document.getElementById('invMonthDisplay');
+            if (elMonth) elMonth.innerText = "TỔNG HỢP CÁC BUỔI ĐÃ HỌC";
             
             var feeStr = feePerClass.toLocaleString('vi-VN');
-            var totalStr = expectedRev.toLocaleString('vi-VN');
-            document.getElementById('invFeeCalcText').innerText = "Học phí (" + feeStr + "đ × " + unpaidClasses + "):";
-            document.getElementById('invFeeCalcTotal').innerText = totalStr + " VNĐ";
-            document.getElementById('invGrandTotal').innerText = totalStr + " đ";
+            var totalStr = (unpaidClasses * feePerClass).toLocaleString('vi-VN');
+            
+            var elCalcText = document.getElementById('invFeeCalcText');
+            if (elCalcText) elCalcText.innerText = "Học phí (" + feeStr + "đ × " + unpaidClasses + "):";
+            var elCalcTotal = document.getElementById('invFeeCalcTotal');
+            if (elCalcTotal) elCalcTotal.innerText = totalStr + " VNĐ";
+            var elGrandTotal = document.getElementById('invGrandTotal');
+            if (elGrandTotal) elGrandTotal.innerText = totalStr + " đ";
             
             var qrImg = document.getElementById('invQrImg');
             var qrText = document.getElementById('invQrText');
-            // Gắn trực tiếp mã QR Base64
-            // Lấy link ảnh trực tiếp từ dữ liệu (link postimg)
-            if (tutorDataGlobal && tutorDataGlobal.qrCode) {
-                qrImg.src = tutorDataGlobal.qrCode;
-                qrImg.style.display = "block";
-                qrText.innerText = "Quét mã để thanh toán";
-            } else {
-                qrImg.style.display = "none";
-                qrText.innerText = "Chưa có mã QR thanh toán";
+            if (qrImg && qrText) {
+                if (tutorDataGlobal && tutorDataGlobal.qrCode) {
+                    qrImg.src = tutorDataGlobal.qrCode;
+                    qrImg.style.display = "block";
+                    qrText.innerText = "Quét mã để thanh toán";
+                } else {
+                    qrImg.style.display = "none";
+                    qrText.innerText = "Chưa có mã QR thanh toán";
+                }
             }
             
             // Update Textarea with prefilled text
             var msg = "Dạ em chào anh/chị, em gửi anh chị phiếu học tập tổng hợp của bé " + currentTutorStudent.name + " ạ.\nTổng số buổi chưa đóng là " + unpaidClasses + " buổi, thành tiền là " + totalStr + " VNĐ.\nAnh/chị quét mã QR trên phiếu để thanh toán giúp em nhé. Em cảm ơn ạ!";
             var ta = document.getElementById('invTextarea');
-            ta.innerText = msg;
+            if (ta) {
+                ta.value = msg;
+                ta.innerText = msg;
+            }
+
+            // Nạp danh sách checkbox buổi học chưa đóng vào modal / container
+            var container = document.getElementById('unpaidLessonsListContainer');
+            if (container) {
+                container.innerHTML = "";
+                var masterSelectAll = document.getElementById('chkSelectAllUnpaid');
+                if (masterSelectAll) masterSelectAll.checked = false;
+                
+                if (unpaidLogs.length === 0) {
+                    container.innerHTML = '<div style="color: #A6ADCE; font-size: 13px; text-align: center; padding: 15px;"><i class="fa-solid fa-circle-check" style="color:#10B981;"></i> Tất cả buổi học đã đóng học phí!</div>';
+                    var btn = document.getElementById('btnMarkPaid');
+                    if (btn) btn.disabled = true;
+                } else {
+                    unpaidLogs.forEach(function(log) {
+                        var div = document.createElement('div');
+                        div.style.display = "flex";
+                        div.style.alignItems = "center";
+                        div.style.gap = "10px";
+                        div.style.padding = "8px 10px";
+                        div.style.background = "rgba(255,255,255,0.03)";
+                        div.style.borderRadius = "8px";
+                        div.style.border = "1px solid rgba(255,255,255,0.05)";
+                        
+                        div.innerHTML = '<input type="checkbox" class="unpaid-chk" value="' + log.rowIndex + '" style="cursor:pointer; width:16px; height:16px; accent-color:#8E4DFF;">' +
+                                        '<span style="color: #FFF; font-size: 13px;">' +
+                                          '<b>Tuần ' + (log.tuan || "-") + '</b> (' + (log.ngay || "") + ') - ' + (log.mon || "") + ' - <span class="badge" style="background:rgba(245,158,11,0.1); color:#F59E0B; padding:2px 6px;">' + (log.trangThai || "Đã học") + '</span>' +
+                                        '</span>';
+                        container.appendChild(div);
+                    });
+                    var btn = document.getElementById('btnMarkPaid');
+                    if (btn) btn.disabled = false;
+                }
+            }
         }
         
         function exportInvoice() {
@@ -1965,50 +2045,7 @@ function formatScheduleCell(val) {
                 .capNhatDongHocPhiBuoiHoc(rowIndices);
         }
 
-        // Hook renderInvoice để nạp danh sách buổi học chưa đóng vào Collapsible Invoice Container
-        var originalRenderInvoice = renderInvoice;
-        renderInvoice = function() {
-            originalRenderInvoice();
-            
-            // Nạp danh sách checkbox buổi học chưa đóng
-            var container = document.getElementById('unpaidLessonsListContainer');
-            if (!container) return;
-            container.innerHTML = "";
-            
-            var masterSelectAll = document.getElementById('chkSelectAllUnpaid');
-            if(masterSelectAll) masterSelectAll.checked = false;
-            
-            var unpaidCount = 0;
-            if (currentTutorStudent && currentTutorStudent.logs) {
-                currentTutorStudent.logs.forEach(function(log) {
-                    if (log.tuan !== "" && log.tienDong !== "Đã đóng") {
-                        unpaidCount++;
-                        var div = document.createElement('div');
-                        div.style.display = "flex";
-                        div.style.alignItems = "center";
-                        div.style.gap = "10px";
-                        div.style.padding = "8px 10px";
-                        div.style.background = "rgba(255,255,255,0.03)";
-                        div.style.borderRadius = "8px";
-                        div.style.border = "1px solid rgba(255,255,255,0.05)";
-                        
-                        div.innerHTML = '<input type="checkbox" class="unpaid-chk" value="' + log.rowIndex + '" style="cursor:pointer; width:16px; height:16px; accent-color:#8E4DFF;">' +
-                                        '<span style="color: #FFF; font-size: 13px;">' +
-                                          '<b>Tuần ' + log.tuan + '</b> (' + log.ngay + ') - ' + log.mon + ' - <span class="badge" style="background:rgba(245,158,11,0.1); color:#F59E0B; padding:2px 6px;">' + log.trangThai + '</span>' +
-                                        '</span>';
-                        container.appendChild(div);
-                    }
-                });
-            }
-            
-            var btn = document.getElementById('btnMarkPaid');
-            if (unpaidCount === 0) {
-                container.innerHTML = '<div style="color: #A6ADCE; font-size: 13px; text-align: center; padding: 15px;"><i class="fa-solid fa-circle-check" style="color:#10B981;"></i> Tất cả buổi học đã đóng học phí!</div>';
-                if(btn) btn.disabled = true;
-            } else {
-                if(btn) btn.disabled = false;
-            }
-        };
+
 
 // ================= TUTOR HOMEWORK FRONTEND CONTROLLER =================
 
