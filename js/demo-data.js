@@ -50,7 +50,9 @@ function generateInitialGiaSuDemoData() {
                 totalSessions: 10,
                 absentSessions: 1,
                 hwRate: "90%",
-                fee: "2.000.000đ",
+                fee: "200.000đ/buổi",
+                tuition: 200000,
+                billing_type: "session",
                 feeStatus: "Đã đóng",
                 logs: [
                     { tuan: 10, ngay: getGiaSuDemoDate(2), topic: "Hệ thức lượng trong tam giác vuông", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.0", diemDK: "9.0", nhanXet: "Làm bài rất tốt, nắm chắc các hệ thức và tỉ số lượng giác." },
@@ -70,7 +72,9 @@ function generateInitialGiaSuDemoData() {
                 totalSessions: 10,
                 absentSessions: 0,
                 hwRate: "100%",
-                fee: "2.000.000đ",
+                fee: "2.000.000đ/tháng",
+                tuition: 2000000,
+                billing_type: "month",
                 feeStatus: "Đã đóng",
                 logs: [
                     { tuan: 10, ngay: getGiaSuDemoDate(1), topic: "Cực trị Hàm số & Tích phân ứng dụng", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.0", diemDK: "9.5", nhanXet: "Tư duy giải toán nhanh, làm tốt các câu phân loại 8.5+." },
@@ -89,7 +93,9 @@ function generateInitialGiaSuDemoData() {
                 totalSessions: 10,
                 absentSessions: 0,
                 hwRate: "100%",
-                fee: "2.000.000đ",
+                fee: "250.000đ/buổi",
+                tuition: 250000,
+                billing_type: "session",
                 feeStatus: "Đã đóng",
                 logs: [
                     { tuan: 10, ngay: getGiaSuDemoDate(2), topic: "Điện tích & Định luật Cu-lông", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.5", diemDK: "9.0", nhanXet: "Rất xuất sắc, giải đề nhanh và đúng phương pháp." },

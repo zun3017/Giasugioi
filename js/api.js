@@ -229,7 +229,8 @@
                             parentName: "Phụ huynh em " + target.name,
                             classLevel: target.classLevel,
                             subject: target.subject,
-                            tuition: 2000000
+                            tuition: target.tuition || 2000000,
+                            billing_type: target.billing_type || 'session'
                         },
                         logs: formattedLogs
                     };
@@ -246,8 +247,9 @@
                         students: store.students.map(s => ({
                             phone: s.phone,
                             name: s.name,
-                            parentName: "Phụ huynh em " + s.name,
-                            tuition: 2000000,
+                            parentName: s.parentName || ("Phụ huynh em " + s.name),
+                            tuition: s.tuition || 200000,
+                            billing_type: s.billing_type || 'session',
                             maBaiTap: s.phone,
                             thongBao: "Em học tập rất chăm chỉ và tiến bộ."
                         })),
@@ -256,6 +258,44 @@
                         classCount: store.students.length,
                         marqueeAnnouncement: "Chào mừng " + tutor.name + " đến với Bảng Quản Lý Gia Sư 4.0!"
                     };
+                }
+
+                // 3.1 THÊM & SỬA HỌC SINH MOCK
+                else if (functionName === 'themHocSinhMoi' || functionName === 'saveTutorStudent') {
+                    const [tutorPhone, phuHuynhName, studentName, studentPhone, tuition, maBaiTap, thongBao, billingType] = args;
+                    const newSt = {
+                        phone: studentPhone || ("09" + Date.now().toString().slice(-8)),
+                        name: studentName,
+                        parentName: phuHuynhName || ("Phụ huynh em " + studentName),
+                        classLevel: "Lớp 12",
+                        subject: "Toán",
+                        tutorName: "Thầy Trần Hoàng Nam",
+                        tutorPhone: tutorPhone || "0123456789",
+                        gpa: "8.5",
+                        totalSessions: 0,
+                        absentSessions: 0,
+                        hwRate: "100%",
+                        tuition: parseFloat(tuition) || 200000,
+                        billing_type: billingType || 'session',
+                        logs: []
+                    };
+                    store.students.push(newSt);
+                    if (typeof saveDemoStore === 'function') saveDemoStore(store);
+                    result = { success: true };
+                }
+
+                else if (functionName === 'suaThongTinHocSinh' || functionName === 'updateTutorStudent') {
+                    const [oldPhone, phuHuynhName, studentName, studentPhone, tuition, maBaiTap, thongBao, billingType] = args;
+                    let target = store.students.find(s => s.phone === oldPhone || normalizePhone(s.phone) === normalizePhone(oldPhone));
+                    if (target) {
+                        target.name = studentName;
+                        target.parentName = phuHuynhName;
+                        target.phone = studentPhone || oldPhone;
+                        target.tuition = parseFloat(tuition) || target.tuition;
+                        target.billing_type = billingType || target.billing_type || 'session';
+                    }
+                    if (typeof saveDemoStore === 'function') saveDemoStore(store);
+                    result = { success: true };
                 }
 
                 // 4. DANH SÁCH Ý KIẾN PHẢN HỒI CỦA PHỤ HUYNH
