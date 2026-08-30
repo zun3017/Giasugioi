@@ -213,6 +213,9 @@ function formatScheduleCell(val) {
                             return;
                         }
                         currentTutorStudent.logs = (res && res.logs) ? res.logs : [];
+                        if (res && res.student && res.student.tuition) {
+                            currentTutorStudent.tuition = res.student.tuition;
+                        }
                         renderInvoice();
                         renderTutorChart(currentTutorStudent.logs);
                         renderTutorStudentHistory(currentTutorStudent.logs);
