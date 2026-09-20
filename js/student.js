@@ -475,7 +475,7 @@ function renderStudentView(ketQua) {
             // Desktop Row
             htmlLichSu += "<tr " + styleStr + ">";
             htmlLichSu += "<td>" + (item.tuan || (idx + 1)) + "</td>";
-            htmlLichSu += "<td>" + (item.ngay || "") + "</td>";
+            htmlLichSu += "<td>" + (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "")) + "</td>";
             htmlLichSu += "<td>" + (item.mon || "") + "</td>";
             htmlLichSu += "<td>" + (item.noiDung || item.topic || "") + "</td>";
             htmlLichSu += "<td>" + getBtvnBadge(btvnValue) + "</td>";
@@ -490,7 +490,7 @@ function renderStudentView(ketQua) {
             htmlMobile += "  <div class='accordion-header' onclick='toggleAccordion(" + idx + ")'>";
             htmlMobile += "    <div class='accordion-header-title'>";
             htmlMobile += "      <span>Tuần " + (item.tuan || (idx + 1)) + "</span>";
-            htmlMobile += "      <span class='accordion-header-date'>" + (item.ngay || "") + "</span>";
+            htmlMobile += "      <span class='accordion-header-date'>" + (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "")) + "</span>";
             htmlMobile += "    </div>";
             htmlMobile += "    <div class='accordion-header-status'>";
             htmlMobile += "      " + badgeHtml;
