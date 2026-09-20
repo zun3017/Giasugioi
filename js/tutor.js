@@ -1648,7 +1648,7 @@ function formatScheduleCell(val) {
                     htmlLichSu += "<tr " + styleStr + ">";
                     htmlLichSu += "<td style='text-align: center;'>" + chkHtml + "</td>";
                     htmlLichSu += "<td>" + (item.tuan || "") + "</td>";
-                    htmlLichSu += "<td>" + (item.ngay || "") + "</td>";
+                    htmlLichSu += "<td>" + (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "")) + "</td>";
                     htmlLichSu += "<td>" + (item.mon || "") + "</td>";
                     htmlLichSu += "<td>" + (item.noiDung || item.topic || "") + "</td>";
                     htmlLichSu += "<td>" + getBtvnBadge(btvnValue) + "</td>";
@@ -1669,7 +1669,7 @@ function formatScheduleCell(val) {
                     htmlMobile += "      " + mobileChkHtml;
                     htmlMobile += "      <div class='accordion-header-title'>";
                     htmlMobile += "        <span>" + (item.tuan || "") + "</span>";
-                    htmlMobile += "        <span class='accordion-header-date'>" + (item.ngay || "") + "</span>";
+                    htmlMobile += "        <span class='accordion-header-date'>" + (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "")) + "</span>";
                     htmlMobile += "      </div>";
                     htmlMobile += "    </div>";
                     htmlMobile += "    <div class='accordion-header-status'>";

@@ -48,6 +48,41 @@
         return String(p).replace(/\D/g, '').replace(/^84/, '0').replace(/^0+/, '');
     }
 
+    // ĐỊNH DẠNG NGÀY KÈM THỨ (VÍ DỤ: "Thứ 7, 08/08")
+    window.formatDateWithDayOfWeek = function(dStr) {
+        if (!dStr || dStr === "-" || dStr === "null") return "-";
+        let s = String(dStr).trim();
+        if (/thứ|chủ nhật|\bcn\b/i.test(s)) return s;
+        let day = null, month = null, year = null;
+        let mIso = s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
+        if (mIso) {
+            year = parseInt(mIso[1], 10);
+            month = parseInt(mIso[2], 10);
+            day = parseInt(mIso[3], 10);
+        } else {
+            let mDmy = s.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})/);
+            if (mDmy) {
+                day = parseInt(mDmy[1], 10);
+                month = parseInt(mDmy[2], 10);
+                year = parseInt(mDmy[3], 10);
+            } else {
+                let mDm = s.match(/^(\d{1,2})[-/.](\d{1,2})/);
+                if (mDm) {
+                    day = parseInt(mDm[1], 10);
+                    month = parseInt(mDm[2], 10);
+                    year = new Date().getFullYear();
+                }
+            }
+        }
+        if (!day || !month || !year) return s;
+        let dateObj = new Date(year, month - 1, day);
+        if (isNaN(dateObj.getTime())) return s;
+        let dayOfWeek = dateObj.getDay();
+        let dayName = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'][dayOfWeek];
+        let dStrFormatted = String(day).padStart(2, '0') + '/' + String(month).padStart(2, '0');
+        return dayName + ', ' + dStrFormatted;
+    };
+
     // Google Apps Script Run Shim
     class MockGoogleScriptRunInstance {
         constructor() {
