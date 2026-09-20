@@ -944,18 +944,39 @@ var pinVerifyAction = "deleteStudent";
                 .adminLuuHocSinh(oldPhone, parentName, studentName, phone, parseFloat(tuition) || 0, tutorPhone);
         }
 
-        function refreshAdminDashboard() {
-            var pin = document.getElementById('maPin').value.trim();
+        function refreshAdminDashboard(silent) {
+            var refreshBtn = document.getElementById('btnRefreshAdmin');
+            if (refreshBtn) {
+                refreshBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate fa-spin"></i> Đang tải...';
+            }
+            if (!silent && typeof showToast === 'function') {
+                showToast("Đang đồng bộ dữ liệu mới nhất...", "info");
+            }
             
             google.script.run
-                .withSuccessHandler(function(loginRes) {
-                    if (loginRes.role === 'admin') {
-                        renderAdminView(loginRes.data);
-                    } else {
-                        location.reload();
+                .withSuccessHandler(function(res) {
+                    if (refreshBtn) {
+                        refreshBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Làm mới';
+                    }
+                    var data = (res && res.data) ? res.data : res;
+                    if (data && (data.tutors || data.students)) {
+                        sessionStorage.setItem('dashboardData', JSON.stringify(data));
+                        renderAdminView(data);
+                        if (!silent && typeof showToast === 'function') {
+                            showToast("Đã cập nhật dữ liệu mới nhất!", "success");
+                        }
                     }
                 })
-                .loginSystem(currentAdminPhone, pin);
+                .withFailureHandler(function(err) {
+                    if (refreshBtn) {
+                        refreshBtn.innerHTML = '<i class="fa-solid fa-arrows-rotate"></i> Làm mới';
+                    }
+                    console.warn("Lỗi làm mới dashboard admin:", err);
+                    if (!silent && typeof showToast === 'function') {
+                        showToast("Lỗi làm mới: " + err.toString(), "error");
+                    }
+                })
+                .getAdminDashboardData();
         }
 
         // Các hàm phụ trợ hóa đơn của Gia sư đã được di chuyển sang đúng file js/tutor.js.
