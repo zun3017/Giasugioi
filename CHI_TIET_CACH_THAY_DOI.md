@@ -9,8 +9,10 @@
 | STT | File trên Demo | File tương ứng trên Web Chính | Mục đích thay đổi |
 | :---: | :--- | :--- | :--- |
 | 1 | `js/api.js` | `js/api.js` | Bổ sung hàm dùng chung toàn cục `window.formatDateWithDayOfWeek(dStr)` |
-| 2 | `js/tutor.js` | `js/tutor.js` | Áp dụng hàm `formatDateWithDayOfWeek` vào cột Ngày dạy (Desktop & Mobile) |
-| 3 | `js/student.js` | `js/student.js` | Áp dụng hàm `formatDateWithDayOfWeek` vào cột Ngày dạy (Desktop & Mobile) |
+| 2 | `tutor-dashboard.html` | `tutor-dashboard.html` | Cập nhật options cho `#lesBtvn`, `#editLesBtvn` và thêm ô input nhập % khi chọn "Khác" |
+| 3 | `js/tutor.js` | `js/tutor.js` | Cập nhật logic Thêm/Sửa/Nhân bản buổi học với BTVN mới; cập nhật `getBtvnBadge` theo % và thống kê hóa đơn |
+| 4 | `js/student.js` | `js/student.js` | Cập nhật `getBtvnBadge` theo %; cập nhật công thức tính % hoàn thành BTVN tháng dựa trên số % thực tế |
+| 5 | `js/demo-data.js` | `js/demo-data.js` | Cập nhật dữ liệu mẫu minh họa các mức BTVN mới |
 
 ---
 
@@ -19,59 +21,67 @@
 ### Hạng mục 1: Hiển thị thứ kèm ngày dạy (`Thứ X, DD/MM`)
 
 #### 1. File `js/api.js`
-- **Vị trí**: Ngay dưới hàm `normalizePhone`.
-- **Code bổ sung**:
-```javascript
-// ĐỊNH DẠNG NGÀY KÈM THỨ (VÍ DỤ: "Thứ 7, 08/08")
-window.formatDateWithDayOfWeek = function(dStr) {
-    if (!dStr || dStr === "-" || dStr === "null") return "-";
-    let s = String(dStr).trim();
-    if (/thứ|chủ nhật|\bcn\b/i.test(s)) return s;
-    let day = null, month = null, year = null;
-    let mIso = s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
-    if (mIso) {
-        year = parseInt(mIso[1], 10);
-        month = parseInt(mIso[2], 10);
-        day = parseInt(mIso[3], 10);
-    } else {
-        let mDmy = s.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})/);
-        if (mDmy) {
-            day = parseInt(mDmy[1], 10);
-            month = parseInt(mDmy[2], 10);
-            year = parseInt(mDmy[3], 10);
-        } else {
-            let mDm = s.match(/^(\d{1,2})[-/.](\d{1,2})/);
-            if (mDm) {
-                day = parseInt(mDm[1], 10);
-                month = parseInt(mDm[2], 10);
-                year = new Date().getFullYear();
-            }
-        }
-    }
-    if (!day || !month || !year) return s;
-    let dateObj = new Date(year, month - 1, day);
-    if (isNaN(dateObj.getTime())) return s;
-    let dayOfWeek = dateObj.getDay();
-    let dayName = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'][dayOfWeek];
-    let dStrFormatted = String(day).padStart(2, '0') + '/' + String(month).padStart(2, '0');
-    return dayName + ', ' + dStrFormatted;
-};
-```
+- Bổ sung hàm toàn cục `window.formatDateWithDayOfWeek(dStr)` phân tích chuỗi ngày hỗ trợ cả `DD/MM`, `DD/MM/YYYY`, `YYYY-MM-DD`. Nếu chuỗi thiếu năm, tự lấy năm hiện tại `new Date().getFullYear()`.
+
+#### 2. File `js/tutor.js` & `js/student.js`
+- Tại các vị trí render cột Ngày dạy trong bảng Desktop và thẻ Accordion Mobile: bọc qua `formatDateWithDayOfWeek(item.ngay)`.
+
+---
+
+### Hạng mục 2: Đại tu logic Đánh giá BTVN
+
+#### 1. File `tutor-dashboard.html`
+- **Thẻ `<select id="lesBtvn">` (Thêm buổi học)** và **`<select id="editLesBtvn">` (Sửa buổi học)**:
+  - Thay toàn bộ option cũ bằng:
+    ```html
+    <option value="Hoàn thành">Hoàn thành</option>
+    <option value="Không làm">Không làm</option>
+    <option value="Hoàn thành 90%">Hoàn thành 90%</option>
+    <option value="Hoàn thành 75%">Hoàn thành 75%</option>
+    <option value="Khác">Khác</option>
+    ```
+  - Bổ sung thêm sự kiện `onchange="toggleBtvnCustomInput(...)"`.
+  - Bổ sung container nhập % hoàn thành ngay bên dưới:
+    ```html
+    <div id="lesBtvnCustomWrap" style="display: none; margin-top: 8px;">
+        <div style="display: flex; align-items: center; gap: 8px;">
+            <input type="number" id="lesBtvnCustom" min="0" max="100" placeholder="Nhập % hoàn thành (ví dụ: 60)" style="...">
+            <span style="font-weight: bold; color: #FFD23F; font-size: 15px;">%</span>
+        </div>
+    </div>
+    ```
+    (Tương tự với `#editLesBtvnCustomWrap` và `#editLesBtvnCustom` trong popup sửa).
 
 #### 2. File `js/tutor.js`
-- **Vị trí**: Hàm render bảng lịch sử buổi học `renderTutorHistoryTable`.
-- **Thay đổi Desktop**:
-  - *Cũ:* `htmlLichSu += "<td>" + (item.ngay || "") + "</td>";`
-  - *Mới:* `htmlLichSu += "<td>" + (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "")) + "</td>";`
-- **Thay đổi Mobile Accordion**:
-  - *Cũ:* `<span class='accordion-header-date'>" + (item.ngay || "") + "</span>`
-  - *Mới:* `<span class='accordion-header-date'>" + (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "")) + "</span>`
+- **Hàm `toggleBtvnCustomInput(selectId, wrapId, inputId)`**:
+  - Ẩn/hiện ô nhập % tùy theo giá trị chọn có phải là `"Khác"` hay không. Tự động focus vào ô nhập khi mở.
+- **Hàm `openAddLessonModal`**:
+  - Reset `lesBtvn` về `"Hoàn thành"`, ẩn wrap nhập tùy chỉnh và xóa trắng ô input.
+- **Hàm `previewLessonLog` & `saveEditedLesson`**:
+  - Khi `btvn === "Khác"`, lấy giá trị từ ô input tùy chỉnh, kiểm tra hợp lệ (từ 0 đến 100%).
+  - Chuẩn hóa lưu trữ: nếu 0 -> `"Không làm"`, nếu 100 -> `"Hoàn thành"`, còn lại -> `"Hoàn thành " + pct + "%"`.
+- **Hàm `openEditLessonModal` & `duplicateLesson`**:
+  - Kiểm tra giá trị BTVN của buổi học: nếu thuộc các tùy chọn cố định thì gán trực tiếp; nếu là giá trị khác (ví dụ "Hoàn thành 60%" hoặc dữ liệu cũ "Thiếu 1 bài") thì chuyển select sang `"Khác"`, hiển thị ô input và trích xuất số % tương ứng điền vào ô input.
+- **Hàm `getBtvnBadge(btvn)`**:
+  - Sử dụng Regex `(\d+(\.\d+)?)\s*%` để bắt tỷ lệ phần trăm:
+    - `>= 90%`: Dùng class `.badge-hoanthanh` (xanh lá).
+    - `50% - 89%`: Dùng class `.badge-thieu` (cam).
+    - `< 50%`: Dùng class `.badge-nghi` (đỏ).
+  - Duy trì các kiểm tra chuỗi truyền thống ("Không làm" -> đỏ, "Hoàn thành" -> xanh, "Thiếu" -> cam).
+- **Hàm `renderInvoice`**:
+  - Cập nhật điều kiện đếm buổi hoàn thành/thiếu BTVN: nếu có phần trăm `< 100%`, tăng số buổi thiếu bài và bổ sung vào danh sách thông báo ngày thiếu bài cho phụ huynh.
 
 #### 3. File `js/student.js`
-- **Vị trí**: Hàm render bảng lịch sử học sinh `renderStudentHistory`.
-- **Thay đổi Desktop**:
-  - *Cũ:* `htmlLichSu += "<td>" + (item.ngay || "") + "</td>";`
-  - *Mới:* `htmlLichSu += "<td>" + (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "")) + "</td>";`
-- **Thay đổi Mobile Accordion**:
-  - *Cũ:* `<span class='accordion-header-date'>" + (item.ngay || "") + "</span>`
-  - *Mới:* `<span class='accordion-header-date'>" + (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "")) + "</span>`
+- **Hàm `getBtvnBadge`**: Đồng bộ hoàn toàn logic hiển thị màu sắc theo % như `tutor.js`.
+- **Hàm tính Tỷ lệ BTVN theo tháng (`completedBTVNThangNay`)**:
+  - Thay vì trước đây `indexOf("hoàn thành") !== -1` luôn cộng `1.0` (100%), nay sử dụng Regex tách số % thực tế:
+    ```javascript
+    var pctMatch = btvnStr.match(/(\d+(\.\d+)?)\s*%/);
+    if (pctMatch) {
+        var pVal = parseFloat(pctMatch[1]);
+        if (!isNaN(pVal)) {
+            completedBTVNThangNay += Math.min(Math.max(pVal / 100.0, 0), 1.0);
+        }
+    }
+    ```
+  - Đảm bảo điểm hoàn thành tháng phản ánh chính xác từng buổi (ví dụ: buổi 90% tính 0.9, buổi 75% tính 0.75).

@@ -9,6 +9,7 @@
 | STT | Phân hệ / Màn hình | Nội dung thay đổi yêu cầu | Trạng thái Demo | Trạng thái Web Chính | Ghi chú |
 | :---: | :--- | :--- | :---: | :---: | :--- |
 | 1 | Gia sư & Học sinh (Bảng lịch sử buổi học) | Thêm Thứ vào cột Ngày dạy (ví dụ: `Thứ 7, 08/08` thay vì chỉ để `08/08`) trên cả bảng Desktop và thẻ Mobile Accordion | ✅ Đã hoàn thành | ⏳ Chưa thực hiện | Không can thiệp dữ liệu gốc, chỉ format khi render HTML |
+| 2 | Gia sư & Học sinh (Đánh giá BTVN) | Đại tu logic Đánh giá BTVN: chuyển danh sách chọn thành `Hoàn thành`, `Không làm`, `Hoàn thành 90%`, `Hoàn thành 75%`, `Khác`. Khi chọn `Khác` cho phép gia sư tự nhập số % hoàn thành. Đồng bộ màu sắc huy hiệu và công thức tính % BTVN tháng. | ✅ Đã hoàn thành | ⏳ Chưa thực hiện | Tự động parse %, validation 0-100%, tương thích hoàn toàn dữ liệu cũ |
 
 ---
 
@@ -20,3 +21,20 @@
   - Giao diện Gia sư (`tutor.html` / `js/tutor.js`): Bảng danh sách buổi học (Desktop) và Card Accordion (Mobile).
   - Giao diện Học sinh (`student.html` / `js/student.js`): Bảng danh sách lịch sử học tập (Desktop) và Card Accordion (Mobile).
 - **Trạng thái**: Đã chạy thực tế trên bản Demo và kiểm tra hiển thị chuẩn xác.
+
+### Đợt 2: Đại tu logic mục Đánh giá Bài tập về nhà (BTVN)
+- **Yêu cầu**: Thay đổi toàn bộ logic chọn đánh giá BTVN thành:
+  1. `Hoàn thành` (100%)
+  2. `Không làm` (0%)
+  3. `Hoàn thành 90%`
+  4. `Hoàn thành 75%`
+  5. `Khác` (khi chọn mục này thì phải để gia sư tự nhập số phần trăm hoàn thành bài tập của học sinh).
+- **Phạm vi áp dụng**:
+  - Popup Thêm buổi học (`tutor-dashboard.html` / `js/tutor.js`)
+  - Popup Sửa buổi học (`tutor-dashboard.html` / `js/tutor.js`)
+  - Tính năng Nhân bản buổi học (`js/tutor.js`)
+  - Bảng lịch sử & thẻ Accordion của Gia sư (`js/tutor.js`)
+  - Bảng lịch sử & thẻ Accordion của Học sinh (`js/student.js`)
+  - Logic tính tỷ lệ hoàn thành BTVN theo tháng (`js/student.js`)
+  - Logic thống kê BTVN trên hóa đơn học phí (`js/tutor.js`)
+- **Trạng thái**: Đã hoàn thành trên bản Demo, kiểm thử đầy đủ các trường hợp.
