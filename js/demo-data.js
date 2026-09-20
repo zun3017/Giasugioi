@@ -56,8 +56,8 @@ function generateInitialGiaSuDemoData() {
                 feeStatus: "Đã đóng",
                 logs: [
                     { tuan: 10, ngay: getGiaSuDemoDate(2), topic: "Hệ thức lượng trong tam giác vuông", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.0", diemDK: "9.0", nhanXet: "Làm bài rất tốt, nắm chắc các hệ thức và tỉ số lượng giác." },
-                    { tuan: 9, ngay: getGiaSuDemoDate(5), topic: "Tỉ số lượng giác của góc nhọn", chuyenCan: "Có mặt", btvn: "Thiếu 1 bài", diemDG: "8.5", diemDK: "9.0", nhanXet: "Hiểu bài nhanh, cần làm đủ phần bài tập nâng cao." },
-                    { tuan: 8, ngay: getGiaSuDemoDate(9), topic: "Căn bậc hai & Hằng đẳng thức", chuyenCan: "Có mặt", btvn: "Đạt", diemDG: "8.0", diemDK: "8.5", nhanXet: "Nắm vững lý thuyết rút gọn biểu thức chứa căn." },
+                    { tuan: 9, ngay: getGiaSuDemoDate(5), topic: "Tỉ số lượng giác của góc nhọn", chuyenCan: "Có mặt", btvn: "Hoàn thành 90%", diemDG: "8.5", diemDK: "9.0", nhanXet: "Hiểu bài nhanh, cần làm đủ phần bài tập nâng cao." },
+                    { tuan: 8, ngay: getGiaSuDemoDate(9), topic: "Căn bậc hai & Hằng đẳng thức", chuyenCan: "Có mặt", btvn: "Hoàn thành 75%", diemDG: "8.0", diemDK: "8.5", nhanXet: "Nắm vững lý thuyết rút gọn biểu thức chứa căn." },
                     { tuan: 7, ngay: getGiaSuDemoDate(14), topic: "Ôn tập Đại số đầu năm", chuyenCan: "Vắng", btvn: "Không làm", diemDG: "Không có", diemDK: "Không có", nhanXet: "Báo nghỉ có phép do bận việc gia đình." }
                 ]
             },
@@ -78,8 +78,8 @@ function generateInitialGiaSuDemoData() {
                 feeStatus: "Đã đóng",
                 logs: [
                     { tuan: 10, ngay: getGiaSuDemoDate(1), topic: "Cực trị Hàm số & Tích phân ứng dụng", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.0", diemDK: "9.5", nhanXet: "Tư duy giải toán nhanh, làm tốt các câu phân loại 8.5+." },
-                    { tuan: 9, ngay: getGiaSuDemoDate(4), topic: "Giao thoa sóng & Sóng dừng trên dây", chuyenCan: "Có mặt", btvn: "Đạt", diemDG: "8.5", diemDK: "9.0", nhanXet: "Nắm vững bản chất hiện tượng giao thoa 2 nguồn cùng pha." },
-                    { tuan: 8, ngay: getGiaSuDemoDate(8), topic: "Đại cương Dao động cơ & Con lắc lò xo", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "8.0", diemDK: "8.5", nhanXet: "Chăm chỉ, hoàn thành đầy đủ bài tập về nhà." }
+                    { tuan: 9, ngay: getGiaSuDemoDate(4), topic: "Giao thoa sóng & Sóng dừng trên dây", chuyenCan: "Có mặt", btvn: "Hoàn thành 90%", diemDG: "8.5", diemDK: "9.0", nhanXet: "Nắm vững bản chất hiện tượng giao thoa 2 nguồn cùng pha." },
+                    { tuan: 8, ngay: getGiaSuDemoDate(8), topic: "Đại cương Dao động cơ & Con lắc lò xo", chuyenCan: "Có mặt", btvn: "Hoàn thành 60%", diemDG: "8.0", diemDK: "8.5", nhanXet: "Chăm chỉ, hoàn thành bài tập về nhà ở mức khá." }
                 ]
             },
             {

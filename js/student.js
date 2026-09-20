@@ -221,7 +221,15 @@ function renderStudentView(ketQua) {
                 var btvnStr = (item.danhGiaBTVN || item.btvn || "").trim().toLowerCase();
                 if (btvnStr !== "" && btvnStr !== "không có" && btvnStr !== "-" && btvnStr !== "chưa có") {
                     tongBTVNThangNay++;
-                    if (btvnStr.indexOf("hoàn thành") !== -1 || btvnStr.indexOf("phụ huynh") !== -1 || btvnStr === "đạt" || btvnStr === "tốt") {
+                    var pctMatch = btvnStr.match(/(\d+(\.\d+)?)\s*%/);
+                    if (pctMatch) {
+                        var pVal = parseFloat(pctMatch[1]);
+                        if (!isNaN(pVal)) {
+                            completedBTVNThangNay += Math.min(Math.max(pVal / 100.0, 0), 1.0);
+                        }
+                    } else if (btvnStr.indexOf("không làm") !== -1 || btvnStr.indexOf("chưa làm") !== -1 || btvnStr.indexOf("chưa nộp") !== -1 || btvnStr === "không") {
+                        completedBTVNThangNay += 0.0;
+                    } else if (btvnStr.indexOf("hoàn thành") !== -1 || btvnStr.indexOf("phụ huynh") !== -1 || btvnStr === "đạt" || btvnStr === "tốt" || btvnStr === "xuất sắc" || btvnStr === "có") {
                         completedBTVNThangNay += 1.0;
                     } else if (btvnStr.indexOf("thiếu") !== -1) {
                         var match = btvnStr.match(/thiếu\s+(\d+)/);
@@ -231,10 +239,8 @@ function renderStudentView(ketQua) {
                             if (completedCount < 0) completedCount = 0;
                             completedBTVNThangNay += (completedCount / 5.0);
                         } else {
-                            completedBTVNThangNay += 0.0;
+                            completedBTVNThangNay += 0.5;
                         }
-                    } else if (btvnStr.indexOf("không làm") !== -1 || btvnStr.indexOf("chưa làm") !== -1 || btvnStr.indexOf("chưa nộp") !== -1) {
-                        completedBTVNThangNay += 0.0;
                     } else {
                         completedBTVNThangNay += 1.0;
                     }
@@ -443,14 +449,28 @@ function renderStudentView(ketQua) {
             var raw = (btvn || "").trim();
             var bt = raw.toLowerCase();
             if (!raw || raw === "-" || raw === "không có") return '<span class="status-badge" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #A6ADCE;">-</span>';
+            
+            // Kiểm tra phần trăm (ví dụ: "Hoàn thành 90%", "Hoàn thành 75%", "60%")
+            var pctMatch = bt.match(/(\d+(\.\d+)?)\s*%/);
+            if (pctMatch) {
+                var pct = parseFloat(pctMatch[1]);
+                if (pct >= 90) {
+                    return '<span class="status-badge badge-hoanthanh">' + raw + '</span>';
+                } else if (pct >= 50) {
+                    return '<span class="status-badge badge-thieu">' + raw + '</span>';
+                } else {
+                    return '<span class="status-badge badge-nghi">' + raw + '</span>';
+                }
+            }
+
+            if (bt.indexOf("không làm") !== -1 || bt.indexOf("chưa làm") !== -1 || bt.indexOf("chưa nộp") !== -1 || bt.indexOf("chưa đạt") !== -1 || bt === "không") {
+                return '<span class="status-badge badge-nghi">' + raw + '</span>';
+            }
             if (bt.indexOf("hoàn thành") !== -1 || bt === "đạt" || bt === "tốt" || bt === "xuất sắc" || bt === "có") {
                 return '<span class="status-badge badge-hoanthanh">' + raw + '</span>';
             }
             if (bt.indexOf("thiếu") !== -1) {
                 return '<span class="status-badge badge-thieu">' + raw + '</span>';
-            }
-            if (bt.indexOf("không làm") !== -1 || bt.indexOf("chưa làm") !== -1 || bt.indexOf("chưa nộp") !== -1 || bt.indexOf("chưa đạt") !== -1 || bt === "không") {
-                return '<span class="status-badge badge-nghi">' + raw + '</span>';
             }
             if (bt.indexOf("phụ huynh") !== -1 || bt.indexOf("nhắc") !== -1) {
                 return '<span class="status-badge badge-hocbu" style="font-size:10.5px; padding:3px 8px;">' + raw + '</span>';
