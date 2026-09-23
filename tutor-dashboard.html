@@ -15,7 +15,7 @@
     <link rel="apple-touch-icon" href="https://i.postimg.cc/66rKbPmb/trinh-duyet.png">
     <script>
         window.onerror = function(message, source, lineno, colno, error) {
-            alert("JS Error: " + message + " at " + source + ":" + lineno + ":" + colno);
+            console.error("JS Error: " + message + " at " + source + ":" + lineno + ":" + colno);
             return false;
         };
     </script>
@@ -25,6 +25,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Global CSS -->
     <link rel="stylesheet" href="css/style.css?v=202608301720">
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('/sw.js').catch(function() {});
+        }
+    </script>
     <style>
         /* ================= INVOICE STYLES (APPROVED E-RECEIPT) ================= */
         .invoice-container {
