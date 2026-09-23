@@ -8,7 +8,7 @@
  */
 
 (function() {
-    const STORAGE_KEY = 'DEMO_GIASU_DATA_V1';
+    const STORAGE_KEY = 'DEMO_GIASU_DATA_V6';
 
     function getDemoStore() {
         let store = null;
@@ -22,16 +22,20 @@
                 { phone: "0123456789", pin: "1234", name: "Thầy Trần Hoàng Nam", subject: "Toán & Vật Lý" }
             ],
             students: [
-                { phone: "0912345678", name: "Nguyễn Hoàng Nam", classLevel: "Lớp 9", subject: "Toán", gpa: "8.6", totalSessions: 10, absentSessions: 0, hwRate: "100%", logs: [] },
-                { phone: "0987654321", name: "Lê Minh Thư", classLevel: "Lớp 12", subject: "Toán & Vật Lý", gpa: "8.9", totalSessions: 10, absentSessions: 0, hwRate: "100%", logs: [] },
-                { phone: "0905123456", name: "Phạm Hải Đăng", classLevel: "Lớp 11", subject: "Vật Lý", gpa: "9.2", totalSessions: 10, absentSessions: 0, hwRate: "100%", logs: [] }
+                { phone: "0912345678", maBaiTap: "0912345678", name: "Nguyễn Hoàng Nam", classLevel: "Lớp 9", subject: "Toán", gpa: "8.6", totalSessions: 10, absentSessions: 0, hwRate: "100%", logs: [] },
+                { phone: "0987654321", maBaiTap: "0987654321", name: "Lê Minh Thư", classLevel: "Lớp 12", subject: "Toán & Vật Lý", gpa: "8.9", totalSessions: 10, absentSessions: 0, hwRate: "100%", logs: [] },
+                { phone: "0905123456", maBaiTap: "0905123456", name: "Phạm Hải Đăng", classLevel: "Lớp 11", subject: "Vật Lý", gpa: "9.2", totalSessions: 10, absentSessions: 0, hwRate: "100%", logs: [] }
             ],
             homework: [],
+            assignedHomework: [],
             schedules: []
         };
 
         if (!store) {
             store = initial;
+            saveDemoStore(store);
+        } else if (!store.assignedHomework || !Array.isArray(store.assignedHomework) || store.assignedHomework.length === 0) {
+            store.assignedHomework = (initial && initial.assignedHomework) ? JSON.parse(JSON.stringify(initial.assignedHomework)) : [];
             saveDemoStore(store);
         }
         return store;
@@ -285,8 +289,8 @@
                             parentName: s.parentName || ("Phụ huynh em " + s.name),
                             tuition: s.tuition || 200000,
                             billing_type: s.billing_type || 'session',
-                            maBaiTap: s.phone,
-                            thongBao: "Em học tập rất chăm chỉ và tiến bộ."
+                            maBaiTap: s.maBaiTap || s.phone,
+                            thongBao: s.thongBao || "Em học tập rất chăm chỉ và tiến bộ."
                         })),
                         deletedStudents: [],
                         totalUnpaidIncome: 0,
@@ -300,6 +304,7 @@
                     const [tutorPhone, phuHuynhName, studentName, studentPhone, tuition, maBaiTap, thongBao, billingType] = args;
                     const newSt = {
                         phone: studentPhone || ("09" + Date.now().toString().slice(-8)),
+                        maBaiTap: maBaiTap || studentPhone || ("09" + Date.now().toString().slice(-8)),
                         name: studentName,
                         parentName: phuHuynhName || ("Phụ huynh em " + studentName),
                         classLevel: "Lớp 12",
@@ -312,6 +317,7 @@
                         hwRate: "100%",
                         tuition: parseFloat(tuition) || 200000,
                         billing_type: billingType || 'session',
+                        thongBao: thongBao || "Em học tập rất chăm chỉ và tiến bộ.",
                         logs: []
                     };
                     store.students.push(newSt);
@@ -328,6 +334,8 @@
                         target.phone = studentPhone || oldPhone;
                         target.tuition = parseFloat(tuition) || target.tuition;
                         target.billing_type = billingType || target.billing_type || 'session';
+                        if (maBaiTap) target.maBaiTap = maBaiTap;
+                        if (thongBao !== undefined) target.thongBao = thongBao;
                     }
                     if (typeof saveDemoStore === 'function') saveDemoStore(store);
                     result = { success: true };
@@ -404,14 +412,151 @@
 
                 // 6. QUẢN LÝ BÀI TẬP ĐÃ GIAO CHO HỌC SINH
                 else if (functionName === 'getAssignedHomework' || functionName === 'getTutorHomeworkList') {
-                    result = store.homework.map(h => ({
-                        hwId: h.id,
-                        title: h.title,
-                        deadline: h.deadline,
-                        fileUrl: h.file,
-                        classLevel: "Lớp 12",
-                        assignedDate: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(5) : "15/08/2026"
-                    }));
+                    const studentName = String(args[0] || "").trim();
+                    const tutorPhone = String(args[1] || "").trim();
+                    const normTutor = normalizePhone(tutorPhone);
+
+                    store.assignedHomework = store.assignedHomework || [];
+
+                    function matchStudent(h) {
+                        let matchTutor = !normTutor || normalizePhone(h.tutorPhone) === normTutor || String(h.tutorPhone || "").trim() === tutorPhone;
+                        let matchName = !studentName || (h.studentName && h.studentName.trim().toLowerCase() === studentName.toLowerCase());
+                        return matchTutor && matchName;
+                    }
+
+                    let active = store.assignedHomework.filter(h => !h.deleted_date && matchStudent(h));
+                    let trash = store.assignedHomework.filter(h => !!h.deleted_date && matchStudent(h));
+
+                    result = {
+                        success: true,
+                        activeList: active.map(h => ({
+                            rowIndex: h.rowIndex || h.hwId,
+                            hwId: h.hwId,
+                            studentName: h.studentName,
+                            title: h.title,
+                            releaseDate: h.releaseDate || "",
+                            fileUrl: h.fileUrl || "",
+                            externalLink: h.externalLink || "",
+                            status: h.status || "Active"
+                        })),
+                        trashList: trash.map(h => ({
+                            rowIndex: h.rowIndex || h.hwId,
+                            hwId: h.hwId,
+                            studentName: h.studentName,
+                            title: h.title,
+                            releaseDate: h.releaseDate || "",
+                            fileUrl: h.fileUrl || "",
+                            externalLink: h.externalLink || "",
+                            deletedTime: h.deleted_date || "",
+                            deletedDate: h.deleted_date || ""
+                        }))
+                    };
+                }
+
+                else if (functionName === 'uploadAssignedHomework' || functionName === 'assignHomework') {
+                    const [tutorPhone, studentName, title, releaseDate, fileBase64, fileName, mimeType, maBaiTap, externalLink] = args;
+                    store.assignedHomework = store.assignedHomework || [];
+
+                    const newRowIndex = store.assignedHomework.length > 0 
+                        ? Math.max(...store.assignedHomework.map(h => Number(h.rowIndex) || 0)) + 1 
+                        : 1;
+                    const hwId = `HW_DEMO_${Date.now()}`;
+                    
+                    let fileUrl = externalLink || "";
+                    if (fileBase64) {
+                        const mime = mimeType || "application/pdf";
+                        fileUrl = `data:${mime};base64,${fileBase64}`;
+                    } else if (!fileUrl) {
+                        fileUrl = "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview";
+                    }
+
+                    const relDate = releaseDate || (typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(0) : new Date().toLocaleDateString('vi-VN'));
+
+                    const newHw = {
+                        rowIndex: newRowIndex,
+                        hwId: hwId,
+                        studentName: studentName || "",
+                        tutorPhone: tutorPhone || "0123456789",
+                        homework_code: maBaiTap || "",
+                        title: title || "Bài tập mới",
+                        releaseDate: relDate,
+                        fileUrl: fileUrl,
+                        fileName: fileName || (title ? `${title}.pdf` : "BaiTap.pdf"),
+                        externalLink: externalLink || "",
+                        status: "Active",
+                        deleted_date: null
+                    };
+
+                    store.assignedHomework.unshift(newHw);
+
+                    // Đồng bộ sang store.homework để học sinh tra cứu bài tập
+                    store.homework = store.homework || [];
+                    store.homework.unshift({
+                        id: hwId,
+                        title: newHw.title,
+                        deadline: newHw.releaseDate,
+                        file: newHw.fileUrl,
+                        status: "Chưa nộp",
+                        score: "-",
+                        submittedAt: "-",
+                        comment: ""
+                    });
+
+                    saveDemoStore(store);
+                    result = { success: true, hwId: hwId, fileUrl: fileUrl, rowIndex: newRowIndex };
+                }
+
+                else if (functionName === 'editAssignedHomework' || functionName === 'updateAssignedHomework') {
+                    const [rowIndex, title, releaseDate, fileBase64, fileName, mimeType, externalLink] = args;
+                    store.assignedHomework = store.assignedHomework || [];
+                    
+                    let target = store.assignedHomework.find(h => String(h.rowIndex) === String(rowIndex) || String(h.hwId) === String(rowIndex));
+                    if (target) {
+                        target.title = title || target.title;
+                        target.releaseDate = releaseDate || target.releaseDate;
+                        if (externalLink !== undefined) target.externalLink = externalLink;
+                        if (fileBase64) {
+                            const mime = mimeType || "application/pdf";
+                            target.fileUrl = `data:${mime};base64,${fileBase64}`;
+                            target.fileName = fileName || target.fileName;
+                        }
+                        
+                        // Đồng bộ store.homework
+                        if (store.homework) {
+                            let hwTarget = store.homework.find(h => h.id === target.hwId || h.title === target.title);
+                            if (hwTarget) {
+                                hwTarget.title = target.title;
+                                hwTarget.deadline = target.releaseDate;
+                                if (target.fileUrl) hwTarget.file = target.fileUrl;
+                            }
+                        }
+                        saveDemoStore(store);
+                    }
+                    result = { success: true };
+                }
+
+                else if (functionName === 'deleteAssignedHomework') {
+                    const [rowIndex] = args;
+                    store.assignedHomework = store.assignedHomework || [];
+                    let target = store.assignedHomework.find(h => String(h.rowIndex) === String(rowIndex) || String(h.hwId) === String(rowIndex));
+                    if (target) {
+                        target.deleted_date = typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(0) : new Date().toLocaleDateString('vi-VN');
+                        target.status = "Trash";
+                        saveDemoStore(store);
+                    }
+                    result = { success: true };
+                }
+
+                else if (functionName === 'restoreAssignedHomework') {
+                    const [rowIndex] = args;
+                    store.assignedHomework = store.assignedHomework || [];
+                    let target = store.assignedHomework.find(h => String(h.rowIndex) === String(rowIndex) || String(h.hwId) === String(rowIndex));
+                    if (target) {
+                        target.deleted_date = null;
+                        target.status = "Active";
+                        saveDemoStore(store);
+                    }
+                    result = { success: true };
                 }
 
                 // 7. QUẢN LÝ BÀI NỘP CỦA HỌC SINH
@@ -565,14 +710,28 @@
                         studentName: target.name,
                         tenHocSinh: target.name,
                         maHocSinh: target.phone,
-                        sdtGiaSu: "0123456789",
-                        assignedList: store.homework.map((h, idx) => ({
-                            rowIndex: idx + 1,
-                            title: h.title,
-                            releaseDate: h.deadline,
-                            fileUrl: h.file,
-                            externalLink: ""
-                        })),
+                        assignedList: (function() {
+                            let myAssigned = (store.assignedHomework || []).filter(h => !h.deleted_date && (
+                                (h.studentName && target.name && h.studentName.trim().toLowerCase() === target.name.trim().toLowerCase()) ||
+                                (h.homework_code && normalizePhone(h.homework_code) === normalizePhone(target.phone))
+                            ));
+                            if (myAssigned.length === 0 && store.homework && store.homework.length > 0) {
+                                return store.homework.map((h, idx) => ({
+                                    rowIndex: idx + 1,
+                                    title: h.title,
+                                    releaseDate: h.deadline,
+                                    fileUrl: h.file,
+                                    externalLink: ""
+                                }));
+                            }
+                            return myAssigned.map((h, idx) => ({
+                                rowIndex: h.rowIndex || (idx + 1),
+                                title: h.title,
+                                releaseDate: h.releaseDate || "",
+                                fileUrl: h.fileUrl || "",
+                                externalLink: h.externalLink || ""
+                            }));
+                        })(),
                         submissions: mySubs.map((s, idx) => ({
                             subId: s.subId || String(idx + 1),
                             rowIndex: s.rowIndex || (idx + 1),
@@ -702,6 +861,105 @@
                             let s = store.submissions[i];
                             if (String(s.rowIndex) === String(rowIndex) || String(s.subId) === String(rowIndex)) {
                                 s.status = "Active";
+                                break;
+                            }
+                        }
+                        saveDemoStore(store);
+                    }
+                    result = { success: true };
+                }
+
+                // ==========================================
+                // BÀI TẬP ĐÃ GIAO CỦA GIA SƯ (DEMO)
+                // ==========================================
+                else if (functionName === 'uploadAssignedHomework' || functionName === 'assignHomework') {
+                    const [tutorPhone, studentName, title, releaseDate, fileBase64, fileName, mimeType, maBaiTap, externalLink] = args;
+                    if (!store.assignedHomework) store.assignedHomework = [];
+                    
+                    let fileUrl = externalLink || "";
+                    if (!fileUrl && fileBase64) {
+                        fileUrl = "data:" + (mimeType || "image/jpeg") + ";base64," + fileBase64;
+                    }
+                    
+                    const newHw = {
+                        rowIndex: store.assignedHomework.length + 1,
+                        hwId: "HW_DEMO_" + Date.now(),
+                        studentName: studentName || "Học sinh",
+                        tutorPhone: tutorPhone || "0123456789",
+                        homework_code: maBaiTap || "",
+                        title: title || "Bài tập mới",
+                        releaseDate: releaseDate || (typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(0) : "Hôm nay"),
+                        fileUrl: fileUrl,
+                        fileName: fileName || (title + ".pdf"),
+                        externalLink: externalLink || "",
+                        status: "Active"
+                    };
+                    
+                    store.assignedHomework.unshift(newHw);
+                    saveDemoStore(store);
+                    result = { success: true, hwId: newHw.hwId, fileUrl: fileUrl };
+                }
+
+                else if (functionName === 'getAssignedHomework') {
+                    const studentName = String(args[0] || "").trim().toLowerCase();
+                    const tutorPhone = String(args[1] || "").trim();
+                    if (!store.assignedHomework) store.assignedHomework = [];
+                    
+                    let activeList = store.assignedHomework.filter(h => (!h.status || h.status === 'Active') && (!studentName || (h.studentName && h.studentName.toLowerCase() === studentName)));
+                    let trashList = store.assignedHomework.filter(h => h.status === 'Trash' && (!studentName || (h.studentName && h.studentName.toLowerCase() === studentName)));
+                    
+                    result = {
+                        success: true,
+                        activeList: activeList,
+                        trashList: trashList
+                    };
+                }
+
+                else if (functionName === 'editAssignedHomework' || functionName === 'updateAssignedHomework') {
+                    const [rowIndex, title, releaseDate, fileBase64, fileName, mimeType, externalLink] = args;
+                    if (store.assignedHomework) {
+                        for (let i = 0; i < store.assignedHomework.length; i++) {
+                            let h = store.assignedHomework[i];
+                            if (String(h.rowIndex) === String(rowIndex) || String(h.hwId) === String(rowIndex)) {
+                                h.title = title;
+                                h.releaseDate = releaseDate || h.releaseDate;
+                                if (externalLink !== undefined) h.externalLink = externalLink;
+                                if (fileBase64) {
+                                    h.fileUrl = "data:" + (mimeType || "image/jpeg") + ";base64," + fileBase64;
+                                    h.fileName = fileName;
+                                }
+                                break;
+                            }
+                        }
+                        saveDemoStore(store);
+                    }
+                    result = { success: true };
+                }
+
+                else if (functionName === 'deleteAssignedHomework') {
+                    const [rowIndex] = args;
+                    if (store.assignedHomework) {
+                        for (let i = 0; i < store.assignedHomework.length; i++) {
+                            let h = store.assignedHomework[i];
+                            if (String(h.rowIndex) === String(rowIndex) || String(h.hwId) === String(rowIndex)) {
+                                h.status = "Trash";
+                                h.deletedDate = typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(0) : "Hôm nay";
+                                break;
+                            }
+                        }
+                        saveDemoStore(store);
+                    }
+                    result = { success: true };
+                }
+
+                else if (functionName === 'restoreAssignedHomework') {
+                    const [rowIndex] = args;
+                    if (store.assignedHomework) {
+                        for (let i = 0; i < store.assignedHomework.length; i++) {
+                            let h = store.assignedHomework[i];
+                            if (String(h.rowIndex) === String(rowIndex) || String(h.hwId) === String(rowIndex)) {
+                                h.status = "Active";
+                                delete h.deletedDate;
                                 break;
                             }
                         }

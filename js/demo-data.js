@@ -41,6 +41,7 @@ function generateInitialGiaSuDemoData() {
         students: [
             {
                 phone: "0912345678",
+                maBaiTap: "0912345678",
                 name: "Nguyễn Hoàng Nam",
                 classLevel: "Lớp 9",
                 subject: "Toán",
@@ -63,6 +64,7 @@ function generateInitialGiaSuDemoData() {
             },
             {
                 phone: "0987654321",
+                maBaiTap: "0987654321",
                 name: "Lê Minh Thư",
                 classLevel: "Lớp 12",
                 subject: "Toán & Vật Lý",
@@ -84,6 +86,7 @@ function generateInitialGiaSuDemoData() {
             },
             {
                 phone: "0905123456",
+                maBaiTap: "0905123456",
                 name: "Phạm Hải Đăng",
                 classLevel: "Lớp 11",
                 subject: "Vật Lý",
@@ -181,6 +184,80 @@ function generateInitialGiaSuDemoData() {
             { day: "Thứ 4 (" + getGiaSuDemoShortDate(0) + ")", time: "19:30 - 21:00", student: "Nguyễn Hoàng Nam", subject: "Toán 9", topic: "Hệ thức lượng trong tam giác", status: "Đã dạy" },
             { day: "Thứ 6 (" + getGiaSuDemoShortDate(-2) + ")", time: "18:00 - 19:30", student: "Phạm Hải Đăng", subject: "Vật Lý 11", topic: "Điện tích & Cu-lông", status: "Sắp tới" },
             { day: "Chủ Nhật (" + getGiaSuDemoShortDate(-4) + ")", time: "08:30 - 10:00", student: "Lê Minh Thư", subject: "Vật Lý 12", topic: "Giao thoa sóng cơ", status: "Sắp tới" }
+        ],
+
+        // 6. Bài tập đã giao cho từng học sinh (Assigned Homework của Gia sư)
+        assignedHomework: [
+            {
+                rowIndex: 1,
+                hwId: "HW_DEMO_01",
+                studentName: "Lê Minh Thư",
+                tutorPhone: "0123456789",
+                homework_code: "0987654321",
+                title: "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị",
+                releaseDate: getGiaSuDemoDate(5),
+                fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
+                fileName: "leminhthu_phieu01_daoham.pdf",
+                externalLink: "",
+                status: "Active",
+                deleted_date: null
+            },
+            {
+                rowIndex: 2,
+                hwId: "HW_DEMO_02",
+                studentName: "Lê Minh Thư",
+                tutorPhone: "0123456789",
+                homework_code: "0987654321",
+                title: "Chuyên đề: Giao thoa sóng cơ học nâng cao (40 câu)",
+                releaseDate: getGiaSuDemoDate(2),
+                fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
+                fileName: "giao_thoa_song_nang_cao.pdf",
+                externalLink: "https://forms.gle/demo-link-nop-bai",
+                status: "Active",
+                deleted_date: null
+            },
+            {
+                rowIndex: 3,
+                hwId: "HW_DEMO_03",
+                studentName: "Nguyễn Hoàng Nam",
+                tutorPhone: "0123456789",
+                homework_code: "0912345678",
+                title: "Chuyên đề: Hệ thức lượng trong tam giác vuông",
+                releaseDate: getGiaSuDemoDate(4),
+                fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
+                fileName: "he_thuc_luong.pdf",
+                externalLink: "",
+                status: "Active",
+                deleted_date: null
+            },
+            {
+                rowIndex: 4,
+                hwId: "HW_DEMO_04",
+                studentName: "Phạm Hải Đăng",
+                tutorPhone: "0123456789",
+                homework_code: "0905123456",
+                title: "Bài tập 03: Khúc xạ ánh sáng & Lăng kính",
+                releaseDate: getGiaSuDemoDate(3),
+                fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
+                fileName: "khuc_xa_anh_sang.pdf",
+                externalLink: "",
+                status: "Active",
+                deleted_date: null
+            },
+            {
+                rowIndex: 5,
+                hwId: "HW_DEMO_05",
+                studentName: "Lê Minh Thư",
+                tutorPhone: "0123456789",
+                homework_code: "0987654321",
+                title: "Đề ôn tập Khảo sát hàm số (Đã xóa vào thùng rác)",
+                releaseDate: getGiaSuDemoDate(10),
+                fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
+                fileName: "de_on_tap_cu.pdf",
+                externalLink: "",
+                status: "Trash",
+                deleted_date: getGiaSuDemoDate(1)
+            }
         ]
     };
 }
@@ -189,15 +266,31 @@ const INITIAL_GIASU_DEMO_DATA = generateInitialGiaSuDemoData();
 
 // Quản lý sessionStorage cho phiên demo Gia Sư
 function getGiaSuDemoStore() {
-    var key = "DEMO_GIASU_DATA_V5";
+    var key = "DEMO_GIASU_DATA_V6";
     var data = sessionStorage.getItem(key);
     if (!data) {
+        var oldV5 = sessionStorage.getItem("DEMO_GIASU_DATA_V5");
+        if (oldV5) {
+            try {
+                var parsedOld = JSON.parse(oldV5);
+                var fresh = generateInitialGiaSuDemoData();
+                parsedOld.assignedHomework = parsedOld.assignedHomework || fresh.assignedHomework;
+                sessionStorage.setItem(key, JSON.stringify(parsedOld));
+                return parsedOld;
+            } catch(e) {}
+        }
         var freshData = generateInitialGiaSuDemoData();
         sessionStorage.setItem(key, JSON.stringify(freshData));
         return freshData;
     }
     try {
-        return JSON.parse(data);
+        var parsed = JSON.parse(data);
+        if (!parsed.assignedHomework || !Array.isArray(parsed.assignedHomework) || parsed.assignedHomework.length === 0) {
+            var freshData2 = generateInitialGiaSuDemoData();
+            parsed.assignedHomework = freshData2.assignedHomework;
+            sessionStorage.setItem(key, JSON.stringify(parsed));
+        }
+        return parsed;
     } catch(e) {
         var defaultData = generateInitialGiaSuDemoData();
         return defaultData;

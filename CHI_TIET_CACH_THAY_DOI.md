@@ -85,3 +85,33 @@
     }
     ```
   - Đảm bảo điểm hoàn thành tháng phản ánh chính xác từng buổi (ví dụ: buổi 90% tính 0.9, buổi 75% tính 0.75).
+
+---
+
+### Hạng mục 3: Sửa triệt để lỗi không đăng được bài tập của Gia sư
+
+#### 1. File `Gia sư - demo/js/api.js` (Mock API)
+- **Bổ sung 5 API quản lý bài tập giao**:
+  - `uploadAssignedHomework` / `assignHomework`: Tiếp nhận `[tutorPhone, studentName, title, releaseDate, fileBase64, fileName, mimeType, maBaiTap, externalLink]`, sinh ID bài tập `HW_DEMO_...`, lưu vào `store.assignedHomework` và đồng bộ sang `store.homework` để học sinh tra cứu nộp bài.
+  - `getAssignedHomework` / `getTutorHomeworkList`: Nhận `[studentName, tutorPhone]`, lọc bài tập hoạt động và bài tập trong thùng rác, trả về cấu trúc chuẩn `{ success: true, activeList: [...], trashList: [...] }`.
+  - `editAssignedHomework`: Cập nhật bài tập đã giao theo `rowIndex` hoặc `hwId`.
+  - `deleteAssignedHomework`: Đưa bài tập vào thùng rác (gán `deleted_date: ...`, `status: "Trash"`).
+  - `restoreAssignedHomework`: Khôi phục bài tập từ thùng rác (`deleted_date: null`, `status: "Active"`).
+- **Lưu trữ mã bài tập (`maBaiTap`)**:
+  - Cập nhật hàm `themHocSinhMoi` và `suaThongTinHocSinh` lưu giữ trường `maBaiTap: maBaiTap || studentPhone`.
+
+#### 2. File `Gia sư - demo/js/demo-data.js`
+- Bổ sung trường `maBaiTap` cho từng học sinh mẫu.
+- Bổ sung mảng `assignedHomework` vào `generateInitialGiaSuDemoData()` với các bài tập mẫu thực tế (gồm cả bài tập hoạt động và bài tập trong thùng rác).
+- Cập nhật `getGiaSuDemoStore()` tự động phát hiện và bù đắp dữ liệu `assignedHomework` nếu phiên làm việc hiện tại của trình duyệt chưa có.
+
+#### 3. File `js/tutor.js` (Cả Demo và Web Chính)
+- **Hàm `submitAssignedHomework`**:
+  - Bổ sung fallback mã bài tập `var maBaiTap = currentTutorStudent.maBaiTap || currentTutorStudent.phone || ""` tránh bị chặn vô lý nếu học sinh chưa nhập mã bài tập riêng.
+  - Tự động xóa trắng ô nhập tên bài tập, link và file đính kèm sau khi đăng thành công để sẵn sàng cho bài tập tiếp theo.
+- **Hàm `loadTutorAssignedHomework`**:
+  - Thêm cơ chế nhận diện dữ liệu linh hoạt: xử lý tốt cả khi backend trả về dạng mảng trực tiếp lẫn dạng đối tượng `{ activeList, trashList }`.
+
+#### 4. File `Gia sư/js/api.js` (Web Chính kết nối Supabase)
+- **Hàm `uploadAssignedHomework` & `editAssignedHomework`**:
+  - Thêm chốt chặn dung lượng tệp Base64: nếu việc đẩy lên Google Drive gặp sự cố và chuỗi Base64 vượt quá 500KB, lập tức ném thông báo lỗi rõ ràng cho người dùng thay vì tiếp tục gửi chuỗi khổng lồ vào Supabase (vốn gây sập kết nối HTTP `ECONNRESET` / 413 Payload Too Large).
