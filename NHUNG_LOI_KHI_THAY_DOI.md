@@ -13,6 +13,7 @@
 | 3 | 20/09/2026 | Khi gia sư chọn "Khác" mà không nhập phần trăm hoặc nhập số âm / vượt quá 100% | Người dùng có thể vô tình bấm lưu khi chưa điền ô input hoặc gõ nhầm số | Thêm bước validation trong `previewLessonLog` và `saveEditedLesson`: nếu rỗng hoặc ngoài khoảng [0, 100], hiển thị Toast cảnh báo và tự động focus vào ô nhập | ⏳ Chưa (Áp dụng khi đẩy lên Web Chính) |
 | 4 | 20/09/2026 | Khi mở modal sửa hoặc nhân bản buổi học có dữ liệu BTVN cũ hoặc mức % tùy chỉnh (ví dụ "Hoàn thành 60%"), thẻ `<select>` bị nhảy về option đầu tiên | Thẻ `<select>` không có option trùng khớp với chuỗi "Hoàn thành 60%" hay dữ liệu cũ | Trong `openEditLessonModal` và `duplicateLesson`, kiểm tra nếu giá trị không thuộc 4 giá trị cố định thì tự động chọn option "Khác", hiển thị container nhập và trích xuất số % đưa vào ô input | ⏳ Chưa (Áp dụng khi đẩy lên Web Chính) |
 | 5 | 20/09/2026 | Tỷ lệ hoàn thành BTVN tháng của học sinh bị tính sai (ví dụ đạt 75% hay 90% vẫn bị tính là 100%) | Hàm cũ trong `student.js` chỉ kiểm tra `indexOf("hoàn thành") !== -1` và cộng luôn `1.0` | Thay thế bằng Regex `(\d+(\.\d+)?)\s*%` để lấy đúng số % thực tế và cộng tỷ lệ `pVal / 100.0` vào tổng | ⏳ Chưa (Áp dụng khi đẩy lên Web Chính) |
+| 6 | 23/09/2026 | Gia sư không đăng được bài tập mới lên, danh sách bài tập đã giao luôn báo rỗng ("Chưa giao bài tập nào") | (1) `api.js` bản demo thiếu hoàn toàn hàm `uploadAssignedHomework`, `editAssignedHomework`, `deleteAssignedHomework`, `restoreAssignedHomework`; (2) `getAssignedHomework` trả về Mảng thay vì `{ activeList, trashList }`; (3) Học sinh thiếu `maBaiTap` bị chặn upload; (4) Bản chính nguy cơ lỗi `ECONNRESET` nếu file Base64 lớn lưu trực tiếp vào Supabase | Bổ sung đầy đủ bộ 5 API CRUD bài tập giao trong `api.js` demo; chuẩn hóa cấu trúc `{ activeList, trashList }`; thêm fallback `maBaiTap || phone`; trên bản chính gia cố chặn Base64 quá tải và thông báo lỗi rõ ràng | ✅ Đã xử lý đồng bộ trên cả Demo và Web Chính |
 
 ---
 
@@ -50,3 +51,18 @@
 - **Giải pháp áp dụng**:
   - Bóc tách số % bằng regex `(\d+(\.\d+)?)\s*%` và cộng `pVal / 100.0`.
   - Tính trung bình: `btvnPercent = Math.round((completedBTVNThangNay / tongBTVNThangNay) * 100);`.
+
+### Lỗi 6: Lỗi không đăng / không tải được bài tập giao của gia sư
+- **Triệu chứng**: Gia sư nhấn nút "Giao bài" trong mục Bài tập, giao diện chạy tiến trình 100% nhưng danh sách bài tập đã giao luôn rỗng ("Chưa giao bài tập nào cho học sinh này!"). Bài tập mới không được lưu trữ, đồng thời không thể chỉnh sửa, xóa hay xem lại bài tập.
+- **Nguyên nhân cốt lõi**:
+  1. File `Gia sư - demo/js/api.js` bị khuyết hoàn toàn các hàm xử lý Mock: `uploadAssignedHomework`, `editAssignedHomework`, `deleteAssignedHomework`, `restoreAssignedHomework`. Khi frontend gọi các hàm này, request rơi vào fallback trả về `{ success: true }` rỗng mà không ghi dữ liệu vào Store.
+  2. Hàm `getAssignedHomework` trong `api.js` bản demo trả về một Mảng đối tượng thô, trong khi hàm `loadTutorAssignedHomework()` trong `tutor.js` yêu cầu cấu trúc chuẩn dạng đối tượng `{ success: true, activeList: [...], trashList: [...] }`. Việc này khiến `res.activeList` bị `undefined`, dẫn đến bảng luôn rỗng.
+  3. Khi thêm học sinh mới hoặc ở dữ liệu khởi tạo thiếu trường `maBaiTap`, logic kiểm tra `if (!maBaiTap)` trong `tutor.js` sẽ chặn đứng quy trình giao bài và báo lỗi bắt cập nhật thông tin học sinh.
+  4. Trên Web Chính (Supabase): Khi gia sư đính kèm tệp dung lượng trung bình/lớn mà kết nối Google Drive gặp trục trặc, hàm cố gắng đẩy trực tiếp chuỗi Base64 siêu dài vào PostgREST (`supaPost`), gây sập kết nối HTTP (`ECONNRESET` / Payload too large) khiến toàn bộ thao tác tải lên thất bại.
+- **Giải pháp áp dụng triệt để**:
+  - Triển khai đầy đủ trọn bộ 5 API quản lý bài tập giao cho Mock API (`uploadAssignedHomework`, `getAssignedHomework`, `editAssignedHomework`, `deleteAssignedHomework`, `restoreAssignedHomework`).
+  - Chuẩn hóa cấu trúc trả về `{ success: true, activeList: [...], trashList: [...] }` đồng bộ hoàn toàn giữa Mock API và Supabase API.
+  - Bổ sung cơ chế fallback tự động `currentTutorStudent.maBaiTap || currentTutorStudent.phone` để không bao giờ bị chặn vì thiếu mã bài tập.
+  - Tự động reset form nhập và chọn file về trắng sau khi giao bài thành công để sẵn sàng giao bài tiếp theo.
+  - Trên Web Chính: Thêm cơ chế chặn kích thước chuỗi Base64 (> 500KB) tránh làm sập kết nối Supabase, đồng thời ném thông báo lỗi chi tiết, dễ hiểu cho người dùng.
+
