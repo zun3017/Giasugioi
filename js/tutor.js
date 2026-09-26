@@ -446,60 +446,41 @@ function formatScheduleCell(val) {
             var elAtt = document.getElementById('tutorAttendance');
             if (elAtt) elAtt.innerText = totalAllClasses > 0 ? Math.round((totalPresent + totalMakeup) / totalAllClasses * 100) + "%" : "100%";
             
-            // 2. TÍNH TOÁN DÀNH RIÊNG CHO PHIẾU HỌC TẬP
-            // 2. TÍNH TOÁN DÀNH RIÊNG CHO PHIẾU HỌC TẬP
-            var invoiceLogs = [];
+            // 2. TÍNH TOÁN DÀNH RIÊNG CHO PHIẾU HỌC TẬP (ĐỢT HỌC CHƯA ĐÓNG HIỆN TẠI)
             var targetMonth = (new Date()).getMonth();
             var targetYear = (new Date()).getFullYear();
-            var isAllPaidInCurrentCycle = false;
-
-            if (unpaidLogs.length > 0) {
-                // Có buổi chưa đóng: lấy tất cả buổi từ buổi chưa đóng đầu tiên trở đi
-                var firstUnpaidIndex = -1;
-                for (var i = 0; i < logs.length; i++) {
-                    var l = logs[i];
-                    var normPaidL = String(l.tienDong || "").toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').trim();
-                    var rawStatusL = l.trangThai || l.chuyenCan || l.attendance_status || l.attendance || l.status || "";
-                    var normTtL = String(rawStatusL).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').trim();
-                    var isDaBuL = (normTtL.includes("da bu") || normTtL.includes("hoc bu"));
-                    var isAbsentL = !isDaBuL && (
-                        normTtL.includes("nghi") || normTtL.includes("huy") || normTtL.includes("vang") || normTtL.includes("off") ||
-                        normTtL.includes("khong hoc") || normTtL.includes("chua hoc") || normTtL.includes("tam hoan") ||
-                        normTtL === "v" || normTtL === "n" || normTtL === "x"
-                    );
-                    var isPresentL = !isAbsentL;
-                    if ((isPresentL || isDaBuL) && !normPaidL.includes("da dong")) {
-                        firstUnpaidIndex = i;
+            if (logs.length > 0) {
+                for (var idx = logs.length - 1; idx >= 0; idx--) {
+                    var pDate = parseLessonDate(logs[idx].ngay);
+                    if (pDate) {
+                        targetMonth = pDate.month;
+                        targetYear = pDate.year;
                         break;
                     }
                 }
-                if (firstUnpaidIndex !== -1) {
-                    invoiceLogs = logs.slice(firstUnpaidIndex);
-                } else {
-                    invoiceLogs = unpaidLogs;
-                }
-                // Xác định tháng hiển thị từ buổi mới nhất trong invoiceLogs
-                if (invoiceLogs.length > 0) {
-                    for (var idx = invoiceLogs.length - 1; idx >= 0; idx--) {
-                        var pDate = parseLessonDate(invoiceLogs[idx].ngay);
-                        if (pDate) { targetMonth = pDate.month; targetYear = pDate.year; break; }
-                    }
+            }
+
+            var invoiceLogs = [];
+            if (lastPaidIndex !== -1 && lastPaidIndex < logs.length - 1) {
+                // Lấy tất cả các buổi sau buổi đã đóng gần nhất
+                invoiceLogs = logs.slice(lastPaidIndex + 1);
+            } else if (lastPaidIndex === -1) {
+                // Nếu chưa có buổi nào đánh dấu đã đóng: Lấy theo tháng mới nhất có dữ liệu
+                invoiceLogs = logs.filter(function(l) {
+                    var p = parseLessonDate(l.ngay);
+                    return p && p.month === targetMonth && p.year === targetYear;
+                });
+                if (invoiceLogs.length === 0) {
+                    invoiceLogs = logs.slice(Math.max(0, logs.length - 10));
                 }
             } else {
-                // Tất cả buổi đã đóng: hiển thị tháng gần nhất, không tính tiền thêm
-                isAllPaidInCurrentCycle = true;
-                if (logs.length > 0) {
-                    for (var idx = logs.length - 1; idx >= 0; idx--) {
-                        var pDate = parseLessonDate(logs[idx].ngay);
-                        if (pDate) { targetMonth = pDate.month; targetYear = pDate.year; break; }
-                    }
-                    invoiceLogs = logs.filter(function(l) {
-                        var p = parseLessonDate(l.ngay);
-                        return p && p.year === targetYear && p.month === targetMonth;
-                    });
-                    if (invoiceLogs.length === 0) {
-                        invoiceLogs = logs.slice(Math.max(0, logs.length - 10));
-                    }
+                // Nếu tất cả buổi đã đóng: Hiển thị tháng gần nhất (không tính tiền)
+                invoiceLogs = logs.filter(function(l) {
+                    var p = parseLessonDate(l.ngay);
+                    return p && p.month === targetMonth && p.year === targetYear;
+                });
+                if (invoiceLogs.length === 0) {
+                    invoiceLogs = logs.slice(Math.max(0, logs.length - 10));
                 }
             }
 
@@ -512,6 +493,163 @@ function formatScheduleCell(val) {
             var invMissingHw = 0;
             var invMissingHwDates = [];
             var invBillableCount = 0;
+
+            invoiceLogs.forEach(function(log) {
+                if (!log) return;
+                var dateText = log.ngay || "";
+                var cleanStr = dateText.split(" ")[0].trim();
+                
+                var rawStatus = log.trangThai || log.chuyenCan || log.attendance_status || log.attendance || log.status || "";
+                var normTt = String(rawStatus).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').trim();
+                
+                var isDaBu = (normTt.includes("da bu") || normTt.includes("hoc bu"));
+                var isAbsent = !isDaBu && (
+                    normTt.includes("nghi") || 
+                    normTt.includes("huy") || 
+                    normTt.includes("vang") || 
+                    normTt.includes("off") || 
+                    normTt.includes("khong hoc") ||
+                    normTt.includes("chua hoc") ||
+                    normTt.includes("tam hoan") ||
+                    normTt === "v" || 
+                    normTt === "n" || 
+                    normTt === "x"
+                );
+                var isPresent = !isAbsent;
+                
+                if (isDaBu) {
+                    invMakeup++;
+                    invBillableCount++;
+                } else if (isAbsent) {
+                    invAbsent++;
+                    invAbsentDates.push(cleanStr || ("Buổi " + (log.tuan || "")));
+                } else {
+                    invPresent++;
+                    invBillableCount++;
+                }
+
+                // CHỈ TÍNH BÀI TẬP VỀ NHÀ CHO CÁC BUỔI CÓ HỌC (LÊN LỚP HOẶC HỌC BÙ)
+                if (isPresent || isDaBu) {
+                    var btvnRaw = (log.danhGiaBTVN || log.btvn || "").trim();
+                    var btvn = btvnRaw.toLowerCase();
+                    if (btvn && btvn !== "-" && btvn !== "không có") {
+                        if (btvn.indexOf("trễ") !== -1 || btvn.indexOf("muộn") !== -1) {
+                            invLateHw++;
+                        }
+                        var pctMatch = btvn.match(/(\d+(\.\d+)?)\s*%/);
+                        if (pctMatch) {
+                            var pVal = parseFloat(pctMatch[1]);
+                            if (pVal >= 100) {
+                                invDoneHw++;
+                            } else {
+                                invMissingHw++;
+                                invMissingHwDates.push((cleanStr || ("Buổi " + (log.tuan || ""))) + " (" + btvnRaw + ")");
+                            }
+                        } else if (btvn.indexOf("thiếu") !== -1 || btvn.indexOf("không làm") !== -1 || btvn.indexOf("chưa làm") !== -1 || btvn.indexOf("chưa nộp") !== -1 || btvn.indexOf("chưa đạt") !== -1 || btvn === "không") {
+                            invMissingHw++;
+                            invMissingHwDates.push((cleanStr || ("Buổi " + (log.tuan || ""))) + " (" + btvnRaw + ")");
+                        } else if (btvn.indexOf("hoàn thành") !== -1 || btvn === "có" || btvn === "đạt" || btvn === "tốt" || btvn === "xuất sắc" || btvn.indexOf("phụ huynh") !== -1 || btvn.indexOf("nhắc") !== -1) {
+                            invDoneHw++;
+                        } else {
+                            invDoneHw++;
+                        }
+                    }
+                }
+            });
+
+            var elStudentName = document.getElementById('invStudentName');
+            if (elStudentName) elStudentName.innerText = (currentTutorStudent.ten || currentTutorStudent.student_name || currentTutorStudent.name || "Học sinh");
+
+            var elMonth = document.getElementById('invMonthDisplay');
+            if (elMonth) elMonth.innerHTML = '<i class="fa-solid fa-calendar-days"></i> KỲ HỌC THÁNG ' + (targetMonth + 1);
+
+            var elAttBadge = document.getElementById('invAttTotalBadge');
+            if (elAttBadge) elAttBadge.innerText = invBillableCount + " Buổi";
+            var elHwBadge = document.getElementById('invHwTotalBadge');
+            if (elHwBadge) elHwBadge.innerText = invBillableCount + " Buổi";
+
+            var elInvP = document.getElementById('invAttP');
+            if (elInvP) elInvP.innerText = invPresent;
+            var elInvA = document.getElementById('invAttA');
+            if (elInvA) elInvA.innerText = invAbsent;
+            var elInvB = document.getElementById('invAttB');
+            if (elInvB) elInvB.innerText = invMakeup;
+            var elInvDates = document.getElementById('invAbsentDates');
+            if (elInvDates) {
+                elInvDates.innerHTML = '<div><span>Nghỉ phép:</span> ' + (invAbsentDates.length > 0 ? invAbsentDates.join(", ") : "Không có") + '</div>';
+            }
+            
+            var elHwDone = document.getElementById('invHwDone');
+            if (elHwDone) elHwDone.innerText = invDoneHw;
+            var elHwLate = document.getElementById('invHwLate');
+            if (elHwLate) elHwLate.innerText = invLateHw;
+            var elHwMiss = document.getElementById('invHwMiss');
+            if (elHwMiss) elHwMiss.innerText = invMissingHw;
+            
+            var elHwMissDates = document.getElementById('invHwMissDates');
+            if (elHwMissDates) {
+                if (invMissingHwDates.length > 0) {
+                    elHwMissDates.innerHTML = '<div><span>Thiếu bài:</span> ' + invMissingHwDates.join(", ") + '</div>';
+                } else {
+                    elHwMissDates.innerHTML = '<div><span>Thiếu bài:</span> Không thiếu bài</div>';
+                }
+            }
+            
+            var billingType = currentTutorStudent.billing_type || currentTutorStudent.billingType || currentTutorStudent.billing_cycle || 'session';
+            var isMonthly = (billingType === 'month' || billingType === 'monthly');
+            
+            var feeStr = feePerClass.toLocaleString('vi-VN');
+            // Chỉ tính tiền cho các buổi thực sự chưa đóng (unpaidLogs) nằm trong invoiceLogs
+            var billableUnpaid = unpaidLogs.filter(function(l) {
+                return invoiceLogs.indexOf(l) !== -1;
+            }).length;
+            var invTotalAmount = isMonthly ? feePerClass : (billableUnpaid * feePerClass);
+            var totalStr = invTotalAmount.toLocaleString('vi-VN');
+            
+            var elFeeUnitLabel = document.getElementById('invFeeUnitLabel');
+            var elFeeUnitValue = document.getElementById('invFeeUnitValue');
+            var elCalcText = document.getElementById('invFeeCalcText');
+            var elCalcTotal = document.getElementById('invFeeCalcTotal');
+            var elGrandTotal = document.getElementById('invGrandTotal');
+            
+            if (isMonthly) {
+                if (elFeeUnitLabel) elFeeUnitLabel.innerText = "Hình thức thu học phí:";
+                if (elFeeUnitValue) elFeeUnitValue.innerText = "Trọn gói theo tháng";
+                if (elCalcText) elCalcText.innerText = "Kỳ học phí:";
+                if (elCalcTotal) elCalcTotal.innerText = "Tháng " + (targetMonth + 1);
+            } else {
+                if (elFeeUnitLabel) elFeeUnitLabel.innerText = "Đơn giá mỗi buổi học:";
+                if (elFeeUnitValue) elFeeUnitValue.innerText = feeStr + " VNĐ";
+                if (elCalcText) elCalcText.innerText = "Thời lượng học kỳ này:";
+                if (elCalcTotal) elCalcTotal.innerText = billableUnpaid + " buổi";
+            }
+            if (elGrandTotal) elGrandTotal.innerText = totalStr + " đ";
+            
+            var qrImg = document.getElementById('invQrImg');
+            var qrText = document.getElementById('invQrText');
+            if (qrImg && qrText) {
+                if (tutorDataGlobal && tutorDataGlobal.qrCode) {
+                    qrImg.src = tutorDataGlobal.qrCode;
+                    qrImg.style.display = "block";
+                    qrText.innerHTML = '<i class="fa-solid fa-qrcode"></i> Quét VietQR';
+                } else {
+                    qrImg.style.display = "none";
+                    qrText.innerText = "Chưa có mã QR thanh toán";
+                }
+            }
+            
+            // Update Textarea with prefilled text
+            var sName = currentTutorStudent.ten || currentTutorStudent.student_name || currentTutorStudent.name || "bé";
+            var ta = document.getElementById('invTextarea');
+            if (ta) {
+                if (isMonthly) {
+                    ta.innerHTML = "Dạ em chào anh/chị, em gửi anh/chị phiếu học tập tổng kết của bé <b>" + sName + "</b> ạ. Học phí kỳ này (Trọn gói tháng " + (targetMonth + 1) + ") là <b>" + totalStr + " VNĐ</b>. Anh/chị xem qua và quét mã QR chuyển khoản giúp em nhé ạ. Em cảm ơn anh/chị nhiều ạ!";
+                } else {
+                    ta.innerHTML = "Dạ em chào anh/chị, em gửi anh/chị phiếu học tập tổng kết của bé <b>" + sName + "</b> ạ. Học phí kỳ này là <b>" + totalStr + " VNĐ</b> (" + billableUnpaid + " buổi). Anh/chị xem qua và quét mã QR chuyển khoản giúp em nhé ạ. Em cảm ơn anh/chị nhiều ạ!";
+                }
+            }
+
+
             var invActualPaidCount = 0;
 
             invoiceLogs.forEach(function(log) {
