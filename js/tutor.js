@@ -3069,25 +3069,75 @@ function loadStudentSubmissions() {
 // Hàm tiện ích parse ngày/giờ dạng DD/MM/YYYY HH:mm:ss hoặc các chuẩn khác về timestamp
 function parseDateTimeString(str) {
     if (!str) return 0;
-    let d = new Date(str);
-    if (!isNaN(d.getTime())) return d.getTime();
+    if (typeof str === 'number') return str;
+    str = String(str).trim();
     
-    let parts = str.split(' ');
-    let dateParts = parts[0].split('/');
-    if (dateParts.length === 3) {
-        let day = parseInt(dateParts[0]);
-        let month = parseInt(dateParts[1]) - 1;
-        let year = parseInt(dateParts[2]);
-        let hour = 0, min = 0, sec = 0;
-        if (parts[1]) {
-            let timeParts = parts[1].split(':');
-            hour = parseInt(timeParts[0] || 0);
-            min = parseInt(timeParts[1] || 0);
-            sec = parseInt(timeParts[2] || 0);
+    // Tách các thành phần ngày và giờ
+    let parts = str.split(/\s+/);
+    let timePart = "";
+    let datePart = "";
+    
+    if (parts.length >= 2) {
+        if (parts[0].indexOf(':') !== -1) {
+            timePart = parts[0];
+            datePart = parts[1];
+        } else {
+            datePart = parts[0];
+            timePart = parts[1];
         }
-        return new Date(year, month, day, hour, min, sec).getTime();
+    } else {
+        if (parts[0].indexOf(':') !== -1) {
+            timePart = parts[0];
+        } else {
+            datePart = parts[0];
+        }
     }
-    return 0;
+    
+    let year = 1970, month = 0, day = 1;
+    let hour = 0, min = 0, sec = 0;
+    
+    // Phân tích datePart
+    if (datePart.indexOf('/') !== -1) {
+        let dp = datePart.split('/');
+        if (dp.length === 3) {
+            if (dp[0].length === 4) { // YYYY/MM/DD
+                year = parseInt(dp[0], 10);
+                month = parseInt(dp[1], 10) - 1;
+                day = parseInt(dp[2], 10);
+            } else { // DD/MM/YYYY
+                day = parseInt(dp[0], 10);
+                month = parseInt(dp[1], 10) - 1;
+                year = parseInt(dp[2], 10);
+            }
+        }
+    } else if (datePart.indexOf('-') !== -1) {
+        let dp = datePart.split('-');
+        if (dp.length === 3) {
+            if (dp[0].length === 4) { // YYYY-MM-DD
+                year = parseInt(dp[0], 10);
+                month = parseInt(dp[1], 10) - 1;
+                day = parseInt(dp[2], 10);
+            } else { // DD-MM-YYYY
+                day = parseInt(dp[0], 10);
+                month = parseInt(dp[1], 10) - 1;
+                year = parseInt(dp[2], 10);
+            }
+        }
+    } else {
+        let d = new Date(str);
+        if (!isNaN(d.getTime())) return d.getTime();
+    }
+    
+    // Phân tích timePart
+    if (timePart && timePart.indexOf(':') !== -1) {
+        let tp = timePart.split(':');
+        hour = parseInt(tp[0] || 0, 10);
+        min = parseInt(tp[1] || 0, 10);
+        sec = parseInt(tp[2] || 0, 10);
+    }
+    
+    let parsed = new Date(year, month, day, hour, min, sec);
+    return isNaN(parsed.getTime()) ? 0 : parsed.getTime();
 }
 
 var activeGradingSubId = "";
