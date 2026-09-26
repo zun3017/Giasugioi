@@ -872,33 +872,6 @@
                 // ==========================================
                 // BÀI TẬP ĐÃ GIAO CỦA GIA SƯ (DEMO)
                 // ==========================================
-                else if (functionName === 'uploadAssignedHomework' || functionName === 'assignHomework') {
-                    const [tutorPhone, studentName, title, releaseDate, fileBase64, fileName, mimeType, maBaiTap, externalLink] = args;
-                    if (!store.assignedHomework) store.assignedHomework = [];
-                    
-                    let fileUrl = externalLink || "";
-                    if (!fileUrl && fileBase64) {
-                        fileUrl = "data:" + (mimeType || "image/jpeg") + ";base64," + fileBase64;
-                    }
-                    
-                    const newHw = {
-                        rowIndex: store.assignedHomework.length + 1,
-                        hwId: "HW_DEMO_" + Date.now(),
-                        studentName: studentName || "Học sinh",
-                        tutorPhone: tutorPhone || "0123456789",
-                        homework_code: maBaiTap || "",
-                        title: title || "Bài tập mới",
-                        releaseDate: releaseDate || (typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(0) : "Hôm nay"),
-                        fileUrl: fileUrl,
-                        fileName: fileName || (title + ".pdf"),
-                        externalLink: externalLink || "",
-                        status: "Active"
-                    };
-                    
-                    store.assignedHomework.unshift(newHw);
-                    saveDemoStore(store);
-                    result = { success: true, hwId: newHw.hwId, fileUrl: fileUrl };
-                }
 
                 else if (functionName === 'getAssignedHomework') {
                     const studentName = String(args[0] || "").trim().toLowerCase();

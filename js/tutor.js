@@ -30,7 +30,9 @@ function formatScheduleCell(val) {
             if (headerEl) headerEl.style.display = 'none';
             
             document.getElementById('tutorDashboardBox').style.display = 'block';
-            document.getElementById('tutorStudentDetail').style.display = 'none'; // Đảm bảo ẩn chi tiết khi mới đăng nhập
+            if (!currentTutorStudent) {
+                document.getElementById('tutorStudentDetail').style.display = 'none';
+            }
             document.getElementById('tutorNameDisplay').innerText = "Xin chào, Gia sư " + data.tutorName;
             
             // Hiển thị thông báo chạy chữ từ Admin
@@ -150,9 +152,14 @@ function formatScheduleCell(val) {
             // Load ý kiến phản hồi của phụ huynh
             loadTutorFeedbacks();
 
-            // Tự động chọn học sinh đầu tiên để hiển thị chi tiết biểu đồ & lịch sử
+            // Khôi phục học sinh đang chọn nếu có, hoặc chọn học sinh đầu tiên
             if (data.students && data.students.length > 0) {
-                selectTutorStudent(0);
+                var selectIdx = 0;
+                if (currentTutorStudent) {
+                    var curIdx = data.students.findIndex(function(s) { return s.name === currentTutorStudent.name; });
+                    if (curIdx !== -1) selectIdx = curIdx;
+                }
+                selectTutorStudent(selectIdx);
             }
         }
 
@@ -2425,7 +2432,7 @@ function switchTutorHwSubTab(subTab) {
 // 5. Chọn và Hủy file bài tập giao
 function handleTutorHwFileSelect(event) {
     var files = event.target.files;
-    if (files.length === 0) return;
+    if (!files || files.length === 0) return;
     
     var file = files[0];
     // Giới hạn dung lượng 30MB
@@ -2435,10 +2442,25 @@ function handleTutorHwFileSelect(event) {
     }
     
     currentTutorHwFile = file;
-    document.getElementById('tutorSelectedFileName').innerText = file.name + " (" + formatBytes(file.size) + ")";
-    document.getElementById('tutorSelectedFileBox').style.display = 'flex';
-    document.getElementById('tutorHwUploadText').innerText = "Đã chọn 1 file";
+    var fileNameEl = document.getElementById('tutorSelectedFileName');
+    if (fileNameEl) fileNameEl.innerText = file.name + " (" + formatBytes(file.size) + ")";
+    var fileBoxEl = document.getElementById('tutorSelectedFileBox');
+    if (fileBoxEl) fileBoxEl.style.display = 'flex';
+    var uploadTextEl = document.getElementById('tutorHwUploadText');
+    if (uploadTextEl) uploadTextEl.innerText = "Đã chọn: " + file.name;
 }
+
+function handleTutorHwDrop(event) {
+    event.preventDefault();
+    event.stopPropagation();
+    if (event.dataTransfer && event.dataTransfer.files && event.dataTransfer.files.length > 0) {
+        handleTutorHwFileSelect({ target: { files: event.dataTransfer.files } });
+    }
+}
+
+// Ngăn trình duyệt tự động mở file khi kéo thả trượt ra ngoài vùng upload
+window.addEventListener('dragover', function(e) { e.preventDefault(); }, false);
+window.addEventListener('drop', function(e) { e.preventDefault(); }, false);
 
 function clearTutorSelectedFile() {
     currentTutorHwFile = null;
