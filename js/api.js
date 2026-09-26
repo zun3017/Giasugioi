@@ -38,6 +38,9 @@
             store.assignedHomework = (initial && initial.assignedHomework) ? JSON.parse(JSON.stringify(initial.assignedHomework)) : [];
             saveDemoStore(store);
         }
+        if (store && purgeExpiredDemoSubmissions(store)) {
+            saveDemoStore(store);
+        }
         return store;
     }
 
@@ -86,6 +89,53 @@
         let dStrFormatted = String(day).padStart(2, '0') + '/' + String(month).padStart(2, '0');
         return dayName + ', ' + dStrFormatted;
     };
+
+    function isOlderThan10Days(dateVal) {
+        if (!dateVal) return false;
+        let ts = 0;
+        if (typeof dateVal === 'number') {
+            ts = dateVal;
+        } else {
+            let str = String(dateVal).trim();
+            let parts = str.split(/\s+/);
+            let datePart = parts.find(p => p.includes('/') || p.includes('-')) || parts[0];
+            if (datePart && datePart.includes('/')) {
+                let dp = datePart.split('/');
+                if (dp.length === 3) {
+                    if (dp[0].length === 4) ts = new Date(parseInt(dp[0], 10), parseInt(dp[1], 10) - 1, parseInt(dp[2], 10)).getTime();
+                    else ts = new Date(parseInt(dp[2], 10), parseInt(dp[1], 10) - 1, parseInt(dp[0], 10)).getTime();
+                }
+            } else if (datePart && datePart.includes('-')) {
+                let dp = datePart.split('-');
+                if (dp.length === 3) {
+                    if (dp[0].length === 4) ts = new Date(parseInt(dp[0], 10), parseInt(dp[1], 10) - 1, parseInt(dp[2], 10)).getTime();
+                    else ts = new Date(parseInt(dp[2], 10), parseInt(dp[1], 10) - 1, parseInt(dp[0], 10)).getTime();
+                }
+            } else {
+                let d = new Date(str);
+                if (!isNaN(d.getTime())) ts = d.getTime();
+            }
+        }
+        if (!ts) return false;
+        return (Date.now() - ts) > (10 * 24 * 60 * 60 * 1000);
+    }
+
+    function purgeExpiredDemoSubmissions(store) {
+        if (!store || !Array.isArray(store.submissions)) return false;
+        let originalLen = store.submissions.length;
+        store.submissions = store.submissions.filter(s => {
+            if (s.status === 'Deleted') {
+                let delTime = s.deleted_at || s.timestamp || s.submissionDate;
+                if (s.comment && s.comment.includes('DELETED_AT:')) {
+                    let m = s.comment.match(/DELETED_AT:(\d+)/);
+                    if (m) delTime = parseInt(m[1], 10);
+                }
+                return !isOlderThan10Days(delTime);
+            }
+            return true;
+        });
+        return store.submissions.length !== originalLen;
+    }
 
     // Google Apps Script Run Shim
     class MockGoogleScriptRunInstance {
@@ -564,6 +614,9 @@
                     const maBaiTap = String(args[0] || "");
                     const studentName = String(args[1] || "");
                     
+                    if (purgeExpiredDemoSubmissions(store)) {
+                        saveDemoStore(store);
+                    }
                     let subs = (store.submissions && store.submissions.length > 0) ? store.submissions : [
                         {
                             subId: "SUB_01",
@@ -608,6 +661,18 @@
                             status: "Active"
                         }
                     ];
+
+                    subs = subs.filter(s => {
+                        if (s.status === 'Deleted') {
+                            let delTime = s.deleted_at || s.timestamp || s.submissionDate;
+                            if (s.comment && s.comment.includes('DELETED_AT:')) {
+                                let m = s.comment.match(/DELETED_AT:(\d+)/);
+                                if (m) delTime = parseInt(m[1], 10);
+                            }
+                            return !isOlderThan10Days(delTime);
+                        }
+                        return true;
+                    });
 
                     if (studentName) {
                         let filtered = subs.filter(s => s.studentName.toLowerCase().includes(studentName.toLowerCase()));
@@ -698,7 +763,20 @@
                     let target = store.students.find(s => normalizePhone(s.phone) === norm || s.name.toLowerCase().includes(code.toLowerCase()));
                     if (!target) target = store.students[1] || store.students[0];
 
-                    let allSubs = store.submissions || [];
+                    if (purgeExpiredDemoSubmissions(store)) {
+                        saveDemoStore(store);
+                    }
+                    let allSubs = (store.submissions || []).filter(s => {
+                        if (s.status === 'Deleted') {
+                            let delTime = s.deleted_at || s.timestamp || s.submissionDate;
+                            if (s.comment && s.comment.includes('DELETED_AT:')) {
+                                let m = s.comment.match(/DELETED_AT:(\d+)/);
+                                if (m) delTime = parseInt(m[1], 10);
+                            }
+                            return !isOlderThan10Days(delTime);
+                        }
+                        return true;
+                    });
                     let mySubs = allSubs.filter(s => normalizePhone(s.studentPhone) === normalizePhone(target.phone) || s.studentName.toLowerCase() === target.name.toLowerCase());
                     if (mySubs.length === 0 && allSubs.length > 0) {
                         mySubs = [allSubs[0]];
@@ -846,6 +924,8 @@
                             let s = store.submissions[i];
                             if (String(s.rowIndex) === String(rowIndex) || String(s.subId) === String(rowIndex)) {
                                 s.status = "Deleted";
+                                s.deleted_at = Date.now();
+                                s.comment = `DELETED_AT:${Date.now()}`;
                                 break;
                             }
                         }
@@ -861,6 +941,8 @@
                             let s = store.submissions[i];
                             if (String(s.rowIndex) === String(rowIndex) || String(s.subId) === String(rowIndex)) {
                                 s.status = "Active";
+                                delete s.deleted_at;
+                                s.comment = "";
                                 break;
                             }
                         }
