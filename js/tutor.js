@@ -1810,8 +1810,8 @@ function buildTuitionModalForm(st, studentLogs) {
 
     // Box 1: Thông tin học sinh (2 Cột Toggles)
     html += '<div class="tuition-card-box">';
-    html += '<div style="font-size: 15px; font-weight: 700; color: #2D1527; margin-bottom: 2px;">Thông tin học sinh</div>';
-    html += '<div style="font-size: 12px; color: #8E7B88; margin-bottom: 12px;">Chọn thông tin hiển thị trên phiếu</div>';
+    html += '<div style="font-size: 15px; font-weight: 700; color: #0F172A; margin-bottom: 2px;">Thông tin học sinh</div>';
+    html += '<div style="font-size: 12px; color: #64748B; margin-bottom: 12px;">Chọn thông tin hiển thị trên phiếu</div>';
     html += '<div class="tuition-toggle-grid">';
 
     // Card 1: Học sinh
@@ -1925,19 +1925,19 @@ function buildTuitionModalForm(st, studentLogs) {
     html += '</div>'; // End .tuition-toggle-grid
 
     // Input for discount
-    html += '<div id="wrapperDiscountInput" style="display: ' + (toggles.discount === true ? 'block' : 'none') + '; margin-top: 10px; padding: 10px 12px; background: #FAF7F8; border: 1px solid #EADFE3; border-radius: 10px;">';
-    html += '<div style="font-size: 11px; font-weight: 600; color: #8E7B88; margin-bottom: 4px;">Số tiền giảm trừ học phí:</div>';
+    html += '<div id="wrapperDiscountInput" style="display: ' + (toggles.discount === true ? 'block' : 'none') + '; margin-top: 10px; padding: 10px 12px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px;">';
+    html += '<div style="font-size: 11px; font-weight: 600; color: #64748B; margin-bottom: 4px;">Số tiền giảm trừ học phí:</div>';
     html += '<div style="display: flex; align-items: center; gap: 8px;">';
-    html += '<input type="number" id="inputDiscountFee" min="0" step="10000" value="' + (state.discountAmount || 0) + '" placeholder="0" oninput="onTuitionFeeAdjustmentChange()" style="flex: 1; background: #FFFFFF; border: 1px solid #EADFE3; border-radius: 8px; padding: 6px 10px; color: #EA580C; font-weight: 700; font-size: 13px; outline: none;">';
-    html += '<span style="font-size: 12px; color: #8E7B88; font-weight: 600;">VNĐ</span>';
+    html += '<input type="number" id="inputDiscountFee" min="0" step="10000" value="' + (state.discountAmount || 0) + '" placeholder="0" oninput="onTuitionFeeAdjustmentChange()" style="flex: 1; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 6px 10px; color: #EA580C; font-weight: 700; font-size: 13px; outline: none;">';
+    html += '<span style="font-size: 12px; color: #64748B; font-weight: 600;">VNĐ</span>';
     html += '</div></div>';
 
     // Input for surcharge
-    html += '<div id="wrapperSurchargeInput" style="display: ' + (toggles.surcharge === true ? 'block' : 'none') + '; margin-top: 10px; padding: 10px 12px; background: #FAF7F8; border: 1px solid #EADFE3; border-radius: 10px;">';
-    html += '<div style="font-size: 11px; font-weight: 600; color: #8E7B88; margin-bottom: 4px;">Số tiền phụ thu thêm:</div>';
+    html += '<div id="wrapperSurchargeInput" style="display: ' + (toggles.surcharge === true ? 'block' : 'none') + '; margin-top: 10px; padding: 10px 12px; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px;">';
+    html += '<div style="font-size: 11px; font-weight: 600; color: #64748B; margin-bottom: 4px;">Số tiền phụ thu thêm:</div>';
     html += '<div style="display: flex; align-items: center; gap: 8px;">';
-    html += '<input type="number" id="inputSurchargeFee" min="0" step="10000" value="' + (state.surchargeAmount || 0) + '" placeholder="0" oninput="onTuitionFeeAdjustmentChange()" style="flex: 1; background: #FFFFFF; border: 1px solid #EADFE3; border-radius: 8px; padding: 6px 10px; color: #16A34A; font-weight: 700; font-size: 13px; outline: none;">';
-    html += '<span style="font-size: 12px; color: #8E7B88; font-weight: 600;">VNĐ</span>';
+    html += '<input type="number" id="inputSurchargeFee" min="0" step="10000" value="' + (state.surchargeAmount || 0) + '" placeholder="0" oninput="onTuitionFeeAdjustmentChange()" style="flex: 1; background: #FFFFFF; border: 1px solid #E2E8F0; border-radius: 8px; padding: 6px 10px; color: #16A34A; font-weight: 700; font-size: 13px; outline: none;">';
+    html += '<span style="font-size: 12px; color: #64748B; font-weight: 600;">VNĐ</span>';
     html += '</div></div>';
 
     html += '</div>'; // End Box 1
@@ -1945,25 +1945,25 @@ function buildTuitionModalForm(st, studentLogs) {
     // Box 2: Thông tin kỳ học
     html += '<div class="tuition-card-box">';
     html += '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 12px;">';
-    html += '<span style="background: #8E284D; color: #FFFFFF; font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 6px;">01</span>';
+    html += '<span style="background: #7C3AED; color: #FFFFFF; font-size: 11px; font-weight: 800; padding: 2px 7px; border-radius: 6px;">01</span>';
     html += '<div>';
-    html += '<div style="font-size: 15px; font-weight: 700; color: #2D1527;">Thông tin kỳ học</div>';
-    html += '<div style="font-size: 12px; color: #8E7B88; margin-top: 1px;">Chọn khoảng thời gian và tiêu đề của phiếu</div>';
+    html += '<div style="font-size: 15px; font-weight: 700; color: #0F172A;">Thông tin kỳ học</div>';
+    html += '<div style="font-size: 12px; color: #64748B; margin-top: 1px;">Chọn khoảng thời gian và tiêu đề của phiếu</div>';
     html += '</div></div>';
 
     html += '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">';
     html += '<div>';
-    html += '<label style="display: block; font-size: 11.5px; color: #8E7B88; margin-bottom: 4px; font-weight: 600;">Từ ngày:</label>';
-    html += '<input type="date" id="tuitionPeriodStartDate" value="' + (state.startDate || '') + '" onchange="onTuitionPeriodDateChange()" style="width: 100%; background: #FAF7F8; border: 1px solid #EADFE3; border-radius: 10px; padding: 8px 10px; color: #2D1527; font-size: 12.5px; outline: none; box-sizing: border-box;">';
+    html += '<label style="display: block; font-size: 11.5px; color: #64748B; margin-bottom: 4px; font-weight: 600;">Từ ngày:</label>';
+    html += '<input type="date" id="tuitionPeriodStartDate" value="' + (state.startDate || '') + '" onchange="onTuitionPeriodDateChange()" style="width: 100%; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 10px; color: #0F172A; font-size: 12.5px; outline: none; box-sizing: border-box;">';
     html += '</div>';
     html += '<div>';
-    html += '<label style="display: block; font-size: 11.5px; color: #8E7B88; margin-bottom: 4px; font-weight: 600;">Đến ngày:</label>';
-    html += '<input type="date" id="tuitionPeriodEndDate" value="' + (state.endDate || '') + '" onchange="onTuitionPeriodDateChange()" style="width: 100%; background: #FAF7F8; border: 1px solid #EADFE3; border-radius: 10px; padding: 8px 10px; color: #2D1527; font-size: 12.5px; outline: none; box-sizing: border-box;">';
+    html += '<label style="display: block; font-size: 11.5px; color: #64748B; margin-bottom: 4px; font-weight: 600;">Đến ngày:</label>';
+    html += '<input type="date" id="tuitionPeriodEndDate" value="' + (state.endDate || '') + '" onchange="onTuitionPeriodDateChange()" style="width: 100%; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 10px; color: #0F172A; font-size: 12.5px; outline: none; box-sizing: border-box;">';
     html += '</div></div>';
 
     html += '<div>';
-    html += '<label style="display: block; font-size: 11.5px; color: #8E7B88; margin-bottom: 4px; font-weight: 600;">Tiêu đề kỳ học:</label>';
-    html += '<input type="text" id="tuitionPeriodTitle" value="' + (state.customTitle || '') + '" placeholder="Ví dụ: HỌC PHÍ THÁNG 8/2026" oninput="onTuitionPeriodTitleChange()" style="width: 100%; background: #FAF7F8; border: 1px solid #EADFE3; border-radius: 10px; padding: 8px 12px; color: #2D1527; font-weight: 700; font-size: 13px; outline: none; box-sizing: border-box;">';
+    html += '<label style="display: block; font-size: 11.5px; color: #64748B; margin-bottom: 4px; font-weight: 600;">Tiêu đề kỳ học:</label>';
+    html += '<input type="text" id="tuitionPeriodTitle" value="' + (state.customTitle || '') + '" placeholder="Ví dụ: HỌC PHÍ THÁNG 8/2026" oninput="onTuitionPeriodTitleChange()" style="width: 100%; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 12px; color: #0F172A; font-weight: 700; font-size: 13px; outline: none; box-sizing: border-box;">';
     html += '</div>';
 
     html += '</div>'; // End Box 2
@@ -2190,72 +2190,72 @@ function renderTuitionLivePreview() {
             if (sp.length >= 2) {
                 chipLabel = String(sp[0]).padStart(2, '0') + '/' + String(sp[1]).padStart(2, '0');
             }
-            dateChipsHtml += '<span style="background: #F8E9EE; color: #8E284D; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">' + chipLabel + '</span>';
+            dateChipsHtml += '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">' + chipLabel + '</span>';
         });
     }
     if (!dateChipsHtml) {
-        dateChipsHtml = '<span style="background: #F8E9EE; color: #8E284D; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">07/08</span>' +
-            '<span style="background: #F8E9EE; color: #8E284D; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">10/08</span>' +
-            '<span style="background: #F8E9EE; color: #8E284D; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">14/08</span>' +
-            '<span style="background: #F8E9EE; color: #8E284D; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">17/08</span>' +
-            '<span style="background: #F8E9EE; color: #8E284D; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">21/08</span>' +
-            '<span style="background: #F8E9EE; color: #8E284D; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">24/08</span>' +
-            '<span style="background: #F8E9EE; color: #8E284D; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">28/08</span>' +
-            '<span style="background: #F8E9EE; color: #8E284D; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">31/08</span>';
+        dateChipsHtml = '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">07/08</span>' +
+            '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">10/08</span>' +
+            '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">14/08</span>' +
+            '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">17/08</span>' +
+            '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">21/08</span>' +
+            '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">24/08</span>' +
+            '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">28/08</span>' +
+            '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">31/08</span>';
     }
 
     var html = '';
 
     if (tmpl === 2) {
-        // ==================== MẪU 2: GIAO DIỆN 2 CỘT & NHẬN XÉT (ẢNH 1) ====================
+        // ==================== MẪU 2: GIAO DIỆN 2 CỘT & NHẬN XÉT (THEME TÍM MẪU 1) ====================
         html += '<div id="tuitionInvoiceCard" class="tuition-receipt-card">';
         
         // 1. Top row: GV và SĐT
-        html += '<div style="display: flex; justify-content: space-between; align-items: center; font-size: 12.5px; font-weight: 700; color: #2D1527; margin-bottom: 12px; padding-bottom: 4px;">';
-        html += '<span>GV. ' + tutorName + '</span>';
-        html += '<span>SĐT: ' + tutorPhone + '</span>';
+        html += '<div style="display: flex; justify-content: space-between; align-items: center; font-size: 12px; font-weight: 700; color: #1E293B; margin-bottom: 12px; padding-bottom: 6px; border-bottom: 1px dashed #E2E8F0;">';
+        html += '<span><i class="fa-solid fa-chalkboard-user" style="color: #7C3AED; margin-right: 4px;"></i> GV. ' + tutorName + '</span>';
+        html += '<span><i class="fa-solid fa-phone" style="color: #7C3AED; margin-right: 4px;"></i> SĐT: ' + tutorPhone + '</span>';
         html += '</div>';
 
         // 2. Centered Title
         html += '<div style="text-align: center; margin-bottom: 14px;">';
-        html += '<h2 style="font-size: 20px; font-weight: 900; color: #8E284D; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">' + periodTitle + '</h2>';
+        html += '<h2 style="font-size: 20px; font-weight: 900; color: #6D28D9; margin: 0; text-transform: uppercase; letter-spacing: 0.5px;">' + periodTitle + '</h2>';
         html += '</div>';
 
         // 3. 2-Column Section
         html += '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-bottom: 12px;">';
 
         // Left Box: THÔNG TIN HỌC SINH
-        html += '<div style="background: #FAF7F8; border: 1px solid #F1E5E9; border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; gap: 7px;">';
-        html += '<div style="font-size: 11px; font-weight: 800; color: #8E7B88; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">THÔNG TIN HỌC SINH</div>';
+        html += '<div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 12px 14px; display: flex; flex-direction: column; gap: 7px;">';
+        html += '<div style="font-size: 10.5px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 2px;"><i class="fa-solid fa-user-graduate" style="color: #7C3AED; margin-right: 4px;"></i> THÔNG TIN HỌC SINH</div>';
 
         if (toggles.student !== false) {
             html += '<div style="display: flex; justify-content: space-between; font-size: 12px;">';
-            html += '<span style="color: #8E7B88;">Họ và tên:</span>';
-            html += '<b style="color: #2D1527;">' + st.name + '</b>';
+            html += '<span style="color: #64748B;">Họ và tên:</span>';
+            html += '<b style="color: #0F172A;">' + st.name + '</b>';
             html += '</div>';
         }
         if (toggles.class !== false) {
             html += '<div style="display: flex; justify-content: space-between; font-size: 12px;">';
-            html += '<span style="color: #8E7B88;">Lớp:</span>';
-            html += '<b style="color: #2D1527;">' + classSubjectStr + '</b>';
+            html += '<span style="color: #64748B;">Lớp:</span>';
+            html += '<b style="color: #0F172A;">' + classSubjectStr + '</b>';
             html += '</div>';
         }
         if (toggles.fee !== false) {
             html += '<div style="display: flex; justify-content: space-between; font-size: 12px;">';
-            html += '<span style="color: #8E7B88;">Học phí:</span>';
-            html += '<b style="color: #2D1527;">' + unitFeeStr + '</b>';
+            html += '<span style="color: #64748B;">Học phí:</span>';
+            html += '<b style="color: #0F172A;">' + unitFeeStr + '</b>';
             html += '</div>';
         }
         if (toggles.sessions !== false) {
             html += '<div style="display: flex; justify-content: space-between; font-size: 12px;">';
-            html += '<span style="color: #8E7B88;">Buổi học:</span>';
-            html += '<b style="color: #2D1527;">' + invBillableCount + '</b>';
+            html += '<span style="color: #64748B;">Buổi học:</span>';
+            html += '<b style="color: #0F172A;">' + invBillableCount + '</b>';
             html += '</div>';
         }
         if (toggles.hours !== false) {
             html += '<div style="display: flex; justify-content: space-between; font-size: 12px;">';
-            html += '<span style="color: #8E7B88;">Giờ học:</span>';
-            html += '<b style="color: #2D1527;">' + totalHours + ' giờ</b>';
+            html += '<span style="color: #64748B;">Giờ học:</span>';
+            html += '<b style="color: #0F172A;">' + totalHours + ' giờ</b>';
             html += '</div>';
         }
         if (toggles.discount && discount > 0) {
@@ -2272,7 +2272,7 @@ function renderTuitionLivePreview() {
         }
         if (toggles.dates !== false) {
             html += '<div style="margin-top: 4px;">';
-            html += '<div style="font-size: 11px; color: #8E7B88; margin-bottom: 5px;">Ngày học:</div>';
+            html += '<div style="font-size: 11px; color: #64748B; margin-bottom: 5px; font-weight: 600;">Ngày học:</div>';
             html += '<div style="display: flex; flex-wrap: wrap; gap: 4px;">';
             html += dateChipsHtml;
             html += '</div></div>';
@@ -2281,31 +2281,31 @@ function renderTuitionLivePreview() {
         html += '</div>'; // End Left Box
 
         // Right Box: TỔNG HỌC PHÍ & QR
-        html += '<div style="background: #FAF7F8; border: 1px solid #F1E5E9; border-radius: 14px; padding: 12px 14px; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">';
+        html += '<div style="background: #FAF5FF; border: 1px solid #EDE9FE; border-radius: 16px; padding: 12px 14px; display: flex; flex-direction: column; align-items: center; justify-content: space-between;">';
         html += '<div style="width: 100%; text-align: left;">';
-        html += '<div style="font-size: 11px; font-weight: 800; color: #8E7B88; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 2px;">TỔNG HỌC PHÍ</div>';
-        html += '<div style="font-size: 22px; font-weight: 900; color: #2D1527; margin-top: 2px;">' + grandTotalStr + '</div>';
+        html += '<div style="font-size: 10.5px; font-weight: 800; color: #4C1D95; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 2px;"><i class="fa-solid fa-coins" style="color: #7C3AED; margin-right: 4px;"></i> TỔNG HỌC PHÍ</div>';
+        html += '<div style="font-size: 22px; font-weight: 900; color: #6D28D9; margin-top: 2px; letter-spacing: -0.5px;">' + grandTotalStr + '</div>';
         html += '</div>';
 
         if (toggles.qr !== false) {
             html += '<div style="margin: 6px 0; text-align: center;">';
-            html += '<img src="' + qrImgSrc + '" style="width: 125px; height: 125px; object-fit: contain; border-radius: 8px; border: 1px solid #EADFE3; background: #FFF; padding: 4px; box-sizing: border-box;" alt="VietQR" crossorigin="anonymous">';
+            html += '<img src="' + qrImgSrc + '" style="width: 125px; height: 125px; object-fit: contain; border-radius: 10px; border: 1px solid #DDD6FE; background: #FFF; padding: 4px; box-sizing: border-box;" alt="VietQR" crossorigin="anonymous">';
             html += '</div>';
         }
 
-        html += '<div style="font-size: 11px; color: #5A4351; text-align: left; width: 100%; line-height: 1.55;">';
-        html += '<div><span style="color: #8E7B88;">Ngân hàng:</span> <b>' + bankName + '</b></div>';
-        html += '<div><span style="color: #8E7B88;">Số TK:</span> <b style="color: #8E284D;">' + bankAcc + '</b></div>';
-        html += '<div><span style="color: #8E7B88;">Chủ TK:</span> <b>' + tutorName.toUpperCase() + '</b></div>';
+        html += '<div style="font-size: 11px; color: #475569; text-align: left; width: 100%; line-height: 1.55;">';
+        html += '<div><span style="color: #64748B;">Ngân hàng:</span> <b style="color: #0F172A;">' + bankName + '</b></div>';
+        html += '<div><span style="color: #64748B;">Số TK:</span> <b style="color: #6D28D9; font-weight: 800;">' + bankAcc + '</b></div>';
+        html += '<div><span style="color: #64748B;">Chủ TK:</span> <b style="color: #0F172A;">' + tutorName.toUpperCase() + '</b></div>';
         html += '</div>';
 
         html += '</div>'; // End Right Box
         html += '</div>'; // End 2-Column Section
 
         // 4. Bottom Box: NHẬN XÉT HỌC TẬP
-        html += '<div style="background: #FAF7F8; border: 1px solid #F1E5E9; border-radius: 14px; padding: 12px 14px;">';
-        html += '<div style="font-size: 11px; font-weight: 800; color: #8E7B88; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px;">NHẬN XÉT HỌC TẬP</div>';
-        html += '<div id="tuitionRemarksText" contenteditable="true" style="font-size: 11.5px; color: #2D1527; line-height: 1.6; outline: none;">';
+        html += '<div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 12px 14px;">';
+        html += '<div style="font-size: 10.5px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px;"><i class="fa-solid fa-comment-dots" style="color: #7C3AED; margin-right: 4px;"></i> NHẬN XÉT HỌC TẬP</div>';
+        html += '<div id="tuitionRemarksText" contenteditable="true" style="font-size: 11.5px; color: #334155; line-height: 1.6; outline: none;">';
         html += '<div>• <b>Tổng quan:</b> Nắm vững kiến thức trọng tâm, tích cực làm bài tập trên lớp.</div>';
         html += '<div>• <b>Đại số:</b> Kỹ năng biến đổi biểu thức tốt, cần cẩn thận hơn ở các bước tính toán cuối.</div>';
         html += '<div>• <b>Hình học:</b> Nắm chắc các định lý tam giác đồng dạng, trình bày bài hình rõ ràng, mạch lạc.</div>';

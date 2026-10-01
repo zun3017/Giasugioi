@@ -1733,14 +1733,14 @@
             max-width: 1100px;
             min-width: 320px;
             max-height: 92vh;
-            background: #FAF7F8;
-            border: 1px solid #EADFE3;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
             border-radius: 20px;
             box-shadow: 0 25px 70px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            color: #2D1527;
+            color: #0F172A;
             padding: 0 !important;
             box-sizing: border-box;
             margin: auto;
@@ -1748,11 +1748,11 @@
         }
         .tuition-modal-header {
             padding: 16px 24px;
-            border-bottom: 1px solid #EADFE3;
+            border-bottom: 1px solid #E2E8F0;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: #FAF7F8;
+            background: #F8FAFC;
             flex-wrap: wrap;
             gap: 12px;
             box-sizing: border-box;
@@ -1761,7 +1761,7 @@
             background: none;
             border: none;
             font-size: 22px;
-            color: #8E7B88;
+            color: #64748B;
             cursor: pointer;
             width: 32px;
             height: 32px;
@@ -1772,30 +1772,30 @@
             transition: all 0.2s;
         }
         .tuition-modal-close:hover {
-            background: #F0E6EA;
-            color: #2D1527;
+            background: #E2E8F0;
+            color: #0F172A;
         }
         .tuition-modal-body-grid {
             display: grid;
             grid-template-columns: 48% 52%;
             flex: 1;
             overflow: hidden;
-            background: #FAF7F8;
+            background: #F8FAFC;
             box-sizing: border-box;
         }
         .tuition-col-left {
             padding: 18px 20px;
             overflow-y: auto;
             max-height: calc(92vh - 135px);
-            border-right: 1px solid #EADFE3;
+            border-right: 1px solid #E2E8F0;
             box-sizing: border-box;
-            background: #FAF7F8;
+            background: #F8FAFC;
         }
         .tuition-col-right {
             padding: 18px 20px;
             overflow-y: auto;
             max-height: calc(92vh - 135px);
-            background: #FAF7F8;
+            background: #F8FAFC;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
@@ -1803,8 +1803,8 @@
         }
         .tuition-modal-footer {
             padding: 12px 24px;
-            border-top: 1px solid #EADFE3;
-            background: #FAF7F8;
+            border-top: 1px solid #E2E8F0;
+            background: #F8FAFC;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -1825,39 +1825,40 @@
             box-sizing: border-box;
             padding: 8px 16px;
             background: #FFFFFF;
-            border: 1px solid #E2D4D8;
-            color: #4A3A45;
+            border: 1px solid #CBD5E1;
+            color: #334155;
         }
         .btn-tuition-action:hover {
             transform: translateY(-1px);
-            background: #F8F1F4;
+            background: #F1F5F9;
         }
         .btn-tuition-primary {
-            background: #8E284D !important;
-            border: 1px solid #8E284D !important;
+            background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
+            border: 1px solid #6D28D9 !important;
             color: #FFFFFF !important;
             font-weight: 700 !important;
-            box-shadow: 0 3px 10px rgba(142, 40, 77, 0.25) !important;
+            box-shadow: 0 4px 12px rgba(124, 58, 237, 0.25) !important;
         }
         .btn-tuition-primary:hover {
-            background: #7A2141 !important;
+            background: linear-gradient(135deg, #6D28D9 0%, #5B21B6 100%) !important;
+            transform: translateY(-1px);
         }
         .btn-template-pill {
             padding: 5px 14px;
             border-radius: 20px;
             font-size: 12px;
             font-weight: 600;
-            border: 1px solid #E2D4D8;
+            border: 1px solid #E2E8F0;
             cursor: pointer;
             transition: all 0.2s ease;
             background: transparent;
-            color: #8E7B88;
+            color: #64748B;
         }
         .btn-template-pill.active {
-            background: #8E284D !important;
+            background: #7C3AED !important;
             color: #FFFFFF !important;
-            border-color: #8E284D !important;
-            box-shadow: 0 2px 8px rgba(142, 40, 77, 0.25);
+            border-color: #7C3AED !important;
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.25);
         }
         /* Tuition Receipt Preview Card */
         .tuition-receipt-card {
@@ -1865,19 +1866,28 @@
             max-width: 480px;
             margin: 0 auto;
             background: #FFFFFF;
-            border: 1px solid #EADFE3;
-            border-radius: 18px;
-            padding: 20px 18px;
-            box-shadow: 0 8px 25px rgba(142, 40, 77, 0.05);
+            border: 1px solid #E2E8F0;
+            border-radius: 24px;
+            padding: 24px 20px 20px 20px;
+            box-shadow: 0 20px 50px -10px rgba(109, 40, 217, 0.08), 0 0 0 1px rgba(0, 0, 0, 0.04);
             box-sizing: border-box;
             font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-            color: #2D1527;
+            color: #0F172A;
+            position: relative;
+            overflow: hidden;
+        }
+        .tuition-receipt-card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0;
+            height: 6px;
+            background: linear-gradient(90deg, #8E4DFF 0%, #3B82F6 50%, #10B981 100%);
         }
 
         /* 2-column Toggle Card Grid */
         .tuition-card-box {
             background: #FFFFFF;
-            border: 1px solid #F1E5E9;
+            border: 1px solid #E2E8F0;
             border-radius: 16px;
             padding: 16px 18px;
             margin-bottom: 14px;
@@ -1890,7 +1900,7 @@
         }
         .tuition-toggle-card {
             background: #FFFFFF;
-            border: 1px solid #F1E5E9;
+            border: 1px solid #E2E8F0;
             border-radius: 12px;
             padding: 10px 14px;
             display: flex;
@@ -1900,18 +1910,18 @@
             box-sizing: border-box;
         }
         .tuition-toggle-card:hover {
-            border-color: #E2CDD5;
-            box-shadow: 0 2px 8px rgba(142, 40, 77, 0.04);
+            border-color: #CBD5E1;
+            box-shadow: 0 2px 8px rgba(124, 58, 237, 0.04);
         }
         .tuition-toggle-label {
             font-size: 11px;
-            color: #8E7B88;
+            color: #64748B;
             font-weight: 500;
         }
         .tuition-toggle-val {
             font-size: 13.5px;
             font-weight: 800;
-            color: #2D1527;
+            color: #0F172A;
             margin-top: 2px;
         }
         .tuition-switch {
@@ -1932,7 +1942,7 @@
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: #E2D4D8;
+            background-color: #CBD5E1;
             transition: .25s;
             border-radius: 24px;
         }
@@ -1949,8 +1959,8 @@
             box-shadow: 0 1px 3px rgba(0,0,0,0.15);
         }
         .tuition-switch input:checked + .tuition-slider {
-            background-color: #8E284D !important;
-            box-shadow: 0 0 8px rgba(142, 40, 77, 0.35);
+            background-color: #7C3AED !important;
+            box-shadow: 0 0 8px rgba(124, 58, 237, 0.35);
         }
         .tuition-switch input:checked + .tuition-slider:before {
             transform: translateX(20px);
@@ -2088,18 +2098,18 @@
             <!-- Header: Title + Subtitle | "Chọn mẫu" + Pills Mẫu 1 / Mẫu 2 + Close X -->
             <div class="tuition-modal-header">
                 <div>
-                    <h3 style="color: #2D1527; font-size: 18px; font-weight: 800; margin: 0;">Tạo Phiếu Học Phí</h3>
-                    <div style="font-size: 12px; color: #8E7B88; margin-top: 3px;">
-                        <span id="tuitionModalHeaderSubtitle">GV. Võ Trung Khánh · STK 0793017777</span>
+                    <h3 style="color: #0F172A; font-size: 18px; font-weight: 800; margin: 0;">Tạo Phiếu Học Phí</h3>
+                    <div style="font-size: 12px; color: #64748B; margin-top: 3px;">
+                        <span id="tuitionModalHeaderSubtitle">GV. Thầy Trần Hoàng Nam · STK 0123456789</span>
                         <span id="tuitionModalStudentName" style="display: none;">--</span>
                         <span id="tuitionModalStudentBadge" style="display: none;">Học sinh</span>
-                        <span id="tuitionModalBankInfo" style="display: none;">STK: 0793017777 (MB Bank)</span>
+                        <span id="tuitionModalBankInfo" style="display: none;">STK: 0123456789 (MB Bank)</span>
                     </div>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <span style="font-size: 12px; color: #8E7B88; font-weight: 600;">Chọn mẫu</span>
-                    <div class="tuition-template-pills" style="display: inline-flex; background: #FFFFFF; padding: 3px; border-radius: 20px; border: 1px solid #EADFE3;">
+                    <span style="font-size: 12px; color: #64748B; font-weight: 600;">Chọn mẫu</span>
+                    <div class="tuition-template-pills" style="display: inline-flex; background: #FFFFFF; padding: 3px; border-radius: 20px; border: 1px solid #E2E8F0;">
                         <button type="button" id="btnTemplate1" class="btn-template-pill active" onclick="switchTuitionTemplate(1)">
                             Mẫu 1
                         </button>
@@ -2116,10 +2126,10 @@
             <div class="tuition-modal-body-grid">
                 <!-- Cột trái (form, ~48%) -->
                 <div id="tuitionInvoiceFormCol" class="tuition-col-left">
-                    <div id="tuitionFormLoadingPlaceholder" style="text-align: center; padding: 48px 20px; color: #8E7B88;">
-                        <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 28px; color: #8E284D; margin-bottom: 12px; display: block;"></i>
-                        <div style="font-size: 14px; font-weight: 600;">Đang tải form...</div>
-                        <div style="font-size: 12px; color: #8E7B88; margin-top: 4px;">Tùy chỉnh các trường thông tin hiển thị trên phiếu</div>
+                    <div id="tuitionFormLoadingPlaceholder" style="text-align: center; padding: 48px 20px; color: #64748B;">
+                        <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 28px; color: #7C3AED; margin-bottom: 12px; display: block;"></i>
+                        <div style="font-size: 14px; font-weight: 600; color: #0F172A;">Đang tải form...</div>
+                        <div style="font-size: 12px; color: #64748B; margin-top: 4px;">Tùy chỉnh các trường thông tin hiển thị trên phiếu</div>
                     </div>
                 </div>
 
@@ -2128,8 +2138,8 @@
                     <!-- Top Bar: Phiếu hiển thị trực tiếp • Mẫu 1 | TRỰC TIẾP -->
                     <div style="width: 100%; max-width: 480px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
                         <div>
-                            <div id="tuitionPreviewTitle" style="font-size: 13.5px; font-weight: 700; color: #2D1527;">Phiếu hiển thị trực tiếp • Mẫu 1</div>
-                            <div style="font-size: 11.5px; color: #8E7B88; margin-top: 1px;">Tự cập nhật ngay khi nội dung thay đổi.</div>
+                            <div id="tuitionPreviewTitle" style="font-size: 13.5px; font-weight: 700; color: #0F172A;">Phiếu hiển thị trực tiếp • Mẫu 1</div>
+                            <div style="font-size: 11.5px; color: #64748B; margin-top: 1px;">Tự cập nhật ngay khi nội dung thay đổi.</div>
                         </div>
                         <div style="display: inline-flex; align-items: center; gap: 6px; background: #E6F7F0; border: 1px solid #A7F3D0; color: #059669; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px;">
                             <span style="width: 7px; height: 7px; border-radius: 50%; background: #10B981; display: inline-block;"></span>
@@ -2138,9 +2148,9 @@
                     </div>
 
                     <div id="tuitionInvoiceModalBody" style="width: 100%; max-width: 480px;">
-                        <div id="tuitionPreviewPlaceholder" style="text-align: center; padding: 48px 20px; color: #8E7B88;">
-                            <i class="fa-solid fa-eye" style="font-size: 28px; color: #8E284D; margin-bottom: 12px; display: block;"></i>
-                            <div style="font-size: 14px; font-weight: 600;">Bản xem trước phiếu học phí...</div>
+                        <div id="tuitionPreviewPlaceholder" style="text-align: center; padding: 48px 20px; color: #64748B;">
+                            <i class="fa-solid fa-eye" style="font-size: 28px; color: #7C3AED; margin-bottom: 12px; display: block;"></i>
+                            <div style="font-size: 14px; font-weight: 600; color: #0F172A;">Bản xem trước phiếu học phí...</div>
                         </div>
                     </div>
                 </div>
