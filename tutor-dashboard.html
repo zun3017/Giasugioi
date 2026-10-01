@@ -2174,12 +2174,8 @@
                 </div>
             </div>
 
-            <!-- Footer: 5 buttons -->
+            <!-- Footer: 5 buttons on LEFT, restored draft note on RIGHT -->
             <div class="tuition-modal-footer">
-                <div style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: #10B981;">
-                    <i class="fa-solid fa-clock-rotate-left"></i>
-                    <span id="tuitionDraftRestoredText">Đã khôi phục bản nháp lần trước</span>
-                </div>
                 <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
                     <button type="button" id="btnTuitionCancel" onclick="closeStudentInvoiceModal(true)" class="btn-tuition-action">
                         Hủy bỏ
@@ -2196,6 +2192,10 @@
                     <button type="button" id="btnExportTuitionInvoice" onclick="exportTuitionModalInvoice()" class="btn-tuition-action btn-tuition-primary">
                         <i class="fa-solid fa-camera"></i> Xuất phiếu (ảnh)
                     </button>
+                </div>
+                <div id="tuitionDraftRestoredWrapper" style="display: none; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: #10B981; margin-left: auto;">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span id="tuitionDraftRestoredText">Đã khôi phục bản nháp lần trước</span>
                 </div>
             </div>
         </div>
