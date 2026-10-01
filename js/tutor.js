@@ -8252,6 +8252,8 @@ var THEME_NAMES = {
   'theme-cloud-meadow-minimal': 'Cloud Meadow · Tối giản',
   'theme-soft-blue-white-full': 'Soft Blue · Nền & bóng',
   'theme-soft-blue-white-minimal': 'Soft Blue · Tối giản',
+  'theme-soft-blue-full': 'Soft Blue · Nền & bóng',
+  'theme-soft-blue-minimal': 'Soft Blue · Tối giản',
   'theme-blossom-noir-full': 'Blossom Noir · Nền & bóng (Tối)',
   'theme-blossom-noir-minimal': 'Blossom Noir · Tối giản (Tối)',
   'theme-violet-planet-full': 'Violet Planet · Nền & bóng (Tối)',

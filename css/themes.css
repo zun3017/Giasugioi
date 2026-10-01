@@ -698,7 +698,8 @@
 /* ----------------------------------------------------------------------------
  * 12. Soft Blue + White (Sáng trắng)
  * ---------------------------------------------------------------------------- */
-.theme-soft-blue-white-full, .theme-soft-blue-white-minimal {
+.theme-soft-blue-white-full, .theme-soft-blue-white-minimal,
+.theme-soft-blue-full, .theme-soft-blue-minimal {
   --bg-page: #FFFFFF;
   --bg-sidebar: #F0F7FF;
   --bg-card: #FFFFFF;
@@ -727,12 +728,12 @@
   --scrollbar-thumb: rgba(74, 154, 196, 0.4);
   --is-dark-theme: 0;
 }
-.theme-soft-blue-white-full {
+.theme-soft-blue-white-full, .theme-soft-blue-full {
   --bg-page-gradient: linear-gradient(135deg, #FFFFFF, #E8F4FF, #F5FAFF);
   --shadow-card: 0 8px 30px rgba(74, 154, 196, 0.12);
   --shadow-primary: 0 4px 18px rgba(74, 154, 196, 0.25);
 }
-.theme-soft-blue-white-minimal {
+.theme-soft-blue-white-minimal, .theme-soft-blue-minimal {
   --bg-page-gradient: #FFFFFF;
   --shadow-card: 0 2px 8px rgba(0, 0, 0, 0.08);
   --shadow-primary: 0 2px 8px rgba(74, 154, 196, 0.2);
