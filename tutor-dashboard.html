@@ -1730,135 +1730,188 @@
     <style>
         .tuition-modal-dialog {
             width: 95%;
-            max-width: 1050px;
+            max-width: 1100px;
             min-width: 320px;
-            max-height: 90vh;
-            background: #0E0B25;
-            border: 1px solid rgba(142, 77, 255, 0.45);
-            border-radius: 24px;
-            box-shadow: 0 25px 70px rgba(0,0,0,0.85);
+            max-height: 92vh;
+            background: #FAF7F8;
+            border: 1px solid #EADFE3;
+            border-radius: 20px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.5);
             display: flex;
             flex-direction: column;
             overflow: hidden;
-            color: #FFF;
+            color: #2D1527;
             padding: 0 !important;
             box-sizing: border-box;
             margin: auto;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
         }
         .tuition-modal-header {
             padding: 16px 24px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            border-bottom: 1px solid #EADFE3;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background: rgba(142, 77, 255, 0.06);
+            background: #FAF7F8;
             flex-wrap: wrap;
             gap: 12px;
             box-sizing: border-box;
         }
+        .tuition-modal-close {
+            background: none;
+            border: none;
+            font-size: 22px;
+            color: #8E7B88;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            transition: all 0.2s;
+        }
+        .tuition-modal-close:hover {
+            background: #F0E6EA;
+            color: #2D1527;
+        }
         .tuition-modal-body-grid {
             display: grid;
-            grid-template-columns: 45% 55%;
+            grid-template-columns: 48% 52%;
             flex: 1;
             overflow: hidden;
-            background: #0A071E;
+            background: #FAF7F8;
             box-sizing: border-box;
         }
         .tuition-col-left {
-            padding: 20px;
+            padding: 18px 20px;
             overflow-y: auto;
-            max-height: calc(90vh - 145px);
-            border-right: 1px solid rgba(255, 255, 255, 0.08);
+            max-height: calc(92vh - 135px);
+            border-right: 1px solid #EADFE3;
             box-sizing: border-box;
+            background: #FAF7F8;
         }
         .tuition-col-right {
-            padding: 20px;
+            padding: 18px 20px;
             overflow-y: auto;
-            max-height: calc(90vh - 145px);
-            background: rgba(0, 0, 0, 0.2);
+            max-height: calc(92vh - 135px);
+            background: #FAF7F8;
             box-sizing: border-box;
             display: flex;
             flex-direction: column;
             align-items: center;
         }
         .tuition-modal-footer {
-            padding: 14px 24px;
-            border-top: 1px solid rgba(255, 255, 255, 0.08);
-            background: #0E0B25;
+            padding: 12px 24px;
+            border-top: 1px solid #EADFE3;
+            background: #FAF7F8;
             display: flex;
             justify-content: space-between;
             align-items: center;
             flex-wrap: wrap;
             gap: 10px;
             box-sizing: border-box;
+            border-radius: 0 0 20px 20px;
         }
         .btn-tuition-action {
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            border-radius: 12px;
-            font-size: 13px;
+            border-radius: 10px;
+            font-size: 12.5px;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s ease;
             box-sizing: border-box;
+            padding: 8px 16px;
+            background: #FFFFFF;
+            border: 1px solid #E2D4D8;
+            color: #4A3A45;
         }
         .btn-tuition-action:hover {
             transform: translateY(-1px);
-            filter: brightness(1.1);
+            background: #F8F1F4;
         }
-        .btn-tuition-action:active {
-            transform: translateY(0);
+        .btn-tuition-primary {
+            background: #8E284D !important;
+            border: 1px solid #8E284D !important;
+            color: #FFFFFF !important;
+            font-weight: 700 !important;
+            box-shadow: 0 3px 10px rgba(142, 40, 77, 0.25) !important;
+        }
+        .btn-tuition-primary:hover {
+            background: #7A2141 !important;
         }
         .btn-template-pill {
-            padding: 6px 14px;
-            border-radius: 9px;
-            font-size: 12.5px;
+            padding: 5px 14px;
+            border-radius: 20px;
+            font-size: 12px;
             font-weight: 600;
-            border: none;
+            border: 1px solid #E2D4D8;
             cursor: pointer;
             transition: all 0.2s ease;
             background: transparent;
-            color: #A6ADCE;
-            display: inline-flex;
-            align-items: center;
-            gap: 5px;
+            color: #8E7B88;
         }
         .btn-template-pill.active {
-            background: #8E4DFF !important;
-            color: #FFF !important;
-            box-shadow: 0 2px 10px rgba(142, 77, 255, 0.4);
+            background: #8E284D !important;
+            color: #FFFFFF !important;
+            border-color: #8E284D !important;
+            box-shadow: 0 2px 8px rgba(142, 40, 77, 0.25);
         }
-        .tuition-toggle-row {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
+        /* Tuition Receipt Preview Card */
+        .tuition-receipt-card {
+            width: 100%;
+            max-width: 480px;
+            margin: 0 auto;
+            background: #FFFFFF;
+            border: 1px solid #EADFE3;
+            border-radius: 18px;
+            padding: 20px 18px;
+            box-shadow: 0 8px 25px rgba(142, 40, 77, 0.05);
+            box-sizing: border-box;
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: #2D1527;
+        }
+
+        /* 2-column Toggle Card Grid */
+        .tuition-card-box {
+            background: #FFFFFF;
+            border: 1px solid #F1E5E9;
+            border-radius: 16px;
+            padding: 16px 18px;
+            margin-bottom: 14px;
+            box-sizing: border-box;
+        }
+        .tuition-toggle-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+        }
+        .tuition-toggle-card {
+            background: #FFFFFF;
+            border: 1px solid #F1E5E9;
+            border-radius: 12px;
             padding: 10px 14px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.07);
-            border-radius: 14px;
-            margin-bottom: 9px;
-            transition: all 0.2s ease;
-        }
-        .tuition-toggle-row:hover {
-            background: rgba(142, 77, 255, 0.06);
-            border-color: rgba(142, 77, 255, 0.25);
-        }
-        .tuition-toggle-info {
-            flex: 1;
-            padding-right: 12px;
-        }
-        .tuition-toggle-title {
-            font-size: 13.5px;
-            font-weight: 600;
-            color: #FFF;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            gap: 7px;
+            transition: all 0.2s ease;
+            box-sizing: border-box;
         }
-        .tuition-toggle-desc {
-            font-size: 12px;
-            color: #A6ADCE;
+        .tuition-toggle-card:hover {
+            border-color: #E2CDD5;
+            box-shadow: 0 2px 8px rgba(142, 40, 77, 0.04);
+        }
+        .tuition-toggle-label {
+            font-size: 11px;
+            color: #8E7B88;
+            font-weight: 500;
+        }
+        .tuition-toggle-val {
+            font-size: 13.5px;
+            font-weight: 800;
+            color: #2D1527;
             margin-top: 2px;
         }
         .tuition-switch {
@@ -1879,7 +1932,7 @@
             position: absolute;
             cursor: pointer;
             top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(255, 255, 255, 0.18);
+            background-color: #E2D4D8;
             transition: .25s;
             border-radius: 24px;
         }
@@ -1893,10 +1946,11 @@
             background-color: white;
             transition: .25s;
             border-radius: 50%;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
         }
         .tuition-switch input:checked + .tuition-slider {
-            background-color: #8E4DFF;
-            box-shadow: 0 0 10px rgba(142, 77, 255, 0.5);
+            background-color: #8E284D !important;
+            box-shadow: 0 0 8px rgba(142, 40, 77, 0.35);
         }
         .tuition-switch input:checked + .tuition-slider:before {
             transform: translateX(20px);
@@ -2031,58 +2085,62 @@
     </style>
     <div id="tutorTuitionInvoiceModal" class="modal-overlay" style="z-index: 1080; display: none;" onclick="if(event.target === this) closeStudentInvoiceModal(true);">
         <div class="modal-content tuition-modal-dialog">
-            <!-- Header: Icon 🎓 + Tạo Phiếu Học Phí + Tên học sinh + STK | Pills Mẫu 1 / Mẫu 2 + Close X -->
+            <!-- Header: Title + Subtitle | "Chọn mẫu" + Pills Mẫu 1 / Mẫu 2 + Close X -->
             <div class="tuition-modal-header">
-                <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                    <div style="width: 40px; height: 40px; border-radius: 12px; background: rgba(142, 77, 255, 0.2); border: 1px solid #8E4DFF; display: flex; align-items: center; justify-content: center; color: #C4B5FD; font-size: 18px;">
-                        <i class="fa-solid fa-graduation-cap"></i>
-                    </div>
-                    <div>
-                        <div style="display: flex; align-items: center; gap: 8px;">
-                            <h3 style="color: #FFF; font-size: 17px; font-weight: 700; margin: 0;">Tạo Phiếu Học Phí</h3>
-                            <span id="tuitionModalStudentBadge" style="background: rgba(16, 185, 129, 0.15); border: 1px solid #10B981; color: #6EE7B7; font-size: 11.5px; font-weight: 600; padding: 2px 10px; border-radius: 10px;">Học sinh</span>
-                        </div>
-                        <div style="display: flex; align-items: center; gap: 10px; margin-top: 3px; font-size: 12.5px; color: #A6ADCE; flex-wrap: wrap;">
-                            <span><i class="fa-solid fa-user-graduate" style="color: #8E4DFF;"></i> <b id="tuitionModalStudentName" style="color: #FFF;">--</b></span>
-                            <span style="opacity: 0.5;">•</span>
-                            <span><i class="fa-solid fa-building-columns" style="color: #6EE7B7;"></i> <span id="tuitionModalBankInfo">STK: 0123456789 (MB Bank)</span></span>
-                        </div>
+                <div>
+                    <h3 style="color: #2D1527; font-size: 18px; font-weight: 800; margin: 0;">Tạo Phiếu Học Phí</h3>
+                    <div style="font-size: 12px; color: #8E7B88; margin-top: 3px;">
+                        <span id="tuitionModalHeaderSubtitle">GV. Võ Trung Khánh · STK 0793017777</span>
+                        <span id="tuitionModalStudentName" style="display: none;">--</span>
+                        <span id="tuitionModalStudentBadge" style="display: none;">Học sinh</span>
+                        <span id="tuitionModalBankInfo" style="display: none;">STK: 0793017777 (MB Bank)</span>
                     </div>
                 </div>
 
                 <div style="display: flex; align-items: center; gap: 12px;">
-                    <!-- Template Selector Pills -->
-                    <div class="tuition-template-pills" style="display: inline-flex; background: rgba(255, 255, 255, 0.06); padding: 3px; border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.1);">
+                    <span style="font-size: 12px; color: #8E7B88; font-weight: 600;">Chọn mẫu</span>
+                    <div class="tuition-template-pills" style="display: inline-flex; background: #FFFFFF; padding: 3px; border-radius: 20px; border: 1px solid #EADFE3;">
                         <button type="button" id="btnTemplate1" class="btn-template-pill active" onclick="switchTuitionTemplate(1)">
-                            <i class="fa-solid fa-receipt"></i> Mẫu 1
+                            Mẫu 1
                         </button>
                         <button type="button" id="btnTemplate2" class="btn-template-pill" onclick="switchTuitionTemplate(2)">
-                            <i class="fa-solid fa-qrcode"></i> Mẫu 2
+                            Mẫu 2
                         </button>
                     </div>
 
-                    <!-- Close button -->
-                    <button type="button" onclick="closeStudentInvoiceModal(true)" class="modal-close" style="background: rgba(255, 255, 255, 0.08); border: none; width: 34px; height: 34px; border-radius: 10px; color: #A6ADCE; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" title="Đóng">&times;</button>
+                    <button type="button" onclick="closeStudentInvoiceModal(true)" class="tuition-modal-close" title="Đóng">&times;</button>
                 </div>
             </div>
 
-            <!-- Body Grid: Left (~45%) + Right (~55%) -->
+            <!-- Body Grid: Left (~48%) + Right (~52%) -->
             <div class="tuition-modal-body-grid">
-                <!-- Cột trái (form, ~45%) -->
+                <!-- Cột trái (form, ~48%) -->
                 <div id="tuitionInvoiceFormCol" class="tuition-col-left">
-                    <div id="tuitionFormLoadingPlaceholder" style="text-align: center; padding: 48px 20px; color: #A6ADCE;">
-                        <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 28px; color: #8E4DFF; margin-bottom: 12px; display: block;"></i>
-                        <div style="font-size: 14px; font-weight: 500;">Đang tải form...</div>
-                        <div style="font-size: 12px; color: rgba(255, 255, 255, 0.4); margin-top: 4px;">Tùy chỉnh các trường thông tin hiển thị trên phiếu</div>
+                    <div id="tuitionFormLoadingPlaceholder" style="text-align: center; padding: 48px 20px; color: #8E7B88;">
+                        <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 28px; color: #8E284D; margin-bottom: 12px; display: block;"></i>
+                        <div style="font-size: 14px; font-weight: 600;">Đang tải form...</div>
+                        <div style="font-size: 12px; color: #8E7B88; margin-top: 4px;">Tùy chỉnh các trường thông tin hiển thị trên phiếu</div>
                     </div>
                 </div>
 
-                <!-- Cột phải (live preview, ~55%) -->
+                <!-- Cột phải (live preview, ~52%) -->
                 <div id="tuitionInvoicePreviewCol" class="tuition-col-right">
+                    <!-- Top Bar: Phiếu hiển thị trực tiếp • Mẫu 1 | TRỰC TIẾP -->
+                    <div style="width: 100%; max-width: 480px; display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px;">
+                        <div>
+                            <div id="tuitionPreviewTitle" style="font-size: 13.5px; font-weight: 700; color: #2D1527;">Phiếu hiển thị trực tiếp • Mẫu 1</div>
+                            <div style="font-size: 11.5px; color: #8E7B88; margin-top: 1px;">Tự cập nhật ngay khi nội dung thay đổi.</div>
+                        </div>
+                        <div style="display: inline-flex; align-items: center; gap: 6px; background: #E6F7F0; border: 1px solid #A7F3D0; color: #059669; font-size: 11px; font-weight: 800; padding: 4px 10px; border-radius: 20px; letter-spacing: 0.5px;">
+                            <span style="width: 7px; height: 7px; border-radius: 50%; background: #10B981; display: inline-block;"></span>
+                            TRỰC TIẾP
+                        </div>
+                    </div>
+
                     <div id="tuitionInvoiceModalBody" style="width: 100%; max-width: 480px;">
-                        <div id="tuitionPreviewPlaceholder" style="text-align: center; padding: 48px 20px; color: #A6ADCE;">
-                            <i class="fa-solid fa-eye" style="font-size: 28px; color: #8E4DFF; margin-bottom: 12px; display: block;"></i>
-                            <div style="font-size: 14px; font-weight: 500;">Bản xem trước phiếu học phí...</div>
+                        <div id="tuitionPreviewPlaceholder" style="text-align: center; padding: 48px 20px; color: #8E7B88;">
+                            <i class="fa-solid fa-eye" style="font-size: 28px; color: #8E284D; margin-bottom: 12px; display: block;"></i>
+                            <div style="font-size: 14px; font-weight: 600;">Bản xem trước phiếu học phí...</div>
                         </div>
                     </div>
                 </div>
@@ -2090,23 +2148,25 @@
 
             <!-- Footer: 5 buttons -->
             <div class="tuition-modal-footer">
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <button type="button" id="btnTuitionCancel" onclick="closeStudentInvoiceModal(true)" class="btn-tuition-action" style="padding: 9px 18px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #FFF;">
-                        <i class="fa-solid fa-xmark"></i> Hủy bỏ
+                <div style="display: flex; align-items: center; gap: 6px; font-size: 12.5px; font-weight: 600; color: #10B981;">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span id="tuitionDraftRestoredText">Đã khôi phục bản nháp lần trước</span>
+                </div>
+                <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+                    <button type="button" id="btnTuitionCancel" onclick="closeStudentInvoiceModal(true)" class="btn-tuition-action">
+                        Hủy bỏ
                     </button>
-                    <button type="button" id="btnTuitionSaveDraft" onclick="saveTuitionDraftModal()" class="btn-tuition-action" style="padding: 9px 18px; background: rgba(142, 77, 255, 0.15); border: 1px solid rgba(142, 77, 255, 0.35); color: #C4B5FD;">
+                    <button type="button" id="btnTuitionSaveDraft" onclick="saveTuitionDraftModal()" class="btn-tuition-action">
                         <i class="fa-regular fa-bookmark"></i> Lưu bản nháp
                     </button>
-                </div>
-                <div style="display: flex; gap: 10px; align-items: center;">
-                    <button type="button" id="btnTuitionExportPdf" onclick="exportTuitionModalPdf()" class="btn-tuition-action" style="padding: 9px 16px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #FFF;">
+                    <button type="button" id="btnTuitionExportPdf" onclick="exportTuitionModalPdf()" class="btn-tuition-action">
                         <i class="fa-solid fa-file-pdf" style="color: #EF4444;"></i> Xuất PDF
                     </button>
-                    <button type="button" id="btnTuitionCopyImage" onclick="copyTuitionModalImage()" class="btn-tuition-action" style="padding: 9px 16px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #FFF;">
-                        <i class="fa-regular fa-copy" style="color: #60A5FA;"></i> Copy ảnh
+                    <button type="button" id="btnTuitionCopyImage" onclick="copyTuitionModalImage()" class="btn-tuition-action">
+                        <i class="fa-regular fa-copy" style="color: #3B82F6;"></i> Copy ảnh
                     </button>
-                    <button type="button" id="btnExportTuitionInvoice" onclick="exportTuitionModalInvoice()" class="btn-tuition-action" style="padding: 9px 20px; background: linear-gradient(135deg, #8E4DFF, #6B21A8); border: 1px solid #A855F7; color: #FFF; box-shadow: 0 4px 15px rgba(142, 77, 255, 0.4);">
-                        <i class="fa-solid fa-camera"></i> Xuất phiếu ảnh
+                    <button type="button" id="btnExportTuitionInvoice" onclick="exportTuitionModalInvoice()" class="btn-tuition-action btn-tuition-primary">
+                        <i class="fa-solid fa-camera"></i> Xuất phiếu (ảnh)
                     </button>
                 </div>
             </div>
