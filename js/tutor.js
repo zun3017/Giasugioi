@@ -1036,6 +1036,27 @@ function renderTutorDiarySection(reinitFilters) {
         selStudent = students[0].name.trim();
         if (studentSelect) studentSelect.value = selStudent;
     }
+
+    // Đồng bộ học sinh hiện tại và nạp thông báo / bài tập tương ứng
+    var matchingSt = students.find(function(s) { return s.name.trim() === selStudent; });
+    if (matchingSt) {
+        currentTutorStudent = matchingSt;
+        var qAnn = document.getElementById('quickAnnouncementInput');
+        if (qAnn) qAnn.value = matchingSt.thongBao || "";
+        var annStBadge = document.getElementById('announcementStudentBadge');
+        if (annStBadge) annStBadge.innerText = "(" + matchingSt.name + ")";
+        var annStatus = document.getElementById('announcementStatus');
+        if (annStatus) annStatus.style.display = 'none';
+
+        // Load bài tập cho học sinh này
+        var tabSubmitBtn = document.getElementById('tabSubmitBtn');
+        var isSubmitTab = tabSubmitBtn && tabSubmitBtn.classList.contains('active');
+        if (isSubmitTab && typeof loadStudentSubmissions === 'function') {
+            loadStudentSubmissions();
+        } else if (typeof loadTutorAssignedHomework === 'function') {
+            loadTutorAssignedHomework();
+        }
+    }
     var selMonth = monthSelect ? monthSelect.value : "all";
 
     var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
