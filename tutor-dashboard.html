@@ -68,8 +68,16 @@
       })();
     </script>
     <!-- Global CSS -->
-    <link rel="stylesheet" href="css/style.css?v=202608301720">
+    <link rel="stylesheet" href="css/style.css?v=202610012025">
     <style>
+        /* Đảm bảo nút thu gọn Sidebar luôn hiển thị tròn nguyên vẹn, không bao giờ bị cắt cụt */
+        .tutor-sidebar {
+            overflow: visible !important;
+        }
+        .sidebar-collapse-btn {
+            z-index: 1005 !important;
+        }
+
         /* ================= INVOICE STYLES (APPROVED E-RECEIPT) ================= */
         .invoice-container {
             width: 100% !important;
@@ -396,9 +404,9 @@
 <body>
     <div id="tutorDashboardBox" class="tutor-app-layout">
         <!-- Sidebar Navigation -->
-        <aside class="tutor-sidebar" id="tutorSidebar">
+        <aside class="tutor-sidebar" id="tutorSidebar" style="overflow: visible !important;">
             <!-- Sidebar Collapse Toggle Button -->
-            <button type="button" class="sidebar-collapse-btn" id="sidebarCollapseBtn" onclick="toggleTutorSidebar()" title="Thu gọn menu">
+            <button type="button" class="sidebar-collapse-btn" id="sidebarCollapseBtn" onclick="toggleTutorSidebar()" title="Thu gọn menu" style="z-index: 1005 !important;">
                 <i class="fa-solid fa-chevron-left" id="sidebarCollapseIcon"></i>
             </button>
 
