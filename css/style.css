@@ -3513,9 +3513,7 @@
         .report-brand-title {
             font-size: 20px;
             font-weight: 900;
-            background: linear-gradient(135deg, #FFF 0%, #C4B5FD 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #FFFFFF;
             letter-spacing: 0.3px;
         }
 
