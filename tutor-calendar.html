@@ -77,37 +77,200 @@
             height: 100%;
         }
 
-        /* --- HEADER & TITLES --- */
-        .calendar-header {
+        /* --- CUSTOM CALENDAR HEADER (TASK 10.2) --- */
+        .calendar-header-custom {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 0;
             flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .calendar-title-wrap {
-            display: flex;
-            align-items: center;
             gap: 12px;
         }
 
-        .calendar-title-wrap i {
-            font-size: 24px;
+        .cal-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .cal-header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        /* Nút Quay lại Dashboard */
+        .btn-back-dashboard {
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 16px;
+            border-radius: 20px;
+            font-weight: 700;
+            font-size: 13px;
+            font-family: 'Inter', sans-serif;
+            background: #E8DDD0;
+            border: 1px solid #E5D9CC;
+            color: #2D1F0E;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+        .btn-back-dashboard:hover {
+            background: #DFD2C3;
+            border-color: #D4C3B3;
+            transform: translateY(-1px);
+        }
+
+        /* Nhóm nút điều hướng Lịch (<, >, Hôm nay) */
+        .cal-nav-group {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .cal-nav-btn {
+            width: 32px;
+            height: 32px;
+            border-radius: 8px;
+            background: #E8DDD0;
+            border: 1px solid #E5D9CC;
+            color: #2D1F0E;
+            font-size: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+        }
+        .cal-nav-btn:hover {
+            background: #DFD2C3;
+            border-color: #D4C3B3;
+        }
+        .cal-nav-btn:active {
+            transform: scale(0.95);
+        }
+
+        .cal-today-btn {
+            height: 32px;
+            padding: 0 13px;
+            border-radius: 8px;
+            background: #E8DDD0;
+            border: 1px solid #E5D9CC;
+            color: #2D1F0E;
+            font-size: 12.5px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.15s ease;
+            font-family: 'Inter', sans-serif;
+        }
+        .cal-today-btn:hover {
+            background: #DFD2C3;
+            border-color: #D4C3B3;
+        }
+        .cal-today-btn:active {
+            transform: scale(0.95);
+        }
+
+        /* Tiêu đề Tháng/Năm nổi bật màu tím đậm */
+        .calendar-month-title {
+            font-size: 20px;
+            font-weight: 800;
+            color: #7C3AED;
+            margin: 0;
+            letter-spacing: -0.3px;
+            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* Toggle Filter Pill: "Ẩn đã hủy" */
+        .cal-filter-pill {
+            height: 32px;
+            padding: 0 14px;
+            border-radius: 20px;
+            background: #FFFFFF;
+            border: 1px solid #E5D9CC;
+            color: #6B4226;
+            font-size: 12.5px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .cal-filter-pill:hover {
+            background: #FAF5EE;
+            border-color: #D4C3B3;
+        }
+        .cal-filter-pill.active {
+            background: #FFF0F6;
+            border-color: #C05E8E;
+            color: #C05E8E;
+            box-shadow: 0 2px 8px rgba(192, 94, 142, 0.2);
+        }
+        .cal-filter-pill.active i {
             color: #C05E8E;
         }
 
-        .calendar-title-wrap h2 {
-            font-size: 19px;
-            font-weight: 800;
+        /* View Toggle Pills: Tháng / Tuần / Ngày */
+        .cal-view-pills {
+            display: inline-flex;
+            align-items: center;
+            background: #E8DDD0;
+            padding: 3px;
+            border-radius: 20px;
+            border: 1px solid #E5D9CC;
+        }
+        .cal-view-pill {
+            height: 26px;
+            padding: 0 13px;
+            border-radius: 14px;
+            border: none;
+            background: transparent;
+            color: #6B4226;
+            font-size: 12px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .cal-view-pill:hover:not(.active) {
             color: #2D1F0E;
+            background: rgba(255, 255, 255, 0.4);
+        }
+        .cal-view-pill.active {
+            background: #C05E8E;
+            color: #FFFFFF;
+            font-weight: 700;
+            box-shadow: 0 2px 6px rgba(192, 94, 142, 0.28);
         }
 
-        .calendar-subtitle {
+        /* Nút Lịch tóm tắt */
+        .cal-sheet-toggle-btn {
+            height: 32px;
+            padding: 0 13px;
+            border-radius: 20px;
+            background: #E8DDD0;
+            border: 1px solid #E5D9CC;
+            color: #2D1F0E;
             font-size: 12.5px;
-            color: #6B4226;
-            margin-top: 4px;
+            font-weight: 600;
+            font-family: 'Inter', sans-serif;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .cal-sheet-toggle-btn:hover {
+            background: #DFD2C3;
         }
 
         /* --- GOOGLE CALENDAR CUSTOM STYLING (LIGHT CREAM/BEIGE) --- */
@@ -1141,38 +1304,56 @@
         @media (max-width: 768px) {
             body { padding: 0 !important; }
             .container { 
-                padding: 10px 15px !important; 
+                padding: 10px 12px !important; 
                 border-radius: 0 !important; 
                 border-bottom: 1px solid #E5D9CC !important;
             }
-            .calendar-header { margin-bottom: 0px; }
-            .calendar-subtitle { display: none; } /* Ẩn subtitle trên mobile để tiết kiệm diện tích */
+            .calendar-header-custom {
+                gap: 8px !important;
+            }
+            .cal-header-left {
+                gap: 8px !important;
+            }
+            .cal-header-right {
+                gap: 6px !important;
+            }
+            /* Mobile: nút Quay lại thu gọn thành icon ← (không có chữ) */
+            .btn-back-dashboard {
+                padding: 0 !important;
+                width: 32px !important;
+                height: 32px !important;
+                border-radius: 50% !important;
+                justify-content: center !important;
+            }
+            .btn-back-dashboard .btn-back-text {
+                display: none !important;
+            }
+            .calendar-month-title {
+                font-size: 16px !important;
+            }
+            .cal-sheet-btn-text {
+                display: none !important;
+            }
+            .cal-sheet-toggle-btn {
+                padding: 0 !important;
+                width: 32px !important;
+                height: 32px !important;
+                border-radius: 50% !important;
+                justify-content: center !important;
+            }
+            .cal-filter-pill {
+                padding: 0 10px !important;
+                font-size: 11.5px !important;
+                height: 28px !important;
+            }
+            .cal-view-pill {
+                padding: 0 9px !important;
+                font-size: 11.5px !important;
+                height: 24px !important;
+            }
             .calendar-wrapper { padding: 0 4px 4px 4px !important; }
             
             .fab-add { display: flex; }
-
-            .fc .fc-toolbar {
-                display: flex !important;
-                flex-direction: column !important;
-                gap: 8px !important;
-                align-items: stretch !important;
-            }
-            .fc .fc-toolbar-title {
-                text-align: center !important;
-                font-size: 14px !important;
-            }
-            .fc .fc-button-group {
-                width: 100% !important;
-                display: flex !important;
-            }
-            .fc .fc-button {
-                flex: 1 !important;
-                padding: 4px 8px !important;
-                font-size: 11.5px !important;
-            }
-            .fc .fc-today-button {
-                width: 100% !important;
-            }
 
             .fc-timegrid-slot {
                 height: 28px !important; /* Compact trên mobile */
@@ -1282,20 +1463,51 @@
 </head>
 <body>
 
-    <!-- HEADER CỐ ĐỊNH -->
+    <!-- HEADER CỐ ĐỊNH (CUSTOM HEADER - TASK 10.2) -->
     <div class="container">
-        <div class="calendar-header" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 10px;">
-            <div class="calendar-title-wrap">
-                <i class="fa-regular fa-calendar-check"></i>
-                <div>
-                    <h2>Thời Khóa Biểu & Lịch Dạy</h2>
-                    <p class="calendar-subtitle">Lên lịch lặp lại (Hàng ngày/tuần) hoặc lịch học thử .</p>
-                </div>
-            </div>
-            <div>
-                <a href="tutor-dashboard.html" class="modal-btn modal-btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 20px; font-weight: bold; font-size: 13.5px; font-family: 'Inter', sans-serif; background: #E8DDD0; border: 1px solid #E5D9CC; color: #2D1F0E; transition: background 0.2s;" onmouseover="this.style.background='#DFD2C3'" onmouseout="this.style.background='#E8DDD0'">
-                    <i class="fa-solid fa-arrow-left"></i> Quay lại Dashboard
+        <div class="calendar-header-custom">
+            <!-- NHÓM BÊN TRÁI: Quay lại Dashboard + Nút < > + Nút Hôm nay + Tiêu đề Tháng/Năm -->
+            <div class="cal-header-left">
+                <a href="tutor-dashboard.html" class="btn-back-dashboard" title="Quay lại Dashboard">
+                    <i class="fa-solid fa-arrow-left"></i>
+                    <span class="btn-back-text">Quay lại Dashboard</span>
                 </a>
+
+                <div class="cal-nav-group">
+                    <button type="button" class="cal-nav-btn" id="btnCalPrev" onclick="if(calendar) calendar.prev()" title="Tháng trước">
+                        <i class="fa-solid fa-chevron-left"></i>
+                    </button>
+                    <button type="button" class="cal-nav-btn" id="btnCalNext" onclick="if(calendar) calendar.next()" title="Tháng sau">
+                        <i class="fa-solid fa-chevron-right"></i>
+                    </button>
+                    <button type="button" class="cal-today-btn" id="btnCalToday" onclick="if(calendar) calendar.today()" title="Về hôm nay">
+                        Hôm nay
+                    </button>
+                </div>
+
+                <h2 id="calendarHeaderTitle" class="calendar-month-title">Tháng 10 2026</h2>
+            </div>
+
+            <!-- NHÓM BÊN PHẢI: Toggle Filter "Ẩn đã hủy" + Toggle Pills "Tháng / Tuần / Ngày" + Lịch tóm tắt -->
+            <div class="cal-header-right">
+                <!-- Toggle Filter "Ẩn buổi đã hủy" -->
+                <button type="button" class="cal-filter-pill" id="btnToggleHideCancelled" onclick="toggleHideCancelledSessions()" title="Ẩn/hiện các ca học đã bị hủy">
+                    <i class="fa-solid fa-eye-slash"></i>
+                    <span>Ẩn đã hủy</span>
+                </button>
+
+                <!-- Toggle Pills: Tháng / Tuần / Ngày -->
+                <div class="cal-view-pills">
+                    <button type="button" class="cal-view-pill active" id="viewPillMonth" onclick="switchCalendarView('dayGridMonth')">Tháng</button>
+                    <button type="button" class="cal-view-pill" id="viewPillWeek" onclick="switchCalendarView('timeGridWeek')">Tuần</button>
+                    <button type="button" class="cal-view-pill" id="viewPillDay" onclick="switchCalendarView('timeGridDay')">Ngày</button>
+                </div>
+
+                <!-- Nút bật/mở bảng lịch tóm tắt -->
+                <button type="button" class="cal-sheet-toggle-btn" onclick="toggleSheetPanel()" title="Xem bảng phân bổ lịch dạy">
+                    <i class="fa-solid fa-table-list"></i>
+                    <span class="cal-sheet-btn-text">Lịch tóm tắt</span>
+                </button>
             </div>
         </div>
     </div>
@@ -1596,7 +1808,7 @@
                 wed: "",
                 thu: "17:30 - 19:30 (Vật lý)",
                 fri: "",
-                sat: "",
+                sat: "14:00 - 16:00 (Đã hủy) [CANCELLED]",
                 sun: ""
             },
             {
@@ -1765,6 +1977,9 @@
             let startHour = match[1], startMin = match[2], endHour = match[3], endMin = match[4];
             let notes = cleanTimeStr.replace(timeRegex, '').trim().replace(/[\(\)]/g, '').trim();
 
+            let isCancelled = /\[CANCELLED\]|\[HỦY\]|\[HUY\]/i.test(rawVal) || (notes && /đã hủy|báo nghỉ|nghỉ học/i.test(notes));
+            let status = isCancelled ? 'cancelled' : 'active';
+
             // Tính ngày
             let viewStart = calendar.view ? calendar.view.currentStart : new Date();
             let startOfWeek = getStartOfWeek(viewStart);
@@ -1807,6 +2022,7 @@
                 textColor: eventColor,
                 classNames: [isOneTime ? 'event-status-onetime' : 'event-status-recurring'],
                 extendedProps: {
+                    status: status,
                     studentIndex: studentIdx,
                     subIndex: subIdx,
                     studentName: row.studentName,
@@ -2058,6 +2274,9 @@
 
                         let notes = cleanTimeStr.replace(timeRegex, '').trim().replace(/[\(\)]/g, '').trim();
 
+                        let isCancelled = /\[CANCELLED\]|\[HỦY\]|\[HUY\]/i.test(rawVal) || (notes && /đã hủy|báo nghỉ|nghỉ học/i.test(notes));
+                        let status = isCancelled ? 'cancelled' : 'active';
+
                         // Xác định ngày cụ thể
                         let dateStr = '';
 
@@ -2121,6 +2340,7 @@
                             textColor: '#FFFFFF',
                             classNames: [isOneTime ? 'event-status-onetime' : 'event-status-recurring'],
                             extendedProps: {
+                                status: status,
                                 studentIndex: studentIdx,
                                 subIndex: subIdx,
                                 studentName: row.studentName,
@@ -2147,25 +2367,30 @@
 
         // Lấy danh sách sự kiện theo khoảng thời gian hiển thị (hỗ trợ Month view và Week/Day view)
         function getEventsForCalendarRange(info, viewType) {
-            if (viewType !== 'dayGridMonth') {
-                return generateEventsForCurrentWeek(info.start);
-            }
             let events = [];
-            let cur = getStartOfWeek(new Date(info.start));
-            let endLimit = new Date(info.end);
-            let seen = new Set();
-            while (cur < endLimit) {
-                let weekEvents = generateEventsForCurrentWeek(cur);
-                weekEvents.forEach(ev => {
-                    let uniqueKey = ev.id + '_' + ev.start;
-                    if (!seen.has(uniqueKey)) {
-                        seen.add(uniqueKey);
-                        let evClone = Object.assign({}, ev);
-                        evClone.id = uniqueKey;
-                        events.push(evClone);
-                    }
-                });
-                cur.setDate(cur.getDate() + 7);
+            if (viewType !== 'dayGridMonth') {
+                events = generateEventsForCurrentWeek(info.start);
+            } else {
+                let cur = getStartOfWeek(new Date(info.start));
+                let endLimit = new Date(info.end);
+                let seen = new Set();
+                while (cur < endLimit) {
+                    let weekEvents = generateEventsForCurrentWeek(cur);
+                    weekEvents.forEach(ev => {
+                        let uniqueKey = ev.id + '_' + ev.start;
+                        if (!seen.has(uniqueKey)) {
+                            seen.add(uniqueKey);
+                            let evClone = Object.assign({}, ev);
+                            evClone.id = uniqueKey;
+                            events.push(evClone);
+                        }
+                    });
+                    cur.setDate(cur.getDate() + 7);
+                }
+            }
+
+            if (window.hideCancelledSessions) {
+                events = events.filter(ev => !(ev.extendedProps && ev.extendedProps.status === 'cancelled'));
             }
             return events;
         }
@@ -2239,6 +2464,61 @@
                 specificDate.style.display = "none";
                 dayCheckbox.style.display = "block";
             }
+        }
+
+        // ==========================================
+        // CUSTOM CALENDAR HEADER CONTROLS (TASK 10.2)
+        // ==========================================
+        window.hideCancelledSessions = false;
+
+        function toggleHideCancelledSessions() {
+            window.hideCancelledSessions = !window.hideCancelledSessions;
+            let btn = document.getElementById('btnToggleHideCancelled');
+            if (btn) {
+                if (window.hideCancelledSessions) {
+                    btn.classList.add('active');
+                } else {
+                    btn.classList.remove('active');
+                }
+            }
+            if (calendar) {
+                calendar.refetchEvents();
+            }
+        }
+
+        function updateCalendarHeaderTitle(view) {
+            let titleEl = document.getElementById('calendarHeaderTitle');
+            if (!titleEl || !view) return;
+            if (view.type === 'dayGridMonth') {
+                let d = view.currentStart;
+                titleEl.innerText = 'Tháng ' + (d.getMonth() + 1) + ' ' + d.getFullYear();
+            } else {
+                titleEl.innerText = view.title;
+            }
+        }
+
+        function updateActiveViewPills(viewType) {
+            let pillMap = {
+                'dayGridMonth': 'viewPillMonth',
+                'timeGridWeek': 'viewPillWeek',
+                'timeGridDay': 'viewPillDay'
+            };
+            Object.keys(pillMap).forEach(key => {
+                let el = document.getElementById(pillMap[key]);
+                if (el) {
+                    if (key === viewType) {
+                        el.classList.add('active');
+                    } else {
+                        el.classList.remove('active');
+                    }
+                }
+            });
+        }
+
+        function switchCalendarView(viewName) {
+            if (!calendar) return;
+            calendar.changeView(viewName);
+            updateActiveViewPills(viewName);
         }
 
         // Khởi tạo lịch
@@ -2325,18 +2605,18 @@
                             timeEl.style.setProperty('font-weight', '600', 'important');
                         }
                     }
+
+                    // Xử lý hiển thị buổi học đã hủy
+                    if (props.status === 'cancelled') {
+                        info.el.style.setProperty('opacity', '0.55', 'important');
+                        info.el.style.setProperty('text-decoration', 'line-through', 'important');
+                        info.el.classList.add('event-status-cancelled');
+                    }
                 },
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,timeGridDay' // Toggle pills: Tháng | Tuần | Ngày
-                },
-                buttonText: {
-                    today: 'Hôm nay',
-                    month: 'Tháng',
-                    week: 'Tuần',
-                    day: 'Ngày',
-                    list: 'Danh sách'
+                headerToolbar: false, // Tắt headerToolbar mặc định vì đã dùng custom header
+                datesSet: function(dateInfo) {
+                    updateCalendarHeaderTitle(dateInfo.view);
+                    updateActiveViewPills(dateInfo.view.type);
                 },
                 events: function(info, successCallback, failureCallback) {
                     let vType = this.view ? this.view.type : (calendar && calendar.view ? calendar.view.type : initialViewType);
