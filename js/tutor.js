@@ -27,9 +27,9 @@ window.getTutorStudentsResolved = getTutorStudentsResolved;
 
 function formatScheduleCell(val) {
     if (!val || val.trim() === "") {
-        return "<span style='color: rgba(255,255,255,0.3); font-weight: normal;'>-</span>";
+        return "<span style='color: var(--text-muted); font-weight: normal;'>-</span>";
     }
-    return "<span style='color:#10B981; font-weight:600; font-size:13.5px; white-space:nowrap;'>" + val + "</span>";
+    return "<span style='color: var(--text-primary); font-weight:600; font-size:13.5px; white-space:nowrap;'>" + val + "</span>";
 }
 
 var tutorOverviewMonth = new Date().getMonth() + 1;
@@ -3922,8 +3922,8 @@ window.initTutorSidebarState = initTutorSidebarState;
                         ];
                         
                         daysList.forEach(function(day) {
-                            var dayVal = day.val ? day.val : "<span style='color: rgba(255,255,255,0.15); font-weight: 400;'>Trống</span>";
-                            mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>" + day.label + "</span><span class='accordion-body-val' style='color:var(--color-primary); font-weight:600;'>" + dayVal + "</span></div>";
+                            var dayVal = day.val ? day.val : "<span style='color: var(--text-muted); font-weight: 400;'>Trống</span>";
+                            mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>" + day.label + "</span><span class='accordion-body-val' style='color:var(--text-primary); font-weight:600;'>" + dayVal + "</span></div>";
                         });
                         
                         // Edit button at the bottom of accordion body
@@ -5096,8 +5096,8 @@ window.initTutorSidebarState = initTutorSidebarState;
                     ];
                     
                     daysList.forEach(function(day) {
-                        var dayVal = day.val ? day.val : "<span style='color: rgba(255,255,255,0.15); font-weight: 400;'>Trống</span>";
-                        mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>" + day.label + "</span><span class='accordion-body-val' style='color:var(--color-primary); font-weight:600;'>" + dayVal + "</span></div>";
+                        var dayVal = day.val ? day.val : "<span style='color: var(--text-muted); font-weight: 400;'>Trống</span>";
+                        mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>" + day.label + "</span><span class='accordion-body-val' style='color:var(--text-primary); font-weight:600;'>" + dayVal + "</span></div>";
                     });
                     
                     mobileHtml += "    <div style='margin-top: 10px; text-align: right;'>";
