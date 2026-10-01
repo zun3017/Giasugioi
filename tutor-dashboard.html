@@ -896,37 +896,18 @@
                 </div>
             </div>
 
-            <!-- Danh sách buổi học & Nhận xét -->
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-top: 25px; margin-bottom: 12px;">
-                <h4 style="color: #FFF; font-size: 16px; margin: 0; display: flex; align-items: center; gap: 8px;">
-                    <i class="fa-solid fa-list-check" style="color: #8E4DFF;"></i>
-                    <span>Danh sách buổi học & Nhận xét</span>
-                </h4>
-            </div>
-
-            <!-- Bảng danh sách buổi học (Desktop) -->
-            <div class="table-wrapper desktop-table-view" style="margin-top: 10px; border-radius: 16px;">
-                <table id="diaryTable" style="width: 100%; border-collapse: collapse;">
-                    <thead>
-                        <tr>
-                            <th style="width: 130px; text-align: left; padding: 12px 14px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Ngày dạy</th>
-                            <th style="width: 110px; text-align: center; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Giờ dạy</th>
-                            <th style="width: 140px; text-align: left; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Học sinh</th>
-                            <th style="width: 110px; text-align: left; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Môn</th>
-                            <th style="min-width: 160px; text-align: left; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Nội dung bài học</th>
-                            <th style="width: 130px; text-align: center; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Đánh giá BTVN</th>
-                            <th style="min-width: 240px; text-align: left; padding: 12px 14px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Nhận xét gia sư</th>
-                        </tr>
-                    </thead>
-                    <tbody id="diaryTableBody">
-                        <tr><td colspan="7" style="text-align: center; color: rgba(255,255,255,0.3); padding: 25px;">Đang tải nhật ký...</td></tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <!-- Mobile View (Card List) -->
-            <div class="mobile-cards-view" id="diaryMobileList" style="margin-top: 15px;">
-                <div style="text-align: center; color: rgba(255,255,255,0.3); padding: 20px;">Đang tải nhật ký...</div>
+            <!-- Lịch sử học tập & Nhận xét chi tiết (Nhật ký các buổi học) -->
+            <div class="schedule-section" style="margin-top: 25px; margin-bottom: 30px;">
+                <h3 style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                    <span style="display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử học tập & Nhận xét chi tiết</span>
+                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
+                        <button type="button" onclick="openAddLessonModal()" class="btn-refresh-history" style="background: linear-gradient(135deg, #8E4DFF 0%, #5B21B6 100%); border: none; color: #FFF; font-weight: bold; border-radius: 20px; padding: 6px 16px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(142,77,255,0.2); cursor: pointer;" title="Thêm buổi học mới"><i class="fa-solid fa-calendar-plus"></i> Thêm buổi học</button>
+                        <button type="button" onclick="refreshTutorStudentHistory()" class="btn-refresh-history" title="Làm mới lịch sử" style="cursor: pointer;"><i class="fa-solid fa-arrows-rotate"></i> Làm mới</button>
+                    </div>
+                </h3>
+                <div id="tutorStudentHistory" style="margin-top: 15px;">
+                    <!-- Render bảng / accordion lịch sử học sinh ở đây -->
+                </div>
             </div>
         </div> <!-- End #tutorSectionDiary -->
 
@@ -960,30 +941,6 @@
             <div class="student-buttons-container" id="tutorStudentsList" style="display: none;">
                 <!-- Nút chọn học sinh sẽ render ở đây (legacy) -->
             </div>
-
-            <div id="tutorStudentDetail">
-            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                <h3 style="color: #FFF; margin: 0; display: flex; align-items: center; gap: 10px; font-size: 18px;">
-                    Học sinh: <span id="selectedStudentNameHeader" style="color: #FFD23F; font-weight: 800;">...</span>
-                    <button onclick="openEditStudentModal()" class="btn-icon-edit" title="Sửa thông tin học sinh"><i class="fa-solid fa-pen-to-square"></i></button>
-                </h3>
-            </div>
-
-            <!-- Lịch sử học tập (Gia sư xem & đối chiếu) -->
-            <div class="schedule-section" style="margin-top: 30px; margin-bottom: 30px;">
-                <h3 style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-                    <span style="display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử học tập & Nhận xét chi tiết</span>
-                    <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
-                        <button onclick="openAddLessonModal()" class="btn-refresh-history" style="background: linear-gradient(135deg, #8E4DFF 0%, #5B21B6 100%); border: none; color: #FFF; font-weight: bold; border-radius: 20px; padding: 6px 16px; display: inline-flex; align-items: center; gap: 6px; box-shadow: 0 4px 10px rgba(142,77,255,0.2);" title="Thêm buổi học mới"><i class="fa-solid fa-calendar-plus"></i> Thêm buổi học</button>
-                        <button onclick="refreshTutorStudentHistory()" class="btn-refresh-history" title="Làm mới lịch sử"><i class="fa-solid fa-arrows-rotate"></i> Làm mới</button>
-                    </div>
-                </h3>
-                <div id="tutorStudentHistory" style="margin-top: 15px;">
-                    <!-- Render bảng / accordion lịch sử học sinh ở đây -->
-                </div>
-            </div>
-
-        </div> <!-- End #tutorStudentDetail -->
         </div> <!-- End #tutorSectionStudents -->
 
         <!-- SECTION HỌC PHÍ -->
@@ -1386,6 +1343,7 @@
                     <option value="Không làm">Không làm</option>
                     <option value="Hoàn thành 90%">Hoàn thành 90%</option>
                     <option value="Hoàn thành 75%">Hoàn thành 75%</option>
+                    <option value="Phụ huynh nhớ nhắc nhở bé làm bài tập gia sư mới giao">Phụ huynh nhớ nhắc nhở bé làm bài tập gia sư mới giao</option>
                     <option value="Khác">Khác</option>
                 </select>
                 <div id="lesBtvnCustomWrap" style="display: none; margin-top: 8px;">
@@ -1516,6 +1474,7 @@
                         <option value="Không làm">Không làm</option>
                         <option value="Hoàn thành 90%">Hoàn thành 90%</option>
                         <option value="Hoàn thành 75%">Hoàn thành 75%</option>
+                        <option value="Phụ huynh nhớ nhắc nhở bé làm bài tập gia sư mới giao">Phụ huynh nhớ nhắc nhở bé làm bài tập gia sư mới giao</option>
                         <option value="Khác">Khác</option>
                     </select>
                     <div id="editLesBtvnCustomWrap" style="display: none; margin-top: 8px;">

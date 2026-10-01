@@ -5935,7 +5935,7 @@ window.initTutorSidebarState = initTutorSidebarState;
             var editWrap = document.getElementById('editLesBtvnCustomWrap');
             var editInp = document.getElementById('editLesBtvnCustom');
             
-            if (curBtvn === "Hoàn thành" || curBtvn === "Không làm" || curBtvn === "Hoàn thành 90%" || curBtvn === "Hoàn thành 75%") {
+            if (curBtvn === "Hoàn thành" || curBtvn === "Không làm" || curBtvn === "Hoàn thành 90%" || curBtvn === "Hoàn thành 75%" || curBtvn === "Phụ huynh nhớ nhắc nhở bé làm bài tập gia sư mới giao") {
                 editSel.value = curBtvn;
                 if (editWrap) editWrap.style.display = "none";
                 if (editInp) editInp.value = "";
@@ -7779,7 +7779,7 @@ function duplicateLesson(rowIndex) {
     var dupWrap = document.getElementById('lesBtvnCustomWrap');
     var dupInp = document.getElementById('lesBtvnCustom');
     
-    if (curBtvn === "Hoàn thành" || curBtvn === "Không làm" || curBtvn === "Hoàn thành 90%" || curBtvn === "Hoàn thành 75%") {
+    if (curBtvn === "Hoàn thành" || curBtvn === "Không làm" || curBtvn === "Hoàn thành 90%" || curBtvn === "Hoàn thành 75%" || curBtvn === "Phụ huynh nhớ nhắc nhở bé làm bài tập gia sư mới giao") {
         dupSel.value = curBtvn;
         if (dupWrap) dupWrap.style.display = "none";
         if (dupInp) dupInp.value = "";
