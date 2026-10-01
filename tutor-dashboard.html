@@ -482,133 +482,127 @@
                 </div>
             </div>
 
-            <!-- 2-Column Overview Body: Left = Upcoming Schedule, Right = Revenue Charts -->
-            <div class="overview-body-grid" id="overviewBodyGrid">
-                <!-- Left Column: Upcoming Schedule -->
-                <div class="overview-col-left">
-                    <!-- Lịch dạy sắp tới (Hôm nay & Ngày mai) -->
-                    <div class="upcoming-schedule-box" id="tutorUpcomingScheduleBox">
-                        <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
-                            <h3 style="color: #FFF; font-size: 16px; margin: 0; display: flex; align-items: center; gap: 8px;">
-                                <i class="fa-solid fa-calendar-check" style="color: #FFD23F;"></i>
-                                <span id="upcomingScheduleTitleText">Lịch dạy sắp tới</span>
-                            </h3>
-                            <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                                <span style="font-size: 12px; color: #A6ADCE;" id="upcomingScheduleSubtext"><i class="fa-solid fa-bolt" style="color: #8E4DFF;"></i> Hôm nay & Ngày mai</span>
-                                <a href="tutor-calendar.html" class="upcoming-all-schedule-btn" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: rgba(142, 77, 255, 0.15); border: 1px solid rgba(142, 77, 255, 0.4); color: #C4B5FD; transition: all 0.2s ease;">
-                                    <i class="fa-regular fa-calendar-days" style="color: #8E4DFF;"></i> Xem toàn bộ lịch dạy
-                                </a>
-                            </div>
+            <!-- Lịch dạy sắp tới (1 hàng ngang riêng) -->
+            <div class="upcoming-schedule-box" id="tutorUpcomingScheduleBox">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+                    <h3 style="color: #FFF; font-size: 16px; margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-calendar-check" style="color: #FFD23F;"></i>
+                        <span id="upcomingScheduleTitleText">Lịch dạy sắp tới</span>
+                    </h3>
+                    <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
+                        <span style="font-size: 12px; color: #A6ADCE;" id="upcomingScheduleSubtext"><i class="fa-solid fa-bolt" style="color: #8E4DFF;"></i> Hôm nay & Ngày mai</span>
+                        <a href="tutor-calendar.html" class="upcoming-all-schedule-btn" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: rgba(142, 77, 255, 0.15); border: 1px solid rgba(142, 77, 255, 0.4); color: #C4B5FD; transition: all 0.2s ease;">
+                            <i class="fa-regular fa-calendar-days" style="color: #8E4DFF;"></i> Xem toàn bộ lịch dạy
+                        </a>
+                    </div>
+                </div>
+                <div class="upcoming-days-grid" id="tutorUpcomingDaysGrid">
+                    <!-- Hôm nay -->
+                    <div class="upcoming-day-column" id="upcomingTodayCol">
+                        <div class="upcoming-day-header">
+                            <span id="upcomingTodayHeaderTitle"><i class="fa-solid fa-sun"></i> Hôm nay</span>
+                            <span style="font-size: 11px; opacity: 0.8;" id="upcomingTodayCountBadge">0 buổi</span>
                         </div>
-                        <div class="upcoming-days-grid" id="tutorUpcomingDaysGrid">
-                            <!-- Hôm nay -->
-                            <div class="upcoming-day-column" id="upcomingTodayCol">
-                                <div class="upcoming-day-header">
-                                    <span id="upcomingTodayHeaderTitle"><i class="fa-solid fa-sun"></i> Hôm nay</span>
-                                    <span style="font-size: 11px; opacity: 0.8;" id="upcomingTodayCountBadge">0 buổi</span>
-                                </div>
-                                <div class="upcoming-items-list" id="upcomingTodayList">
-                                    <!-- Items or Empty -->
-                                </div>
-                            </div>
-                            <!-- Ngày mai -->
-                            <div class="upcoming-day-column" id="upcomingTomorrowCol">
-                                <div class="upcoming-day-header">
-                                    <span id="upcomingTomorrowHeaderTitle"><i class="fa-solid fa-calendar-day"></i> Ngày mai</span>
-                                    <span style="font-size: 11px; opacity: 0.8;" id="upcomingTomorrowCountBadge">0 buổi</span>
-                                </div>
-                                <div class="upcoming-items-list" id="upcomingTomorrowList">
-                                    <!-- Items or Empty -->
-                                </div>
-                            </div>
+                        <div class="upcoming-items-list" id="upcomingTodayList">
+                            <!-- Items or Empty -->
+                        </div>
+                    </div>
+                    <!-- Ngày mai -->
+                    <div class="upcoming-day-column" id="upcomingTomorrowCol">
+                        <div class="upcoming-day-header">
+                            <span id="upcomingTomorrowHeaderTitle"><i class="fa-solid fa-calendar-day"></i> Ngày mai</span>
+                            <span style="font-size: 11px; opacity: 0.8;" id="upcomingTomorrowCountBadge">0 buổi</span>
+                        </div>
+                        <div class="upcoming-items-list" id="upcomingTomorrowList">
+                            <!-- Items or Empty -->
                         </div>
                     </div>
                 </div>
+            </div>
 
-                <!-- Right Column: Charts -->
-                <div class="overview-col-right" id="overviewChartsColumn">
-                    <!-- Block: Doanh thu N tháng (Bar Chart) -->
-                    <div class="overview-chart-box" id="revenueBarChartBox">
-                        <div class="overview-chart-header">
-                            <div>
-                                <h3 class="overview-chart-title" id="revenueChartTitle">
-                                    <i class="fa-solid fa-chart-column" style="color: #8E4DFF;"></i>
-                                    <span>Doanh thu 6 tháng gần nhất (2026)</span>
-                                </h3>
-                                <div class="revenue-big-total-wrap">
-                                    <span class="revenue-big-total" id="revenuePeriodTotal">0đ</span>
-                                    <span class="revenue-big-subtext">Tổng thu trong kỳ</span>
-                                </div>
-                            </div>
-                            
-                            <!-- 3 Dropdown Filters -->
-                            <div class="overview-chart-filters">
-                                <!-- Khoảng thời gian -->
-                                <select class="chart-filter-select" id="revenuePeriodFilter" onchange="updateRevenueBarChart()" title="Khoảng thời gian">
-                                    <option value="3">3 tháng</option>
-                                    <option value="6" selected>6 tháng</option>
-                                    <option value="12">12 tháng</option>
-                                </select>
-                                <!-- Loại biểu đồ -->
-                                <select class="chart-filter-select" id="revenueTypeFilter" onchange="updateRevenueBarChart()" title="Loại biểu đồ">
-                                    <option value="bar" selected>Biểu đồ cột</option>
-                                </select>
-                                <!-- Năm -->
-                                <select class="chart-filter-select" id="revenueYearFilter" onchange="updateRevenueBarChart()" title="Năm">
-                                    <option value="2026" selected>2026</option>
-                                    <option value="2025">2025</option>
-                                </select>
+            <!-- 2 Biểu đồ Doanh thu (Chung 1 hàng ngang) -->
+            <div class="overview-charts-grid" id="overviewChartsGrid">
+                <!-- Block: Doanh thu N tháng (Bar Chart) -->
+                <div class="overview-chart-box" id="revenueBarChartBox">
+                    <div class="overview-chart-header">
+                        <div>
+                            <h3 class="overview-chart-title" id="revenueChartTitle">
+                                <i class="fa-solid fa-chart-column" style="color: #8E4DFF;"></i>
+                                <span>Doanh thu 6 tháng gần nhất (2026)</span>
+                            </h3>
+                            <div class="revenue-big-total-wrap">
+                                <span class="revenue-big-total" id="revenuePeriodTotal">0đ</span>
+                                <span class="revenue-big-subtext">Tổng thu trong kỳ</span>
                             </div>
                         </div>
-
-                        <!-- Canvas Wrapper -->
-                        <div class="chart-canvas-container">
-                            <canvas id="revenueBarChartCanvas"></canvas>
+                        
+                        <!-- 3 Dropdown Filters -->
+                        <div class="overview-chart-filters">
+                            <!-- Khoảng thời gian -->
+                            <select class="chart-filter-select" id="revenuePeriodFilter" onchange="updateRevenueBarChart()" title="Khoảng thời gian">
+                                <option value="3">3 tháng</option>
+                                <option value="6" selected>6 tháng</option>
+                                <option value="12">12 tháng</option>
+                            </select>
+                            <!-- Loại biểu đồ -->
+                            <select class="chart-filter-select" id="revenueTypeFilter" onchange="updateRevenueBarChart()" title="Loại biểu đồ">
+                                <option value="bar" selected>Biểu đồ cột</option>
+                            </select>
+                            <!-- Năm -->
+                            <select class="chart-filter-select" id="revenueYearFilter" onchange="updateRevenueBarChart()" title="Năm">
+                                <option value="2026" selected>2026</option>
+                                <option value="2025">2025</option>
+                            </select>
                         </div>
                     </div>
 
-                    <!-- Block: Doanh thu theo Học sinh (Donut Chart + List) -->
-                    <div class="overview-chart-box" id="studentRevenueDonutBox" style="margin-top: 20px;">
-                        <div class="overview-chart-header">
-                            <div>
-                                <h3 class="overview-chart-title" id="studentRevenueTitle">
-                                    <i class="fa-solid fa-chart-pie" style="color: #FFD23F;"></i>
-                                    <span>Doanh thu theo học sinh</span>
-                                </h3>
-                                <span class="revenue-big-subtext" id="studentRevenueSubtitle">Phân bổ doanh thu tháng này</span>
-                            </div>
-                            
-                            <!-- Month Filter Dropdown -->
-                            <div class="overview-chart-filters">
-                                <select class="chart-filter-select" id="studentRevenueMonthFilter" onchange="renderStudentRevenueDonut()" title="Chọn tháng">
-                                    <option value="10/2026" selected>Tháng 10/2026</option>
-                                    <option value="9/2026">Tháng 9/2026</option>
-                                    <option value="8/2026">Tháng 8/2026</option>
-                                    <option value="7/2026">Tháng 7/2026</option>
-                                    <option value="6/2026">Tháng 6/2026</option>
-                                    <option value="5/2026">Tháng 5/2026</option>
-                                </select>
+                    <!-- Canvas Wrapper -->
+                    <div class="chart-canvas-container">
+                        <canvas id="revenueBarChartCanvas"></canvas>
+                    </div>
+                </div>
+
+                <!-- Block: Doanh thu theo Học sinh (Donut Chart + List) -->
+                <div class="overview-chart-box" id="studentRevenueDonutBox">
+                    <div class="overview-chart-header">
+                        <div>
+                            <h3 class="overview-chart-title" id="studentRevenueTitle">
+                                <i class="fa-solid fa-chart-pie" style="color: #FFD23F;"></i>
+                                <span>Doanh thu theo học sinh</span>
+                            </h3>
+                            <span class="revenue-big-subtext" id="studentRevenueSubtitle">Phân bổ doanh thu tháng này</span>
+                        </div>
+                        
+                        <!-- Month Filter Dropdown -->
+                        <div class="overview-chart-filters">
+                            <select class="chart-filter-select" id="studentRevenueMonthFilter" onchange="renderStudentRevenueDonut()" title="Chọn tháng">
+                                <option value="10/2026" selected>Tháng 10/2026</option>
+                                <option value="9/2026">Tháng 9/2026</option>
+                                <option value="8/2026">Tháng 8/2026</option>
+                                <option value="7/2026">Tháng 7/2026</option>
+                                <option value="6/2026">Tháng 6/2026</option>
+                                <option value="5/2026">Tháng 5/2026</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Chart + List Grid -->
+                    <div class="student-revenue-body">
+                        <!-- Donut Chart with Center Text -->
+                        <div class="student-donut-wrap">
+                            <div class="student-donut-canvas-container">
+                                <canvas id="studentRevenueDonutCanvas"></canvas>
+                                <!-- Center overlay for total -->
+                                <div class="donut-center-total" id="studentDonutCenterTotal">
+                                    <span class="donut-center-label">Tổng thu</span>
+                                    <span class="donut-center-value" id="studentDonutTotalVal">0đ</span>
+                                </div>
                             </div>
                         </div>
 
-                        <!-- Chart + List Grid -->
-                        <div class="student-revenue-body">
-                            <!-- Donut Chart with Center Text -->
-                            <div class="student-donut-wrap">
-                                <div class="student-donut-canvas-container">
-                                    <canvas id="studentRevenueDonutCanvas"></canvas>
-                                    <!-- Center overlay for total -->
-                                    <div class="donut-center-total" id="studentDonutCenterTotal">
-                                        <span class="donut-center-label">Tổng thu</span>
-                                        <span class="donut-center-value" id="studentDonutTotalVal">0đ</span>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <!-- Student Revenue List -->
-                            <div class="student-revenue-list" id="studentRevenueList">
-                                <!-- Rendered dynamically -->
-                            </div>
+                        <!-- Student Revenue List -->
+                        <div class="student-revenue-list" id="studentRevenueList">
+                            <!-- Rendered dynamically -->
                         </div>
                     </div>
                 </div>
