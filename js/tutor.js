@@ -2780,20 +2780,153 @@ function closeStudentInvoiceModal(isExplicitCancel) {
 }
 window.closeStudentInvoiceModal = closeStudentInvoiceModal;
 
+function createPdfBlobFromJpeg(jpegBytes, imgWidth, imgHeight) {
+    var a4W = 595.28;
+    var a4H = 841.89;
+    var margin = 20;
+    var maxW = a4W - margin * 2;
+    var maxH = a4H - margin * 2;
+
+    var renderW = maxW;
+    var renderH = (imgHeight / imgWidth) * renderW;
+    if (renderH > maxH) {
+        renderH = maxH;
+        renderW = (imgWidth / imgHeight) * renderH;
+    }
+
+    var posX = (a4W - renderW) / 2;
+    var posY = (a4H - renderH) / 2;
+
+    var contentStream = 'q\n' +
+        renderW.toFixed(2) + ' 0 0 ' + renderH.toFixed(2) + ' ' + posX.toFixed(2) + ' ' + posY.toFixed(2) + ' cm\n' +
+        '/Img Do\n' +
+        'Q\n';
+
+    var header = '%PDF-1.4\n';
+    var obj1 = '1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n';
+    var obj2 = '2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n';
+    var obj3 = '3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + a4W.toFixed(2) + ' ' + a4H.toFixed(2) + '] /Resources << /XObject << /Img 4 0 R >> >> /Contents 5 0 R >>\nendobj\n';
+    var obj4Start = '4 0 obj\n<< /Type /XObject /Subtype /Image /Width ' + imgWidth + ' /Height ' + imgHeight + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + jpegBytes.length + ' >>\nstream\n';
+    var obj4End = '\nendstream\nendobj\n';
+    var obj5 = '5 0 obj\n<< /Length ' + contentStream.length + ' >>\nstream\n' + contentStream + 'endstream\nendobj\n';
+
+    var enc = new TextEncoder();
+    var bHeader = enc.encode(header);
+    var bObj1 = enc.encode(obj1);
+    var bObj2 = enc.encode(obj2);
+    var bObj3 = enc.encode(obj3);
+    var bObj4Start = enc.encode(obj4Start);
+    var bObj4End = enc.encode(obj4End);
+    var bObj5 = enc.encode(obj5);
+
+    var off1 = bHeader.length;
+    var off2 = off1 + bObj1.length;
+    var off3 = off2 + bObj2.length;
+    var off4 = off3 + bObj3.length;
+    var off5 = off4 + bObj4Start.length + jpegBytes.length + bObj4End.length;
+    var xrefOff = off5 + bObj5.length;
+
+    var xref = 'xref\n0 6\n0000000000 65535 f \n' +
+        String(off1).padStart(10, '0') + ' 00000 n \n' +
+        String(off2).padStart(10, '0') + ' 00000 n \n' +
+        String(off3).padStart(10, '0') + ' 00000 n \n' +
+        String(off4).padStart(10, '0') + ' 00000 n \n' +
+        String(off5).padStart(10, '0') + ' 00000 n \n' +
+        'trailer\n<< /Size 6 /Root 1 0 R >>\nstartxref\n' + xrefOff + '\n%%EOF\n';
+    var bXref = enc.encode(xref);
+
+    return new Blob([
+        bHeader,
+        bObj1,
+        bObj2,
+        bObj3,
+        bObj4Start,
+        jpegBytes,
+        bObj4End,
+        bObj5,
+        bXref
+    ], { type: 'application/pdf' });
+}
+
 function exportTuitionModalPdf() {
+    var card = document.getElementById('tuitionInvoiceCard');
+    var modal = document.getElementById('tutorTuitionInvoiceModal');
+    if (!card) {
+        if (typeof showToast === 'function') showToast("Không tìm thấy phiếu học phí!", "error");
+        return;
+    }
+
+    var state = window.tuitionInvoiceModalState || {};
+    var sName = state.studentName || (modal ? modal.getAttribute('data-student') : "") || "HocSinh";
+    var startDateStr = state.startDate || (modal ? modal.getAttribute('data-start') : "") || "";
+    var fileName = getTuitionInvoiceFileName(sName, startDateStr).replace(/\.png$/i, '.pdf');
+
     var btn = document.getElementById('btnTuitionExportPdf');
     var originalText = btn ? btn.innerHTML : "";
     if (btn) {
         btn.disabled = true;
-        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang chuẩn bị...';
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang tạo PDF...';
     }
-    setTimeout(function() {
+
+    var restoreBtn = function() {
         if (btn) {
             btn.disabled = false;
             btn.innerHTML = originalText;
         }
-        window.print();
-    }, 200);
+    };
+
+    if (typeof html2canvas !== 'function') {
+        restoreBtn();
+        if (typeof showToast === 'function') showToast("Thư viện html2canvas chưa sẵn sàng!", "error");
+        return;
+    }
+
+    html2canvas(card, {
+        scale: 2,
+        backgroundColor: "#FFFFFF",
+        useCORS: true,
+        logging: false
+    }).then(function(canvas) {
+        try {
+            var dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+            var base64 = dataUrl.split(',')[1];
+            var binaryStr = atob(base64);
+            var len = binaryStr.length;
+            var jpegBytes = new Uint8Array(len);
+            for (var i = 0; i < len; i++) {
+                jpegBytes[i] = binaryStr.charCodeAt(i);
+            }
+
+            var pdfBlob = createPdfBlobFromJpeg(jpegBytes, canvas.width, canvas.height);
+            var url = URL.createObjectURL(pdfBlob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(function() {
+                URL.revokeObjectURL(url);
+            }, 5000);
+
+            restoreBtn();
+            if (typeof showToast === 'function') {
+                showToast("Đã tải phiếu học tập PDF thành công!", "success");
+            }
+        } catch(err) {
+            console.error("PDF generation error:", err);
+            restoreBtn();
+            if (typeof showToast === 'function') {
+                showToast("Lỗi khi tạo file PDF!", "error");
+            }
+        }
+    }).catch(function(err) {
+        console.error("html2canvas error during PDF export:", err);
+        restoreBtn();
+        if (typeof showToast === 'function') {
+            showToast("Lỗi khi chụp phiếu học phí để xuất PDF!", "error");
+        }
+    });
 }
 window.exportTuitionModalPdf = exportTuitionModalPdf;
 
