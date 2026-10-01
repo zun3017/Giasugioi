@@ -2135,6 +2135,39 @@
             color: #FFFFFF;
         }
 
+        /* Image 2 Style Select Pills */
+        .chart-filter-select-img2 {
+            background-color: #FFFFFF;
+            color: #1E293B;
+            border: 1px solid #CBD5E1;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            padding: 7px 32px 7px 14px;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            appearance: none;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke='%23334155'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' stroke-width='2.5' d='M19 9l-7 7-7-7'%3E%3C/path%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 10px center;
+            background-size: 13px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.08);
+        }
+
+        .chart-filter-select-img2:hover {
+            border-color: #94A3B8;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.12);
+        }
+
+        .chart-filter-select-img2 option {
+            background: #FFFFFF;
+            color: #1E293B;
+            font-weight: 500;
+        }
+
         .chart-canvas-container {
             position: relative;
             height: 240px;

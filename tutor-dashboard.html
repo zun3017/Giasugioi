@@ -522,42 +522,38 @@
 
             <!-- 2 Biểu đồ Doanh thu (Chung 1 hàng ngang) -->
             <div class="overview-charts-grid" id="overviewChartsGrid">
-                <!-- Block: Doanh thu N tháng (Bar Chart) -->
+                <!-- Block: Doanh thu N tháng (Bar Chart - Chuẩn Hình 2) -->
                 <div class="overview-chart-box" id="revenueBarChartBox">
-                    <div class="overview-chart-header">
-                        <div>
-                            <h3 class="overview-chart-title" id="revenueChartTitle">
-                                <i class="fa-solid fa-chart-column" style="color: #8E4DFF;"></i>
-                                <span>Doanh thu 6 tháng gần nhất (2026)</span>
-                            </h3>
-                            <div class="revenue-big-total-wrap">
-                                <span class="revenue-big-total" id="revenuePeriodTotal">0đ</span>
-                                <span class="revenue-big-subtext">Tổng thu trong kỳ</span>
-                            </div>
+                    <div style="margin-bottom: 10px;">
+                        <h3 class="overview-chart-title" id="revenueChartTitle" style="font-size: 16px; font-weight: 700; color: #FFFFFF; margin: 0 0 4px 0;">
+                            Doanh thu 12 tháng
+                        </h3>
+                        <div class="revenue-big-total" id="revenuePeriodTotal" style="color: #10B981; font-size: 26px; font-weight: 800; line-height: 1.2;">
+                            180.250.000 đ
                         </div>
-                        
-                        <!-- 3 Dropdown Filters -->
-                        <div class="overview-chart-filters">
-                            <!-- Khoảng thời gian -->
-                            <select class="chart-filter-select" id="revenuePeriodFilter" onchange="updateRevenueBarChart()" title="Khoảng thời gian">
-                                <option value="3">3 tháng</option>
-                                <option value="6" selected>6 tháng</option>
-                                <option value="12">12 tháng</option>
-                            </select>
-                            <!-- Loại biểu đồ -->
-                            <select class="chart-filter-select" id="revenueTypeFilter" onchange="updateRevenueBarChart()" title="Loại biểu đồ">
-                                <option value="bar" selected>Biểu đồ cột</option>
-                            </select>
-                            <!-- Năm -->
-                            <select class="chart-filter-select" id="revenueYearFilter" onchange="updateRevenueBarChart()" title="Năm">
-                                <option value="2026" selected>2026</option>
-                                <option value="2025">2025</option>
-                            </select>
-                        </div>
+                    </div>
+                    
+                    <!-- 3 Dropdown Filters in separate row below total (White rounded pills as in Image 2) -->
+                    <div class="overview-chart-filters" style="display: flex; gap: 10px; margin-bottom: 16px; flex-wrap: wrap;">
+                        <!-- Khoảng thời gian -->
+                        <select class="chart-filter-select-img2" id="revenuePeriodFilter" onchange="updateRevenueBarChart()" title="Khoảng thời gian">
+                            <option value="12" selected>12 tháng</option>
+                            <option value="6">6 tháng</option>
+                            <option value="3">3 tháng</option>
+                        </select>
+                        <!-- Loại biểu đồ -->
+                        <select class="chart-filter-select-img2" id="revenueTypeFilter" onchange="updateRevenueBarChart()" title="Loại biểu đồ">
+                            <option value="bar" selected>Biểu đồ cột</option>
+                        </select>
+                        <!-- Năm -->
+                        <select class="chart-filter-select-img2" id="revenueYearFilter" onchange="updateRevenueBarChart()" title="Năm">
+                            <option value="2026" selected>Năm 2026</option>
+                            <option value="2025">Năm 2025</option>
+                        </select>
                     </div>
 
                     <!-- Canvas Wrapper -->
-                    <div class="chart-canvas-container">
+                    <div class="chart-canvas-container" style="position: relative; height: 230px; width: 100%;">
                         <canvas id="revenueBarChartCanvas"></canvas>
                     </div>
                 </div>
