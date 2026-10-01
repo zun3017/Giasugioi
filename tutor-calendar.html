@@ -284,6 +284,9 @@
             padding: 8px 20px;
             gap: 16px;
             z-index: 10;
+            min-width: 0;
+            overflow: hidden;
+            box-sizing: border-box;
         }
 
         .cal-legend-list {
@@ -291,12 +294,20 @@
             align-items: center;
             gap: 16px;
             overflow-x: auto;
-            scrollbar-width: none;
+            overflow-y: hidden;
+            scrollbar-width: thin;
+            scrollbar-color: #D5C7B7 transparent;
             white-space: nowrap;
-            flex: 1;
+            flex: 1 1 0%;
+            min-width: 0;
+            padding-right: 8px;
         }
         .cal-legend-list::-webkit-scrollbar {
-            display: none;
+            height: 3px;
+        }
+        .cal-legend-list::-webkit-scrollbar-thumb {
+            background: #D5C7B7;
+            border-radius: 4px;
         }
 
         .cal-legend-item {
@@ -308,6 +319,7 @@
             color: #2D1F0E;
             cursor: default;
             user-select: none;
+            flex-shrink: 0;
         }
 
         .cal-legend-dot {
@@ -320,7 +332,7 @@
         }
 
         .cal-status-bar {
-            display: flex;
+            display: inline-flex;
             align-items: center;
             gap: 8px;
             font-size: 12.5px;
@@ -332,6 +344,9 @@
             padding: 5px 14px;
             border-radius: 20px;
             border: 1px solid #E5D9CC;
+            position: relative;
+            z-index: 2;
+            margin-left: auto;
         }
 
         /* --- GOOGLE CALENDAR CUSTOM STYLING (LIGHT CREAM/BEIGE) --- */
@@ -2418,8 +2433,8 @@
             }
 
             renderSheetTable();
-            if (typeof updateMonthStatusBar === 'function' && calendar && calendar.view && calendar.view.type === 'dayGridMonth') {
-                updateMonthStatusBar(calendar.view);
+            if (typeof updateMonthBottomBar === 'function' && calendar && calendar.view && calendar.view.type === 'dayGridMonth') {
+                updateMonthBottomBar(calendar.view);
             }
             if (andThen) andThen();
 
@@ -2805,7 +2820,7 @@
                 calendar.refetchEvents();
                 if (calendar.view && calendar.view.type === 'dayGridMonth') {
                     setTimeout(function() {
-                        updateMonthStatusBar(calendar.view);
+                        updateMonthBottomBar(calendar.view);
                     }, 50);
                 }
             }
@@ -2860,11 +2875,36 @@
         // ==========================================
         // THANH ĐÁY LỊCH: LEGEND HỌC SINH & STATUS BAR (TASK 10.4)
         // ==========================================
-        function renderStudentLegend() {
+        function renderStudentLegend(view) {
             let legendContainer = document.getElementById('calStudentLegendList');
             if (!legendContainer) return;
             legendContainer.innerHTML = '';
-            tutorScheduleSheetData.forEach(row => {
+            
+            let displayRows = tutorScheduleSheetData;
+
+            // Nếu đang xem dạng tháng, lọc theo học sinh có buổi học trong tháng đó để đồng bộ chuẩn xác với thanh thống kê
+            if (view && view.type === 'dayGridMonth' && typeof getEventsForCalendarRange === 'function') {
+                let rangeInfo = { start: view.activeStart, end: view.activeEnd };
+                let events = getEventsForCalendarRange(rangeInfo, 'dayGridMonth');
+                let targetMonth = view.currentStart.getMonth();
+                let targetYear = view.currentStart.getFullYear();
+
+                let activeStudentNames = new Set();
+                events.forEach(ev => {
+                    let d = new Date(ev.start);
+                    if (d.getMonth() === targetMonth && d.getFullYear() === targetYear) {
+                        if (ev.extendedProps && ev.extendedProps.studentName) {
+                            activeStudentNames.add(ev.extendedProps.studentName);
+                        }
+                    }
+                });
+
+                if (activeStudentNames.size > 0) {
+                    displayRows = tutorScheduleSheetData.filter(row => activeStudentNames.has(row.studentName));
+                }
+            }
+
+            displayRows.forEach(row => {
                 let studentColor = row.color || '#C05E8E';
                 let item = document.createElement('div');
                 item.className = 'cal-legend-item';
@@ -2905,7 +2945,7 @@
             if (!bar || !view) return;
             if (view.type === 'dayGridMonth') {
                 bar.style.display = 'flex';
-                renderStudentLegend();
+                renderStudentLegend(view);
                 updateMonthStatusBar(view);
             } else {
                 bar.style.display = 'none';
@@ -3171,6 +3211,17 @@
             });
 
             calendar.render();
+
+            // Cho phép cuộn ngang danh sách học sinh (legend) bằng con lăn chuột
+            let legendListEl = document.getElementById('calStudentLegendList');
+            if (legendListEl) {
+                legendListEl.addEventListener('wheel', function(e) {
+                    if (e.deltaY !== 0) {
+                        e.preventDefault();
+                        this.scrollLeft += e.deltaY;
+                    }
+                }, { passive: false });
+            }
         });
 
         // --- ĐIỀU KHIỂN FORM HỘP THOẠI MODAL ---
