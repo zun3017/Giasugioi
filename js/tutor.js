@@ -1457,8 +1457,26 @@ function initTuitionMonthFilter() {
         select.appendChild(opt);
     });
 
-    if (currentVal && monthsSet[currentVal]) {
+    var latestActiveMonth = "";
+    for (var i = 0; i < sortedMonths.length; i++) {
+        var mCandidate = sortedMonths[i];
+        var hasLogsInMonth = students.some(function(st) {
+            return st.logs && Array.isArray(st.logs) && st.logs.some(function(l) {
+                if (!l.ngay) return false;
+                var parts = l.ngay.split('/');
+                return parts.length >= 3 && (parts[1].padStart(2, '0') + '/' + parts[2]) === mCandidate;
+            });
+        });
+        if (hasLogsInMonth) {
+            latestActiveMonth = mCandidate;
+            break;
+        }
+    }
+
+    if (currentVal && (currentVal === 'all' || monthsSet[currentVal])) {
         select.value = currentVal;
+    } else if (latestActiveMonth) {
+        select.value = latestActiveMonth;
     } else if (monthsSet[currentMonthStr]) {
         select.value = currentMonthStr;
     } else {
