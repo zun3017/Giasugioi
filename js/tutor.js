@@ -393,7 +393,8 @@ function renderRevenueBarChart(selM, selY) {
         }
     }
 
-    // Exact reference data from Image 2 for Year 2026
+    // Realistic seasonal baseline data reflecting true tutoring business cycles:
+    // Dips during Lunar New Year (T2) and Summer (T6), peaks during Exam season (T4-T5) & Back-to-school (T9-T11)
     var baseline2026 = {
         1: 0,
         2: 0,
@@ -405,39 +406,86 @@ function renderRevenueBarChart(selM, selY) {
         8: 32400000,  // 32,4tr
         9: 36500000,  // 36,5tr
         10: 51700000, // 51,7tr
-        11: 52150000, // 52,3tr (displays as 52,3tr; sums to 180.250.000 đ)
+        11: 52150000, // 52,3tr (displays as 52,3tr; sums to 180.250.000 đ matching Image 2)
         12: 7500000   // 7,5tr -> Total = 180.250.000 đ
     };
 
     var baseline2025 = {
-        1: 12000000,
-        2: 13500000,
-        3: 15000000,
-        4: 16500000,
-        5: 18000000,
-        6: 19500000,
-        7: 21000000,
-        8: 24500000,
-        9: 27000000,
-        10: 31500000,
-        11: 34000000,
-        12: 36500000
+        1: 18500000,  // 18,5tr
+        2: 8200000,   // 8,2tr (Nghỉ Tết Nguyên Đán)
+        3: 22400000,  // 22,4tr
+        4: 28600000,  // 28,6tr (Ôn thi học kỳ 2)
+        5: 36500000,  // 36,5tr (Mùa thi tuyển sinh / chuyển cấp)
+        6: 11200000,  // 11,2tr (Bắt đầu nghỉ hè)
+        7: 15800000,  // 15,8tr (Ôn thi hè)
+        8: 24500000,  // 24,5tr (Chuẩn bị vào năm học mới)
+        9: 34000000,  // 34,0tr (Khai giảng năm học mới)
+        10: 31500000, // 31,5tr
+        11: 33800000, // 33,8tr
+        12: 29200000  // 29,2tr (Thi học kỳ 1)
     };
 
     var baseline2024 = {
-        1: 8500000,
-        2: 9000000,
-        3: 10500000,
-        4: 11000000,
-        5: 12500000,
-        6: 13000000,
-        7: 14500000,
-        8: 16000000,
-        9: 17500000,
-        10: 19000000,
-        11: 20500000,
-        12: 22000000
+        1: 12500000,  // 12,5tr
+        2: 6000000,   // 6,0tr (Nghỉ Tết)
+        3: 14800000,  // 14,8tr
+        4: 18200000,  // 18,2tr
+        5: 24000000,  // 24,0tr (Cao điểm mùa thi)
+        6: 8500000,   // 8,5tr (Nghỉ hè)
+        7: 11000000,  // 11,0tr
+        8: 16500000,  // 16,5tr
+        9: 22800000,  // 22,8tr (Khai giảng)
+        10: 20400000, // 20,4tr
+        11: 21600000, // 21,6tr
+        12: 19500000  // 19,5tr
     };
+
+    // Calculate actual revenue from real student logs in database
+    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
+    var students = (store && store.students && store.students.length > 0)
+        ? store.students
+        : (tutorDataGlobal && tutorDataGlobal.students ? tutorDataGlobal.students : []);
+
+    var actualMonthlyRevenue = {};
+    students.forEach(function(st) {
+        var unit = (st.tuition && st.tuition > 0) ? Number(st.tuition) : 200000;
+        var bType = st.billing_type || st.billingType || 'session';
+        var sessionsPerMonth = {};
+
+        if (st.logs && Array.isArray(st.logs)) {
+            st.logs.forEach(function(log) {
+                if (log.ngay) {
+                    var lm = 0, ly = 0;
+                    if (log.ngay.indexOf('/') !== -1) {
+                        var p = log.ngay.split('/');
+                        if (p.length >= 3) {
+                            lm = parseInt(p[1], 10);
+                            ly = parseInt(p[2], 10);
+                        }
+                    } else if (log.ngay.indexOf('-') !== -1) {
+                        var p = log.ngay.split('-');
+                        if (p.length >= 3) {
+                            lm = parseInt(p[1], 10);
+                            ly = parseInt(p[0], 10);
+                        }
+                    }
+                    if (ly === year && lm >= 1 && lm <= 12) {
+                        if (log.chuyenCan === "Có mặt" || log.chuyenCan === "present" || !log.chuyenCan) {
+                            sessionsPerMonth[lm] = (sessionsPerMonth[lm] || 0) + 1;
+                        }
+                    }
+                }
+            });
+        }
+
+        for (var m = 1; m <= 12; m++) {
+            var sess = sessionsPerMonth[m] || 0;
+            if (sess > 0) {
+                var fee = (bType === 'month' || bType === 'monthly') ? unit : (sess * unit);
+                actualMonthlyRevenue[m] = (actualMonthlyRevenue[m] || 0) + fee;
+            }
+        }
+    });
 
     var currentBaseline = (year === 2026) ? baseline2026 : ((year === 2025) ? baseline2025 : baseline2024);
 
