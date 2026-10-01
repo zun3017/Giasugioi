@@ -153,7 +153,7 @@
         
         .intro-card p {
             font-size: 14px;
-            color: #A6ADCE;
+            color: var(--text-secondary);
             line-height: 1.6;
             margin-bottom: 24px;
         }
@@ -179,14 +179,14 @@
         }
         
         .btn-intro.btn-purple {
-            background: linear-gradient(135deg, #8E4DFF 0%, #5B21B6 100%);
-            color: #FFFFFF;
-            box-shadow: 0 4px 15px rgba(142, 77, 255, 0.3);
+            background: var(--btn-bg);
+            color: var(--btn-text);
+            box-shadow: var(--shadow-primary);
         }
         
         .btn-intro.btn-purple:hover {
             transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(142, 77, 255, 0.4);
+            box-shadow: var(--shadow-primary);
         }
         
         .btn-intro.btn-dark {
@@ -626,13 +626,13 @@
         
         .table-wrapper { width: 100%; overflow-x: auto; border-radius: 12px; }
         table { width: 100%; border-collapse: collapse; min-width: 800px; }
-        th, td { border-bottom: 1px solid rgba(142, 77, 255, 0.2); padding: 12px 16px; text-align: left; font-size: 13px; color: #E2D1FF;}
-        th { background-color: rgba(91, 46, 255, 0.1); color: #FFF; white-space: nowrap; font-weight: 600;}
-        tr:hover td { background-color: rgba(142, 77, 255, 0.05); }
+        th, td { border-bottom: 1px solid var(--border-card); padding: 12px 16px; text-align: left; font-size: 13px; color: var(--text-primary);}
+        th { background-color: var(--nav-active-bg); color: var(--text-primary); white-space: nowrap; font-weight: 600;}
+        tr:hover td { background-color: var(--nav-hover-bg); }
         
         .bt-item {
             display: flex; justify-content: space-between; align-items: center;
-            padding: 12px 0; border-bottom: 1px dashed rgba(142, 77, 255, 0.3);
+            padding: 12px 0; border-bottom: 1px dashed var(--border-color);
         }
         .bt-item:last-child { border-bottom: none; padding-bottom: 0;}
         
@@ -640,7 +640,7 @@
         a.btn-download:hover { background: var(--color-primary); color: var(--btn-text); box-shadow: var(--shadow-primary); transform: translateY(-2px);}
         
         .btn-back { width: 100%; padding: 14px; background: transparent; border: 1px solid var(--color-primary); color: var(--text-primary); border-radius: 25px; font-weight: 600; font-size: 15px; cursor: pointer; transition: 0.3s; display: flex; justify-content: center; align-items: center; gap: 10px; letter-spacing: -0.2px;}
-        .btn-back:hover { background: rgba(142, 77, 255, 0.1); box-shadow: inset 0 0 20px rgba(142, 77, 255, 0.2);}
+        .btn-back:hover { background: var(--nav-active-bg); box-shadow: none;}
 /* ================= RESPONSIVE (TỐI ƯU HÓA MOBILE CHUẨN UI/UX) ================= */
         @media (max-width: 1024px) {
             .char-boy { width: 220px; left: 2%; bottom: 100px;}
@@ -1893,12 +1893,12 @@
         .month-selector-widget {
             display: inline-flex;
             align-items: center;
-            background: rgba(24, 18, 59, 0.95);
-            border: 1px solid rgba(142, 77, 255, 0.4);
+            background: var(--btn-bg);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 4px 6px;
             gap: 4px;
-            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+            box-shadow: var(--shadow-primary);
         }
 
         .month-nav-btn {
@@ -1918,7 +1918,7 @@
         }
 
         .month-nav-btn:hover:not(:disabled) {
-            background: rgba(142, 77, 255, 0.25);
+            background: rgba(255,255,255,0.2);
             color: #FFFFFF;
             transform: scale(1.08);
         }
@@ -2237,15 +2237,15 @@
             justify-content: space-between;
             gap: 10px;
             padding: 8px 12px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: var(--bg-input);
+            border: 1px solid var(--border-card);
             border-radius: 10px;
             transition: all 0.2s ease;
         }
 
         .student-revenue-item:hover {
-            background: rgba(142, 77, 255, 0.08);
-            border-color: rgba(142, 77, 255, 0.25);
+            background: var(--nav-active-bg);
+            border-color: var(--border-color);
         }
 
         .student-revenue-left {
@@ -2415,8 +2415,8 @@
         }
 
         .upcoming-day-column {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: var(--bg-card-alt);
+            border: 1px solid var(--border-card);
             border-radius: 16px;
             padding: 16px;
             display: flex;
@@ -2428,11 +2428,11 @@
             align-items: center;
             justify-content: space-between;
             padding: 8px 12px;
-            background: rgba(142, 77, 255, 0.1);
-            border: 1px solid rgba(142, 77, 255, 0.2);
+            background: var(--nav-active-bg);
+            border: 1px solid var(--border-color);
             border-radius: 10px;
             margin-bottom: 12px;
-            color: #FFD23F;
+            color: var(--text-primary);
             font-size: 13.5px;
             font-weight: 700;
         }
@@ -2449,8 +2449,8 @@
         }
 
         .upcoming-session-card {
-            background: rgba(255, 255, 255, 0.04);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--bg-input);
+            border: 1px solid var(--border-card);
             border-radius: 12px;
             padding: 12px 14px;
             display: flex;
@@ -2461,8 +2461,8 @@
         }
 
         .upcoming-session-card:hover {
-            background: rgba(142, 77, 255, 0.08);
-            border-color: rgba(142, 77, 255, 0.25);
+            background: var(--nav-active-bg);
+            border-color: var(--border-color);
             transform: translateX(2px);
         }
 
@@ -2514,12 +2514,12 @@
             justify-content: center;
             padding: 24px 16px;
             text-align: center;
-            color: #8E95BE;
+            color: var(--text-muted);
             font-size: 13px;
             font-style: italic;
-            background: rgba(255, 255, 255, 0.02);
+            background: var(--bg-input);
             border-radius: 12px;
-            border: 1px dashed rgba(255, 255, 255, 0.08);
+            border: 1px dashed var(--border-color);
             min-height: 80px;
         }
 
@@ -3519,18 +3519,18 @@
         .report-capture-card {
             width: 100%;
             max-width: 820px;
-            background: #0E0B25;
-            border: 2px solid rgba(142, 77, 255, 0.35);
+            background: var(--bg-card);
+            border: 2px solid var(--border-color);
             border-radius: 24px;
             padding: 30px;
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
             position: relative;
             box-sizing: border-box;
-            color: #FFF;
+            color: var(--text-primary);
         }
 
         .report-card-banner {
-            border-bottom: 2px solid rgba(142, 77, 255, 0.3);
+            border-bottom: 2px solid var(--border-color);
             padding-bottom: 20px;
             margin-bottom: 20px;
             display: flex;
@@ -3543,7 +3543,7 @@
         .report-brand-title {
             font-size: 20px;
             font-weight: 900;
-            color: #FFFFFF;
+            color: var(--text-primary);
             letter-spacing: 0.3px;
         }
 
@@ -3560,9 +3560,9 @@
         }
 
         .report-meta-pill {
-            background: rgba(142, 77, 255, 0.15);
-            border: 1px solid rgba(142, 77, 255, 0.35);
-            color: #C4B5FD;
+            background: var(--nav-active-bg);
+            border: 1px solid var(--border-color);
+            color: var(--color-primary-light);
             font-size: 11.5px;
             font-weight: 700;
             padding: 5px 12px;
@@ -3580,8 +3580,8 @@
         }
 
         .report-stat-box {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--bg-card-alt);
+            border: 1px solid var(--border-card);
             border-radius: 14px;
             padding: 12px 14px;
             text-align: center;
@@ -3590,7 +3590,7 @@
         .report-stat-num {
             font-size: 18px;
             font-weight: 800;
-            color: #FFF;
+            color: var(--text-primary);
         }
 
         .report-stat-lbl {
@@ -3607,8 +3607,8 @@
         }
 
         .report-session-item {
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid rgba(255, 255, 255, 0.08);
+            background: var(--bg-card-alt);
+            border: 1px solid var(--border-card);
             border-radius: 14px;
             padding: 14px 16px;
             transition: all 0.2s ease;
@@ -3626,7 +3626,7 @@
         .report-session-date {
             font-size: 13.5px;
             font-weight: 700;
-            color: #FFF;
+            color: var(--text-primary);
             display: flex;
             align-items: center;
             gap: 6px;
@@ -3634,7 +3634,7 @@
 
         .report-session-topic {
             font-size: 13.5px;
-            color: #FFD23F;
+            color: var(--color-primary);
             font-weight: 600;
             margin-bottom: 6px;
         }
@@ -3653,12 +3653,12 @@
         .report-card-footer {
             margin-top: 24px;
             padding-top: 16px;
-            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+            border-top: 1px dashed var(--border-color);
             display: flex;
             justify-content: space-between;
             align-items: center;
             font-size: 11.5px;
-            color: #64748B;
+            color: var(--text-muted);
             flex-wrap: wrap;
             gap: 10px;
         }

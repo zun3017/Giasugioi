@@ -1,4 +1,4 @@
-var tutorChartInstance = null;
+﻿var tutorChartInstance = null;
 var tutorDataGlobal = null;
 var currentTutorStudent = null;
 var currentTutorPhone = "";
@@ -240,7 +240,7 @@ function renderUpcomingSchedule(scheduleList, selM, selY) {
         var tomorrowDateFormatted = fmtFn(formatDmy(tomorrow));
 
         if (todayTitleEl) {
-            todayTitleEl.innerHTML = '<i class="fa-solid fa-sun" style="color: #FFD23F; margin-right: 6px;"></i> Hôm nay — ' + todayDateFormatted;
+            todayTitleEl.innerHTML = '<i class="fa-solid fa-sun" style="color: var(--color-primary); margin-right: 6px;"></i> Hôm nay — ' + todayDateFormatted;
         }
         if (tomorrowTitleEl) {
             tomorrowTitleEl.innerHTML = '<i class="fa-solid fa-calendar-day" style="color: var(--color-primary); margin-right: 6px;"></i> Ngày mai — ' + tomorrowDateFormatted;
@@ -341,7 +341,7 @@ function renderUpcomingSchedule(scheduleList, selM, selY) {
         var secondHalf = monthLogs.slice(half);
 
         if (todayTitleEl) {
-            todayTitleEl.innerHTML = '<i class="fa-solid fa-calendar-check" style="color: #FFD23F; margin-right: 6px;"></i> Buổi dạy đầu tháng (' + firstHalf.length + ')';
+            todayTitleEl.innerHTML = '<i class="fa-solid fa-calendar-check" style="color: var(--color-primary); margin-right: 6px;"></i> Buổi dạy đầu tháng (' + firstHalf.length + ')';
         }
         if (tomorrowTitleEl) {
             tomorrowTitleEl.innerHTML = '<i class="fa-solid fa-calendar-check" style="color: var(--color-primary); margin-right: 6px;"></i> Buổi dạy cuối tháng (' + secondHalf.length + ')';
@@ -650,7 +650,7 @@ function renderRevenueBarChart(selM, selY) {
                     display: false
                 },
                 tooltip: {
-                    backgroundColor: '#1E2235',
+                    backgroundColor: (getComputedStyle(document.documentElement).getPropertyValue('--bg-card-alt') || '#1E2235').trim(),
                     titleColor: '#FFFFFF',
                     titleFont: { family: 'Inter', size: 12, weight: 'bold' },
                     bodyColor: '#10B981',
@@ -884,12 +884,12 @@ function renderStudentRevenueDonut(selM, selY) {
                 },
                 tooltip: {
                     enabled: donutData.length > 0 && donutLabels[0] !== "Chưa có buổi học",
-                    backgroundColor: '#1E2235',
-                    titleColor: '#FFFFFF',
+                    backgroundColor: (getComputedStyle(document.documentElement).getPropertyValue('--bg-card-alt') || '#1E2235').trim(),
+                    titleColor: (getComputedStyle(document.documentElement).getPropertyValue('--text-primary') || '#FFFFFF').trim(),
                     titleFont: { family: 'Inter', size: 12, weight: 'bold' },
-                    bodyColor: '#FFD23F',
+                    bodyColor: (getComputedStyle(document.documentElement).getPropertyValue('--color-primary') || '#8E4DFF').trim(),
                     bodyFont: { family: 'Inter', size: 12 },
-                    borderColor: 'rgba(142, 77, 255, 0.4)',
+                    borderColor: (getComputedStyle(document.documentElement).getPropertyValue('--border-color') || 'rgba(142, 77, 255, 0.4)').trim(),
                     borderWidth: 1,
                     padding: 10,
                     displayColors: true,
@@ -1231,7 +1231,7 @@ function renderTutorStudentsGrid() {
         : ((tutorDataGlobal && tutorDataGlobal.students) ? tutorDataGlobal.students : []);
 
     if (!students || students.length === 0) {
-        grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.4); padding: 40px; font-style: italic; background: rgba(11,8,38,0.6); border: 1px dashed rgba(142,77,255,0.3); border-radius: 16px;">' +
+        grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.4); padding: 40px; font-style: italic; background: var(--bg-card-alt); border: 1px dashed var(--border-color); border-radius: 16px;">' +
             '<i class="fa-solid fa-user-graduate" style="font-size: 32px; color: var(--color-primary); margin-bottom: 10px; display: block;"></i>' +
             'Chưa có học sinh nào. Bấm <b>"Thêm học sinh"</b> để tạo hồ sơ mới.</div>';
         return;
@@ -1544,7 +1544,7 @@ function renderTutorTuitionSection() {
             '</td>' +
             '<td style="padding: 12px 10px; text-align: center;"><span style="background: var(--nav-active-bg); color: var(--color-primary-light); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 12px; font-size: 12.5px; font-weight: 700;">' + sessionCount + ' buổi</span></td>' +
             '<td style="padding: 12px 10px; text-align: right; color: #E2E8F0; font-size: 13px; font-weight: 600;">' + unitFeeStr + '</td>' +
-            '<td style="padding: 12px 14px; text-align: right; color: #FFD23F; font-size: 15px; font-weight: 800; font-family: \'Space Grotesk\', sans-serif;">' + studentTotalFormatted + '</td>' +
+            '<td style="padding: 12px 14px; text-align: right; color: var(--color-primary); font-size: 15px; font-weight: 800; font-family: \'Space Grotesk\', sans-serif;">' + studentTotalFormatted + '</td>' +
             '<td style="padding: 12px 10px; text-align: center;">' + statusBtnHtml + '</td>' +
             '<td style="padding: 12px 14px; text-align: center;">' +
                 '<button type="button" class="btn-tuition-invoice" onclick="openStudentInvoiceModal(\'' + sName.replace(/'/g, "\\'") + '\')"><i class="fa-solid fa-file-invoice-dollar"></i> Xem hóa đơn</button>' +
@@ -1568,7 +1568,7 @@ function renderTutorTuitionSection() {
                 '<div><span style="color:var(--text-secondary);">Đơn giá:</span> <b style="color:var(--text-primary);">' + unitFeeStr + '</b></div>' +
                 '<div style="grid-column: 1 / -1; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 6px; display: flex; justify-content: space-between; align-items: center;">' +
                     '<span style="color:var(--text-secondary); font-weight:600;">Tổng học phí:</span>' +
-                    '<span style="color:#FFD23F; font-size: 16px; font-weight:800; font-family: \'Space Grotesk\', sans-serif;">' + studentTotalFormatted + '</span>' +
+                    '<span style="color:var(--color-primary); font-size: 16px; font-weight:800; font-family: \'Space Grotesk\', sans-serif;">' + studentTotalFormatted + '</span>' +
                 '</div>' +
             '</div>' +
             '<button type="button" class="btn-tuition-invoice" style="width: 100%; justify-content: center; padding: 8px;" onclick="openStudentInvoiceModal(\'' + sName.replace(/'/g, "\\'") + '\')"><i class="fa-solid fa-file-invoice-dollar"></i> Xem chi tiết hóa đơn</button>' +
@@ -3421,9 +3421,9 @@ function previewTutorReport() {
         });
 
         if (flatSessions.length === 0) {
-            container.innerHTML = '<div style="background: rgba(11,8,38,0.8); border: 1px dashed rgba(142,77,255,0.3); border-radius: 20px; padding: 40px; text-align: center; max-width: 600px; width: 100%;">' +
+            container.innerHTML = '<div style="background: var(--bg-card-alt); border: 1px dashed var(--border-color); border-radius: 20px; padding: 40px; text-align: center; max-width: 600px; width: 100%;">' +
                 '<i class="fa-solid fa-file-circle-xmark" style="font-size: 38px; color: var(--color-primary); margin-bottom: 12px; display: block;"></i>' +
-                '<h4 style="color: #FFF; font-size: 16px; margin: 0 0 6px 0;">Không tìm thấy buổi học nào</h4>' +
+                '<h4 style="color: var(--text-primary); font-size: 16px; margin: 0 0 6px 0;">Không tìm thấy buổi học nào</h4>' +
                 '<p style="color: var(--text-secondary); font-size: 13px; margin: 0;">Vui lòng điều chỉnh lại khoảng thời gian "Từ ngày" - "Đến ngày" hoặc chọn học sinh khác.</p>' +
             '</div>';
             if (exportBtn) exportBtn.style.display = 'none';
@@ -3529,9 +3529,9 @@ function previewTutorReport() {
         container.innerHTML = html;
     } catch(err) {
         console.error("Lỗi khi tạo bản xem trước báo cáo:", err);
-        container.innerHTML = '<div style="background: rgba(11,8,38,0.8); border: 1px dashed rgba(239,68,68,0.4); border-radius: 20px; padding: 40px; text-align: center; max-width: 600px; width: 100%;">' +
+        container.innerHTML = '<div style="background: var(--bg-card-alt); border: 1px dashed rgba(239,68,68,0.4); border-radius: 20px; padding: 40px; text-align: center; max-width: 600px; width: 100%;">' +
             '<i class="fa-solid fa-triangle-exclamation" style="font-size: 38px; color: #EF4444; margin-bottom: 12px; display: block;"></i>' +
-            '<h4 style="color: #FFF; font-size: 16px; margin: 0 0 6px 0;">Đã xảy ra lỗi khi tạo báo cáo</h4>' +
+            '<h4 style="color: var(--text-primary); font-size: 16px; margin: 0 0 6px 0;">Đã xảy ra lỗi khi tạo báo cáo</h4>' +
             '<p style="color: var(--text-secondary); font-size: 13px; margin: 0;">Vui lòng thử lại hoặc chọn học sinh khác.</p>' +
         '</div>';
         if (exportBtn) exportBtn.style.display = 'none';
@@ -3881,7 +3881,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                         
                         // Desktop Row
                         tableHtml += "<tr>" +
-                            "<td style='font-weight:700; color:#FFD23F; text-align: left; padding: 12px 14px; white-space: nowrap;'>" + st.name + "</td>" +
+                            "<td style='font-weight:700; color:var(--color-primary); text-align: left; padding: 12px 14px; white-space: nowrap;'>" + st.name + "</td>" +
                             "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.mon) + "</td>" +
                             "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.tue) + "</td>" +
                             "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.wed) + "</td>" +
@@ -3927,7 +3927,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                         
                         daysList.forEach(function(day) {
                             var dayVal = day.val ? day.val : "<span style='color: rgba(255,255,255,0.15); font-weight: 400;'>Trống</span>";
-                            mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>" + day.label + "</span><span class='accordion-body-val' style='color:#FFD23F; font-weight:600;'>" + dayVal + "</span></div>";
+                            mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>" + day.label + "</span><span class='accordion-body-val' style='color:var(--color-primary); font-weight:600;'>" + dayVal + "</span></div>";
                         });
                         
                         // Edit button at the bottom of accordion body
@@ -4116,10 +4116,10 @@ window.initTutorSidebarState = initTutorSidebarState;
                             {
                                 label: 'Điểm đầu giờ',
                                 data: dataDauGio,
-                                borderColor: '#8E4DFF',
-                                backgroundColor: 'rgba(142, 77, 255, 0.1)',
+                                borderColor: (getComputedStyle(document.documentElement).getPropertyValue('--color-primary') || '#8E4DFF').trim(),
+                                backgroundColor: (getComputedStyle(document.documentElement).getPropertyValue('--color-primary') || '#8E4DFF').trim().replace(')', ', 0.1)').replace('rgb', 'rgba'),
                                 borderWidth: 2,
-                                pointBackgroundColor: '#8E4DFF',
+                                pointBackgroundColor: (getComputedStyle(document.documentElement).getPropertyValue('--color-primary') || '#8E4DFF').trim(),
                                 pointBorderColor: '#ffffff',
                                 pointHoverRadius: 5,
                                 tension: 0.3,
@@ -4128,10 +4128,10 @@ window.initTutorSidebarState = initTutorSidebarState;
                             {
                                 label: 'Điểm định kì',
                                 data: dataDinhKi,
-                                borderColor: '#FFD23F',
-                                backgroundColor: 'rgba(255, 210, 63, 0.1)',
+                                borderColor: '#F59E0B',
+                                backgroundColor: 'rgba(245, 158, 11, 0.1)',
                                 borderWidth: 2,
-                                pointBackgroundColor: '#FFD23F',
+                                pointBackgroundColor: '#F59E0B',
                                 pointBorderColor: '#ffffff',
                                 pointHoverRadius: 5,
                                 tension: 0.3,
@@ -4145,20 +4145,20 @@ window.initTutorSidebarState = initTutorSidebarState;
                         plugins: {
                             legend: { display: false },
                             tooltip: {
-                                backgroundColor: 'rgba(11, 8, 38, 0.95)',
-                                titleColor: '#FFF',
-                                bodyColor: '#A6ADCE',
+                                backgroundColor: (getComputedStyle(document.documentElement).getPropertyValue('--bg-card-alt') || 'rgba(11, 8, 38, 0.95)').trim(),
+                                titleColor: (getComputedStyle(document.documentElement).getPropertyValue('--text-primary') || '#FFF').trim(),
+                                bodyColor: (getComputedStyle(document.documentElement).getPropertyValue('--text-secondary') || '#A6ADCE').trim(),
                                 titleFont: { family: 'Inter', weight: 'bold', size: 11 },
                                 bodyFont: { family: 'Inter', size: 10 },
-                                borderColor: '#8E4DFF',
+                                borderColor: (getComputedStyle(document.documentElement).getPropertyValue('--border-color') || '#8E4DFF').trim(),
                                 borderWidth: 1
                             }
                         },
                         scales: {
                             x: {
-                                grid: { color: 'rgba(255, 255, 255, 0.03)' },
+                                grid: { color: (getComputedStyle(document.documentElement).getPropertyValue('--border-card') || 'rgba(255, 255, 255, 0.03)').trim() },
                                 ticks: {
-                                    color: '#A6ADCE',
+                                    color: (getComputedStyle(document.documentElement).getPropertyValue('--text-secondary') || '#A6ADCE').trim(),
                                     font: { family: 'Inter', size: 9.5 },
                                     maxRotation: 45,
                                     minRotation: 0,
@@ -4169,8 +4169,8 @@ window.initTutorSidebarState = initTutorSidebarState;
                             y: {
                                 min: 0,
                                 max: 10,
-                                grid: { color: 'rgba(255, 255, 255, 0.03)' },
-                                ticks: { color: '#A6ADCE', font: { family: 'Inter', size: 9.5 }, stepSize: 2 }
+                                grid: { color: (getComputedStyle(document.documentElement).getPropertyValue('--border-card') || 'rgba(255, 255, 255, 0.03)').trim() },
+                                ticks: { color: (getComputedStyle(document.documentElement).getPropertyValue('--text-secondary') || '#A6ADCE').trim(), font: { family: 'Inter', size: 9.5 }, stepSize: 2 }
                             }
                         }
                     }
@@ -5048,7 +5048,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                 students.forEach(function(st) {
                     var s = schedMap[st.name.trim()] || { mon: "", tue: "", wed: "", thu: "", fri: "", sat: "", sun: "" };
                     tableHtml += "<tr>" +
-                        "<td style='font-weight:700; color:#FFD23F; text-align: left; padding: 12px 14px; white-space: nowrap;'>" + st.name + "</td>" +
+                        "<td style='font-weight:700; color:var(--color-primary); text-align: left; padding: 12px 14px; white-space: nowrap;'>" + st.name + "</td>" +
                         "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.mon) + "</td>" +
                         "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.tue) + "</td>" +
                         "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.wed) + "</td>" +
@@ -5101,7 +5101,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                     
                     daysList.forEach(function(day) {
                         var dayVal = day.val ? day.val : "<span style='color: rgba(255,255,255,0.15); font-weight: 400;'>Trống</span>";
-                        mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>" + day.label + "</span><span class='accordion-body-val' style='color:#FFD23F; font-weight:600;'>" + dayVal + "</span></div>";
+                        mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>" + day.label + "</span><span class='accordion-body-val' style='color:var(--color-primary); font-weight:600;'>" + dayVal + "</span></div>";
                     });
                     
                     mobileHtml += "    <div style='margin-top: 10px; text-align: right;'>";
@@ -7882,7 +7882,7 @@ function saveTutorGrade() {
     var gradeWrap = document.getElementById('grade-wrapper-' + activeGradingSubId);
     var mobileGradeWrap = document.getElementById('mobile-grade-wrapper-' + activeGradingSubId);
     
-    var gradedHtml = '<span style="padding:4px 10px; background:rgba(255,210,63,0.15); border:1px solid #FFD23F; border-radius:8px; color:#FFD23F; font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-star"></i> Điểm: ' + score + '</span>'
+    var gradedHtml = '<span style="padding:4px 10px; background:var(--nav-active-bg); border:1px solid var(--border-color); border-radius:8px; color:var(--color-primary); font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-star"></i> Điểm: ' + score + '</span>'
         + ' <button onclick="openGradeModal(\'' + activeGradingSubId + '\',\'' + (stName || '').replace(/'/g, "\\'") + '\',\'' + score + '\',\'' + (comment || '').replace(/'/g, "\\'") + '\')" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; font-size:11px; margin-left:4px;" title="Sửa điểm"><i class="fa-solid fa-pen"></i></button>';
 
     if (gradeWrap) gradeWrap.innerHTML = gradedHtml;
@@ -7963,7 +7963,7 @@ function renderStudentSubmissionsList() {
         
         var gradeHtml = '<div id="grade-wrapper-' + subId + '" style="display:inline-flex; align-items:center; justify-content:center;">';
         if (scoreVal) {
-            gradeHtml += '<span style="padding:4px 10px; background:rgba(255,210,63,0.15); border:1px solid #FFD23F; border-radius:8px; color:#FFD23F; font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-star"></i> Điểm: ' + scoreVal + '</span>'
+            gradeHtml += '<span style="padding:4px 10px; background:var(--nav-active-bg); border:1px solid var(--border-color); border-radius:8px; color:var(--color-primary); font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-star"></i> Điểm: ' + scoreVal + '</span>'
                 + ' <button onclick="openGradeModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\',\'' + scoreVal + '\',\'' + commentVal.replace(/'/g, "\\'") + '\')" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; font-size:11px; margin-left:4px;" title="Sửa điểm"><i class="fa-solid fa-pen"></i></button>';
         } else {
             gradeHtml += '<button onclick="openGradeModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\')" style="padding:6px 14px; background:rgba(249,115,22,0.15); border:1px solid #F97316; border-radius:8px; color:#FED7AA; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-pen"></i> Chấm điểm</button>';
@@ -7973,7 +7973,7 @@ function renderStudentSubmissionsList() {
         // Mobile Grade HTML
         var mobileGradeHtml = '<div id="mobile-grade-wrapper-' + subId + '" style="display:inline-flex; align-items:center;">';
         if (scoreVal) {
-            mobileGradeHtml += '<span style="padding:3px 8px; background:rgba(255,210,63,0.15); border:1px solid #FFD23F; border-radius:6px; color:#FFD23F; font-size:11.5px; font-weight:700;"><i class="fa-solid fa-star"></i> Điểm: ' + scoreVal + '</span>'
+            mobileGradeHtml += '<span style="padding:3px 8px; background:var(--nav-active-bg); border:1px solid var(--border-color); border-radius:6px; color:var(--color-primary); font-size:11.5px; font-weight:700;"><i class="fa-solid fa-star"></i> Điểm: ' + scoreVal + '</span>'
                 + ' <button onclick="openGradeModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\',\'' + scoreVal + '\',\'' + commentVal.replace(/'/g, "\\'") + '\')" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; font-size:11px; margin-left:4px;" title="Sửa điểm"><i class="fa-solid fa-pen"></i></button>';
         } else {
             mobileGradeHtml += '<button onclick="openGradeModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\')" style="padding:4px 10px; background:rgba(249,115,22,0.15); border:1px solid #F97316; border-radius:6px; color:#FED7AA; font-size:12px; font-weight:600; cursor:pointer;"><i class="fa-solid fa-pen"></i> Chấm điểm</button>';
@@ -7999,7 +7999,7 @@ function renderStudentSubmissionsList() {
         mobileHtml += "    </div>";
         mobileHtml += "    <div class='accordion-header-status' style='display:flex; align-items:center; gap:8px;'>";
         if (scoreVal) {
-            mobileHtml += "      <span style='color:#FFD23F; font-size:12px; font-weight:700;'><i class='fa-solid fa-star'></i> " + scoreVal + "đ</span>";
+            mobileHtml += "      <span style='color:var(--color-primary); font-size:12px; font-weight:700;'><i class='fa-solid fa-star'></i> " + scoreVal + "đ</span>";
         }
         mobileHtml += "      <i class='fa-solid fa-chevron-down' id='submit-hw-chevron-" + idx + "'></i>";
         mobileHtml += "    </div>";
@@ -8009,7 +8009,7 @@ function renderStudentSubmissionsList() {
         mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>Xem bài làm</span><span class='accordion-body-val'>" + viewBtn + "</span></div>";
         mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>Chấm điểm</span><span class='accordion-body-val'>" + mobileGradeHtml + "</span></div>";
         if (commentVal) {
-            mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>Nhận xét</span><span class='accordion-body-val' style='color:#E2D1FF; font-style:italic; font-size:12.5px;'>" + commentVal + "</span></div>";
+            mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>Nhận xét</span><span class='accordion-body-val' style='color:var(--text-secondary); font-style:italic; font-size:12.5px;'>" + commentVal + "</span></div>";
         }
         mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>Tải về</span><span class='accordion-body-val'>" + downloadBtn + "</span></div>";
         mobileHtml += "  </div>";
@@ -8020,11 +8020,11 @@ function renderStudentSubmissionsList() {
     if (totalCount > submissionsLimit) {
         var remaining = totalCount - submissionsLimit;
         tableBody.innerHTML += '<tr><td colspan="5" style="text-align:center; padding:10px;">'
-            + '<button onclick="loadMoreStudentSubmissions()" style="background:none; border:1px solid #4B5563; color:#FFD23F; padding:6px 20px; border-radius:8px; cursor:pointer; font-size:13px;">'
+            + '<button onclick="loadMoreStudentSubmissions()" style="background:none; border:1px solid var(--border-color); color:var(--color-primary); padding:6px 20px; border-radius:8px; cursor:pointer; font-size:13px;">'
             + '<i class="fa-solid fa-chevron-down" style="margin-right:5px;"></i>Xem thêm ' + remaining + ' bài nộp cũ hơn'
             + '</button></td></tr>';
         mobileHtml += '<div style="text-align:center; padding:10px;">'
-            + '<button onclick="loadMoreStudentSubmissions()" style="background:none; border:1px solid #4B5563; color:#FFD23F; padding:6px 20px; border-radius:8px; cursor:pointer; font-size:13px; width:100%;">'
+            + '<button onclick="loadMoreStudentSubmissions()" style="background:none; border:1px solid var(--border-color); color:var(--color-primary); padding:6px 20px; border-radius:8px; cursor:pointer; font-size:13px; width:100%;">'
             + '<i class="fa-solid fa-chevron-down" style="margin-right:5px;"></i>Xem thêm ' + remaining + ' bài nộp cũ hơn'
             + '</button></div>';
     } else if (submissionsLimit > 5 && totalCount <= submissionsLimit) {
@@ -8118,12 +8118,12 @@ function loadTutorFeedbacks() {
             
             var html = "";
             feedbacks.forEach(function(fb) {
-                html += '<div class="agenda-event-card" style="border-left-color: #FFD23F; background: rgba(255, 210, 63, 0.04); border: 1px solid rgba(255, 210, 63, 0.1); border-left-width: 4px; padding: 12px 15px; border-radius: 10px; flex-direction: column; align-items: stretch; cursor: default; gap: 6px;">' +
+                html += '<div class="agenda-event-card" style="border-left-color: var(--color-primary); background: var(--nav-active-bg); border: 1px solid var(--border-color); border-left-width: 4px; padding: 12px 15px; border-radius: 10px; flex-direction: column; align-items: stretch; cursor: default; gap: 6px;">' +
                     '  <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 5px;">' +
-                    '    <span style="font-weight: 800; color: #FFD23F; font-size: 13.5px;"><i class="fa-solid fa-graduation-cap"></i> Phụ huynh em ' + fb.studentName + ' <span style="font-size: 11.5px; color: rgba(255,255,255,0.4); font-weight: normal;">(' + fb.studentPhone + ')</span></span>' +
-                    '    <span style="font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 600;"><i class="fa-regular fa-clock"></i> ' + fb.timestamp + '</span>' +
+                    '    <span style="font-weight: 800; color: var(--color-primary); font-size: 13.5px;"><i class="fa-solid fa-graduation-cap"></i> Phụ huynh em ' + fb.studentName + ' <span style="font-size: 11.5px; color: var(--text-muted); font-weight: normal;">(' + fb.studentPhone + ')</span></span>' +
+                    '    <span style="font-size: 11px; color: var(--text-muted); font-weight: 600;"><i class="fa-regular fa-clock"></i> ' + fb.timestamp + '</span>' +
                     '  </div>' +
-                    '  <div style="font-size: 13px; color: #E2D1FF; line-height: 1.5; font-style: italic; background: rgba(0,0,0,0.2); padding: 8px 12px; border-radius: 8px; margin-top: 4px;">' +
+                    '  <div style="font-size: 13px; color: var(--text-secondary); line-height: 1.5; font-style: italic; background: var(--bg-input); padding: 8px 12px; border-radius: 8px; margin-top: 4px;">' +
                     '    "' + fb.content + '"' +
                     '  </div>' +
                     '</div>';

@@ -476,7 +476,7 @@
             <!-- Overview Top Bar: Title & Month Selector -->
             <div class="overview-top-bar" id="overviewTopBar">
                 <div class="overview-top-title">
-                    <h2><i class="fa-solid fa-gauge" style="color: #8E4DFF;"></i> <span>Tổng quan</span></h2>
+                    <h2><i class="fa-solid fa-gauge" style="color: var(--color-primary);"></i> <span>Tổng quan</span></h2>
                     <p>Tổng quan hệ thống giảng dạy & theo dõi hiệu suất</p>
                 </div>
                 <div class="month-selector-widget" id="tutorOverviewMonthSelector">
@@ -538,9 +538,9 @@
                         <span id="upcomingScheduleTitleText">Lịch dạy sắp tới</span>
                     </h3>
                     <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
-                        <span style="font-size: 12px; color: #A6ADCE;" id="upcomingScheduleSubtext"><i class="fa-solid fa-bolt" style="color: #8E4DFF;"></i> Hôm nay & Ngày mai</span>
-                        <a href="tutor-calendar.html" class="upcoming-all-schedule-btn" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: rgba(142, 77, 255, 0.15); border: 1px solid rgba(142, 77, 255, 0.4); color: #C4B5FD; transition: all 0.2s ease;">
-                            <i class="fa-regular fa-calendar-days" style="color: #8E4DFF;"></i> Xem toàn bộ lịch dạy
+                        <span style="font-size: 12px; color: var(--text-secondary);" id="upcomingScheduleSubtext"><i class="fa-solid fa-bolt" style="color: var(--color-primary);"></i> Hôm nay & Ngày mai</span>
+                        <a href="tutor-calendar.html" class="upcoming-all-schedule-btn" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: var(--nav-active-bg); border: 1px solid var(--border-color); color: var(--nav-active-text); transition: all 0.2s ease;">
+                            <i class="fa-regular fa-calendar-days" style="color: var(--color-primary);"></i> Xem toàn bộ lịch dạy
                         </a>
                     </div>
                 </div>
@@ -655,8 +655,8 @@
 
             <div class="schedule-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
-                <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;"><i class="fa-regular fa-calendar-alt" style="color: #8E4DFF;"></i> Thời khóa biểu tổng hợp</h3>
-                <a href="tutor-calendar.html" class="modal-btn modal-btn-primary" style="width: auto; padding: 8px 18px; background: linear-gradient(135deg, #8E4DFF 0%, #5B21B6 100%); font-weight: bold; border-radius: 20px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(142,77,255,0.25); text-decoration: none; font-size: 13px; font-family: 'Inter', sans-serif;">
+                <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;"><i class="fa-regular fa-calendar-alt" style="color: var(--color-primary);"></i> Thời khóa biểu tổng hợp</h3>
+                <a href="tutor-calendar.html" class="modal-btn modal-btn-primary" style="width: auto; padding: 8px 18px; background: var(--btn-bg); color: var(--btn-text); font-weight: bold; border-radius: 20px; display: inline-flex; align-items: center; gap: 8px; box-shadow: var(--shadow-primary); text-decoration: none; font-size: 13px; font-family: 'Inter', sans-serif;">
                     <i class="fa-solid fa-calendar-days"></i> Quản lý & Tạo thời khóa biểu
                 </a>
             </div>
@@ -665,19 +665,19 @@
                 <table id="tutorScheduleTable" style="min-width: 700px; width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr>
-                            <th style="text-align: left; padding: 12px 14px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Học sinh</th>
-                            <th style="text-align: center; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Thứ 2</th>
-                            <th style="text-align: center; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Thứ 3</th>
-                            <th style="text-align: center; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Thứ 4</th>
-                            <th style="text-align: center; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Thứ 5</th>
-                            <th style="text-align: center; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Thứ 6</th>
-                            <th style="text-align: center; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Thứ 7</th>
-                            <th style="text-align: center; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">CN</th>
-                            <th style="text-align: center; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700; width: 50px;">Sửa</th>
+                            <th style="text-align: left; padding: 12px 14px; background: var(--nav-active-bg); color: var(--text-primary); font-weight: 700;">Học sinh</th>
+                            <th style="text-align: center; padding: 12px 10px; background: var(--nav-active-bg); color: var(--text-primary); font-weight: 700;">Thứ 2</th>
+                            <th style="text-align: center; padding: 12px 10px; background: var(--nav-active-bg); color: var(--text-primary); font-weight: 700;">Thứ 3</th>
+                            <th style="text-align: center; padding: 12px 10px; background: var(--nav-active-bg); color: var(--text-primary); font-weight: 700;">Thứ 4</th>
+                            <th style="text-align: center; padding: 12px 10px; background: var(--nav-active-bg); color: var(--text-primary); font-weight: 700;">Thứ 5</th>
+                            <th style="text-align: center; padding: 12px 10px; background: var(--nav-active-bg); color: var(--text-primary); font-weight: 700;">Thứ 6</th>
+                            <th style="text-align: center; padding: 12px 10px; background: var(--nav-active-bg); color: var(--text-primary); font-weight: 700;">Thứ 7</th>
+                            <th style="text-align: center; padding: 12px 10px; background: var(--nav-active-bg); color: var(--text-primary); font-weight: 700;">CN</th>
+                            <th style="text-align: center; padding: 12px 10px; background: var(--nav-active-bg); color: var(--text-primary); font-weight: 700; width: 50px;">Sửa</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr><td colspan="9" style="text-align: center; color: rgba(255,255,255,0.3); padding: 20px;">Đang tải thời khóa biểu...</td></tr>
+                        <tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải thời khóa biểu...</td></tr>
                     </tbody>
                 </table>
             </div>
@@ -690,9 +690,9 @@
 
         <!-- Section Ý kiến phụ huynh -->
         <div class="schedule-section" id="tutorFeedbackContainer" style="margin-top: 25px;">
-            <h3 style="display: flex; align-items: center; gap: 8px;"><i class="fa-regular fa-comment-dots" style="color: #FFD23F;"></i> Ý kiến phản hồi của Phụ huynh (10 ngày gần nhất)</h3>
+            <h3 style="display: flex; align-items: center; gap: 8px;"><i class="fa-regular fa-comment-dots" style="color: var(--color-primary);"></i> Ý kiến phản hồi của Phụ huynh (10 ngày gần nhất)</h3>
             <div id="tutorFeedbackList" class="mobile-cards-view" style="display: flex; flex-direction: column; gap: 12px; max-height: 350px; overflow-y: auto; padding-right: 5px; margin-top: 15px;">
-                <div style="text-align: center; color: rgba(255,255,255,0.3); font-style: italic; padding: 20px;">Đang tải ý kiến...</div>
+                <div style="text-align: center; color: var(--text-muted); font-style: italic; padding: 20px;">Đang tải ý kiến...</div>
             </div>
         </div>
         </div> <!-- End #tutorSectionOverview -->
@@ -703,7 +703,7 @@
             <div class="report-filter-toolbar">
                 <div class="report-toolbar-header">
                     <h3>
-                        <i class="fa-solid fa-file-image" style="color: #8E4DFF;"></i>
+                        <i class="fa-solid fa-file-image" style="color: var(--color-primary);"></i>
                         <span>Xuất báo cáo học tập & Lịch sử buổi học</span>
                     </h3>
                     <p>Chọn khoảng thời gian và học sinh để xuất ảnh PNG hoặc tải file PDF gửi phụ huynh</p>
@@ -753,8 +753,8 @@
 
             <!-- Preview Container -->
             <div class="report-preview-wrapper" id="reportPreviewContainer">
-                <div style="text-align: center; color: rgba(255,255,255,0.4); padding: 40px; font-style: italic;">
-                    <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 24px; color: #8E4DFF; margin-bottom: 8px;"></i>
+                <div style="text-align: center; color: var(--text-muted); padding: 40px; font-style: italic;">
+                    <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 24px; color: var(--color-primary); margin-bottom: 8px;"></i>
                     <div>Đang tạo bản xem trước báo cáo...</div>
                 </div>
             </div>
@@ -764,11 +764,11 @@
         <div id="tutorSectionDiary" class="tutor-section" style="display: none;">
             <div class="diary-toolbar">
                 <div class="diary-toolbar-title">
-                    <h3 style="color: #FFF; font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px;">
-                        <i class="fa-solid fa-book-open" style="color: #8E4DFF;"></i>
+                    <h3 style="color: var(--text-primary); font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-book-open" style="color: var(--color-primary);"></i>
                         <span>Nhật ký buổi học & Nhận xét chi tiết</span>
                     </h3>
-                    <p style="color: #A6ADCE; font-size: 13px; margin: 4px 0 0 0;">Theo dõi chi tiết tiến độ bài học, chuyên cần và nhận xét cho từng học sinh</p>
+                    <p style="color: var(--text-secondary); font-size: 13px; margin: 4px 0 0 0;">Theo dõi chi tiết tiến độ bài học, chuyên cần và nhận xét cho từng học sinh</p>
                 </div>
 
                 <div class="diary-filters">
@@ -795,13 +795,13 @@
             </div>
 
             <!-- Widget thông báo nhanh cho Phụ huynh / Học sinh -->
-            <div id="tutorQuickAnnouncementWidget" style="background: rgba(142, 77, 255, 0.08); border: 1px dashed rgba(142, 77, 255, 0.3); border-radius: 12px; padding: 15px; margin-top: 20px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px;">
+            <div id="tutorQuickAnnouncementWidget" style="background: var(--nav-active-bg); border: 1px dashed var(--border-color); border-radius: 12px; padding: 15px; margin-top: 20px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span style="color: #A6ADCE; font-size: 13.5px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px;"><i class="fa-solid fa-bullhorn" style="color: #8E4DFF;"></i> Thông báo nhanh cho phụ huynh <span id="announcementStudentBadge" style="color: #FFD23F; font-size: 13px; font-weight: 700; margin-left: 6px;"></span></span>
+                    <span style="color: var(--text-secondary); font-size: 13.5px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px;"><i class="fa-solid fa-bullhorn" style="color: var(--color-primary);"></i> Thông báo nhanh cho phụ huynh <span id="announcementStudentBadge" style="color: var(--color-primary); font-size: 13px; font-weight: 700; margin-left: 6px;"></span></span>
                     <span id="announcementStatus" style="font-size: 12px; color: #10B981; font-weight: bold; display: none;"><i class="fa-solid fa-circle-check"></i> Đã lưu thành công!</span>
                 </div>
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; width: 100%;">
-                    <input type="text" id="quickAnnouncementInput" placeholder="Ví dụ: Hôm nay nghỉ học nhé phụ huynh ơi..." style="flex: 1; min-width: 250px; padding: 10px 15px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(0,0,0,0.25); color: #FFF; font-size: 13.5px; outline: none; transition: border 0.3s;" onfocus="this.style.borderColor='#8E4DFF'" onblur="this.style.borderColor='rgba(255,255,255,0.1)'">
+                    <input type="text" id="quickAnnouncementInput" placeholder="Ví dụ: Hôm nay nghỉ học nhé phụ huynh ơi..." style="flex: 1; min-width: 250px; padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-primary); font-size: 13.5px; outline: none; transition: border 0.3s;" onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--border-color)'">
                     <button onclick="saveQuickAnnouncement()" id="btnSaveQuickAnnouncement" class="modal-btn modal-btn-primary" style="width: auto; padding: 10px 20px; margin: 0; background: var(--btn-bg); color: var(--btn-text); display: inline-flex; align-items: center; gap: 8px; justify-content: center; font-size: 13.5px; font-weight: bold; border-radius: 8px; box-shadow: var(--shadow-primary);"><i class="fa-solid fa-paper-plane"></i> Gửi thông báo</button>
                 </div>
             </div>
@@ -839,16 +839,16 @@
                                 <label>Chọn file bài tập (Hình ảnh, Word, PDF...)</label>
                                 
                                 <!-- Upload Area cho Desktop -->
-                                <div class="upload-area" id="tutorHwUploadAreaDesktop" onclick="document.getElementById('tutorHwFileInputDesktop').click()" ondragover="event.preventDefault();" ondrop="handleTutorHwDrop(event);" style="padding: 20px; border-style: dashed; background: rgba(4, 2, 10, 0.6); border: 2px dashed rgba(142, 77, 255, 0.4); border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.3s;">
+                                <div class="upload-area" id="tutorHwUploadAreaDesktop" onclick="document.getElementById('tutorHwFileInputDesktop').click()" ondragover="event.preventDefault();" ondrop="handleTutorHwDrop(event);" style="padding: 20px; border-style: dashed; background: var(--bg-input); border: 2px dashed var(--border-color); border-radius: 12px; text-align: center; cursor: pointer; transition: all 0.3s;">
                                     <i class="fa-solid fa-file-arrow-up" style="font-size: 24px; color: var(--color-primary); margin-bottom: 6px;"></i>
-                                    <div id="tutorHwUploadText" style="font-size: 12px; color: #E2D1FF;">Kéo thả hoặc click chọn file bài tập từ máy...</div>
+                                    <div id="tutorHwUploadText" style="font-size: 12px; color: var(--text-secondary);">Kéo thả hoặc click chọn file bài tập từ máy...</div>
                                     <input type="file" id="tutorHwFileInputDesktop" style="display: none;" onclick="event.stopPropagation();" onchange="handleTutorHwFileSelect(event)">
                                 </div>
 
                                 <!-- Upload Area cho Mobile -->
-                                <div class="upload-area" id="tutorHwUploadAreaMobile" style="cursor: default; padding: 20px 15px; border-style: dashed; background: rgba(4, 2, 10, 0.6); border: 2px dashed rgba(142, 77, 255, 0.4); border-radius: 12px; text-align: center;">
+                                <div class="upload-area" id="tutorHwUploadAreaMobile" style="cursor: default; padding: 20px 15px; border-style: dashed; background: var(--bg-input); border: 2px dashed var(--border-color); border-radius: 12px; text-align: center;">
                                     <i class="fa-solid fa-cloud-arrow-up" style="font-size: 28px; margin-bottom: 10px; color: var(--color-primary);"></i>
-                                    <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px; color: #FFF;">Chọn hình ảnh hoặc tài liệu bài tập</div>
+                                    <div style="font-size: 13px; font-weight: 600; margin-bottom: 12px; color: var(--text-primary);">Chọn hình ảnh hoặc tài liệu bài tập</div>
                                     
                                     <div style="display: flex; flex-direction: column; gap: 10px; width: 100%; max-width: 280px; margin: 0 auto;">
                                         <!-- Nút chọn ảnh từ thư viện hoặc chụp camera -->
@@ -856,7 +856,7 @@
                                             <i class="fa-solid fa-camera"></i> Chụp ảnh / Chọn Thư viện
                                         </button>
                                         <!-- Nút chọn tài liệu PDF/Word -->
-                                        <button type="button" onclick="document.getElementById('tutorHwDocInputMobile').click()" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #FFF; font-size: 12px; padding: 8px 16px; border-radius: 20px; font-weight: 600; width: 100%; justify-content: center; gap: 6px; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; font-family: 'Inter', sans-serif;">
+                                        <button type="button" onclick="document.getElementById('tutorHwDocInputMobile').click()" style="background: var(--bg-card-alt); border: 1px solid var(--border-card); color: var(--text-primary); font-size: 12px; padding: 8px 16px; border-radius: 20px; font-weight: 600; width: 100%; justify-content: center; gap: 6px; cursor: pointer; transition: all 0.3s; display: inline-flex; align-items: center; font-family: 'Inter', sans-serif;">
                                             <i class="fa-solid fa-file-pdf"></i> Tải Tài liệu (PDF, Word...)
                                         </button>
                                     </div>
@@ -867,8 +867,8 @@
                                 </div>
 
                                 <!-- Selected File Badge -->
-                                <div id="tutorSelectedFileBox" style="display: none; justify-content: space-between; align-items: center; background: rgba(142, 77, 255, 0.15); padding: 8px 12px; border-radius: 8px; margin-top: 10px; font-size: 12px;">
-                                    <span id="tutorSelectedFileName" style="color: #FFF; font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80%;"></span>
+                                <div id="tutorSelectedFileBox" style="display: none; justify-content: space-between; align-items: center; background: var(--nav-active-bg); padding: 8px 12px; border-radius: 8px; margin-top: 10px; font-size: 12px;">
+                                    <span id="tutorSelectedFileName" style="color: var(--text-primary); font-weight: 500; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 80%;"></span>
                                     <button type="button" onclick="clearTutorSelectedFile()" style="background:none; border:none; color:#FF4D4D; cursor:pointer;"><i class="fa-solid fa-times"></i> Hủy</button>
                                 </div>
                             </div>
@@ -964,8 +964,8 @@
             <!-- Header Toolbar: Thêm học sinh + Thùng rác -->
             <div class="students-toolbar">
                 <div class="students-toolbar-title">
-                    <h3 style="color: #FFF; font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px;">
-                        <i class="fa-solid fa-user-graduate" style="color: #8E4DFF;"></i>
+                    <h3 style="color: var(--text-primary); font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-user-graduate" style="color: var(--color-primary);"></i>
                         <span>Danh sách học sinh</span>
                     </h3>
                     <p style="color: var(--text-secondary); font-size: 13px; margin: 4px 0 0 0;">Theo dõi tiến độ, lịch cố định, tỷ lệ chuyên cần và quản lý từng học sinh</p>
@@ -1048,23 +1048,23 @@
                 <table id="tuitionTable" style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr>
-                            <th style="width: 200px; text-align: left; padding: 12px 14px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Học sinh</th>
-                            <th style="width: 110px; text-align: center; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Số buổi</th>
-                            <th style="width: 130px; text-align: right; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Đơn giá/buổi</th>
-                            <th style="width: 140px; text-align: right; padding: 12px 14px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Tổng tiền</th>
-                            <th style="width: 140px; text-align: center; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Trạng thái</th>
-                            <th style="width: 140px; text-align: center; padding: 12px 14px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Hóa đơn</th>
+                            <th style="width: 200px; text-align: left; padding: 12px 14px; background: var(--nav-active-bg); color: var(--text-primary); font-weight: 700;">Học sinh</th>
+                            <th style="width: 110px; text-align: center; padding: 12px 10px; background: var(--nav-active-bg); color: var(--text-primary); font-weight: 700;">Số buổi</th>
+                            <th style="width: 130px; text-align: right; padding: 12px 10px; background: var(--nav-active-bg); color: var(--text-primary); font-weight: 700;">Đơn giá/buổi</th>
+                            <th style="width: 140px; text-align: right; padding: 12px 14px; background: var(--nav-active-bg); color: var(--text-primary); font-weight: 700;">Tổng tiền</th>
+                            <th style="width: 140px; text-align: center; padding: 12px 10px; background: var(--nav-active-bg); color: var(--text-primary); font-weight: 700;">Trạng thái</th>
+                            <th style="width: 140px; text-align: center; padding: 12px 14px; background: var(--nav-active-bg); color: var(--text-primary); font-weight: 700;">Hóa đơn</th>
                         </tr>
                     </thead>
                     <tbody id="tuitionTableBody">
-                        <tr><td colspan="6" style="text-align: center; color: rgba(255,255,255,0.3); padding: 25px;">Đang tải danh sách học phí...</td></tr>
+                        <tr><td colspan="6" style="text-align: center; color: var(--text-muted); padding: 25px;">Đang tải danh sách học phí...</td></tr>
                     </tbody>
                 </table>
             </div>
 
             <!-- Mobile Card View cho Học phí -->
             <div class="mobile-cards-view" id="tuitionMobileList" style="margin-top: 15px;">
-                <div style="text-align: center; color: rgba(255,255,255,0.3); padding: 20px;">Đang tải danh sách học phí...</div>
+                <div style="text-align: center; color: var(--text-muted); padding: 20px;">Đang tải danh sách học phí...</div>
             </div>
         </div> <!-- End #tutorSectionTuition -->
         </main>
