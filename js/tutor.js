@@ -2091,6 +2091,11 @@ function renderTuitionLivePreview() {
         if (!log) return;
         var dateText = log.ngay || "";
         var cleanStr = dateText.split(" ")[0].trim();
+        var shortDateStr = cleanStr;
+        var dParts = cleanStr.split('/');
+        if (dParts.length >= 2) {
+            shortDateStr = String(dParts[0]).padStart(2, '0') + '/' + String(dParts[1]).padStart(2, '0');
+        }
         
         var rawStatus = log.trangThai || log.chuyenCan || log.attendance_status || log.attendance || log.status || "";
         var normTt = String(rawStatus).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').trim();
@@ -2115,7 +2120,7 @@ function renderTuitionLivePreview() {
             invBillableCount++;
         } else if (isAbsent) {
             invAbsent++;
-            invAbsentDates.push(cleanStr || ("Buổi " + (log.tuan || "")));
+            invAbsentDates.push(shortDateStr || ("Buổi " + (log.tuan || "")));
         } else {
             invPresent++;
             invBillableCount++;
@@ -2136,11 +2141,11 @@ function renderTuitionLivePreview() {
                         invDoneHw++;
                     } else {
                         invMissingHw++;
-                        invMissingHwDates.push((cleanStr || ("Buổi " + (log.tuan || ""))) + " (" + btvnRaw + ")");
+                        invMissingHwDates.push((shortDateStr || ("Buổi " + (log.tuan || ""))) + " (" + btvnRaw + ")");
                     }
                 } else if (btvn.indexOf("thiếu") !== -1 || btvn.indexOf("không làm") !== -1 || btvn.indexOf("chưa làm") !== -1 || btvn.indexOf("chưa nộp") !== -1 || btvn.indexOf("chưa đạt") !== -1 || btvn === "không") {
                     invMissingHw++;
-                    invMissingHwDates.push((cleanStr || ("Buổi " + (log.tuan || ""))) + " (" + btvnRaw + ")");
+                    invMissingHwDates.push((shortDateStr || ("Buổi " + (log.tuan || ""))) + " (" + btvnRaw + ")");
                 } else if (btvn.indexOf("hoàn thành") !== -1 || btvn === "có" || btvn === "đạt" || btvn === "tốt" || btvn === "xuất sắc" || btvn.indexOf("phụ huynh") !== -1 || btvn.indexOf("nhắc") !== -1) {
                     invDoneHw++;
                 } else {
@@ -2393,7 +2398,13 @@ function renderTuitionLivePreview() {
                 html += '<div style="font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px;"><i class="fa-solid fa-calendar-days" style="color: #7C3AED;"></i> Chi tiết các ngày học (' + attendedLogs.length + ' buổi):</div>';
                 html += '<div style="display: flex; flex-wrap: wrap; gap: 5px;">';
                 attendedLogs.forEach(function(l) {
-                    html += '<span style="background: #FFFFFF; border: 1px solid #CBD5E1; color: #334155; font-size: 11px; padding: 2px 7px; border-radius: 6px; font-weight: 600;">' + (l.ngay || '-') + '</span>';
+                    var rawD = (l.ngay || '-').split(' ')[0].trim();
+                    var sp = rawD.split('/');
+                    var chipLabel = rawD;
+                    if (sp.length >= 2) {
+                        chipLabel = String(sp[0]).padStart(2, '0') + '/' + String(sp[1]).padStart(2, '0');
+                    }
+                    html += '<span style="background: #FFFFFF; border: 1px solid #CBD5E1; color: #334155; font-size: 11px; padding: 2px 7px; border-radius: 6px; font-weight: 600;">' + chipLabel + '</span>';
                 });
                 html += '</div>';
             } else {
