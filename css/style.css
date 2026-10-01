@@ -29,6 +29,8 @@
         body {
             background-color: var(--bg-page); 
             background-image: var(--bg-page-gradient);
+            background-attachment: fixed;
+            background-size: cover;
             color: var(--text-primary);
             min-height: 100vh;
             display: flex;
@@ -2454,8 +2456,8 @@
         }
 
         .upcoming-session-card {
-            background: var(--bg-input);
-            border: 1px solid var(--border-card);
+            background: var(--glass-inner, rgba(255, 255, 255, 0.35));
+            border: 1px solid var(--glass-inner-border, rgba(255, 255, 255, 0.5));
             border-radius: 12px;
             padding: 12px 14px;
             display: flex;
@@ -2570,8 +2572,8 @@
             display: flex;
             align-items: center;
             gap: 8px;
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
+            background: var(--glass-inner, rgba(255, 255, 255, 0.35));
+            border: 1px solid var(--glass-inner-border, rgba(255, 255, 255, 0.5));
             border-radius: 12px;
             padding: 8px 14px;
         }
@@ -2921,8 +2923,8 @@
         }
 
         .student-card-schedule {
-            background: var(--bg-input);
-            border: 1px solid var(--border-card);
+            background: var(--glass-inner, rgba(255, 255, 255, 0.35));
+            border: 1px solid var(--glass-inner-border, rgba(255, 255, 255, 0.5));
             border-radius: 10px;
             padding: 7px 12px;
             font-size: 12px;
@@ -2952,8 +2954,8 @@
         }
 
         .card-metric-box {
-            background: var(--bg-input);
-            border: 1px solid var(--border-card);
+            background: var(--glass-inner, rgba(255, 255, 255, 0.35));
+            border: 1px solid var(--glass-inner-border, rgba(255, 255, 255, 0.5));
             border-radius: 10px;
             padding: 6px 3px;
         }
