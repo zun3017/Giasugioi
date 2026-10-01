@@ -1570,7 +1570,10 @@ function renderTutorTuitionSection() {
         }
 
         // Status
-        var rawStatus = (st.feeStatus || "Chưa thu").toLowerCase();
+        var now = new Date();
+        var currentMonthStr = String(now.getMonth()+1).padStart(2,'0') + '/' + now.getFullYear();
+        var monthKey = (selMonth === 'all') ? currentMonthStr : selMonth;
+        var rawStatus = ((st.feeStatusByMonth && st.feeStatusByMonth[monthKey]) || "Chưa thu").toLowerCase();
         var isPaid = (rawStatus.indexOf("đã") !== -1 || rawStatus.indexOf("paid") !== -1 || rawStatus.indexOf("thành công") !== -1);
 
         totalExpected += studentTotal;
@@ -1640,24 +1643,49 @@ window.renderTutorTuitionSection = renderTutorTuitionSection;
 
 function toggleStudentTuitionStatus(idx) {
     var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
-    var students = (store && store.students) ? store.students : (tutorDataGlobal ? tutorDataGlobal.students : null);
-    if (!students || !students[idx]) return;
+    var resolvedStudents = (typeof getTutorStudentsResolved === 'function')
+        ? getTutorStudentsResolved()
+        : ((store && store.students) ? store.students : (tutorDataGlobal ? tutorDataGlobal.students : null));
+    if (!resolvedStudents || !resolvedStudents[idx]) return;
 
-    var st = students[idx];
-    var current = (st.feeStatus || "Chưa thu").toLowerCase();
+    var select = document.getElementById('tuitionMonthFilter');
+    var selMonth = select ? select.value : 'all';
+    var now = new Date();
+    var currentMonthStr = String(now.getMonth()+1).padStart(2,'0') + '/' + now.getFullYear();
+    var monthKey = (selMonth === 'all') ? currentMonthStr : selMonth;
+
+    var target = resolvedStudents[idx];
+    if (!target.feeStatusByMonth) target.feeStatusByMonth = {};
+    var current = ((target.feeStatusByMonth && target.feeStatusByMonth[monthKey]) || "Chưa thu").toLowerCase();
     var isPaid = (current.indexOf("đã") !== -1 || current.indexOf("paid") !== -1 || current.indexOf("thành công") !== -1);
     var newStatus = isPaid ? "Chưa thu" : "Đã thu";
-    st.feeStatus = newStatus;
+    target.feeStatusByMonth[monthKey] = newStatus;
+    target.feeStatus = newStatus;
 
-    if (store) {
+    if (store && store.students) {
+        var stInStore = store.students.find(function(s) {
+            return (s.phone && target.phone && s.phone === target.phone) || (s.name && target.name && s.name.trim() === target.name.trim());
+        }) || store.students[idx];
+        if (stInStore) {
+            if (!stInStore.feeStatusByMonth) stInStore.feeStatusByMonth = {};
+            stInStore.feeStatusByMonth[monthKey] = newStatus;
+            stInStore.feeStatus = newStatus;
+        }
         saveGiaSuDemoStore(store);
     }
-    if (tutorDataGlobal && tutorDataGlobal.students && tutorDataGlobal.students[idx]) {
-        tutorDataGlobal.students[idx].feeStatus = newStatus;
+    if (tutorDataGlobal && tutorDataGlobal.students) {
+        var stInGlobal = tutorDataGlobal.students.find(function(s) {
+            return (s.phone && target.phone && s.phone === target.phone) || (s.name && target.name && s.name.trim() === target.name.trim());
+        }) || tutorDataGlobal.students[idx];
+        if (stInGlobal) {
+            if (!stInGlobal.feeStatusByMonth) stInGlobal.feeStatusByMonth = {};
+            stInGlobal.feeStatusByMonth[monthKey] = newStatus;
+            stInGlobal.feeStatus = newStatus;
+        }
     }
 
     if (typeof showToast === 'function') {
-        showToast("Đã đổi trạng thái của " + st.name + ": " + newStatus, "success");
+        showToast("Đã đổi trạng thái (" + monthKey + ") của " + target.name + ": " + newStatus, "success");
     }
 
     renderTutorTuitionSection();
