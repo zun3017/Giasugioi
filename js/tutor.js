@@ -4058,13 +4058,22 @@ window.initTutorSidebarState = initTutorSidebarState;
             
             var allResolved = (typeof getTutorStudentsResolved === 'function') ? getTutorStudentsResolved() : (tutorDataGlobal ? tutorDataGlobal.students : []);
             currentTutorStudent = (allResolved && allResolved[idx]) ? allResolved[idx] : (tutorDataGlobal && tutorDataGlobal.students ? tutorDataGlobal.students[idx] : null);
-            document.getElementById('tutorStudentDetail').style.display = 'block';
-            document.getElementById('selectedStudentNameHeader').innerText = currentTutorStudent.name;
-            document.getElementById('invStudentName').innerText = currentTutorStudent.name;
-            document.getElementById('quickAnnouncementInput').value = currentTutorStudent.thongBao || "";
-            if (document.getElementById('announcementStatus')) {
-                document.getElementById('announcementStatus').style.display = 'none';
-            }
+            if (!currentTutorStudent) return;
+
+            var elDetail = document.getElementById('tutorStudentDetail');
+            if (elDetail) elDetail.style.display = 'block';
+
+            var elHeader = document.getElementById('selectedStudentNameHeader');
+            if (elHeader) elHeader.innerText = currentTutorStudent.name;
+
+            var elInvName = document.getElementById('invStudentName');
+            if (elInvName) elInvName.innerText = currentTutorStudent.name;
+
+            var elQuickAnn = document.getElementById('quickAnnouncementInput');
+            if (elQuickAnn) elQuickAnn.value = currentTutorStudent.thongBao || "";
+
+            var elAnnStatus = document.getElementById('announcementStatus');
+            if (elAnnStatus) elAnnStatus.style.display = 'none';
             
             // Mở sẵn trạng thái bài tập theo mặc định
             var hwSec = document.getElementById('tutorHomeworkSection');
@@ -4074,11 +4083,11 @@ window.initTutorSidebarState = initTutorSidebarState;
             }
             
             // Tải dữ liệu tab Giao bài tập
-            switchTutorHwTab('assign');
-            switchTutorHwSubTab('upload');
+            if (typeof switchTutorHwTab === 'function') switchTutorHwTab('assign');
+            if (typeof switchTutorHwSubTab === 'function') switchTutorHwSubTab('upload');
             
             // Clear file upload selection
-            clearTutorSelectedFile();
+            if (typeof clearTutorSelectedFile === 'function') clearTutorSelectedFile();
             
             // Reset trạng thái thu gọn hóa đơn
             var invContainer = document.getElementById('invoiceCollapseContainer');
@@ -4086,35 +4095,44 @@ window.initTutorSidebarState = initTutorSidebarState;
             var btnToggle = document.getElementById('btnToggleInvoice');
             if (btnToggle) btnToggle.innerHTML = '<i class="fa-solid fa-file-invoice-dollar"></i> Xuất Hóa Đơn (Phiếu Học Tập)';
             
+            // Render dữ liệu cục bộ ngay lập tức nếu đã có sẵn logs để không bị khoảng trống
+            if (currentTutorStudent.logs && Array.isArray(currentTutorStudent.logs) && currentTutorStudent.logs.length > 0) {
+                renderInvoice();
+                renderTutorChart(currentTutorStudent.logs);
+                renderTutorStudentHistory(currentTutorStudent.logs);
+            }
+
             // Fetch logs for this student to render invoice and stats
-            google.script.run
-                .withSuccessHandler(function(res) {
-                    try {
-                        if (res && res.error) {
-                            showToast("Lỗi từ hệ thống: " + res.error, "error");
-                            return;
+            if (typeof google !== 'undefined' && google.script && google.script.run && google.script.run.getStudentDetailsForTutor) {
+                google.script.run
+                    .withSuccessHandler(function(res) {
+                        try {
+                            if (res && res.error) {
+                                showToast("Lỗi từ hệ thống: " + res.error, "error");
+                                return;
+                            }
+                            currentTutorStudent.logs = (res && res.logs) ? res.logs : (currentTutorStudent.logs || []);
+                            if (res && res.student && res.student.tuition) {
+                                currentTutorStudent.tuition = res.student.tuition;
+                            }
+                            if (res && res.student && res.student.billing_type) {
+                                currentTutorStudent.billing_type = res.student.billing_type;
+                            } else if (res && res.billing_type) {
+                                currentTutorStudent.billing_type = res.billing_type;
+                            }
+                            renderInvoice();
+                            renderTutorChart(currentTutorStudent.logs);
+                            renderTutorStudentHistory(currentTutorStudent.logs);
+                        } catch (err) {
+                            showToast("Lỗi hiển thị biểu đồ/lịch sử: " + err.message, "error");
+                            console.error("Render student logs error: ", err);
                         }
-                        currentTutorStudent.logs = (res && res.logs) ? res.logs : [];
-                        if (res && res.student && res.student.tuition) {
-                            currentTutorStudent.tuition = res.student.tuition;
-                        }
-                        if (res && res.student && res.student.billing_type) {
-                            currentTutorStudent.billing_type = res.student.billing_type;
-                        } else if (res && res.billing_type) {
-                            currentTutorStudent.billing_type = res.billing_type;
-                        }
-                        renderInvoice();
-                        renderTutorChart(currentTutorStudent.logs);
-                        renderTutorStudentHistory(currentTutorStudent.logs);
-                    } catch (err) {
-                        showToast("Lỗi hiển thị biểu đồ/lịch sử: " + err.message, "error");
-                        console.error("Render student logs error: ", err);
-                    }
-                })
-                .withFailureHandler(function(err) {
-                    showToast("Lỗi kết nối máy chủ: " + err.toString(), "error");
-                })
-                .getStudentDetailsForTutor(currentTutorStudent.phone, currentTutorStudent.name);
+                    })
+                    .withFailureHandler(function(err) {
+                        showToast("Lỗi kết nối máy chủ: " + err.toString(), "error");
+                    })
+                    .getStudentDetailsForTutor(currentTutorStudent.phone, currentTutorStudent.name);
+            }
         }
         
         function renderTutorChart(lichSuVe) {
@@ -5538,12 +5556,14 @@ window.initTutorSidebarState = initTutorSidebarState;
 
         function refreshTutorStudentHistorySilent() {
             if (!currentTutorStudent) return;
-            google.script.run.withSuccessHandler(function(res) {
-                currentTutorStudent.logs = res.logs || [];
-                renderInvoice();
-                renderTutorChart(res.logs || []);
-                renderTutorStudentHistory(res.logs || []);
-            }).getStudentDetailsForTutor(currentTutorStudent.phone);
+            if (typeof google !== 'undefined' && google.script && google.script.run && google.script.run.getStudentDetailsForTutor) {
+                google.script.run.withSuccessHandler(function(res) {
+                    currentTutorStudent.logs = (res && res.logs) ? res.logs : (currentTutorStudent.logs || []);
+                    renderInvoice();
+                    renderTutorChart(currentTutorStudent.logs);
+                    renderTutorStudentHistory(currentTutorStudent.logs);
+                }).getStudentDetailsForTutor(currentTutorStudent.phone, currentTutorStudent.name);
+            }
         }
 
         function toggleSelectAllTutorLessons(masterChk) {
@@ -5658,7 +5678,8 @@ window.initTutorSidebarState = initTutorSidebarState;
             var container = document.getElementById('tutorStudentHistory');
             if (!container) return;
             
-            var totalBuoi = logs.length;
+            var list = (logs && Array.isArray(logs)) ? logs : ((currentTutorStudent && currentTutorStudent.logs && Array.isArray(currentTutorStudent.logs)) ? currentTutorStudent.logs : []);
+            var totalBuoi = list.length;
             if (totalBuoi > 0) {
                 var getStatusBadge = function(trangThai) {
                     var tt = (trangThai || "").trim().toLowerCase();
@@ -5713,7 +5734,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                 // 2. Mobile View (Accordion list)
                 var htmlMobile = "<div class='mobile-cards-view'>";
 
-                logs.slice().reverse().forEach(function(item, idx) {
+                list.slice().reverse().forEach(function(item, idx) {
                     var styleStr = (idx >= 5) ? 'style="display: none;" class="tutor-history-row tutor-hidden-row"' : 'class="tutor-history-row"';
                     var btvnValue = (item.btvn || item.danhGiaBTVN || "");
 
@@ -5828,14 +5849,30 @@ window.initTutorSidebarState = initTutorSidebarState;
             var icon = button ? button.querySelector('i') : null;
             if (icon) icon.classList.add('fa-spin');
             
-            google.script.run.withSuccessHandler(function(res) {
+            if (typeof google !== 'undefined' && google.script && google.script.run && google.script.run.getStudentDetailsForTutor) {
+                google.script.run
+                    .withSuccessHandler(function(res) {
+                        if (icon) icon.classList.remove('fa-spin');
+                        currentTutorStudent.logs = (res && res.logs) ? res.logs : (currentTutorStudent.logs || []);
+                        renderInvoice();
+                        renderTutorChart(currentTutorStudent.logs);
+                        renderTutorStudentHistory(currentTutorStudent.logs);
+                        showToast("Đã cập nhật dữ liệu mới nhất!", "success");
+                    })
+                    .withFailureHandler(function(err) {
+                        if (icon) icon.classList.remove('fa-spin');
+                        showToast("Lỗi kết nối máy chủ: " + err.toString(), "error");
+                    })
+                    .getStudentDetailsForTutor(currentTutorStudent.phone, currentTutorStudent.name);
+            } else {
                 if (icon) icon.classList.remove('fa-spin');
-                currentTutorStudent.logs = res.logs || [];
-                renderInvoice();
-                renderTutorChart(res.logs || []);
-                renderTutorStudentHistory(res.logs || []);
+                if (currentTutorStudent.logs) {
+                    renderInvoice();
+                    renderTutorChart(currentTutorStudent.logs);
+                    renderTutorStudentHistory(currentTutorStudent.logs);
+                }
                 showToast("Đã cập nhật dữ liệu mới nhất!", "success");
-            }).getStudentDetailsForTutor(currentTutorStudent.phone);
+            }
         }
 
         // --- Edit lesson handlers ---
