@@ -2220,6 +2220,16 @@ function renderTuitionLivePreview() {
 
     var html = '';
 
+    // Prepare message content for parent note (used in both Template 1 and Template 2)
+    var sDisplayName = (toggles.student !== false) ? st.name : "học sinh";
+    var msgContent = "";
+    if (isMonthly) {
+        msgContent = "Dạ em chào anh/chị, em gửi anh/chị phiếu học tập tổng kết của bé <b>" + sDisplayName + "</b> ạ. Học phí kỳ này (" + periodTitle + ") là <b>" + grandTotalStr + "</b>. Anh/chị xem qua và quét mã QR chuyển khoản giúp em nhé ạ. Em cảm ơn anh/chị nhiều ạ!";
+    } else {
+        var feeWord = (grandTotal === 0) ? "0 VNĐ" : (Number(grandTotal).toLocaleString('vi-VN') + " VNĐ");
+        msgContent = "Dạ em chào anh/chị, em gửi anh/chị phiếu học tập tổng kết của bé <b>" + sDisplayName + "</b> ạ. Học phí kỳ này là <b>" + feeWord + "</b> (" + invBillableCount + " buổi). Anh/chị xem qua và quét mã QR chuyển khoản giúp em nhé ạ. Em cảm ơn anh/chị nhiều ạ!";
+    }
+
     if (tmpl === 2) {
         // ==================== MẪU 2: GIAO DIỆN 2 CỘT & NHẬN XÉT (THEME TÍM MẪU 1) ====================
         html += '<div id="tuitionInvoiceCard" class="tuition-receipt-card">';
@@ -2321,14 +2331,13 @@ function renderTuitionLivePreview() {
         html += '</div>'; // End Right Box
         html += '</div>'; // End 2-Column Section
 
-        // 4. Bottom Box: NHẬN XÉT HỌC TẬP
-        html += '<div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 16px; padding: 12px 14px;">';
-        html += '<div style="font-size: 10.5px; font-weight: 800; color: #64748B; text-transform: uppercase; letter-spacing: 0.6px; margin-bottom: 6px;"><i class="fa-solid fa-comment-dots" style="color: #7C3AED; margin-right: 4px;"></i> NHẬN XÉT HỌC TẬP</div>';
-        html += '<div id="tuitionRemarksText" contenteditable="true" style="font-size: 11.5px; color: #334155; line-height: 1.6; outline: none;">';
-        html += '<div>• <b>Tổng quan:</b> Nắm vững kiến thức trọng tâm, tích cực làm bài tập trên lớp.</div>';
-        html += '<div>• <b>Đại số:</b> Kỹ năng biến đổi biểu thức tốt, cần cẩn thận hơn ở các bước tính toán cuối.</div>';
-        html += '<div>• <b>Hình học:</b> Nắm chắc các định lý tam giác đồng dạng, trình bày bài hình rõ ràng, mạch lạc.</div>';
+        // 4. Bottom Box: Lời nhắn gửi phụ huynh (Ảnh 2)
+        html += '<div class="msg-box">';
+        html += '<div>';
+        html += '<div class="msg-header"><i class="fa-regular fa-comment-dots"></i> Lời nhắn gửi phụ huynh</div>';
+        html += '<div class="msg-text" id="invTextarea" contenteditable="true">' + msgContent + '</div>';
         html += '</div>';
+        html += '<div class="msg-footer">Đồng hành cùng sự tiến bộ của học sinh!</div>';
         html += '</div>';
 
         html += '</div>'; // End Mẫu 2 #tuitionInvoiceCard
@@ -2437,15 +2446,6 @@ function renderTuitionLivePreview() {
         html += '</div></div>';
 
         // 4. Section 3: Bottom Action (Note & QR)
-        var sDisplayName = (toggles.student !== false) ? st.name : "học sinh";
-        var msgContent = "";
-        if (isMonthly) {
-            msgContent = "Dạ em chào anh/chị, em gửi anh/chị phiếu học tập tổng kết của bé <b>" + sDisplayName + "</b> ạ. Học phí kỳ này (" + periodTitle + ") là <b>" + grandTotalStr + "</b>. Anh/chị xem qua và quét mã QR chuyển khoản giúp em nhé ạ. Em cảm ơn anh/chị nhiều ạ!";
-        } else {
-            var feeWord = (grandTotal === 0) ? "0 VNĐ" : (Number(grandTotal).toLocaleString('vi-VN') + " VNĐ");
-            msgContent = "Dạ em chào anh/chị, em gửi anh/chị phiếu học tập tổng kết của bé <b>" + sDisplayName + "</b> ạ. Học phí kỳ này là <b>" + feeWord + "</b> (" + invBillableCount + " buổi). Anh/chị xem qua và quét mã QR chuyển khoản giúp em nhé ạ. Em cảm ơn anh/chị nhiều ạ!";
-        }
-
         var bottomGridCols = (toggles.qr !== false) ? 'grid-template-columns: 1fr 190px;' : 'grid-template-columns: 1fr;';
         html += '<div class="bottom-action-container" style="' + bottomGridCols + '">';
         html += '<div class="msg-box">';
