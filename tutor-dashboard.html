@@ -1131,6 +1131,65 @@
                 <label>Mã bài tập *</label>
                 <input type="text" id="addStudentMaBaiTap" placeholder="Mã để đăng nhập nộp bài (Ví dụ: BT101)">
             </div>
+
+            <!-- Chọn thời gian học cố định trong tuần -->
+            <div class="modal-form-group" style="margin-top: 10px;">
+                <label style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-weight: 600;"><i class="fa-regular fa-clock" style="color: #8E4DFF;"></i> Thời gian học cố định</span>
+                    <span style="font-size: 11.5px; color: #A6ADCE; font-weight: normal;">Chọn các ngày trong tuần</span>
+                </label>
+                
+                <!-- Day Pills T2 - CN -->
+                <div class="schedule-day-pills" id="addScheduleDays">
+                    <button type="button" class="day-pill" data-day="mon" onclick="toggleScheduleDay('add', 'mon')">T2</button>
+                    <button type="button" class="day-pill" data-day="tue" onclick="toggleScheduleDay('add', 'tue')">T3</button>
+                    <button type="button" class="day-pill" data-day="wed" onclick="toggleScheduleDay('add', 'wed')">T4</button>
+                    <button type="button" class="day-pill" data-day="thu" onclick="toggleScheduleDay('add', 'thu')">T5</button>
+                    <button type="button" class="day-pill" data-day="fri" onclick="toggleScheduleDay('add', 'fri')">T6</button>
+                    <button type="button" class="day-pill" data-day="sat" onclick="toggleScheduleDay('add', 'sat')">T7</button>
+                    <button type="button" class="day-pill" data-day="sun" onclick="toggleScheduleDay('add', 'sun')">CN</button>
+                </div>
+
+                <!-- Khung giờ học -->
+                <div style="display: flex; gap: 8px; align-items: center; margin-top: 10px; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 140px;">
+                        <select id="addScheduleTimeSelect" onchange="handleScheduleTimeSelectChange('add')" style="width: 100%; padding: 9px 12px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #FFF; font-size: 13px;">
+                            <option value="18:00 - 19:30">18:00 - 19:30 (Tối ca 1)</option>
+                            <option value="19:00 - 20:30" selected>19:00 - 20:30 (Tối ca 2)</option>
+                            <option value="19:30 - 21:00">19:30 - 21:00 (Tối ca 3)</option>
+                            <option value="14:00 - 15:30">14:00 - 15:30 (Chiều)</option>
+                            <option value="15:30 - 17:00">15:30 - 17:00 (Chiều muộn)</option>
+                            <option value="08:00 - 09:30">08:00 - 09:30 (Sáng ca 1)</option>
+                            <option value="09:30 - 11:00">09:30 - 11:00 (Sáng ca 2)</option>
+                            <option value="custom">Khung giờ khác...</option>
+                        </select>
+                    </div>
+                    <div id="addScheduleTimeCustomWrap" style="display: none; flex: 1; min-width: 140px;">
+                        <input type="text" id="addScheduleTimeCustom" placeholder="Ví dụ: 19:00 - 21:00" oninput="handleScheduleCustomTimeInput('add')" style="width: 100%; padding: 9px 12px; background: rgba(0,0,0,0.25); border: 1px solid rgba(142,77,255,0.4); border-radius: 8px; color: #FFF; font-size: 13px;">
+                    </div>
+                </div>
+
+                <!-- Tóm tắt lịch đã chọn -->
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
+                    <div id="addScheduleSummary" style="font-size: 12px; color: #6EE7B7; font-weight: 500;"><i class="fa-solid fa-calendar-check"></i> Chưa chọn ngày học</div>
+                    <button type="button" onclick="toggleDetailedSchedule('add')" style="background:none; border:none; color:#C4B5FD; font-size:11.5px; cursor:pointer; padding:0; text-decoration:underline;"><i class="fa-solid fa-sliders"></i> Chỉnh giờ riêng từng ngày</button>
+                </div>
+
+                <!-- Chi tiết từng ngày (mặc định ẩn) -->
+                <div id="addDetailedScheduleBox" style="display: none; margin-top: 10px; padding: 12px; background: rgba(0,0,0,0.2); border: 1px dashed rgba(142,77,255,0.3); border-radius: 10px;">
+                    <div style="font-size: 11.5px; color: #FFD23F; margin-bottom: 8px; font-weight: 600;"><i class="fa-solid fa-clock"></i> Khung giờ riêng từng ngày:</div>
+                    <div class="modal-grid-2" style="gap: 8px;">
+                        <div><label style="font-size: 11.5px; margin-bottom: 3px;">Thứ 2:</label><input type="text" id="addSchMon" placeholder="Trống" oninput="syncFromDetailedSchedule('add')" style="padding: 6px 10px; font-size: 12px;"></div>
+                        <div><label style="font-size: 11.5px; margin-bottom: 3px;">Thứ 3:</label><input type="text" id="addSchTue" placeholder="Trống" oninput="syncFromDetailedSchedule('add')" style="padding: 6px 10px; font-size: 12px;"></div>
+                        <div><label style="font-size: 11.5px; margin-bottom: 3px;">Thứ 4:</label><input type="text" id="addSchWed" placeholder="Trống" oninput="syncFromDetailedSchedule('add')" style="padding: 6px 10px; font-size: 12px;"></div>
+                        <div><label style="font-size: 11.5px; margin-bottom: 3px;">Thứ 5:</label><input type="text" id="addSchThu" placeholder="Trống" oninput="syncFromDetailedSchedule('add')" style="padding: 6px 10px; font-size: 12px;"></div>
+                        <div><label style="font-size: 11.5px; margin-bottom: 3px;">Thứ 6:</label><input type="text" id="addSchFri" placeholder="Trống" oninput="syncFromDetailedSchedule('add')" style="padding: 6px 10px; font-size: 12px;"></div>
+                        <div><label style="font-size: 11.5px; margin-bottom: 3px;">Thứ 7:</label><input type="text" id="addSchSat" placeholder="Trống" oninput="syncFromDetailedSchedule('add')" style="padding: 6px 10px; font-size: 12px;"></div>
+                    </div>
+                    <div style="margin-top: 8px;"><label style="font-size: 11.5px; margin-bottom: 3px;">Chủ nhật:</label><input type="text" id="addSchSun" placeholder="Trống" oninput="syncFromDetailedSchedule('add')" style="padding: 6px 10px; font-size: 12px;"></div>
+                </div>
+            </div>
+
             <div class="modal-footer">
                 <button onclick="closeAddStudentModal()" class="modal-btn modal-btn-secondary">Hủy</button>
                 <button onclick="saveNewStudent()" class="modal-btn modal-btn-primary">Thêm mới</button>
@@ -1179,6 +1238,65 @@
                 <label>Mã bài tập *</label>
                 <input type="text" id="editStudentMaBaiTap" placeholder="Mã để đăng nhập nộp bài (Ví dụ: BT101)">
             </div>
+
+            <!-- Chọn thời gian học cố định trong tuần -->
+            <div class="modal-form-group" style="margin-top: 10px;">
+                <label style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-weight: 600;"><i class="fa-regular fa-clock" style="color: #8E4DFF;"></i> Thời gian học cố định</span>
+                    <span style="font-size: 11.5px; color: #A6ADCE; font-weight: normal;">Chọn các ngày trong tuần</span>
+                </label>
+                
+                <!-- Day Pills T2 - CN -->
+                <div class="schedule-day-pills" id="editScheduleDays">
+                    <button type="button" class="day-pill" data-day="mon" onclick="toggleScheduleDay('edit', 'mon')">T2</button>
+                    <button type="button" class="day-pill" data-day="tue" onclick="toggleScheduleDay('edit', 'tue')">T3</button>
+                    <button type="button" class="day-pill" data-day="wed" onclick="toggleScheduleDay('edit', 'wed')">T4</button>
+                    <button type="button" class="day-pill" data-day="thu" onclick="toggleScheduleDay('edit', 'thu')">T5</button>
+                    <button type="button" class="day-pill" data-day="fri" onclick="toggleScheduleDay('edit', 'fri')">T6</button>
+                    <button type="button" class="day-pill" data-day="sat" onclick="toggleScheduleDay('edit', 'sat')">T7</button>
+                    <button type="button" class="day-pill" data-day="sun" onclick="toggleScheduleDay('edit', 'sun')">CN</button>
+                </div>
+
+                <!-- Khung giờ học -->
+                <div style="display: flex; gap: 8px; align-items: center; margin-top: 10px; flex-wrap: wrap;">
+                    <div style="flex: 1; min-width: 140px;">
+                        <select id="editScheduleTimeSelect" onchange="handleScheduleTimeSelectChange('edit')" style="width: 100%; padding: 9px 12px; background: rgba(0,0,0,0.25); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #FFF; font-size: 13px;">
+                            <option value="18:00 - 19:30">18:00 - 19:30 (Tối ca 1)</option>
+                            <option value="19:00 - 20:30" selected>19:00 - 20:30 (Tối ca 2)</option>
+                            <option value="19:30 - 21:00">19:30 - 21:00 (Tối ca 3)</option>
+                            <option value="14:00 - 15:30">14:00 - 15:30 (Chiều)</option>
+                            <option value="15:30 - 17:00">15:30 - 17:00 (Chiều muộn)</option>
+                            <option value="08:00 - 09:30">08:00 - 09:30 (Sáng ca 1)</option>
+                            <option value="09:30 - 11:00">09:30 - 11:00 (Sáng ca 2)</option>
+                            <option value="custom">Khung giờ khác...</option>
+                        </select>
+                    </div>
+                    <div id="editScheduleTimeCustomWrap" style="display: none; flex: 1; min-width: 140px;">
+                        <input type="text" id="editScheduleTimeCustom" placeholder="Ví dụ: 19:00 - 21:00" oninput="handleScheduleCustomTimeInput('edit')" style="width: 100%; padding: 9px 12px; background: rgba(0,0,0,0.25); border: 1px solid rgba(142,77,255,0.4); border-radius: 8px; color: #FFF; font-size: 13px;">
+                    </div>
+                </div>
+
+                <!-- Tóm tắt lịch đã chọn -->
+                <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
+                    <div id="editScheduleSummary" style="font-size: 12px; color: #6EE7B7; font-weight: 500;"><i class="fa-solid fa-calendar-check"></i> Chưa chọn ngày học</div>
+                    <button type="button" onclick="toggleDetailedSchedule('edit')" style="background:none; border:none; color:#C4B5FD; font-size:11.5px; cursor:pointer; padding:0; text-decoration:underline;"><i class="fa-solid fa-sliders"></i> Chỉnh giờ riêng từng ngày</button>
+                </div>
+
+                <!-- Chi tiết từng ngày (mặc định ẩn) -->
+                <div id="editDetailedScheduleBox" style="display: none; margin-top: 10px; padding: 12px; background: rgba(0,0,0,0.2); border: 1px dashed rgba(142,77,255,0.3); border-radius: 10px;">
+                    <div style="font-size: 11.5px; color: #FFD23F; margin-bottom: 8px; font-weight: 600;"><i class="fa-solid fa-clock"></i> Khung giờ riêng từng ngày:</div>
+                    <div class="modal-grid-2" style="gap: 8px;">
+                        <div><label style="font-size: 11.5px; margin-bottom: 3px;">Thứ 2:</label><input type="text" id="editSchMon" placeholder="Trống" oninput="syncFromDetailedSchedule('edit')" style="padding: 6px 10px; font-size: 12px;"></div>
+                        <div><label style="font-size: 11.5px; margin-bottom: 3px;">Thứ 3:</label><input type="text" id="editSchTue" placeholder="Trống" oninput="syncFromDetailedSchedule('edit')" style="padding: 6px 10px; font-size: 12px;"></div>
+                        <div><label style="font-size: 11.5px; margin-bottom: 3px;">Thứ 4:</label><input type="text" id="editSchWed" placeholder="Trống" oninput="syncFromDetailedSchedule('edit')" style="padding: 6px 10px; font-size: 12px;"></div>
+                        <div><label style="font-size: 11.5px; margin-bottom: 3px;">Thứ 5:</label><input type="text" id="editSchThu" placeholder="Trống" oninput="syncFromDetailedSchedule('edit')" style="padding: 6px 10px; font-size: 12px;"></div>
+                        <div><label style="font-size: 11.5px; margin-bottom: 3px;">Thứ 6:</label><input type="text" id="editSchFri" placeholder="Trống" oninput="syncFromDetailedSchedule('edit')" style="padding: 6px 10px; font-size: 12px;"></div>
+                        <div><label style="font-size: 11.5px; margin-bottom: 3px;">Thứ 7:</label><input type="text" id="editSchSat" placeholder="Trống" oninput="syncFromDetailedSchedule('edit')" style="padding: 6px 10px; font-size: 12px;"></div>
+                    </div>
+                    <div style="margin-top: 8px;"><label style="font-size: 11.5px; margin-bottom: 3px;">Chủ nhật:</label><input type="text" id="editSchSun" placeholder="Trống" oninput="syncFromDetailedSchedule('edit')" style="padding: 6px 10px; font-size: 12px;"></div>
+                </div>
+            </div>
+
             <div class="modal-footer" style="justify-content: space-between;">
                 <button onclick="confirmDeleteStudent()" class="modal-btn" style="background: rgba(239, 68, 68, 0.1); border: 1px solid #EF4444; color: #EF4444; border-radius: 20px; padding: 8px 16px; cursor: pointer; display: flex; align-items: center; gap: 6px;"><i class="fa-solid fa-trash-can"></i> Xóa học sinh</button>
                 <div style="display: flex; gap: 8px;">

@@ -4812,6 +4812,403 @@ window.initTutorSidebarState = initTutorSidebarState;
             }
         }
 
+        // ==========================================
+        // QUẢN LÝ THỜI GIAN HỌC TRONG TUẦN (MODAL THÊM / SỬA HỌC SINH)
+        // ==========================================
+        var SCHEDULE_DAYS = ['mon', 'tue', 'wed', 'thu', 'fri', 'sat', 'sun'];
+        var SCHEDULE_DAY_INPUT_MAP = {
+            mon: 'SchMon',
+            tue: 'SchTue',
+            wed: 'SchWed',
+            thu: 'SchThu',
+            fri: 'SchFri',
+            sat: 'SchSat',
+            sun: 'SchSun'
+        };
+        var SCHEDULE_DAY_LABELS = {
+            mon: 'T2',
+            tue: 'T3',
+            wed: 'T4',
+            thu: 'T5',
+            fri: 'T6',
+            sat: 'T7',
+            sun: 'CN'
+        };
+
+        function getCurrentSelectedScheduleTime(prefix) {
+            var select = document.getElementById(prefix + 'ScheduleTimeSelect');
+            if (!select) return "19:00 - 20:30";
+            if (select.value === 'custom') {
+                var customInput = document.getElementById(prefix + 'ScheduleTimeCustom');
+                var customVal = customInput ? customInput.value.trim() : "";
+                return customVal || "19:00 - 20:30";
+            }
+            return select.value;
+        }
+
+        function updateScheduleSummaryUI(prefix) {
+            var summaryEl = document.getElementById(prefix + 'ScheduleSummary');
+            if (!summaryEl) return;
+            
+            var activeList = [];
+            SCHEDULE_DAYS.forEach(function(d) {
+                var inp = document.getElementById(prefix + SCHEDULE_DAY_INPUT_MAP[d]);
+                var val = inp ? inp.value.trim() : "";
+                if (val) {
+                    activeList.push({ key: d, label: SCHEDULE_DAY_LABELS[d], time: val });
+                }
+            });
+            
+            if (activeList.length === 0) {
+                summaryEl.innerHTML = '<span style="color: #94A3B8;"><i class="fa-solid fa-calendar-xmark" style="margin-right: 4px;"></i>Chưa chọn ngày học</span>';
+                return;
+            }
+            
+            var firstTime = activeList[0].time;
+            var allSame = activeList.every(function(item) { return item.time === firstTime; });
+            var text = "";
+            if (allSame) {
+                var daysText = activeList.map(function(item) { return item.label; }).join(", ");
+                text = daysText + ": " + firstTime;
+            } else {
+                text = activeList.map(function(item) { return item.label + " (" + item.time + ")"; }).join(", ");
+            }
+            summaryEl.innerHTML = '<span style="color: #6EE7B7; font-weight: 600;"><i class="fa-solid fa-calendar-check" style="margin-right: 4px;"></i>' + text + '</span>';
+        }
+
+        function initScheduleForm(prefix, schedObj) {
+            var select = document.getElementById(prefix + 'ScheduleTimeSelect');
+            var customWrap = document.getElementById(prefix + 'ScheduleTimeCustomWrap');
+            var customInput = document.getElementById(prefix + 'ScheduleTimeCustom');
+            var detailedBox = document.getElementById(prefix + 'DetailedScheduleBox');
+            
+            if (select) select.value = "19:00 - 20:30";
+            if (customWrap) customWrap.style.display = 'none';
+            if (customInput) customInput.value = "";
+            if (detailedBox) detailedBox.style.display = 'none';
+            
+            var activeTimes = [];
+            SCHEDULE_DAYS.forEach(function(d) {
+                var inp = document.getElementById(prefix + SCHEDULE_DAY_INPUT_MAP[d]);
+                var pill = document.querySelector('#' + prefix + 'ScheduleDays .day-pill[data-day="' + d + '"]');
+                var val = (schedObj && schedObj[d]) ? String(schedObj[d]).trim() : "";
+                
+                if (inp) inp.value = val;
+                if (pill) {
+                    if (val) {
+                        pill.classList.add('active');
+                        activeTimes.push(val);
+                    } else {
+                        pill.classList.remove('active');
+                    }
+                }
+            });
+            
+            // Nếu có thời gian sẵn, đồng bộ với select hoặc custom input
+            if (activeTimes.length > 0 && select) {
+                var firstTime = activeTimes[0];
+                var allSame = activeTimes.every(function(t) { return t === firstTime; });
+                if (allSame) {
+                    var hasOption = false;
+                    for (var i = 0; i < select.options.length; i++) {
+                        if (select.options[i].value === firstTime) {
+                            hasOption = true;
+                            break;
+                        }
+                    }
+                    if (hasOption) {
+                        select.value = firstTime;
+                        if (customWrap) customWrap.style.display = 'none';
+                    } else {
+                        select.value = 'custom';
+                        if (customWrap) customWrap.style.display = 'block';
+                        if (customInput) customInput.value = firstTime;
+                    }
+                } else {
+                    // Các ngày có giờ khác nhau: tự động mở khung chi tiết để người dùng thấy rõ
+                    if (detailedBox) detailedBox.style.display = 'block';
+                }
+            }
+            
+            updateScheduleSummaryUI(prefix);
+        }
+
+        function toggleScheduleDay(prefix, dayKey) {
+            var pill = document.querySelector('#' + prefix + 'ScheduleDays .day-pill[data-day="' + dayKey + '"]');
+            var input = document.getElementById(prefix + SCHEDULE_DAY_INPUT_MAP[dayKey]);
+            var curTime = getCurrentSelectedScheduleTime(prefix);
+            
+            if (pill) {
+                if (pill.classList.contains('active')) {
+                    pill.classList.remove('active');
+                    if (input) input.value = "";
+                } else {
+                    pill.classList.add('active');
+                    if (input) input.value = curTime;
+                }
+            }
+            updateScheduleSummaryUI(prefix);
+        }
+
+        function handleScheduleTimeSelectChange(prefix) {
+            var select = document.getElementById(prefix + 'ScheduleTimeSelect');
+            var customWrap = document.getElementById(prefix + 'ScheduleTimeCustomWrap');
+            var customInput = document.getElementById(prefix + 'ScheduleTimeCustom');
+            
+            if (!select) return;
+            if (select.value === 'custom') {
+                if (customWrap) customWrap.style.display = 'block';
+                if (customInput) {
+                    customInput.focus();
+                    if (!customInput.value.trim()) customInput.value = "19:00 - 20:30";
+                }
+            } else {
+                if (customWrap) customWrap.style.display = 'none';
+            }
+            
+            var time = getCurrentSelectedScheduleTime(prefix);
+            SCHEDULE_DAYS.forEach(function(d) {
+                var pill = document.querySelector('#' + prefix + 'ScheduleDays .day-pill[data-day="' + d + '"]');
+                if (pill && pill.classList.contains('active')) {
+                    var inp = document.getElementById(prefix + SCHEDULE_DAY_INPUT_MAP[d]);
+                    if (inp) inp.value = time;
+                }
+            });
+            updateScheduleSummaryUI(prefix);
+        }
+
+        function handleScheduleCustomTimeInput(prefix) {
+            var time = getCurrentSelectedScheduleTime(prefix);
+            SCHEDULE_DAYS.forEach(function(d) {
+                var pill = document.querySelector('#' + prefix + 'ScheduleDays .day-pill[data-day="' + d + '"]');
+                if (pill && pill.classList.contains('active')) {
+                    var inp = document.getElementById(prefix + SCHEDULE_DAY_INPUT_MAP[d]);
+                    if (inp) inp.value = time;
+                }
+            });
+            updateScheduleSummaryUI(prefix);
+        }
+
+        function toggleDetailedSchedule(prefix) {
+            var box = document.getElementById(prefix + 'DetailedScheduleBox');
+            if (!box) return;
+            if (box.style.display === 'none' || !box.style.display) {
+                box.style.display = 'block';
+            } else {
+                box.style.display = 'none';
+            }
+        }
+
+        function syncFromDetailedSchedule(prefix) {
+            SCHEDULE_DAYS.forEach(function(d) {
+                var inp = document.getElementById(prefix + SCHEDULE_DAY_INPUT_MAP[d]);
+                var pill = document.querySelector('#' + prefix + 'ScheduleDays .day-pill[data-day="' + d + '"]');
+                if (inp && pill) {
+                    if (inp.value.trim() !== "") {
+                        pill.classList.add('active');
+                    } else {
+                        pill.classList.remove('active');
+                    }
+                }
+            });
+            updateScheduleSummaryUI(prefix);
+        }
+
+        function getScheduleDataFromForm(prefix) {
+            var data = {};
+            SCHEDULE_DAYS.forEach(function(d) {
+                var inp = document.getElementById(prefix + SCHEDULE_DAY_INPUT_MAP[d]);
+                data[d] = inp ? inp.value.trim() : "";
+            });
+            return data;
+        }
+
+        function refreshTutorScheduleDisplay(scheduleList) {
+            if (scheduleList) lastLoadedTutorSchedule = scheduleList;
+            var list = lastLoadedTutorSchedule || [];
+            var schedMap = {};
+            list.forEach(function(s) {
+                if (s && s.studentName) schedMap[s.studentName.trim()] = s;
+            });
+            
+            var students = (typeof getTutorStudentsResolved === 'function') 
+                ? getTutorStudentsResolved() 
+                : ((tutorDataGlobal && tutorDataGlobal.students) ? tutorDataGlobal.students : []);
+                
+            var table = document.getElementById('tutorScheduleTable');
+            if (table && students && students.length > 0) {
+                var tableHtml = "<tr><th>Học sinh</th><th>Thứ 2</th><th>Thứ 3</th><th>Thứ 4</th><th>Thứ 5</th><th>Thứ 6</th><th>Thứ 7</th><th>CN</th><th style='width: 50px;'>Sửa</th></tr>";
+                students.forEach(function(st) {
+                    var s = schedMap[st.name.trim()] || { mon: "", tue: "", wed: "", thu: "", fri: "", sat: "", sun: "" };
+                    tableHtml += "<tr>" +
+                        "<td style='font-weight:700; color:#FFD23F; text-align: left; padding: 12px 14px; white-space: nowrap;'>" + st.name + "</td>" +
+                        "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.mon) + "</td>" +
+                        "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.tue) + "</td>" +
+                        "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.wed) + "</td>" +
+                        "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.thu) + "</td>" +
+                        "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.fri) + "</td>" +
+                        "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.sat) + "</td>" +
+                        "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.sun) + "</td>" +
+                        "<td style='text-align: center; padding: 12px 10px;'><button onclick='openEditScheduleModal(\"" + st.name.replace(/'/g, "\\'").replace(/"/g, '&quot;') + "\", \"" + (s.mon||"") + "\", \"" + (s.tue||"") + "\", \"" + (s.wed||"") + "\", \"" + (s.thu||"") + "\", \"" + (s.fri||"") + "\", \"" + (s.sat||"") + "\", \"" + (s.sun||"") + "\")' class='btn-icon-edit' style='margin: 0 auto; padding: 6px 10px; display: inline-flex; align-items: center; justify-content: center;' title='Sửa thời khóa biểu'><i class='fa-solid fa-pen-to-square'></i></button></td>" +
+                        "</tr>";
+                });
+                table.innerHTML = tableHtml;
+            }
+            
+            var mobileContainer = document.getElementById('tutorScheduleMobile');
+            if (mobileContainer && students && students.length > 0) {
+                var mobileHtml = "";
+                students.forEach(function(st, idx) {
+                    var s = schedMap[st.name.trim()] || { mon: "", tue: "", wed: "", thu: "", fri: "", sat: "", sun: "" };
+                    var activeDays = [];
+                    if (s.mon) activeDays.push("T2");
+                    if (s.tue) activeDays.push("T3");
+                    if (s.wed) activeDays.push("T4");
+                    if (s.thu) activeDays.push("T5");
+                    if (s.fri) activeDays.push("T6");
+                    if (s.sat) activeDays.push("T7");
+                    if (s.sun) activeDays.push("CN");
+                    var activeDaysStr = activeDays.length > 0 ? activeDays.join(", ") : "Chưa xếp lịch";
+                    
+                    mobileHtml += "<div class='accordion-item' id='sched-item-" + idx + "'>";
+                    mobileHtml += "  <div class='accordion-header' onclick='toggleTutorScheduleAccordion(" + idx + ")'>";
+                    mobileHtml += "    <div class='accordion-header-title'>";
+                    mobileHtml += "      <span>" + st.name + "</span>";
+                    mobileHtml += "      <span class='accordion-header-date'>" + activeDaysStr + "</span>";
+                    mobileHtml += "    </div>";
+                    mobileHtml += "    <div class='accordion-header-status'>";
+                    mobileHtml += "      <i class='fa-solid fa-chevron-down' id='sched-chevron-" + idx + "'></i>";
+                    mobileHtml += "    </div>";
+                    mobileHtml += "  </div>";
+                    mobileHtml += "  <div class='accordion-body' id='sched-accordion-body-" + idx + "' style='display: none;'>";
+                    
+                    var daysList = [
+                        { label: "Thứ 2", val: s.mon },
+                        { label: "Thứ 3", val: s.tue },
+                        { label: "Thứ 4", val: s.wed },
+                        { label: "Thứ 5", val: s.thu },
+                        { label: "Thứ 6", val: s.fri },
+                        { label: "Thứ 7", val: s.sat },
+                        { label: "Chủ nhật", val: s.sun }
+                    ];
+                    
+                    daysList.forEach(function(day) {
+                        var dayVal = day.val ? day.val : "<span style='color: rgba(255,255,255,0.15); font-weight: 400;'>Trống</span>";
+                        mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>" + day.label + "</span><span class='accordion-body-val' style='color:#FFD23F; font-weight:600;'>" + dayVal + "</span></div>";
+                    });
+                    
+                    mobileHtml += "    <div style='margin-top: 10px; text-align: right;'>";
+                    mobileHtml += "      <button onclick='openEditScheduleModal(\"" + st.name.replace(/'/g, "\\'").replace(/"/g, '&quot;') + "\", \"" + (s.mon||"") + "\", \"" + (s.tue||"") + "\", \"" + (s.wed||"") + "\", \"" + (s.thu||"") + "\", \"" + (s.fri||"") + "\", \"" + (s.sat||"") + "\", \"" + (s.sun||"") + "\")' class='action-btn-hw' style='border-color:#8E4DFF; color:#8E4DFF; cursor:pointer;'><i class='fa-solid fa-pen-to-square'></i> Sửa lịch học</button>";
+                    mobileHtml += "    </div>";
+                    mobileHtml += "  </div>";
+                    mobileHtml += "</div>";
+                });
+                mobileContainer.innerHTML = mobileHtml;
+            }
+            
+            if (typeof renderUpcomingSchedule === 'function') {
+                renderUpcomingSchedule(list);
+            }
+            if (typeof renderTutorStudentsGrid === 'function') {
+                renderTutorStudentsGrid();
+            }
+        }
+        window.refreshTutorScheduleDisplay = refreshTutorScheduleDisplay;
+
+        function saveStudentScheduleData(studentName, schedData, oldStudentName) {
+            if (!studentName) return;
+            studentName = studentName.trim();
+            var lookupName = (oldStudentName || studentName).trim();
+            
+            // 1. Cập nhật bộ nhớ đệm lastLoadedTutorSchedule
+            if (!lastLoadedTutorSchedule || !Array.isArray(lastLoadedTutorSchedule)) {
+                lastLoadedTutorSchedule = [];
+            }
+            var foundIdx = lastLoadedTutorSchedule.findIndex(function(s) {
+                return s.studentName && s.studentName.trim().toLowerCase() === lookupName.toLowerCase();
+            });
+            if (foundIdx !== -1) {
+                lastLoadedTutorSchedule[foundIdx].studentName = studentName;
+                SCHEDULE_DAYS.forEach(function(d) {
+                    lastLoadedTutorSchedule[foundIdx][d] = schedData[d] || "";
+                });
+            } else {
+                var newItem = {
+                    studentName: studentName,
+                    color: "#8E4DFF"
+                };
+                SCHEDULE_DAYS.forEach(function(d) {
+                    newItem[d] = schedData[d] || "";
+                });
+                lastLoadedTutorSchedule.push(newItem);
+            }
+            
+            // 2. Cập nhật Demo Store / SessionStorage
+            var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
+            if (store) {
+                if (!store.tutorSchedule || !Array.isArray(store.tutorSchedule)) {
+                    store.tutorSchedule = [];
+                }
+                var sIdx = store.tutorSchedule.findIndex(function(s) {
+                    return s.studentName && s.studentName.trim().toLowerCase() === lookupName.toLowerCase();
+                });
+                if (sIdx !== -1) {
+                    store.tutorSchedule[sIdx].studentName = studentName;
+                    SCHEDULE_DAYS.forEach(function(d) {
+                        store.tutorSchedule[sIdx][d] = schedData[d] || "";
+                    });
+                } else {
+                    var storeItem = {
+                        rowIndex: store.tutorSchedule.length + 1,
+                        studentName: studentName,
+                        color: "#8E4DFF"
+                    };
+                    SCHEDULE_DAYS.forEach(function(d) {
+                        storeItem[d] = schedData[d] || "";
+                    });
+                    store.tutorSchedule.push(storeItem);
+                }
+                if (typeof saveGiaSuDemoStore === 'function') {
+                    saveGiaSuDemoStore(store);
+                }
+            }
+            
+            // 3. Đồng bộ lên Backend (GAS / Mock API)
+            var tutorPhone = (tutorDataGlobal && tutorDataGlobal.tutorPhone) ? tutorDataGlobal.tutorPhone : "";
+            if (typeof google !== 'undefined' && google.script && google.script.run) {
+                if (typeof google.script.run.capNhatThoiKhoaBieu === 'function') {
+                    google.script.run
+                        .withSuccessHandler(function(res) {
+                            console.log("Schedule saved to backend successfully", res);
+                        })
+                        .capNhatThoiKhoaBieu(tutorPhone, studentName, 
+                            schedData.mon || "", schedData.tue || "", schedData.wed || "", schedData.thu || "", 
+                            schedData.fri || "", schedData.sat || "", schedData.sun || "");
+                } else if (typeof google.script.run.saveScheduleToBackend === 'function') {
+                    google.script.run
+                        .withSuccessHandler(function(res) {
+                            console.log("Schedule saved to backend successfully", res);
+                        })
+                        .saveScheduleToBackend(tutorPhone, studentName, 
+                            schedData.mon || "", schedData.tue || "", schedData.wed || "", schedData.thu || "", 
+                            schedData.fri || "", schedData.sat || "", schedData.sun || "");
+                }
+            }
+            
+            // 4. Cập nhật giao diện (Grid thẻ học sinh, lịch tuần Overview)
+            refreshTutorScheduleDisplay(lastLoadedTutorSchedule);
+        }
+
+        // Expose to window
+        window.toggleScheduleDay = toggleScheduleDay;
+        window.handleScheduleTimeSelectChange = handleScheduleTimeSelectChange;
+        window.handleScheduleCustomTimeInput = handleScheduleCustomTimeInput;
+        window.toggleDetailedSchedule = toggleDetailedSchedule;
+        window.syncFromDetailedSchedule = syncFromDetailedSchedule;
+        window.initScheduleForm = initScheduleForm;
+        window.getScheduleDataFromForm = getScheduleDataFromForm;
+        window.saveStudentScheduleData = saveStudentScheduleData;
+
         // 2. Cửa sổ Thêm học sinh (Add Student)
         function openAddStudentModal() {
             document.getElementById('addParentName').value = "";
@@ -4823,6 +5220,8 @@ window.initTutorSidebarState = initTutorSidebarState;
             var radSession = document.getElementById('addBillingSession');
             if (radSession) radSession.checked = true;
             toggleBillingTypeLabel('add');
+            
+            initScheduleForm('add', null);
             
             document.getElementById('addStudentModal').style.display = "flex";
         }
@@ -4845,15 +5244,18 @@ window.initTutorSidebarState = initTutorSidebarState;
                 return;
             }
             
+            var schedData = getScheduleDataFromForm('add');
+            
             google.script.run.withSuccessHandler(function(res) {
                 if(res.error) {
                      showToast("Lỗi: " + res.error, "error");
                 } else {
                      showToast("Thêm học sinh mới thành công!", "success");
                      closeAddStudentModal();
+                     saveStudentScheduleData(sName, schedData);
                      google.script.run.withSuccessHandler(function(loginRes) {
-                         if(loginRes.role === 'tutor') renderTutorView(loginRes.data);
-                     }).loginSystem(tutorDataGlobal.tutorPhone, document.getElementById('maPin').value.trim());
+                         if(loginRes && loginRes.role === 'tutor') renderTutorView(loginRes.data);
+                     }).loginSystem(tutorDataGlobal.tutorPhone, document.getElementById('maPin') ? document.getElementById('maPin').value.trim() : "");
                 }
             }).themHocSinhMoi(tutorDataGlobal.tutorPhone, pName, sName, phone, parseFloat(tuition), maBaiTap, thongBao, billingType);
         }
@@ -4880,7 +5282,10 @@ window.initTutorSidebarState = initTutorSidebarState;
             document.getElementById('editParentName').placeholder = "Đang tải tên phụ huynh...";
             if (typeof google !== 'undefined' && google.script && google.script.run && google.script.run.getStudentParentName) {
                 google.script.run.withSuccessHandler(function(pName) {
-                    document.getElementById('editParentName').value = pName || "";
+                    if (typeof pName === 'object' && pName !== null) {
+                        pName = pName.parentName || pName.name || "";
+                    }
+                    document.getElementById('editParentName').value = pName || (currentTutorStudent.parentName || ("Phụ huynh " + currentTutorStudent.name));
                     document.getElementById('editParentName').placeholder = "";
                 }).getStudentParentName(currentTutorStudent.phone);
             } else {
@@ -4889,6 +5294,21 @@ window.initTutorSidebarState = initTutorSidebarState;
             }
             
             document.getElementById('editStudentPhone').value = currentTutorStudent.phone;
+            
+            // Tải thời khóa biểu hiện tại của học sinh vào form sửa
+            var curSched = null;
+            var schedList = lastLoadedTutorSchedule;
+            if (!schedList) {
+                var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
+                schedList = (store && store.tutorSchedule) ? store.tutorSchedule : [];
+            }
+            if (Array.isArray(schedList) && currentTutorStudent.name) {
+                curSched = schedList.find(function(s) {
+                    return s.studentName && s.studentName.trim().toLowerCase() === currentTutorStudent.name.trim().toLowerCase();
+                });
+            }
+            initScheduleForm('edit', curSched);
+
             document.getElementById('editStudentModal').style.display = "flex";
         }
         function closeEditStudentModal() {
@@ -4904,6 +5324,8 @@ window.initTutorSidebarState = initTutorSidebarState;
             var radBilling = document.querySelector('input[name="editStudentBillingType"]:checked');
             var billingType = radBilling ? radBilling.value : 'session';
             var thongBao = currentTutorStudent.thongBao || "";
+            var oldName = (currentTutorStudent && currentTutorStudent.name) ? currentTutorStudent.name : sName;
+            var schedData = getScheduleDataFromForm('edit');
             
             if(!pName || !sName || !phone || !tuition || !maBaiTap) {
                 showToast("Vui lòng điền đầy đủ các thông tin!", "error");
@@ -4915,6 +5337,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                     if(res.error) {
                         showToast("Lỗi: " + res.error, "error");
                     } else {
+                        saveStudentScheduleData(sName, schedData, oldName);
                         showToast("Cập nhật thông tin học sinh thành công!", "success");
                         closeEditStudentModal();
                         if (google.script.run.loginSystem) {
@@ -4949,6 +5372,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                         if (typeof saveGiaSuDemoStore === 'function') saveGiaSuDemoStore(store);
                     }
                 }
+                saveStudentScheduleData(sName, schedData, oldName);
                 showToast("Cập nhật thông tin học sinh thành công!", "success");
                 closeEditStudentModal();
                 if (typeof renderTutorStudentsGrid === 'function') renderTutorStudentsGrid();
@@ -6067,31 +6491,10 @@ window.initTutorSidebarState = initTutorSidebarState;
                         showToast("Cập nhật thời khóa biểu thành công!", "success");
                         closeEditScheduleModal();
                         
-                        // Reload schedule table
+                        // Reload schedule table and cards
                         google.script.run.withSuccessHandler(function(schedule) {
-                            var table = document.getElementById('tutorScheduleTable');
-                            table.innerHTML = "<tr><th>Học sinh</th><th>Thứ 2</th><th>Thứ 3</th><th>Thứ 4</th><th>Thứ 5</th><th>Thứ 6</th><th>Thứ 7</th><th>CN</th><th style='width: 50px;'>Sửa</th></tr>";
-                            var schedMap = {};
-                            if(schedule && schedule.length > 0) {
-                                schedule.forEach(function(s) {
-                                    schedMap[s.studentName.trim()] = s;
-                                });
-                            }
-                            if(tutorDataGlobal && tutorDataGlobal.students) {
-                                tutorDataGlobal.students.forEach(function(st) {
-                                    var s = schedMap[st.name.trim()] || { mon: "", tue: "", wed: "", thu: "", fri: "", sat: "", sun: "" };
-                                    table.innerHTML += "<tr>" +
-                                        "<td style='font-weight:700; color:#FFD23F; text-align: left; padding: 12px 14px; white-space: nowrap;'>" + st.name + "</td>" +
-                                        "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.mon) + "</td>" +
-                                        "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.tue) + "</td>" +
-                                        "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.wed) + "</td>" +
-                                        "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.thu) + "</td>" +
-                                        "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.fri) + "</td>" +
-                                        "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.sat) + "</td>" +
-                                        "<td style='text-align: center; padding: 12px 10px;'>" + formatScheduleCell(s.sun) + "</td>" +
-                                        "<td style='text-align: center; padding: 12px 10px;'><button onclick='openEditScheduleModal(\"" + st.name.replace(/'/g, "\\'").replace(/"/g, '&quot;') + "\", \"" + (s.mon||"") + "\", \"" + (s.tue||"") + "\", \"" + (s.wed||"") + "\", \"" + (s.thu||"") + "\", \"" + (s.fri||"") + "\", \"" + (s.sat||"") + "\", \"" + (s.sun||"") + "\")' class='btn-icon-edit' style='margin: 0 auto; padding: 6px 10px; display: inline-flex; align-items: center; justify-content: center;' title='Sửa thời khóa biểu'><i class='fa-solid fa-pen-to-square'></i></button></td>" +
-                                        "</tr>";
-                                });
+                            if (typeof refreshTutorScheduleDisplay === 'function') {
+                                refreshTutorScheduleDisplay(schedule);
                             }
                         }).getTutorSchedule(tutorDataGlobal.tutorPhone);
                     }

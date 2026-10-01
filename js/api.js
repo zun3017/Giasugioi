@@ -391,6 +391,12 @@
                     result = { success: true };
                 }
 
+                else if (functionName === 'getStudentParentName') {
+                    const studentPhone = args[0];
+                    let target = store.students ? store.students.find(s => s.phone === studentPhone || normalizePhone(s.phone) === normalizePhone(studentPhone)) : null;
+                    result = (target && target.parentName) ? target.parentName : (target ? ("Phụ huynh em " + target.name) : "");
+                }
+
                 // 3.2 CẬP NHẬT THÔNG TIN GIA SƯ & MÃ QR THANH TOÁN
                 else if (functionName === 'capNhatThongTinGiaSu' || functionName === 'updateTutorAccount') {
                     const [oldPhone, name, phone, pin, qrCode] = args;
@@ -1049,7 +1055,7 @@
                 else if (functionName === 'saveEvaluation' || functionName === 'deleteEvaluation') {
                     result = { success: true, thongBao: "Cập nhật đánh giá buổi học thành công!" };
                 }
-                else if (functionName === 'saveScheduleToBackend') {
+                else if (functionName === 'saveScheduleToBackend' || functionName === 'capNhatThoiKhoaBieu') {
                     const studentName = String(args[1] || "").trim();
                     const mon = String(args[2] || "").trim();
                     const tue = String(args[3] || "").trim();
@@ -1111,6 +1117,10 @@
             return result;
         }
     }
+
+    // Expose store helpers for synchronous client state access
+    window.getGiaSuDemoStore = getDemoStore;
+    window.saveGiaSuDemoStore = saveDemoStore;
 
     // Gán Mock API vào window.google.script.run
     window.google = {
