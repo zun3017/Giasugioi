@@ -2181,27 +2181,36 @@ function renderTuitionLivePreview() {
     var qrImgSrc = (tutorDataGlobal && tutorDataGlobal.qrCode) ? tutorDataGlobal.qrCode : qrVietQrUrl;
 
     var dateChipsHtml = '';
+    var attendedLogs = [];
     if (studentLogs && studentLogs.length > 0) {
         studentLogs.forEach(function(l) {
             if (!l || !l.ngay) return;
-            var rawD = l.ngay.split(' ')[0].trim();
-            var sp = rawD.split('/');
-            var chipLabel = rawD;
-            if (sp.length >= 2) {
-                chipLabel = String(sp[0]).padStart(2, '0') + '/' + String(sp[1]).padStart(2, '0');
+            var rawStatus = l.trangThai || l.chuyenCan || l.attendance_status || l.attendance || l.status || "";
+            var normTt = String(rawStatus).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').trim();
+            var isDaBu = (normTt.includes("da bu") || normTt.includes("hoc bu"));
+            var isAbsent = !isDaBu && (
+                normTt.includes("nghi") || 
+                normTt.includes("huy") || 
+                normTt.includes("vang") || 
+                normTt.includes("off") || 
+                normTt.includes("khong hoc") ||
+                normTt.includes("chua hoc") ||
+                normTt.includes("tam hoan") ||
+                normTt === "v" || 
+                normTt === "n" || 
+                normTt === "x"
+            );
+            if (!isAbsent) {
+                attendedLogs.push(l);
+                var rawD = l.ngay.split(' ')[0].trim();
+                var sp = rawD.split('/');
+                var chipLabel = rawD;
+                if (sp.length >= 2) {
+                    chipLabel = String(sp[0]).padStart(2, '0') + '/' + String(sp[1]).padStart(2, '0');
+                }
+                dateChipsHtml += '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">' + chipLabel + '</span>';
             }
-            dateChipsHtml += '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">' + chipLabel + '</span>';
         });
-    }
-    if (!dateChipsHtml) {
-        dateChipsHtml = '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">07/08</span>' +
-            '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">10/08</span>' +
-            '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">14/08</span>' +
-            '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">17/08</span>' +
-            '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">21/08</span>' +
-            '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">24/08</span>' +
-            '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">28/08</span>' +
-            '<span style="background: #F3E8FF; color: #6D28D9; border: 1px solid #DDD6FE; font-size: 10px; font-weight: 700; padding: 2px 6px; border-radius: 6px;">31/08</span>';
     }
 
     var html = '';
@@ -2273,9 +2282,14 @@ function renderTuitionLivePreview() {
         if (toggles.dates !== false) {
             html += '<div style="margin-top: 4px;">';
             html += '<div style="font-size: 11px; color: #64748B; margin-bottom: 5px; font-weight: 600;">Ngày học:</div>';
-            html += '<div style="display: flex; flex-wrap: wrap; gap: 4px;">';
-            html += dateChipsHtml;
-            html += '</div></div>';
+            if (dateChipsHtml) {
+                html += '<div style="display: flex; flex-wrap: wrap; gap: 4px;">';
+                html += dateChipsHtml;
+                html += '</div>';
+            } else {
+                html += '<div style="font-size: 11.5px; color: #94A3B8; font-style: italic;">Chưa có buổi học nào</div>';
+            }
+            html += '</div>';
         }
 
         html += '</div>'; // End Left Box
@@ -2373,14 +2387,19 @@ function renderTuitionLivePreview() {
         }
 
         // Chi tiết ngày học (nếu toggle bật)
-        if (toggles.dates === true && studentLogs.length > 0) {
+        if (toggles.dates === true) {
             html += '<div style="background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 10px 12px; margin-top: 10px;">';
-            html += '<div style="font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px;"><i class="fa-solid fa-calendar-days" style="color: #06B6D4;"></i> Chi tiết các ngày học (' + studentLogs.length + ' buổi):</div>';
-            html += '<div style="display: flex; flex-wrap: wrap; gap: 5px;">';
-            studentLogs.forEach(function(l) {
-                html += '<span style="background: #FFFFFF; border: 1px solid #CBD5E1; color: #334155; font-size: 11px; padding: 2px 7px; border-radius: 6px; font-weight: 600;">' + (l.ngay || '-') + '</span>';
-            });
-            html += '</div></div>';
+            if (attendedLogs.length > 0) {
+                html += '<div style="font-size: 11px; font-weight: 700; color: #475569; margin-bottom: 6px;"><i class="fa-solid fa-calendar-days" style="color: #7C3AED;"></i> Chi tiết các ngày học (' + attendedLogs.length + ' buổi):</div>';
+                html += '<div style="display: flex; flex-wrap: wrap; gap: 5px;">';
+                attendedLogs.forEach(function(l) {
+                    html += '<span style="background: #FFFFFF; border: 1px solid #CBD5E1; color: #334155; font-size: 11px; padding: 2px 7px; border-radius: 6px; font-weight: 600;">' + (l.ngay || '-') + '</span>';
+                });
+                html += '</div>';
+            } else {
+                html += '<div style="font-size: 11.5px; color: #94A3B8; font-style: italic;"><i class="fa-solid fa-calendar-days" style="color: #94A3B8; margin-right: 4px;"></i> Chưa có buổi học nào trong kỳ</div>';
+            }
+            html += '</div>';
         }
 
         // 3. Section 2: Tuition Breakdown
@@ -2520,6 +2539,28 @@ function openStudentInvoiceModal(studentName) {
             mo = parseInt(mParts[0], 10) - 1;
             yr = parseInt(mParts[1], 10);
         }
+    } else {
+        // If 'all', check if current month has logs for this student; if not, pick the month with actual logs!
+        var hasLogsInCurrentMonth = false;
+        if (st.logs && Array.isArray(st.logs)) {
+            for (var i = 0; i < st.logs.length; i++) {
+                var pDate = parseLogDate(st.logs[i].ngay);
+                if (pDate && pDate.getMonth() === mo && pDate.getFullYear() === yr) {
+                    hasLogsInCurrentMonth = true;
+                    break;
+                }
+            }
+            if (!hasLogsInCurrentMonth && st.logs.length > 0) {
+                for (var i = 0; i < st.logs.length; i++) {
+                    var pDate = parseLogDate(st.logs[i].ngay);
+                    if (pDate) {
+                        mo = pDate.getMonth();
+                        yr = pDate.getFullYear();
+                        break;
+                    }
+                }
+            }
+        }
     }
     var firstD = new Date(yr, mo, 1);
     var lastD = new Date(yr, mo + 1, 0);
@@ -2545,6 +2586,29 @@ function openStudentInvoiceModal(studentName) {
     }
 
     if (restoredDraft && draftObj) {
+        var sDateVal = draftObj.startDate || defaultStartStr;
+        var eDateVal = draftObj.endDate || defaultEndStr;
+        // If draft range has 0 logs while default range has logs, and not custom titled, use default range
+        if (!draftObj.isCustomTitle && sDateVal !== defaultStartStr) {
+            var hasLogsInDraft = false;
+            var dS = parseInputDate(sDateVal);
+            var dE = parseInputDate(eDateVal);
+            if (dE) dE.setHours(23, 59, 59, 999);
+            if (st.logs && Array.isArray(st.logs)) {
+                for (var i = 0; i < st.logs.length; i++) {
+                    var lD = parseLogDate(st.logs[i].ngay);
+                    if (lD && (!dS || lD >= dS) && (!dE || lD <= dE)) {
+                        hasLogsInDraft = true;
+                        break;
+                    }
+                }
+            }
+            if (!hasLogsInDraft) {
+                sDateVal = defaultStartStr;
+                eDateVal = defaultEndStr;
+            }
+        }
+
         var restoredTmpl = draftObj.template || 1;
         window.tuitionInvoiceModalState = {
             studentName: st.name,
@@ -2562,9 +2626,9 @@ function openStudentInvoiceModal(studentName) {
             },
             discountAmount: draftObj.discountAmount || 0,
             surchargeAmount: draftObj.surchargeAmount || 0,
-            startDate: draftObj.startDate || defaultStartStr,
-            endDate: draftObj.endDate || defaultEndStr,
-            customTitle: draftObj.customTitle || generateTuitionPeriodTitle(draftObj.startDate || defaultStartStr, draftObj.endDate || defaultEndStr, restoredTmpl),
+            startDate: sDateVal,
+            endDate: eDateVal,
+            customTitle: draftObj.customTitle || generateTuitionPeriodTitle(sDateVal, eDateVal, restoredTmpl),
             isCustomTitle: !!draftObj.isCustomTitle,
             restoredFromDraft: true
         };
