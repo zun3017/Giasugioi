@@ -440,12 +440,37 @@
             background: #FFFFFF !important;
         }
 
+        .fc-daygrid-day-top {
+            display: flex !important;
+            flex-direction: row-reverse !important;
+            align-items: center !important;
+            justify-content: space-between !important;
+            padding: 2px 4px !important;
+        }
+
         .fc-daygrid-day-number {
             color: #2D1F0E !important;
             font-size: 13px !important;
             font-weight: 600 !important;
             padding: 4px 8px !important;
             text-decoration: none !important;
+        }
+
+        /* Ngày lễ quốc gia Việt Nam trong Month view (Task 10.3) */
+        .fc-vn-holiday-badge {
+            color: #F87171 !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            padding: 1px 4px !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            line-height: 1.2 !important;
+            letter-spacing: -0.2px !important;
+        }
+
+        .fc-day-other .fc-vn-holiday-badge {
+            opacity: 0.5 !important;
         }
 
         /* Ngày ngoài tháng */
@@ -2521,6 +2546,17 @@
             updateActiveViewPills(viewName);
         }
 
+        // ==========================================
+        // DANH SÁCH NGÀY LỄ QUỐC GIA VIỆT NAM (TASK 10.3)
+        // ==========================================
+        const VN_HOLIDAYS = {
+            '1/1': 'Tết Dương lịch',
+            '10/3': 'Giỗ Tổ Hùng Vương',
+            '30/4': 'Giải phóng miền Nam',
+            '1/5': 'Quốc tế Lao động',
+            '2/9': 'Quốc khánh'
+        };
+
         // Khởi tạo lịch
         document.addEventListener('DOMContentLoaded', function() {
             loadTutorScheduleFromBackend(function() {
@@ -2617,6 +2653,24 @@
                 datesSet: function(dateInfo) {
                     updateCalendarHeaderTitle(dateInfo.view);
                     updateActiveViewPills(dateInfo.view.type);
+                },
+                dayCellDidMount: function(arg) {
+                    // Task 10.3: Chỉ hiển thị ngày lễ quốc gia ở Month view
+                    if (arg.view.type !== 'dayGridMonth') return;
+                    let m = arg.date.getMonth() + 1;
+                    let d = arg.date.getDate();
+                    let key = d + '/' + m;
+                    let holidayName = VN_HOLIDAYS[key];
+                    if (holidayName) {
+                        let topEl = arg.el.querySelector('.fc-daygrid-day-top');
+                        if (topEl && !topEl.querySelector('.fc-vn-holiday-badge')) {
+                            let holEl = document.createElement('span');
+                            holEl.className = 'fc-vn-holiday-badge';
+                            holEl.title = holidayName;
+                            holEl.innerText = holidayName;
+                            topEl.appendChild(holEl);
+                        }
+                    }
                 },
                 events: function(info, successCallback, failureCallback) {
                     let vType = this.view ? this.view.type : (calendar && calendar.view ? calendar.view.type : initialViewType);
