@@ -548,8 +548,8 @@
             <!-- Lịch dạy sắp tới (1 hàng ngang riêng) -->
             <div class="upcoming-schedule-box" id="tutorUpcomingScheduleBox">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
-                    <h3 style="color: #FFF; font-size: 16px; margin: 0; display: flex; align-items: center; gap: 8px;">
-                        <i class="fa-solid fa-calendar-check" style="color: #FFD23F;"></i>
+                    <h3 style="color: var(--text-heading, var(--text-primary)); font-size: 16px; margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-calendar-check" style="color: var(--color-primary);"></i>
                         <span id="upcomingScheduleTitleText">Lịch dạy sắp tới</span>
                     </h3>
                     <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
@@ -588,10 +588,10 @@
                 <!-- Block: Doanh thu N tháng (Bar Chart - Chuẩn Hình 2) -->
                 <div class="overview-chart-box" id="revenueBarChartBox">
                     <div style="margin-bottom: 10px;">
-                        <h3 class="overview-chart-title" id="revenueChartTitle" style="font-size: 16px; font-weight: 700; color: #FFFFFF; margin: 0 0 4px 0;">
+                        <h3 class="overview-chart-title" id="revenueChartTitle" style="font-size: 16px; font-weight: 700; color: var(--text-heading, var(--text-primary)); margin: 0 0 4px 0;">
                             Doanh thu 12 tháng
                         </h3>
-                        <div class="revenue-big-total" id="revenuePeriodTotal" style="color: #10B981; font-size: 26px; font-weight: 800; line-height: 1.2;">
+                        <div class="revenue-big-total" id="revenuePeriodTotal" style="color: var(--text-primary); font-size: 26px; font-weight: 800; line-height: 1.2;">
                             64.800.000 đ
                         </div>
                     </div>
@@ -906,7 +906,7 @@
                         <!-- Danh sách bài tập đã giao (mở sẵn mặc định) -->
                         <div id="assignedHwListContainer" style="display: none; overflow: hidden;">
                             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 10px;">
-                                <h4 style="color:#FFF; font-size:14px;"><i class="fa-solid fa-list-ol"></i> Lịch sử bài tập đã giao</h4>
+                                <h4 style="color: var(--text-heading, var(--text-primary)); font-size: 14px;"><i class="fa-solid fa-list-ol" style="color: var(--color-primary);"></i> Lịch sử bài tập đã giao</h4>
                                 <button onclick="openTutorHwTrashModal()" class="action-btn-hw btn-delete"><i class="fa-solid fa-trash-can"></i> Thùng rác bài tập</button>
                             </div>
                             <div class="table-wrapper desktop-table-view">
@@ -932,7 +932,7 @@
 
                     <!-- Nội dung Tab 2: Học sinh nộp bài -->
                     <div id="tabContentSubmit" class="tutor-hw-tab-content" style="display: none;">
-                        <h4 style="color:#FFF; font-size:14px; margin-bottom:12px;"><i class="fa-solid fa-list"></i> Các bài tập học sinh đã nộp</h4>
+                        <h4 style="color: var(--text-heading, var(--text-primary)); font-size: 14px; margin-bottom: 12px;"><i class="fa-solid fa-list" style="color: var(--color-primary);"></i> Các bài tập học sinh đã nộp</h4>
                         <div class="table-wrapper desktop-table-view">
                             <table>
                                 <thead>
@@ -1011,7 +1011,7 @@
             <!-- Toolbar: Tiêu đề + Bộ lọc tháng -->
             <div class="tuition-toolbar">
                 <div class="tuition-toolbar-title">
-                    <h3 style="color: #FFF; font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px;">
+                    <h3 style="color: var(--text-heading, var(--text-primary)); font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-money-bill-wave" style="color: #10B981;"></i>
                         <span>Quản lý học phí & Thu nhập</span>
                     </h3>
@@ -1283,11 +1283,11 @@
             <div class="modal-form-group">
                 <label style="display: block; margin-bottom: 8px;">Hình thức thu học phí <span style="color: #EF4444;">*</span></label>
                 <div style="display: flex; gap: 10px;">
-                    <label style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 9px 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(142,77,255,0.4); border-radius: 12px; cursor: pointer; color: #FFF; font-size: 13px; margin: 0;">
+                    <label style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 9px 12px; background: var(--nav-active-bg); border: 1px solid var(--border-color); border-radius: 12px; cursor: pointer; color: var(--text-primary); font-size: 13px; margin: 0;">
                         <input type="radio" name="editStudentBillingType" id="editBillingSession" value="session" checked onchange="toggleBillingTypeLabel('edit')" style="accent-color: var(--color-primary); cursor: pointer; width: 16px; height: 16px;">
                         <span>Theo buổi</span>
                     </label>
-                    <label style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 9px 12px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 12px; cursor: pointer; color: #FFF; font-size: 13px; margin: 0;">
+                    <label style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 9px 12px; background: var(--bg-input); border: 1px solid var(--border-card); border-radius: 12px; cursor: pointer; color: var(--text-primary); font-size: 13px; margin: 0;">
                         <input type="radio" name="editStudentBillingType" id="editBillingMonth" value="month" onchange="toggleBillingTypeLabel('edit')" style="accent-color: var(--color-primary); cursor: pointer; width: 16px; height: 16px;">
                         <span>Trọn gói tháng</span>
                     </label>
@@ -1529,8 +1529,8 @@
                 </select>
                 <div id="lesBtvnCustomWrap" style="display: none; margin-top: 8px;">
                     <div style="display: flex; align-items: center; gap: 8px;">
-                        <input type="number" id="lesBtvnCustom" min="0" max="100" placeholder="Nhập % hoàn thành (ví dụ: 60)" style="flex: 1; padding: 10px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #FFF;">
-                        <span style="font-weight: bold; color: #FFD23F; font-size: 15px;">%</span>
+                        <input type="number" id="lesBtvnCustom" min="0" max="100" placeholder="Nhập % hoàn thành (ví dụ: 60)" style="flex: 1; padding: 10px 12px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary);">
+                        <span style="font-weight: bold; color: var(--color-primary); font-size: 15px;">%</span>
                     </div>
                 </div>
             </div>
@@ -1660,8 +1660,8 @@
                     </select>
                     <div id="editLesBtvnCustomWrap" style="display: none; margin-top: 8px;">
                         <div style="display: flex; align-items: center; gap: 8px;">
-                            <input type="number" id="editLesBtvnCustom" min="0" max="100" placeholder="Nhập % hoàn thành (ví dụ: 60)" style="flex: 1; padding: 10px 12px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #FFF;">
-                            <span style="font-weight: bold; color: #FFD23F; font-size: 15px;">%</span>
+                            <input type="number" id="editLesBtvnCustom" min="0" max="100" placeholder="Nhập % hoàn thành (ví dụ: 60)" style="flex: 1; padding: 10px 12px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary);">
+                            <span style="font-weight: bold; color: var(--color-primary); font-size: 15px;">%</span>
                         </div>
                     </div>
                 </div>
@@ -1748,8 +1748,8 @@
         <!-- 6. Custom Confirm Modal -->
     <div id="customConfirmModal" class="modal-overlay" style="z-index: 2000;" onclick="if(event.target === this) this.style.display = 'none';">
         <div class="modal-content" style="max-width: 400px; text-align: center;">
-            <div style="font-size: 40px; color: #FFD23F; margin-bottom: 15px;"><i class="fa-solid fa-circle-question"></i></div>
-            <h3 style="color: #FFF; margin: 0 0 10px; font-size: 18px;">Xác nhận yêu cầu</h3>
+            <div style="font-size: 40px; color: var(--color-primary); margin-bottom: 15px;"><i class="fa-solid fa-circle-question"></i></div>
+            <h3 style="color: var(--text-heading, var(--text-primary)); margin: 0 0 10px; font-size: 18px;">Xác nhận yêu cầu</h3>
             <p id="confirmModalMessage" style="color: var(--text-secondary); font-size: 14px; line-height: 1.5; margin: 0 0 20px; text-align: center;"></p>
             <div style="display: flex; justify-content: center; gap: 10px;">
                 <button id="btnConfirmCancel" class="modal-btn modal-btn-secondary" style="width: 100px;">Hủy</button>
@@ -2264,8 +2264,8 @@
 
     <!-- MODAL: Chấm Điểm & Nhận Xét Bài Nộp -->
     <div id="tutorGradeModal" class="modal-overlay" style="z-index: 1100;">
-        <div class="modal-card" style="max-width: 460px; width: 92%; padding: 25px; border-radius: 20px; background: #0D0826; border: 1px solid rgba(249, 115, 22, 0.4); box-shadow: 0 10px 40px rgba(0,0,0,0.85);">
-            <div class="modal-header" style="margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px;">
+        <div class="modal-card" style="max-width: 460px; width: 92%; padding: 25px; border-radius: 20px; background: var(--bg-card); border: 1px solid var(--border-card); box-shadow: var(--shadow-card);">
+            <div class="modal-header" style="margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-card); padding-bottom: 12px;">
                 <h3 style="color: var(--text-heading); font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; margin: 0;">
                     <i class="fa-solid fa-pen-to-square" style="color: #F97316;"></i> Chấm điểm bài làm
                 </h3>

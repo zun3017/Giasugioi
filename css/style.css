@@ -119,20 +119,20 @@
         }
         
         .nav-btn.active {
-            background: var(--btn-bg);
-            border-color: var(--color-primary);
-            color: var(--btn-text);
+            background: var(--nav-active-bg, var(--btn-bg));
+            border: 1px solid var(--nav-active-border, var(--color-primary));
+            color: var(--nav-active-text, var(--btn-text));
             font-weight: 700;
             box-shadow: var(--shadow-primary);
         }
         
-        .header-text h1 { font-size: 18px; font-weight: 700; color: var(--text-heading, #fff); margin-bottom: -2px; letter-spacing: -0.5px;}
+        .header-text h1 { font-size: 18px; font-weight: 700; color: var(--text-primary, #1E293B); margin-bottom: -2px; letter-spacing: -0.5px;}
         .header-text p { font-size: 11px; color: var(--text-secondary); font-weight: 500;}
 
         /* Intro Card on Home */
         .intro-card {
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.05);
+            background: var(--bg-card);
+            border: 1px solid var(--border-card);
             border-radius: 20px;
             padding: 30px;
             max-width: 650px;
@@ -140,7 +140,7 @@
             text-align: center;
             backdrop-filter: blur(10px);
             -webkit-backdrop-filter: blur(10px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            box-shadow: var(--shadow-card);
             z-index: 10;
             position: relative;
         }
@@ -3142,7 +3142,7 @@
         }
 
         .tuition-toolbar-title h3 {
-            color: var(--text-primary);
+            color: var(--text-heading, var(--text-primary)) !important;
             font-size: 18px;
             margin: 0;
             display: flex;
@@ -3265,6 +3265,7 @@
             line-height: 1.2;
             font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
             letter-spacing: -0.3px;
+            color: var(--text-heading, var(--text-primary));
         }
 
         .tuition-banner-sub {
@@ -3957,10 +3958,10 @@
             box-sizing: border-box;
         }
         .metric-notes span { font-weight: 700; color: #1E293B; }
-        .text-green { color: #059669 !important; }
-        .text-amber { color: #D97706 !important; }
-        .text-red { color: #DC2626 !important; }
-        .text-purple { color: #7C3AED !important; }
+        .tuition-receipt-card .text-green { color: #059669 !important; }
+        .tuition-receipt-card .text-amber { color: #D97706 !important; }
+        .tuition-receipt-card .text-red { color: #DC2626 !important; }
+        .tuition-receipt-card .text-purple { color: #7C3AED !important; }
 
         .fee-card {
             background: linear-gradient(135deg, #FAF5FF 0%, #F5F3FF 100%);

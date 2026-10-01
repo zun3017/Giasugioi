@@ -2502,11 +2502,11 @@
     <!-- HỘP THOẠI XÁC NHẬN (CONFIRM) WEB-BASED TỰ CUSTOM -->
     <div class="modal-overlay" id="customConfirmModal" style="display: none; z-index: 4000;">
         <div class="calendar-modal" style="max-width: 420px; padding: 25px; text-align: center; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            <div style="font-size: 40px; color: #FFD23F; margin-bottom: 15px;"><i class="fa-solid fa-circle-question"></i></div>
-            <h3 style="margin-bottom: 12px; color: #FFF; font-size: 17px; font-weight: bold;">Xác nhận thao tác</h3>
-            <p id="confirmMessageText" style="color: #A6ADCE; font-size: 13.5px; line-height: 1.6; margin-bottom: 25px;"></p>
+            <div style="font-size: 40px; color: var(--color-primary); margin-bottom: 15px;"><i class="fa-solid fa-circle-question"></i></div>
+            <h3 style="margin-bottom: 12px; color: var(--text-heading, var(--text-primary)); font-size: 17px; font-weight: bold;">Xác nhận thao tác</h3>
+            <p id="confirmMessageText" style="color: var(--text-secondary); font-size: 13.5px; line-height: 1.6; margin-bottom: 25px;"></p>
             <div style="display: flex; gap: 12px; justify-content: center;">
-                <button type="button" class="modal-btn modal-btn-secondary" id="btnConfirmCancelWeb" style="padding: 10px 22px; border-radius: 20px; font-weight: bold; font-size: 13px; font-family: 'Inter', sans-serif; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #FFF; transition: background 0.2s; cursor: pointer;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">Hủy bỏ</button>
+                <button type="button" class="modal-btn modal-btn-secondary" id="btnConfirmCancelWeb" style="padding: 10px 22px; border-radius: 20px; font-weight: bold; font-size: 13px; font-family: 'Inter', sans-serif; background: var(--bg-input); border: 1px solid var(--border-card); color: var(--text-primary); transition: background 0.2s; cursor: pointer;">Hủy bỏ</button>
                 <button type="button" class="modal-btn modal-btn-primary" id="btnConfirmOkWeb" style="padding: 10px 22px; border-radius: 20px; font-weight: bold; font-size: 13px; font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #EF4444 0%, #B91C1C 100%); border: none; color: #FFF; box-shadow: 0 4px 15px rgba(239, 68, 68, 0.25); cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Đồng ý</button>
             </div>
         </div>
@@ -2515,9 +2515,9 @@
     <!-- HỘP THOẠI THÔNG BÁO (ALERT) WEB-BASED TỰ CUSTOM -->
     <div class="modal-overlay" id="customAlertModal" style="display: none; z-index: 4000;">
         <div class="calendar-modal" style="max-width: 400px; padding: 25px; text-align: center; border-radius: 16px; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">
-            <div style="font-size: 40px; color: #8E4DFF; margin-bottom: 15px;" id="alertIcon"><i class="fa-solid fa-circle-info"></i></div>
-            <h3 style="margin-bottom: 12px; color: #FFF; font-size: 17px; font-weight: bold;">Thông báo</h3>
-            <p id="alertMessageText" style="color: #A6ADCE; font-size: 13.5px; line-height: 1.6; margin-bottom: 25px;"></p>
+            <div style="font-size: 40px; color: var(--color-primary); margin-bottom: 15px;" id="alertIcon"><i class="fa-solid fa-circle-info"></i></div>
+            <h3 style="margin-bottom: 12px; color: var(--text-heading, var(--text-primary)); font-size: 17px; font-weight: bold;">Thông báo</h3>
+            <p id="alertMessageText" style="color: var(--text-secondary); font-size: 13.5px; line-height: 1.6; margin-bottom: 25px;"></p>
             <div style="display: flex; justify-content: center;">
                 <button type="button" class="modal-btn modal-btn-primary" id="btnAlertOkWeb" style="padding: 10px 24px; border-radius: 20px; font-weight: bold; font-size: 13px; font-family: 'Inter', sans-serif; background: linear-gradient(135deg, #8E4DFF 0%, #5B21B6 100%); border: none; color: #FFF; box-shadow: 0 4px 15px rgba(142,77,255,0.25); min-width: 100px; cursor: pointer; transition: opacity 0.2s;" onmouseover="this.style.opacity='0.9'" onmouseout="this.style.opacity='1'">Đã hiểu</button>
             </div>
