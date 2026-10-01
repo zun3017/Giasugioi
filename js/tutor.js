@@ -2769,10 +2769,39 @@ function openStudentInvoiceModal(studentName) {
 }
 window.openStudentInvoiceModal = openStudentInvoiceModal;
 
+function showCustomConfirm(message, onConfirm, onCancel) {
+    var msgEl = document.getElementById('confirmModalMessage');
+    if (msgEl) msgEl.innerText = message;
+    var modal = document.getElementById('customConfirmModal');
+    if (modal) modal.style.display = 'flex';
+    
+    var btnCancel = document.getElementById('btnConfirmCancel');
+    var btnOk = document.getElementById('btnConfirmOk');
+    
+    if (btnCancel) {
+        btnCancel.onclick = function() {
+            if (modal) modal.style.display = 'none';
+            if (typeof onCancel === 'function') onCancel();
+        };
+    }
+    
+    if (btnOk) {
+        btnOk.onclick = function() {
+            if (modal) modal.style.display = 'none';
+            if (typeof onConfirm === 'function') onConfirm();
+        };
+    }
+}
+window.showCustomConfirm = showCustomConfirm;
+
 function closeStudentInvoiceModal(isExplicitCancel) {
     if (isExplicitCancel && window.tuitionInvoiceHasUnsavedChanges) {
-        var ok = confirm("Bỏ các thay đổi chưa lưu?");
-        if (!ok) return;
+        showCustomConfirm("Bỏ các thay đổi chưa lưu?", function() {
+            window.tuitionInvoiceHasUnsavedChanges = false;
+            var modal = document.getElementById('tutorTuitionInvoiceModal');
+            if (modal) modal.style.display = "none";
+        });
+        return;
     }
     window.tuitionInvoiceHasUnsavedChanges = false;
     var modal = document.getElementById('tutorTuitionInvoiceModal');

@@ -209,7 +209,9 @@
 
   // 5. Hướng dẫn cho trình duyệt Desktop
   function showDesktopInstallGuide() {
-    alert('Để cài đặt App trên máy tính: Bạn vui lòng nhấn vào biểu tượng [Cài đặt ứng dụng] trên thanh địa chỉ của trình duyệt Chrome/Edge (ở góc phải thanh URL).');
+    if (typeof showToast === 'function') {
+      showToast('Để cài đặt App trên máy tính: Bạn vui lòng nhấn vào biểu tượng [Cài đặt ứng dụng] trên thanh địa chỉ của trình duyệt Chrome/Edge.', 'info');
+    }
   }
 
   // 6. Lắng nghe sự kiện cài đặt trên Android / Chrome
