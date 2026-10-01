@@ -561,6 +561,51 @@
                             <canvas id="revenueBarChartCanvas"></canvas>
                         </div>
                     </div>
+
+                    <!-- Block: Doanh thu theo Học sinh (Donut Chart + List) -->
+                    <div class="overview-chart-box" id="studentRevenueDonutBox" style="margin-top: 20px;">
+                        <div class="overview-chart-header">
+                            <div>
+                                <h3 class="overview-chart-title" id="studentRevenueTitle">
+                                    <i class="fa-solid fa-chart-pie" style="color: #FFD23F;"></i>
+                                    <span>Doanh thu theo học sinh</span>
+                                </h3>
+                                <span class="revenue-big-subtext" id="studentRevenueSubtitle">Phân bổ doanh thu tháng này</span>
+                            </div>
+                            
+                            <!-- Month Filter Dropdown -->
+                            <div class="overview-chart-filters">
+                                <select class="chart-filter-select" id="studentRevenueMonthFilter" onchange="renderStudentRevenueDonut()" title="Chọn tháng">
+                                    <option value="10/2026" selected>Tháng 10/2026</option>
+                                    <option value="9/2026">Tháng 9/2026</option>
+                                    <option value="8/2026">Tháng 8/2026</option>
+                                    <option value="7/2026">Tháng 7/2026</option>
+                                    <option value="6/2026">Tháng 6/2026</option>
+                                    <option value="5/2026">Tháng 5/2026</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Chart + List Grid -->
+                        <div class="student-revenue-body">
+                            <!-- Donut Chart with Center Text -->
+                            <div class="student-donut-wrap">
+                                <div class="student-donut-canvas-container">
+                                    <canvas id="studentRevenueDonutCanvas"></canvas>
+                                    <!-- Center overlay for total -->
+                                    <div class="donut-center-total" id="studentDonutCenterTotal">
+                                        <span class="donut-center-label">Tổng thu</span>
+                                        <span class="donut-center-value" id="studentDonutTotalVal">0đ</span>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Student Revenue List -->
+                            <div class="student-revenue-list" id="studentRevenueList">
+                                <!-- Rendered dynamically -->
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 

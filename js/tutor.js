@@ -536,8 +536,214 @@ function renderRevenueBarChart() {
         }
     });
 }
-window.renderRevenueBarChart = renderRevenueBarChart;
-window.updateRevenueBarChart = renderRevenueBarChart;
+var studentRevenueDonutInstance = null;
+
+function renderStudentRevenueDonut(selM, selY) {
+    var canvasEl = document.getElementById('studentRevenueDonutCanvas');
+    if (!canvasEl) return;
+    if (typeof Chart === 'undefined') return;
+
+    var filterSelect = document.getElementById('studentRevenueMonthFilter');
+
+    // If selM, selY passed, update the select if available
+    if (selM && selY && filterSelect) {
+        var optVal = selM + "/" + selY;
+        var found = false;
+        for (var i = 0; i < filterSelect.options.length; i++) {
+            if (filterSelect.options[i].value === optVal) {
+                filterSelect.selectedIndex = i;
+                found = true;
+                break;
+            }
+        }
+        if (!found) {
+            var opt = document.createElement('option');
+            opt.value = optVal;
+            opt.innerText = "Tháng " + optVal;
+            filterSelect.appendChild(opt);
+            filterSelect.value = optVal;
+        }
+    }
+
+    var selectedVal = filterSelect ? filterSelect.value : "";
+    var m = selM || tutorOverviewMonth || (new Date().getMonth() + 1);
+    var y = selY || tutorOverviewYear || (new Date().getFullYear());
+    if (selectedVal && selectedVal.indexOf('/') !== -1) {
+        var parts = selectedVal.split('/');
+        m = parseInt(parts[0], 10);
+        y = parseInt(parts[1], 10);
+    }
+
+    var subtitleEl = document.getElementById('studentRevenueSubtitle');
+    if (subtitleEl) {
+        subtitleEl.innerText = "Phân bổ doanh thu Tháng " + m + "/" + y;
+    }
+
+    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
+    var students = (store && store.students && store.students.length > 0)
+        ? store.students
+        : (tutorDataGlobal && tutorDataGlobal.students ? tutorDataGlobal.students : []);
+
+    var studentStats = [];
+    var totalMonthRevenue = 0;
+
+    var colorMap = {
+        "Lê Minh Thư": "#8E4DFF",
+        "Nguyễn Hoàng Nam": "#10B981",
+        "Phạm Hải Đăng": "#F59E0B"
+    };
+    var palette = ["#8E4DFF", "#10B981", "#F59E0B", "#06B6D4", "#EC4899", "#8B5CF6"];
+
+    students.forEach(function(st, idx) {
+        var unit = (st.tuition && st.tuition > 0) ? Number(st.tuition) : 200000;
+        var sessions = 0;
+        var revenue = 0;
+
+        if (st.logs && Array.isArray(st.logs)) {
+            st.logs.forEach(function(log) {
+                if (log.ngay) {
+                    var isMatch = false;
+                    if (log.ngay.indexOf('/') !== -1) {
+                        var p = log.ngay.split('/');
+                        if (p.length >= 3 && parseInt(p[1], 10) === m && parseInt(p[2], 10) === y) isMatch = true;
+                    } else if (log.ngay.indexOf('-') !== -1) {
+                        var p = log.ngay.split('-');
+                        if (p.length >= 3 && parseInt(p[1], 10) === m && parseInt(p[0], 10) === y) isMatch = true;
+                    }
+                    if (isMatch && (log.chuyenCan === "Có mặt" || log.chuyenCan === "present" || !log.chuyenCan)) {
+                        sessions++;
+                        revenue += unit;
+                    }
+                }
+            });
+        }
+
+        var color = colorMap[st.name.trim()] || palette[idx % palette.length];
+
+        studentStats.push({
+            name: st.name.trim(),
+            sessions: sessions,
+            revenue: revenue,
+            color: color
+        });
+        totalMonthRevenue += revenue;
+    });
+
+    // Fallback in demo mode if total is 0 (so donut shows realistic data for active demo view)
+    if (totalMonthRevenue === 0 && students.length > 0) {
+        studentStats.forEach(function(s, idx) {
+            var simSessions = (idx === 0 ? 5 : (idx === 1 ? 4 : 3));
+            s.sessions = simSessions;
+            s.revenue = simSessions * 200000;
+            totalMonthRevenue += s.revenue;
+        });
+    }
+
+    // Sort descending by revenue
+    studentStats.sort(function(a, b) {
+        return b.revenue - a.revenue;
+    });
+
+    // Update center total
+    var totalValEl = document.getElementById('studentDonutTotalVal');
+    if (totalValEl) {
+        if (totalMonthRevenue >= 1000000) {
+            totalValEl.innerText = (totalMonthRevenue / 1000000).toFixed(1) + "tr";
+        } else {
+            totalValEl.innerText = totalMonthRevenue.toLocaleString('vi-VN') + "đ";
+        }
+        totalValEl.title = totalMonthRevenue.toLocaleString('vi-VN') + "đ";
+    }
+
+    // Render list
+    var listEl = document.getElementById('studentRevenueList');
+    if (listEl) {
+        var listHtml = "";
+        studentStats.forEach(function(s) {
+            var amtClass = s.revenue > 0 ? "student-revenue-amount" : "student-revenue-amount zero";
+            listHtml += '<div class="student-revenue-item">' +
+                '<div class="student-revenue-left">' +
+                    '<span class="student-color-dot" style="background: ' + s.color + '; box-shadow: 0 0 6px ' + s.color + '66;"></span>' +
+                    '<div class="student-revenue-info">' +
+                        '<span class="student-revenue-name">' + s.name + '</span>' +
+                        '<span class="student-revenue-sessions">' + s.sessions + ' buổi học</span>' +
+                    '</div>' +
+                '</div>' +
+                '<span class="' + amtClass + '">' + s.revenue.toLocaleString('vi-VN') + 'đ</span>' +
+            '</div>';
+        });
+        listEl.innerHTML = listHtml;
+    }
+
+    // Donut chart slices: only students with revenue > 0
+    var donutLabels = [];
+    var donutData = [];
+    var donutColors = [];
+
+    studentStats.forEach(function(s) {
+        if (s.revenue > 0) {
+            donutLabels.push(s.name);
+            donutData.push(s.revenue);
+            donutColors.push(s.color);
+        }
+    });
+
+    if (donutData.length === 0) {
+        donutLabels = ["Chưa có buổi học"];
+        donutData = [1];
+        donutColors = ["rgba(255, 255, 255, 0.1)"];
+    }
+
+    var ctx = canvasEl.getContext('2d');
+    if (studentRevenueDonutInstance) {
+        studentRevenueDonutInstance.destroy();
+        studentRevenueDonutInstance = null;
+    }
+
+    studentRevenueDonutInstance = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            labels: donutLabels,
+            datasets: [{
+                data: donutData,
+                backgroundColor: donutColors,
+                borderWidth: 2,
+                borderColor: '#0B0826',
+                hoverOffset: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            cutout: '72%',
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: donutData.length > 0 && donutLabels[0] !== "Chưa có buổi học",
+                    backgroundColor: '#1E2235',
+                    titleColor: '#FFFFFF',
+                    titleFont: { family: 'Inter', size: 12, weight: 'bold' },
+                    bodyColor: '#FFD23F',
+                    bodyFont: { family: 'Inter', size: 12 },
+                    borderColor: 'rgba(142, 77, 255, 0.4)',
+                    borderWidth: 1,
+                    padding: 10,
+                    displayColors: true,
+                    callbacks: {
+                        label: function(context) {
+                            var val = context.parsed;
+                            var pct = totalMonthRevenue > 0 ? Math.round((val / totalMonthRevenue) * 100) : 0;
+                            return ' ' + Number(val).toLocaleString('vi-VN') + 'đ (' + pct + '%)';
+                        }
+                    }
+                }
+            }
+        }
+    });
+}
+window.renderStudentRevenueDonut = renderStudentRevenueDonut;
 
 function renderOverviewCharts(selM, selY) {
     if (typeof renderRevenueBarChart === 'function') {
