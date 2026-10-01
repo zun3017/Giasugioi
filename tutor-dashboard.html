@@ -1861,14 +1861,15 @@
                 tutorPhone: t.phone,
                 tutorPin: t.pin,
                 qrCode: "https://i.postimg.cc/66rKbPmb/trinh-duyet.png",
-                students: store.students.map(s => ({
+                students: store.students.map(s => Object.assign({}, s, {
                     phone: s.phone,
                     name: s.name,
                     parentName: s.parentName || ("Phụ huynh em " + s.name),
                     tuition: (s.tuition && s.tuition <= 500000) ? s.tuition : 200000,
                     billing_type: s.billing_type || 'session',
                     maBaiTap: s.phone,
-                    thongBao: "Chúc mừng em hoàn thành xuất sắc bài kiểm tra."
+                    thongBao: s.thongBao || "Chúc mừng em hoàn thành xuất sắc bài kiểm tra.",
+                    logs: (s.logs && Array.isArray(s.logs)) ? s.logs : []
                 })),
                 deletedStudents: [],
                 totalUnpaidIncome: 0,

@@ -4,6 +4,27 @@ var currentTutorStudent = null;
 var currentTutorPhone = "";
 var pinVerifyAction = "deleteStudent";
 
+function getTutorStudentsResolved() {
+    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
+    var rawStoreStudents = (store && store.students && store.students.length > 0) ? store.students : [];
+    var globalStudents = (tutorDataGlobal && tutorDataGlobal.students && tutorDataGlobal.students.length > 0) ? tutorDataGlobal.students : [];
+
+    if (rawStoreStudents.length === 0 && globalStudents.length === 0) return [];
+    if (globalStudents.length === 0) return rawStoreStudents;
+    if (rawStoreStudents.length === 0) return globalStudents;
+
+    return globalStudents.map(function(gs) {
+        var base = rawStoreStudents.find(function(s) { 
+            return (s.phone && gs.phone && s.phone === gs.phone) || (s.name && gs.name && s.name.trim() === gs.name.trim()); 
+        });
+        if (!base) return gs;
+        return Object.assign({}, base, gs, {
+            logs: (gs.logs && Array.isArray(gs.logs) && gs.logs.length > 0) ? gs.logs : (base.logs || [])
+        });
+    });
+}
+window.getTutorStudentsResolved = getTutorStudentsResolved;
+
 function formatScheduleCell(val) {
     if (!val || val.trim() === "") {
         return "<span style='color: rgba(255,255,255,0.3); font-weight: normal;'>-</span>";
@@ -1254,10 +1275,9 @@ function renderTutorStudentsGrid() {
     var grid = document.getElementById('tutorStudentsGrid');
     if (!grid) return;
 
-    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
-    var students = (tutorDataGlobal && tutorDataGlobal.students && tutorDataGlobal.students.length > 0)
-        ? tutorDataGlobal.students
-        : ((store && store.students) ? store.students : []);
+    var students = (typeof getTutorStudentsResolved === 'function') 
+        ? getTutorStudentsResolved() 
+        : ((tutorDataGlobal && tutorDataGlobal.students) ? tutorDataGlobal.students : []);
 
     if (!students || students.length === 0) {
         grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.4); padding: 40px; font-style: italic; background: rgba(11,8,38,0.6); border: 1px dashed rgba(142,77,255,0.3); border-radius: 16px;">' +
@@ -1387,10 +1407,9 @@ function initTuitionMonthFilter() {
     var select = document.getElementById('tuitionMonthFilter');
     if (!select) return;
 
-    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
-    var students = (tutorDataGlobal && tutorDataGlobal.students && tutorDataGlobal.students.length > 0)
-        ? tutorDataGlobal.students
-        : ((store && store.students) ? store.students : []);
+    var students = (typeof getTutorStudentsResolved === 'function') 
+        ? getTutorStudentsResolved() 
+        : ((tutorDataGlobal && tutorDataGlobal.students) ? tutorDataGlobal.students : []);
 
     var monthsSet = {};
     students.forEach(function(st) {
@@ -1445,10 +1464,9 @@ function renderTutorTuitionSection() {
     }
     var selMonth = select ? select.value : 'all';
 
-    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
-    var students = (tutorDataGlobal && tutorDataGlobal.students && tutorDataGlobal.students.length > 0)
-        ? tutorDataGlobal.students
-        : ((store && store.students) ? store.students : []);
+    var students = (typeof getTutorStudentsResolved === 'function') 
+        ? getTutorStudentsResolved() 
+        : ((tutorDataGlobal && tutorDataGlobal.students) ? tutorDataGlobal.students : []);
 
     var tableBody = document.getElementById('tuitionTableBody');
     var mobileList = document.getElementById('tuitionMobileList');
@@ -1613,8 +1631,9 @@ function openStudentInvoiceModal(studentName) {
     var modalBody = document.getElementById('tuitionInvoiceModalBody');
     if (!modal || !modalBody) return;
 
-    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
-    var students = (tutorDataGlobal && tutorDataGlobal.students) || (store ? store.students : []);
+    var students = (typeof getTutorStudentsResolved === 'function') 
+        ? getTutorStudentsResolved() 
+        : ((tutorDataGlobal && tutorDataGlobal.students) ? tutorDataGlobal.students : []);
     var st = students.find(function(s) { return s.name.trim() === studentName.trim(); });
     if (!st) return;
 
@@ -1793,10 +1812,9 @@ function initReportFilterOptions() {
 
     if (studentSelect) {
         var curVal = studentSelect.value || "all";
-        var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
-        var students = (tutorDataGlobal && tutorDataGlobal.students && tutorDataGlobal.students.length > 0)
-            ? tutorDataGlobal.students
-            : ((store && store.students) ? store.students : []);
+        var students = (typeof getTutorStudentsResolved === 'function') 
+            ? getTutorStudentsResolved() 
+            : ((tutorDataGlobal && tutorDataGlobal.students) ? tutorDataGlobal.students : []);
 
         studentSelect.innerHTML = '<option value="all">Tất cả học sinh</option>';
         students.forEach(function(st) {
@@ -1846,10 +1864,9 @@ function previewTutorReport() {
 
     var selStudent = studentSelect ? studentSelect.value : 'all';
 
-    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
-    var students = (tutorDataGlobal && tutorDataGlobal.students && tutorDataGlobal.students.length > 0)
-        ? tutorDataGlobal.students
-        : ((store && store.students) ? store.students : []);
+    var students = (typeof getTutorStudentsResolved === 'function') 
+        ? getTutorStudentsResolved() 
+        : ((tutorDataGlobal && tutorDataGlobal.students) ? tutorDataGlobal.students : []);
 
     var flatSessions = [];
     students.forEach(function(st) {
@@ -2347,7 +2364,8 @@ window.initTutorSidebarState = initTutorSidebarState;
             var targetCard = document.getElementById('studentCard_' + idx);
             if (targetCard) targetCard.classList.add('active');
             
-            currentTutorStudent = tutorDataGlobal.students[idx];
+            var allResolved = (typeof getTutorStudentsResolved === 'function') ? getTutorStudentsResolved() : (tutorDataGlobal ? tutorDataGlobal.students : []);
+            currentTutorStudent = (allResolved && allResolved[idx]) ? allResolved[idx] : (tutorDataGlobal && tutorDataGlobal.students ? tutorDataGlobal.students[idx] : null);
             document.getElementById('tutorStudentDetail').style.display = 'block';
             document.getElementById('selectedStudentNameHeader').innerText = currentTutorStudent.name;
             document.getElementById('invStudentName').innerText = currentTutorStudent.name;
