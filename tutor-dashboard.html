@@ -958,6 +958,83 @@
                 </div>
         </div> <!-- End #tutorStudentDetail -->
         </div> <!-- End #tutorSectionStudents -->
+
+        <!-- SECTION HỌC PHÍ -->
+        <div id="tutorSectionTuition" class="tutor-section" style="display: none;">
+            <!-- Toolbar: Tiêu đề + Bộ lọc tháng -->
+            <div class="tuition-toolbar">
+                <div class="tuition-toolbar-title">
+                    <h3 style="color: #FFF; font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-money-bill-wave" style="color: #10B981;"></i>
+                        <span>Quản lý học phí & Thu nhập</span>
+                    </h3>
+                    <p style="color: #A6ADCE; font-size: 13px; margin: 4px 0 0 0;">Theo dõi tổng thu nhập, tình trạng đóng học phí từng em và xuất hóa đơn phiếu học tập</p>
+                </div>
+                <div class="tuition-filters">
+                    <div class="tuition-filter-item">
+                        <label><i class="fa-solid fa-calendar-days"></i> Kỳ học:</label>
+                        <select id="tuitionMonthFilter" onchange="renderTutorTuitionSection()">
+                            <option value="all">Tất cả các tháng</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 3 Banner Cards tổng thu nhập -->
+            <div class="tuition-banner-grid">
+                <!-- Card 1: Tổng thu dự kiến -->
+                <div class="tuition-banner-card">
+                    <div class="tuition-banner-top">
+                        <span class="tuition-banner-lbl">Tổng thu dự kiến</span>
+                        <div class="tuition-banner-icon icon-purple"><i class="fa-solid fa-calculator"></i></div>
+                    </div>
+                    <div class="tuition-banner-val text-purple" id="tuitionTotalExpected">0đ</div>
+                    <div class="tuition-banner-sub"><i class="fa-solid fa-chart-line"></i> Số buổi × Đơn giá</div>
+                </div>
+                <!-- Card 2: Đã thu -->
+                <div class="tuition-banner-card">
+                    <div class="tuition-banner-top">
+                        <span class="tuition-banner-lbl">Đã thu</span>
+                        <div class="tuition-banner-icon icon-green"><i class="fa-solid fa-circle-check"></i></div>
+                    </div>
+                    <div class="tuition-banner-val text-green" id="tuitionTotalCollected">0đ</div>
+                    <div class="tuition-banner-sub"><i class="fa-solid fa-circle-check"></i> Đã thanh toán thành công</div>
+                </div>
+                <!-- Card 3: Còn phải thu -->
+                <div class="tuition-banner-card">
+                    <div class="tuition-banner-top">
+                        <span class="tuition-banner-lbl">Còn phải thu</span>
+                        <div class="tuition-banner-icon icon-amber"><i class="fa-solid fa-clock-rotate-left"></i></div>
+                    </div>
+                    <div class="tuition-banner-val text-amber" id="tuitionTotalPending">0đ</div>
+                    <div class="tuition-banner-sub"><i class="fa-solid fa-triangle-exclamation"></i> Chưa hoàn tất thanh toán</div>
+                </div>
+            </div>
+
+            <!-- Bảng chi tiết học phí từng học sinh (Desktop Table View) -->
+            <div class="table-wrapper desktop-table-view" style="margin-top: 15px; border-radius: 16px;">
+                <table id="tuitionTable" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th style="width: 200px; text-align: left; padding: 12px 14px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Học sinh</th>
+                            <th style="width: 110px; text-align: center; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Số buổi</th>
+                            <th style="width: 130px; text-align: right; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Đơn giá/buổi</th>
+                            <th style="width: 140px; text-align: right; padding: 12px 14px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Tổng tiền</th>
+                            <th style="width: 140px; text-align: center; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Trạng thái</th>
+                            <th style="width: 140px; text-align: center; padding: 12px 14px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Hóa đơn</th>
+                        </tr>
+                    </thead>
+                    <tbody id="tuitionTableBody">
+                        <tr><td colspan="6" style="text-align: center; color: rgba(255,255,255,0.3); padding: 25px;">Đang tải danh sách học phí...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mobile Card View cho Học phí -->
+            <div class="mobile-cards-view" id="tuitionMobileList" style="margin-top: 15px;">
+                <div style="text-align: center; color: rgba(255,255,255,0.3); padding: 20px;">Đang tải danh sách học phí...</div>
+            </div>
+        </div> <!-- End #tutorSectionTuition -->
         </main>
     </div>
                 <!-- ================= TUTOR MODALS ================= -->
@@ -1482,6 +1559,28 @@
             <div style="display: flex; justify-content: center; gap: 10px;">
                 <button id="btnConfirmCancel" class="modal-btn modal-btn-secondary" style="width: 100px;">Hủy</button>
                 <button id="btnConfirmOk" class="modal-btn modal-btn-primary" style="width: 100px;">Đồng ý</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Xem Hóa Đơn Học Phí (Inline Modal) -->
+    <div id="tutorTuitionInvoiceModal" class="modal-overlay" style="z-index: 1080;">
+        <div class="modal-content" style="max-width: 540px; padding: 20px; background: #0F0C29; border: 1px solid rgba(142, 77, 255, 0.4); border-radius: 24px; box-shadow: 0 20px 60px rgba(0,0,0,0.85);">
+            <div class="modal-header" style="border-bottom: 1px solid rgba(255, 255, 255, 0.08); padding-bottom: 12px; margin-bottom: 16px; display: flex; justify-content: space-between; align-items: center;">
+                <h3 style="color: #FFF; font-size: 17px; margin: 0; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-file-invoice-dollar" style="color: #8E4DFF;"></i>
+                    <span>Phiếu báo cáo & Hóa đơn học phí</span>
+                </h3>
+                <button onclick="closeStudentInvoiceModal()" class="modal-close">&times;</button>
+            </div>
+            
+            <div id="tuitionInvoiceModalBody" style="max-height: 75vh; overflow-y: auto; padding-right: 4px;">
+                <!-- Rendered dynamically -->
+            </div>
+
+            <div class="modal-footer" style="display: flex; gap: 10px; justify-content: flex-end; margin-top: 16px; border-top: 1px solid rgba(255, 255, 255, 0.08); padding-top: 14px;">
+                <button type="button" onclick="closeStudentInvoiceModal()" class="modal-btn modal-btn-secondary" style="width: auto; padding: 8px 18px; border-radius: 12px;">Đóng</button>
+                <button type="button" id="btnExportTuitionInvoice" onclick="exportTuitionModalInvoice()" class="modal-btn modal-btn-primary" style="width: auto; padding: 8px 20px; border-radius: 12px; background: linear-gradient(135deg, #10B981, #059669);"><i class="fa-solid fa-camera"></i> Tải ảnh hóa đơn</button>
             </div>
         </div>
     </div>

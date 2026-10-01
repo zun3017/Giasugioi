@@ -718,6 +718,395 @@ function goToStudentDiary(studentName, event) {
 }
 window.goToStudentDiary = goToStudentDiary;
 
+function initTuitionMonthFilter() {
+    var select = document.getElementById('tuitionMonthFilter');
+    if (!select) return;
+
+    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
+    var students = (tutorDataGlobal && tutorDataGlobal.students && tutorDataGlobal.students.length > 0)
+        ? tutorDataGlobal.students
+        : ((store && store.students) ? store.students : []);
+
+    var monthsSet = {};
+    students.forEach(function(st) {
+        if (st.logs && Array.isArray(st.logs)) {
+            st.logs.forEach(function(l) {
+                if (l.ngay) {
+                    var parts = l.ngay.split('/');
+                    if (parts.length >= 3) {
+                        var mKey = parts[1].padStart(2, '0') + '/' + parts[2];
+                        monthsSet[mKey] = true;
+                    }
+                }
+            });
+        }
+    });
+
+    var now = new Date();
+    var currentMonthStr = String(now.getMonth() + 1).padStart(2, '0') + '/' + now.getFullYear();
+    monthsSet[currentMonthStr] = true;
+
+    var sortedMonths = Object.keys(monthsSet).sort(function(a, b) {
+        var pA = a.split('/');
+        var pB = b.split('/');
+        var valA = parseInt(pA[1], 10) * 100 + parseInt(pA[0], 10);
+        var valB = parseInt(pB[1], 10) * 100 + parseInt(pB[0], 10);
+        return valB - valA;
+    });
+
+    var currentVal = select.value;
+    select.innerHTML = '<option value="all">Tất cả các tháng</option>';
+    sortedMonths.forEach(function(m) {
+        var opt = document.createElement('option');
+        opt.value = m;
+        opt.innerText = "Tháng " + m;
+        select.appendChild(opt);
+    });
+
+    if (currentVal && monthsSet[currentVal]) {
+        select.value = currentVal;
+    } else if (monthsSet[currentMonthStr]) {
+        select.value = currentMonthStr;
+    } else {
+        select.value = "all";
+    }
+}
+window.initTuitionMonthFilter = initTuitionMonthFilter;
+
+function renderTutorTuitionSection() {
+    var select = document.getElementById('tuitionMonthFilter');
+    if (!select || select.options.length <= 1) {
+        initTuitionMonthFilter();
+    }
+    var selMonth = select ? select.value : 'all';
+
+    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
+    var students = (tutorDataGlobal && tutorDataGlobal.students && tutorDataGlobal.students.length > 0)
+        ? tutorDataGlobal.students
+        : ((store && store.students) ? store.students : []);
+
+    var tableBody = document.getElementById('tuitionTableBody');
+    var mobileList = document.getElementById('tuitionMobileList');
+    var expEl = document.getElementById('tuitionTotalExpected');
+    var colEl = document.getElementById('tuitionTotalCollected');
+    var penEl = document.getElementById('tuitionTotalPending');
+
+    var totalExpected = 0;
+    var totalCollected = 0;
+    var totalPending = 0;
+
+    var tableHtml = "";
+    var mobileHtml = "";
+
+    if (!students || students.length === 0) {
+        if (tableBody) tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; color: rgba(255,255,255,0.4); padding: 30px; font-style: italic;">Chưa có dữ liệu học sinh</td></tr>';
+        if (mobileList) mobileList.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.4); padding: 25px; font-style: italic;">Chưa có dữ liệu học sinh</div>';
+        if (expEl) expEl.innerText = "0đ";
+        if (colEl) colEl.innerText = "0đ";
+        if (penEl) penEl.innerText = "0đ";
+        return;
+    }
+
+    students.forEach(function(st, idx) {
+        var sName = st.name.trim();
+        var stStyle = (typeof getStudentStyle === 'function') 
+            ? getStudentStyle(sName) 
+            : { bg: "rgba(142, 77, 255, 0.15)", border: "#8E4DFF", text: "#C4B5FD" };
+
+        // Count sessions in selected month
+        var sessionCount = 0;
+        if (st.logs && Array.isArray(st.logs)) {
+            st.logs.forEach(function(l) {
+                if (selMonth === 'all') {
+                    sessionCount++;
+                } else if (l.ngay) {
+                    var parts = l.ngay.split('/');
+                    if (parts.length >= 3) {
+                        var logMonth = parts[1].padStart(2, '0') + '/' + parts[2];
+                        if (logMonth === selMonth) sessionCount++;
+                    }
+                }
+            });
+        }
+        if (sessionCount === 0 && selMonth === 'all' && st.totalSessions) {
+            sessionCount = st.totalSessions;
+        }
+
+        // Unit fee
+        var unitFee = st.tuition || 200000;
+        var unitFeeStr = st.fee || (Number(unitFee).toLocaleString('vi-VN') + "đ/buổi");
+
+        // Total fee for this student
+        var studentTotal = 0;
+        var bType = st.billing_type || st.billingType || 'session';
+        if (bType === 'month' || bType === 'monthly') {
+            studentTotal = unitFee;
+        } else {
+            studentTotal = sessionCount * unitFee;
+        }
+
+        // Status
+        var rawStatus = (st.feeStatus || "Chưa thu").toLowerCase();
+        var isPaid = (rawStatus.indexOf("đã") !== -1 || rawStatus.indexOf("paid") !== -1 || rawStatus.indexOf("thành công") !== -1);
+
+        totalExpected += studentTotal;
+        if (isPaid) {
+            totalCollected += studentTotal;
+        } else {
+            totalPending += studentTotal;
+        }
+
+        var statusBtnHtml = isPaid
+            ? '<button type="button" class="tuition-status-badge status-paid" onclick="toggleStudentTuitionStatus(' + idx + ')" title="Bấm để đổi thành Chưa thu"><i class="fa-solid fa-circle-check"></i> Đã thu</button>'
+            : '<button type="button" class="tuition-status-badge status-unpaid" onclick="toggleStudentTuitionStatus(' + idx + ')" title="Bấm để đổi thành Đã thu"><i class="fa-solid fa-clock"></i> Chưa thu</button>';
+
+        var studentTotalFormatted = Number(studentTotal).toLocaleString('vi-VN') + " đ";
+
+        // Desktop Row
+        tableHtml += '<tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">' +
+            '<td style="padding: 12px 14px;">' +
+                '<div style="display: flex; align-items: center; gap: 10px;">' +
+                    '<span style="background:' + stStyle.bg + '; border:1px solid ' + stStyle.border + '; color:' + stStyle.text + '; width: 32px; height: 32px; border-radius: 50%; font-size: 13px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">' + getStudentInitial(sName) + '</span>' +
+                    '<div>' +
+                        '<div style="font-weight: 700; color: #FFF; font-size: 14px;">' + sName + '</div>' +
+                        '<div style="font-size: 11.5px; color: #A6ADCE;">' + (st.subject || "Gia sư") + (st.classLevel ? ' • ' + st.classLevel : '') + '</div>' +
+                    '</div>' +
+                '</div>' +
+            '</td>' +
+            '<td style="padding: 12px 10px; text-align: center;"><span style="background: rgba(142, 77, 255, 0.12); color: #C4B5FD; border: 1px solid rgba(142, 77, 255, 0.25); padding: 4px 10px; border-radius: 12px; font-size: 12.5px; font-weight: 700;">' + sessionCount + ' buổi</span></td>' +
+            '<td style="padding: 12px 10px; text-align: right; color: #E2E8F0; font-size: 13px; font-weight: 600;">' + unitFeeStr + '</td>' +
+            '<td style="padding: 12px 14px; text-align: right; color: #FFD23F; font-size: 15px; font-weight: 800; font-family: \'Space Grotesk\', sans-serif;">' + studentTotalFormatted + '</td>' +
+            '<td style="padding: 12px 10px; text-align: center;">' + statusBtnHtml + '</td>' +
+            '<td style="padding: 12px 14px; text-align: center;">' +
+                '<button type="button" class="btn-tuition-invoice" onclick="openStudentInvoiceModal(\'' + sName.replace(/'/g, "\\'") + '\')"><i class="fa-solid fa-file-invoice-dollar"></i> Xem hóa đơn</button>' +
+            '</td>' +
+        '</tr>';
+
+        // Mobile Card
+        mobileHtml += '<div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 16px; margin-bottom: 12px;">' +
+            '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">' +
+                '<div style="display: flex; align-items: center; gap: 8px;">' +
+                    '<span style="background:' + stStyle.bg + '; border:1px solid ' + stStyle.border + '; color:' + stStyle.text + '; width: 30px; height: 30px; border-radius: 50%; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center;">' + getStudentInitial(sName) + '</span>' +
+                    '<div>' +
+                        '<div style="font-weight: 700; color: #FFF; font-size: 14.5px;">' + sName + '</div>' +
+                        '<div style="font-size: 11px; color: #A6ADCE;">' + (st.subject || "Gia sư") + '</div>' +
+                    '</div>' +
+                '</div>' +
+                statusBtnHtml +
+            '</div>' +
+            '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: rgba(0,0,0,0.25); border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; font-size: 12px;">' +
+                '<div><span style="color:#A6ADCE;">Số buổi:</span> <b style="color:#FFF;">' + sessionCount + ' buổi</b></div>' +
+                '<div><span style="color:#A6ADCE;">Đơn giá:</span> <b style="color:#FFF;">' + unitFeeStr + '</b></div>' +
+                '<div style="grid-column: 1 / -1; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 6px; display: flex; justify-content: space-between; align-items: center;">' +
+                    '<span style="color:#A6ADCE; font-weight:600;">Tổng học phí:</span>' +
+                    '<span style="color:#FFD23F; font-size: 16px; font-weight:800; font-family: \'Space Grotesk\', sans-serif;">' + studentTotalFormatted + '</span>' +
+                '</div>' +
+            '</div>' +
+            '<button type="button" class="btn-tuition-invoice" style="width: 100%; justify-content: center; padding: 8px;" onclick="openStudentInvoiceModal(\'' + sName.replace(/'/g, "\\'") + '\')"><i class="fa-solid fa-file-invoice-dollar"></i> Xem chi tiết hóa đơn</button>' +
+        '</div>';
+    });
+
+    if (tableBody) tableBody.innerHTML = tableHtml;
+    if (mobileList) mobileList.innerHTML = mobileHtml;
+    if (expEl) expEl.innerText = Number(totalExpected).toLocaleString('vi-VN') + "đ";
+    if (colEl) colEl.innerText = Number(totalCollected).toLocaleString('vi-VN') + "đ";
+    if (penEl) penEl.innerText = Number(totalPending).toLocaleString('vi-VN') + "đ";
+}
+window.renderTutorTuitionSection = renderTutorTuitionSection;
+
+function toggleStudentTuitionStatus(idx) {
+    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
+    var students = (store && store.students) ? store.students : (tutorDataGlobal ? tutorDataGlobal.students : null);
+    if (!students || !students[idx]) return;
+
+    var st = students[idx];
+    var current = (st.feeStatus || "Chưa thu").toLowerCase();
+    var isPaid = (current.indexOf("đã") !== -1 || current.indexOf("paid") !== -1 || current.indexOf("thành công") !== -1);
+    var newStatus = isPaid ? "Chưa thu" : "Đã thu";
+    st.feeStatus = newStatus;
+
+    if (store) {
+        saveGiaSuDemoStore(store);
+    }
+    if (tutorDataGlobal && tutorDataGlobal.students && tutorDataGlobal.students[idx]) {
+        tutorDataGlobal.students[idx].feeStatus = newStatus;
+    }
+
+    if (typeof showToast === 'function') {
+        showToast("Đã đổi trạng thái của " + st.name + ": " + newStatus, "success");
+    }
+
+    renderTutorTuitionSection();
+    if (typeof renderTutorKpiCards === 'function') {
+        renderTutorKpiCards();
+    }
+}
+window.toggleStudentTuitionStatus = toggleStudentTuitionStatus;
+
+function openStudentInvoiceModal(studentName) {
+    var modal = document.getElementById('tutorTuitionInvoiceModal');
+    var modalBody = document.getElementById('tuitionInvoiceModalBody');
+    if (!modal || !modalBody) return;
+
+    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
+    var students = (tutorDataGlobal && tutorDataGlobal.students) || (store ? store.students : []);
+    var st = students.find(function(s) { return s.name.trim() === studentName.trim(); });
+    if (!st) return;
+
+    var selMonth = document.getElementById('tuitionMonthFilter') ? document.getElementById('tuitionMonthFilter').value : 'all';
+    var now = new Date();
+    var currentMonthStr = String(now.getMonth() + 1).padStart(2, '0') + '/' + now.getFullYear();
+    var displayMonth = (selMonth === 'all') ? currentMonthStr : selMonth;
+
+    // Filter logs for this student
+    var studentLogs = [];
+    if (st.logs && Array.isArray(st.logs)) {
+        st.logs.forEach(function(l) {
+            if (selMonth === 'all') {
+                studentLogs.push(l);
+            } else if (l.ngay) {
+                var parts = l.ngay.split('/');
+                if (parts.length >= 3 && (parts[1].padStart(2, '0') + '/' + parts[2]) === selMonth) {
+                    studentLogs.push(l);
+                }
+            }
+        });
+    }
+
+    var totalSess = studentLogs.length > 0 ? studentLogs.length : (st.totalSessions || 1);
+    var absentCount = 0;
+    var hwDone = 0;
+    var hwMiss = 0;
+
+    studentLogs.forEach(function(l) {
+        if (l.chuyenCan && l.chuyenCan.toLowerCase().indexOf("vắng") !== -1) absentCount++;
+        var b = (l.btvn || "").toLowerCase();
+        if (b.indexOf("hoàn thành") !== -1 || b.indexOf("đạt") !== -1) hwDone++;
+        else if (b.indexOf("không") !== -1 || b.indexOf("thiếu") !== -1 || b.indexOf("chưa") !== -1) hwMiss++;
+        else hwDone++;
+    });
+
+    var presentCount = totalSess - absentCount;
+    if (presentCount < 0) presentCount = 0;
+
+    var unitFee = st.tuition || 200000;
+    var grandTotal = (st.billing_type === 'month') ? unitFee : (totalSess * unitFee);
+    var grandTotalStr = Number(grandTotal).toLocaleString('vi-VN') + " đ";
+    var unitFeeStr = Number(unitFee).toLocaleString('vi-VN') + " VNĐ";
+
+    var qrUrl = (tutorDataGlobal && tutorDataGlobal.qrCode) 
+        ? tutorDataGlobal.qrCode 
+        : ("https://img.vietqr.io/image/970422-0123456789-compact2.png?amount=" + grandTotal + "&addInfo=HOC%20PHI%20" + encodeURIComponent(st.name.replace(/\s+/g, '%20')));
+
+    var html = '<div id="tuitionInvoiceCard" class="invoice-container" style="max-width: 100%; border-radius: 20px; box-shadow: none; margin: 0 auto; color: #0F172A; background: #FFFFFF;">' +
+        '<div class="inv-head">' +
+            '<div class="inv-head-left">' +
+                '<div class="inv-avatar"><i class="fa-solid fa-graduation-cap"></i></div>' +
+                '<div class="inv-user-meta">' +
+                    '<span class="inv-tag-mini">HỌC SINH</span>' +
+                    '<h2 style="color: #0F172A; font-size: 18px; margin: 2px 0 0 0;">' + st.name + '</h2>' +
+                '</div>' +
+            '</div>' +
+            '<div class="inv-head-right">' +
+                '<span class="inv-pill-status"><i class="fa-solid fa-calendar-days"></i> KỲ ' + displayMonth + '</span>' +
+            '</div>' +
+        '</div>' +
+        '<div class="inv-section-title" style="margin-top: 15px;"><i class="fa-solid fa-chart-pie"></i> TỔNG KẾT KẾT QUẢ KỲ NÀY</div>' +
+        '<div class="metrics-grid" style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">' +
+            '<div class="metric-card" style="padding: 10px;">' +
+                '<div class="metric-card-header"><span><i class="fa-solid fa-calendar-check text-green"></i> Chuyên cần</span><span class="text-green font-bold">' + totalSess + ' Buổi</span></div>' +
+                '<div class="metric-badges">' +
+                    '<div class="m-badge"><div class="m-num text-green">' + presentCount + '</div><div class="m-lbl">Buổi học</div></div>' +
+                    '<div class="m-badge"><div class="m-num text-amber">' + absentCount + '</div><div class="m-lbl">Vắng/Phép</div></div>' +
+                '</div>' +
+            '</div>' +
+            '<div class="metric-card" style="padding: 10px;">' +
+                '<div class="metric-card-header"><span><i class="fa-solid fa-book-open text-purple"></i> BTVN</span><span class="text-purple font-bold">' + (st.hwRate || "100%") + '</span></div>' +
+                '<div class="metric-badges">' +
+                    '<div class="m-badge"><div class="m-num text-green">' + hwDone + '</div><div class="m-lbl">Đủ bài</div></div>' +
+                    '<div class="m-badge"><div class="m-num text-red">' + hwMiss + '</div><div class="m-lbl">Thiếu bài</div></div>' +
+                '</div>' +
+            '</div>' +
+        '</div>' +
+        '<div class="fee-card" style="margin-top: 10px; padding: 12px 14px;">' +
+            '<div class="fee-row"><span>Đơn giá mỗi buổi:</span><b>' + unitFeeStr + '</b></div>' +
+            '<div class="fee-row"><span>Thời lượng kỳ này:</span><b>' + totalSess + ' buổi</b></div>' +
+            '<div class="fee-row grand-total">' +
+                '<span class="total-label">Tổng học phí kỳ này</span>' +
+                '<span class="total-val">' + grandTotalStr + '</span>' +
+            '</div>' +
+        '</div>' +
+        '<div class="bottom-action-container" style="margin-top: 12px;">' +
+            '<div class="msg-box" style="padding: 10px;">' +
+                '<div class="msg-header"><i class="fa-regular fa-comment-dots"></i> Lời nhắn gửi phụ huynh</div>' +
+                '<div class="msg-text" style="font-size: 11.5px; line-height: 1.4;">' +
+                    'Dạ em gửi anh/chị phiếu học tập tổng kết của bé <b>' + st.name + '</b> kỳ <b>' + displayMonth + '</b> ạ. Tổng học phí là <b>' + grandTotalStr + '</b> (' + totalSess + ' buổi). Cảm ơn anh/chị nhiều ạ!' +
+                '</div>' +
+            '</div>' +
+            '<div class="qr-card" style="padding: 8px;">' +
+                '<img src="' + qrUrl + '" class="qr-img" alt="QR VietQR" style="max-height: 90px; object-fit: contain; margin: 0 auto; display: block;">' +
+                '<div class="qr-label" style="font-size: 10px; margin-top: 4px;"><i class="fa-solid fa-qrcode"></i> Quét VietQR</div>' +
+            '</div>' +
+        '</div>' +
+    '</div>';
+
+    modalBody.innerHTML = html;
+    modal.style.display = "flex";
+    modal.setAttribute('data-student', st.name);
+    modal.setAttribute('data-month', displayMonth.replace('/', '-'));
+}
+window.openStudentInvoiceModal = openStudentInvoiceModal;
+
+function closeStudentInvoiceModal() {
+    var modal = document.getElementById('tutorTuitionInvoiceModal');
+    if (modal) modal.style.display = "none";
+}
+window.closeStudentInvoiceModal = closeStudentInvoiceModal;
+
+function exportTuitionModalInvoice() {
+    var card = document.getElementById('tuitionInvoiceCard');
+    var modal = document.getElementById('tutorTuitionInvoiceModal');
+    if (!card) return;
+
+    var sName = modal ? (modal.getAttribute('data-student') || "HocSinh") : "HocSinh";
+    var mStr = modal ? (modal.getAttribute('data-month') || "KyNay") : "KyNay";
+    var cleanName = sName.replace(/\s+/g, '_');
+
+    var btn = document.getElementById('btnExportTuitionInvoice');
+    var originalText = btn ? btn.innerHTML : "";
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang xuất...';
+    }
+
+    if (typeof html2canvas === 'function') {
+        html2canvas(card, { scale: 2, backgroundColor: "#FFFFFF", useCORS: true }).then(function(canvas) {
+            var link = document.createElement('a');
+            link.download = 'HoaDon_' + cleanName + '_' + mStr + '.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+        }).catch(function(err) {
+            console.error(err);
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+            if (typeof showToast === 'function') showToast("Lỗi khi xuất ảnh hóa đơn!", "error");
+        });
+    } else {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+        if (typeof showToast === 'function') showToast("Thư viện html2canvas chưa sẵn sàng!", "error");
+    }
+}
+window.exportTuitionModalInvoice = exportTuitionModalInvoice;
+
 function switchTutorNavTab(element, tabKey) {
     var items = document.querySelectorAll('.sidebar-nav-item');
     items.forEach(function(item) {
@@ -730,23 +1119,33 @@ function switchTutorNavTab(element, tabKey) {
     var overviewSec = document.getElementById('tutorSectionOverview');
     var diarySec = document.getElementById('tutorSectionDiary');
     var studentsSec = document.getElementById('tutorSectionStudents');
+    var tuitionSec = document.getElementById('tutorSectionTuition');
 
     if (tabKey === 'overview') {
         if (overviewSec) overviewSec.style.display = 'block';
         if (diarySec) diarySec.style.display = 'none';
         if (studentsSec) studentsSec.style.display = 'none';
+        if (tuitionSec) tuitionSec.style.display = 'none';
         renderTutorKpiCards();
         renderUpcomingSchedule();
     } else if (tabKey === 'diary') {
         if (overviewSec) overviewSec.style.display = 'none';
         if (diarySec) diarySec.style.display = 'block';
         if (studentsSec) studentsSec.style.display = 'none';
+        if (tuitionSec) tuitionSec.style.display = 'none';
         renderTutorDiarySection(true);
     } else if (tabKey === 'students') {
         if (overviewSec) overviewSec.style.display = 'none';
         if (diarySec) diarySec.style.display = 'none';
         if (studentsSec) studentsSec.style.display = 'block';
+        if (tuitionSec) tuitionSec.style.display = 'none';
         renderTutorStudentsGrid();
+    } else if (tabKey === 'tuition') {
+        if (overviewSec) overviewSec.style.display = 'none';
+        if (diarySec) diarySec.style.display = 'none';
+        if (studentsSec) studentsSec.style.display = 'none';
+        if (tuitionSec) tuitionSec.style.display = 'block';
+        renderTutorTuitionSection();
     }
 }
 window.switchTutorNavTab = switchTutorNavTab;

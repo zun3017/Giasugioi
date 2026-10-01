@@ -2487,6 +2487,210 @@
             border-color: rgba(255, 255, 255, 0.3);
         }
 
+        /* Tuition Section Styles */
+        .tuition-toolbar {
+            background: rgba(11, 8, 38, 0.95);
+            border: 1px solid rgba(142, 77, 255, 0.3);
+            border-radius: 20px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .tuition-toolbar-title h3 {
+            color: #FFF;
+            font-size: 18px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tuition-toolbar-title p {
+            color: #A6ADCE;
+            font-size: 13px;
+            margin: 4px 0 0 0;
+        }
+
+        .tuition-filters {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .tuition-filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 8px 14px;
+        }
+
+        .tuition-filter-item label {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #A6ADCE;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .tuition-filter-item select {
+            background: transparent;
+            border: none;
+            color: #FFD23F;
+            font-weight: 700;
+            font-size: 13.5px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .tuition-filter-item select option {
+            background: #0B0826;
+            color: #FFF;
+        }
+
+        /* Tuition Banner Grid */
+        .tuition-banner-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 768px) {
+            .tuition-toolbar {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            .tuition-banner-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .tuition-banner-card {
+            background: rgba(11, 8, 38, 0.85);
+            border: 1px solid rgba(142, 77, 255, 0.25);
+            border-radius: 16px;
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            backdrop-filter: blur(15px);
+            transition: all 0.25s ease;
+        }
+
+        .tuition-banner-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+            border-color: #8E4DFF;
+        }
+
+        .tuition-banner-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tuition-banner-lbl {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #A6ADCE;
+        }
+
+        .tuition-banner-icon {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 15px;
+        }
+
+        .tuition-banner-val {
+            font-size: 22px;
+            font-weight: 800;
+            line-height: 1.2;
+            font-family: 'Space Grotesk', 'Plus Jakarta Sans', sans-serif;
+            letter-spacing: -0.3px;
+        }
+
+        .tuition-banner-sub {
+            font-size: 11.5px;
+            color: #64748B;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Tuition Status Badges */
+        .tuition-status-badge {
+            border: none;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .tuition-status-badge.status-paid {
+            background: rgba(16, 185, 129, 0.15);
+            border: 1px solid #10B981;
+            color: #10B981;
+        }
+
+        .tuition-status-badge.status-paid:hover {
+            background: rgba(16, 185, 129, 0.28);
+            transform: scale(1.03);
+        }
+
+        .tuition-status-badge.status-unpaid {
+            background: rgba(239, 68, 68, 0.15);
+            border: 1px solid #EF4444;
+            color: #EF4444;
+        }
+
+        .tuition-status-badge.status-unpaid:hover {
+            background: rgba(239, 68, 68, 0.28);
+            transform: scale(1.03);
+        }
+
+        .btn-tuition-invoice {
+            background: rgba(142, 77, 255, 0.15);
+            border: 1px solid rgba(142, 77, 255, 0.35);
+            color: #C4B5FD;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 6px 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-tuition-invoice:hover {
+            background: rgba(142, 77, 255, 0.3);
+            color: #FFF;
+            transform: translateY(-1px);
+        }
+
         /* Schedule Table */
         .schedule-section {
             background: rgba(11, 8, 38, 0.95);
