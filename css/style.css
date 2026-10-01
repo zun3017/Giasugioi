@@ -2478,8 +2478,8 @@
         }
 
         .upcoming-day-column {
-            background: var(--glass-bg, var(--bg-card-alt));
-            border: 1px solid var(--glass-border, var(--border-card));
+            background: var(--bg-card, #FFFFFF) !important;
+            border: 1px solid var(--border-card, #E2E8F0) !important;
             border-radius: 16px;
             padding: 16px;
             display: flex;
@@ -2491,8 +2491,8 @@
             align-items: center;
             justify-content: space-between;
             padding: 8px 12px;
-            background: var(--nav-active-bg);
-            border: 1px solid var(--border-color);
+            background: var(--nav-active-bg, rgba(59, 130, 246, 0.08)) !important;
+            border: 1px solid var(--border-color, #BFDBFE) !important;
             border-radius: 10px;
             margin-bottom: 12px;
             color: var(--text-primary);
@@ -2512,8 +2512,8 @@
         }
 
         .upcoming-session-card {
-            background: var(--glass-inner, rgba(255, 255, 255, 0.35));
-            border: 1px solid var(--glass-inner-border, rgba(255, 255, 255, 0.5));
+            background: var(--nav-active-bg, rgba(59, 130, 246, 0.08)) !important;
+            border: 1px solid var(--border-color, #BFDBFE) !important;
             border-radius: 12px;
             padding: 12px 14px;
             display: flex;
@@ -2524,8 +2524,8 @@
         }
 
         .upcoming-session-card:hover {
-            background: var(--nav-active-bg);
-            border-color: var(--border-color);
+            background: var(--nav-active-bg, rgba(59, 130, 246, 0.14)) !important;
+            border-color: var(--color-primary, #3B82F6) !important;
             transform: translateX(2px);
         }
 
@@ -2544,8 +2544,8 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            border: 1px solid var(--border-color);
-            background: var(--glass-inner, rgba(255, 255, 255, 0.35));
+            border: 1px solid var(--border-color, #BFDBFE);
+            background: var(--nav-active-bg, rgba(59, 130, 246, 0.12));
             color: var(--text-primary) !important;
         }
 
@@ -2566,14 +2566,15 @@
             display: inline-flex;
             align-items: center;
             gap: 6px;
-            background: var(--glass-inner, rgba(255, 255, 255, 0.35));
-            border: 1px solid var(--border-color);
-            color: var(--text-primary);
-            padding: 4px 10px;
-            border-radius: 20px;
-            font-size: 12px;
-            font-weight: 700;
-            white-space: nowrap;
+            background: var(--bg-card, #FFFFFF) !important;
+            border: 1px solid var(--border-color, #BFDBFE) !important;
+            color: var(--text-primary) !important;
+            padding: 4px 12px !important;
+            border-radius: 20px !important;
+            font-size: 12.5px !important;
+            font-weight: 700 !important;
+            white-space: nowrap !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
         }
 
         .upcoming-time-badge i {
@@ -2590,9 +2591,9 @@
             color: var(--text-muted);
             font-size: 13px;
             font-style: italic;
-            background: var(--bg-input);
+            background: var(--nav-active-bg, rgba(59, 130, 246, 0.05)) !important;
             border-radius: 12px;
-            border: 1px dashed var(--border-color);
+            border: 1px dashed var(--border-color, #BFDBFE) !important;
             min-height: 80px;
         }
 
