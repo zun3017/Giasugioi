@@ -289,6 +289,22 @@
                             </svg>
                         </button>
                     </form>
+
+                    <!-- Thanh Đăng Nhập Nhanh Xem Demo Gia Sư (1 Chạm) -->
+                    <div class="mt-5 pt-4 border-t border-dashed border-indigo-200 text-xs text-slate-600 text-left">
+                        <div class="mb-2.5 font-bold text-indigo-900 flex items-center justify-between flex-wrap gap-2">
+                            <span class="flex items-center gap-1.5 text-xs sm:text-sm">
+                                <i class="fa-solid fa-bolt text-amber-500"></i>
+                                <span>Đăng nhập nhanh xem Demo (1 chạm):</span>
+                            </span>
+                            <a href="tutor-dashboard.html" class="text-indigo-600 hover:text-indigo-800 font-semibold underline text-xs">
+                                Vào thẳng Quản lý &rarr;
+                            </a>
+                        </div>
+                        <button type="button" onclick="fillQuickTutor('0123456789', '1234')" class="w-full bg-indigo-50 hover:bg-indigo-600 hover:text-white border border-indigo-200 text-indigo-700 py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
+                            👨‍🏫 Thầy Trần Hoàng Nam (SĐT: 0123456789 - PIN: 1234)
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -491,6 +507,18 @@
             if (targetPage) {
                 targetPage.classList.remove('page-hidden');
                 targetPage.classList.add('page-visible');
+            }
+        }
+
+        // Đăng nhập nhanh 1 chạm Demo Gia Sư
+        function fillQuickTutor(phone, pin) {
+            const pInput = document.getElementById('gsPhone');
+            const pinInput = document.getElementById('gsPin');
+            if (pInput) pInput.value = phone;
+            if (pinInput) pinInput.value = pin;
+            const form = document.getElementById('formGiaSu');
+            if (form) {
+                form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
             }
         }
 

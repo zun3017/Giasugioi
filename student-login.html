@@ -271,6 +271,30 @@
                         </svg>
                     </button>
                 </form>
+
+                <!-- Thanh Đăng Nhập Nhanh Xem Demo PH/HS (1 Chạm) -->
+                <div class="mt-5 p-4 bg-white/80 backdrop-blur-md rounded-2xl border border-teal-100 shadow-sm text-xs text-slate-600">
+                    <div class="mb-2.5 font-bold text-teal-800 flex items-center justify-between flex-wrap gap-2">
+                        <span class="flex items-center gap-1.5 text-xs sm:text-sm">
+                            <i class="fa-solid fa-bolt text-amber-500"></i>
+                            <span>Đăng nhập nhanh xem Demo (1 chạm):</span>
+                        </span>
+                        <a href="student-dashboard.html" class="text-teal-600 hover:text-teal-800 font-semibold underline text-xs">
+                            Vào thẳng Bảng điểm &rarr;
+                        </a>
+                    </div>
+                    <div class="flex gap-2 flex-wrap">
+                        <button type="button" onclick="fillQuickStudent('0912345678')" class="bg-teal-50 hover:bg-teal-600 hover:text-white border border-teal-200 text-teal-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95 cursor-pointer">
+                            👦 Nguyễn Hoàng Nam (0912345678)
+                        </button>
+                        <button type="button" onclick="fillQuickStudent('0987654321')" class="bg-emerald-50 hover:bg-emerald-600 hover:text-white border border-emerald-200 text-emerald-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95 cursor-pointer">
+                            👧 Lê Minh Thư (0987654321)
+                        </button>
+                        <button type="button" onclick="fillQuickStudent('0905123456')" class="bg-amber-50 hover:bg-amber-600 hover:text-white border border-amber-200 text-amber-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95 cursor-pointer">
+                            👦 Phạm Hải Đăng (0905123456)
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- 4 Thẻ tính năng -->
@@ -490,6 +514,18 @@
             if (targetPage) {
                 targetPage.classList.remove('page-hidden');
                 targetPage.classList.add('page-visible');
+            }
+        }
+
+        // Đăng nhập nhanh 1 chạm Demo PH/HS
+        function fillQuickStudent(phone) {
+            const input = document.getElementById('maHocSinh');
+            if (input) {
+                input.value = phone;
+                const form = document.getElementById('formPhHs');
+                if (form) {
+                    form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                }
             }
         }
 
