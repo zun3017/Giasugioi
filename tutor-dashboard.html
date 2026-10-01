@@ -541,6 +541,62 @@
         </div>
         </div> <!-- End #tutorSectionOverview -->
 
+        <!-- SECTION BÁO CÁO (XUẤT ẢNH) -->
+        <div id="tutorSectionReports" class="tutor-section" style="display: none;">
+            <!-- Filter Toolbar -->
+            <div class="report-filter-toolbar">
+                <div class="report-toolbar-header">
+                    <h3>
+                        <i class="fa-solid fa-file-image" style="color: #8E4DFF;"></i>
+                        <span>Xuất báo cáo học tập & Lịch sử buổi học</span>
+                    </h3>
+                    <p>Chọn khoảng thời gian và học sinh để xem trước phiếu báo cáo và xuất ảnh PNG gửi phụ huynh</p>
+                </div>
+
+                <div class="report-filter-controls">
+                    <!-- Từ ngày -->
+                    <div class="report-control-group">
+                        <label class="report-control-label" for="reportStartDate"><i class="fa-regular fa-calendar"></i> Từ ngày:</label>
+                        <input type="date" id="reportStartDate" class="report-input-box report-date-input" onchange="previewTutorReport()">
+                    </div>
+
+                    <!-- Đến ngày -->
+                    <div class="report-control-group">
+                        <label class="report-control-label" for="reportEndDate"><i class="fa-regular fa-calendar-check"></i> Đến ngày:</label>
+                        <input type="date" id="reportEndDate" class="report-input-box report-date-input" onchange="previewTutorReport()">
+                    </div>
+
+                    <!-- Học sinh -->
+                    <div class="report-control-group">
+                        <label class="report-control-label" for="reportStudentSelect"><i class="fa-solid fa-user-graduate"></i> Học sinh:</label>
+                        <select id="reportStudentSelect" class="report-input-box report-select" onchange="previewTutorReport()">
+                            <option value="all">Tất cả học sinh</option>
+                        </select>
+                    </div>
+
+                    <!-- Actions -->
+                    <div class="report-actions">
+                        <button type="button" class="btn-report-preview" onclick="previewTutorReport()">
+                            <i class="fa-solid fa-magnifying-glass"></i>
+                            <span>Xem trước</span>
+                        </button>
+                        <button type="button" id="btnExportReportPng" class="btn-report-export" onclick="exportReportToPng()" style="display: none;">
+                            <i class="fa-solid fa-camera"></i>
+                            <span>Xuất ảnh PNG</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Preview Container -->
+            <div class="report-preview-wrapper" id="reportPreviewContainer">
+                <div style="text-align: center; color: rgba(255,255,255,0.4); padding: 40px; font-style: italic;">
+                    <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 24px; color: #8E4DFF; margin-bottom: 8px;"></i>
+                    <div>Đang tạo bản xem trước báo cáo...</div>
+                </div>
+            </div>
+        </div> <!-- End #tutorSectionReports -->
+
         <!-- SECTION NHẬT KÝ BUỔI HỌC -->
         <div id="tutorSectionDiary" class="tutor-section" style="display: none;">
             <div class="diary-toolbar">

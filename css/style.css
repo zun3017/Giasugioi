@@ -2691,6 +2691,320 @@
             transform: translateY(-1px);
         }
 
+        /* Report Section Styles */
+        .report-filter-toolbar {
+            background: rgba(11, 8, 38, 0.95);
+            border: 1px solid rgba(142, 77, 255, 0.3);
+            border-radius: 20px;
+            padding: 20px 24px;
+            margin-bottom: 22px;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .report-toolbar-header {
+            margin-bottom: 16px;
+        }
+
+        .report-toolbar-header h3 {
+            color: #FFF;
+            font-size: 18px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .report-toolbar-header p {
+            color: #A6ADCE;
+            font-size: 13px;
+            margin: 4px 0 0 0;
+        }
+
+        .report-filter-controls {
+            display: flex;
+            align-items: flex-end;
+            gap: 14px;
+            flex-wrap: wrap;
+        }
+
+        .report-control-group {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .report-control-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #A6ADCE;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .report-input-box {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 10px;
+            padding: 8px 12px;
+            color: #FFF;
+            font-size: 13px;
+            font-family: inherit;
+            outline: none;
+            transition: all 0.2s ease;
+        }
+
+        .report-input-box:focus {
+            border-color: #8E4DFF;
+            background: rgba(142, 77, 255, 0.08);
+        }
+
+        .report-date-input {
+            color-scheme: dark;
+            min-width: 140px;
+        }
+
+        .report-select {
+            min-width: 160px;
+            cursor: pointer;
+        }
+
+        .report-select option {
+            background: #0B0826;
+            color: #FFF;
+        }
+
+        .report-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-left: auto;
+            flex-wrap: wrap;
+        }
+
+        .btn-report-preview {
+            background: linear-gradient(135deg, #8E4DFF 0%, #5B21B6 100%);
+            border: none;
+            color: #FFF;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 9px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            box-shadow: 0 4px 15px rgba(142, 77, 255, 0.25);
+            transition: all 0.2s ease;
+        }
+
+        .btn-report-preview:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(142, 77, 255, 0.4);
+        }
+
+        .btn-report-export {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            border: none;
+            color: #FFF;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 9px 20px;
+            border-radius: 10px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            box-shadow: 0 4px 15px rgba(16, 185, 129, 0.25);
+            transition: all 0.2s ease;
+        }
+
+        .btn-report-export:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 20px rgba(16, 185, 129, 0.45);
+        }
+
+        .btn-report-export:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        @media (max-width: 768px) {
+            .report-filter-controls {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            .report-actions {
+                margin-left: 0 !important;
+                margin-top: 8px;
+                width: 100%;
+            }
+            .btn-report-preview,
+            .btn-report-export {
+                flex: 1;
+                justify-content: center;
+            }
+        }
+
+        /* Report Capture Card for html2canvas */
+        .report-preview-wrapper {
+            margin-top: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .report-capture-card {
+            width: 100%;
+            max-width: 820px;
+            background: #0E0B25;
+            border: 2px solid rgba(142, 77, 255, 0.35);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.6);
+            position: relative;
+            box-sizing: border-box;
+            color: #FFF;
+        }
+
+        .report-card-banner {
+            border-bottom: 2px solid rgba(142, 77, 255, 0.3);
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .report-brand-title {
+            font-size: 20px;
+            font-weight: 900;
+            background: linear-gradient(135deg, #FFF 0%, #C4B5FD 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: 0.3px;
+        }
+
+        .report-brand-sub {
+            font-size: 12.5px;
+            color: #A6ADCE;
+            margin-top: 4px;
+        }
+
+        .report-meta-pills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .report-meta-pill {
+            background: rgba(142, 77, 255, 0.15);
+            border: 1px solid rgba(142, 77, 255, 0.35);
+            color: #C4B5FD;
+            font-size: 11.5px;
+            font-weight: 700;
+            padding: 5px 12px;
+            border-radius: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .report-stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .report-stat-box {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 12px 14px;
+            text-align: center;
+        }
+
+        .report-stat-num {
+            font-size: 18px;
+            font-weight: 800;
+            color: #FFF;
+        }
+
+        .report-stat-lbl {
+            font-size: 11px;
+            color: #A6ADCE;
+            font-weight: 600;
+            margin-top: 3px;
+        }
+
+        .report-sessions-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .report-session-item {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            padding: 14px 16px;
+            transition: all 0.2s ease;
+        }
+
+        .report-session-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+            flex-wrap: wrap;
+            gap: 6px;
+        }
+
+        .report-session-date {
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #FFF;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .report-session-topic {
+            font-size: 13.5px;
+            color: #FFD23F;
+            font-weight: 600;
+            margin-bottom: 6px;
+        }
+
+        .report-session-comment {
+            font-size: 12.5px;
+            color: #E2E8F0;
+            line-height: 1.45;
+            background: rgba(0, 0, 0, 0.25);
+            border-left: 3px solid #8E4DFF;
+            padding: 8px 12px;
+            border-radius: 0 8px 8px 0;
+            margin-top: 6px;
+        }
+
+        .report-card-footer {
+            margin-top: 24px;
+            padding-top: 16px;
+            border-top: 1px dashed rgba(255, 255, 255, 0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 11.5px;
+            color: #64748B;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
         /* Schedule Table */
         .schedule-section {
             background: rgba(11, 8, 38, 0.95);

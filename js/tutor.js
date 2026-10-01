@@ -1107,6 +1107,283 @@ function exportTuitionModalInvoice() {
 }
 window.exportTuitionModalInvoice = exportTuitionModalInvoice;
 
+function initReportFilterOptions() {
+    var startInput = document.getElementById('reportStartDate');
+    var endInput = document.getElementById('reportEndDate');
+    var studentSelect = document.getElementById('reportStudentSelect');
+
+    var now = new Date();
+    var pad = function(n) { return String(n).padStart(2, '0'); };
+    var todayStr = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate());
+
+    var past = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
+    var pastStr = past.getFullYear() + '-' + pad(past.getMonth() + 1) + '-' + pad(past.getDate());
+
+    if (startInput && !startInput.value) {
+        startInput.value = pastStr;
+    }
+    if (endInput && !endInput.value) {
+        endInput.value = todayStr;
+    }
+
+    if (studentSelect) {
+        var curVal = studentSelect.value || "all";
+        var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
+        var students = (tutorDataGlobal && tutorDataGlobal.students && tutorDataGlobal.students.length > 0)
+            ? tutorDataGlobal.students
+            : ((store && store.students) ? store.students : []);
+
+        studentSelect.innerHTML = '<option value="all">Tất cả học sinh</option>';
+        students.forEach(function(st) {
+            var opt = document.createElement('option');
+            opt.value = st.name.trim();
+            opt.innerText = st.name.trim() + (st.subject ? ' (' + st.subject + ')' : '');
+            studentSelect.appendChild(opt);
+        });
+
+        studentSelect.value = curVal;
+    }
+}
+window.initReportFilterOptions = initReportFilterOptions;
+
+function parseDateInputYmd(str) {
+    if (!str) return null;
+    var parts = str.split('-');
+    if (parts.length >= 3) {
+        return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10), 0, 0, 0, 0);
+    }
+    return null;
+}
+
+function parseLogDateDmy(str) {
+    if (!str) return null;
+    var parts = str.split('/');
+    if (parts.length >= 3) {
+        return new Date(parseInt(parts[2], 10), parseInt(parts[1], 10) - 1, parseInt(parts[0], 10), 0, 0, 0, 0);
+    }
+    return null;
+}
+
+function previewTutorReport() {
+    var startInput = document.getElementById('reportStartDate');
+    var endInput = document.getElementById('reportEndDate');
+    var studentSelect = document.getElementById('reportStudentSelect');
+    var container = document.getElementById('reportPreviewContainer');
+    var exportBtn = document.getElementById('btnExportReportPng');
+
+    if (!container) return;
+
+    var startDate = startInput ? parseDateInputYmd(startInput.value) : null;
+    var endDate = endInput ? parseDateInputYmd(endInput.value) : null;
+    if (endDate) {
+        endDate.setHours(23, 59, 59, 999);
+    }
+
+    var selStudent = studentSelect ? studentSelect.value : 'all';
+
+    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
+    var students = (tutorDataGlobal && tutorDataGlobal.students && tutorDataGlobal.students.length > 0)
+        ? tutorDataGlobal.students
+        : ((store && store.students) ? store.students : []);
+
+    var flatSessions = [];
+    students.forEach(function(st) {
+        var sName = st.name.trim();
+        if (selStudent !== 'all' && sName !== selStudent) return;
+
+        if (st.logs && Array.isArray(st.logs)) {
+            st.logs.forEach(function(log) {
+                var lDate = parseLogDateDmy(log.ngay);
+                if (lDate) {
+                    if (startDate && lDate < startDate) return;
+                    if (endDate && lDate > endDate) return;
+                }
+                flatSessions.push({
+                    studentName: sName,
+                    studentSubject: st.subject || "Gia sư",
+                    log: log,
+                    logDate: lDate || new Date(0)
+                });
+            });
+        }
+    });
+
+    // Sort by date descending (newest first)
+    flatSessions.sort(function(a, b) {
+        return b.logDate.getTime() - a.logDate.getTime();
+    });
+
+    if (flatSessions.length === 0) {
+        container.innerHTML = '<div style="background: rgba(11,8,38,0.8); border: 1px dashed rgba(142,77,255,0.3); border-radius: 20px; padding: 40px; text-align: center; max-width: 600px; width: 100%;">' +
+            '<i class="fa-solid fa-file-circle-xmark" style="font-size: 38px; color: #8E4DFF; margin-bottom: 12px; display: block;"></i>' +
+            '<h4 style="color: #FFF; font-size: 16px; margin: 0 0 6px 0;">Không tìm thấy buổi học nào</h4>' +
+            '<p style="color: #A6ADCE; font-size: 13px; margin: 0;">Vui lòng điều chỉnh lại khoảng thời gian "Từ ngày" - "Đến ngày" hoặc chọn học sinh khác.</p>' +
+        '</div>';
+        if (exportBtn) exportBtn.style.display = 'none';
+        return;
+    }
+
+    if (exportBtn) exportBtn.style.display = 'inline-flex';
+
+    // Calculate metrics
+    var totalSessions = flatSessions.length;
+    var presentCount = 0;
+    var hwDoneCount = 0;
+
+    flatSessions.forEach(function(it) {
+        var l = it.log;
+        var cc = (l.chuyenCan || "").toLowerCase();
+        if (cc.indexOf("vắng") === -1 && cc.indexOf("nghỉ") === -1) presentCount++;
+        var bt = (l.btvn || "").toLowerCase();
+        if (bt.indexOf("hoàn thành") !== -1 || bt.indexOf("đạt") !== -1 || bt.indexOf("tốt") !== -1) hwDoneCount++;
+    });
+
+    var attRate = Math.round((presentCount / totalSessions) * 100) + "%";
+    var hwRate = Math.round((hwDoneCount / totalSessions) * 100) + "%";
+
+    var fmtFn = (typeof window.formatDateWithDayOfWeek === 'function') 
+        ? window.formatDateWithDayOfWeek 
+        : function(s) { return s; };
+
+    var startDisplay = startInput && startInput.value ? startInput.value.split('-').reverse().join('/') : "Đầu kỳ";
+    var endDisplay = endInput && endInput.value ? endInput.value.split('-').reverse().join('/') : "Hiện tại";
+    var targetStudentDisplay = (selStudent === 'all') ? "Tất cả học sinh" : selStudent;
+    var tutorName = (tutorDataGlobal && tutorDataGlobal.tutorName) ? tutorDataGlobal.tutorName : "Thầy Trần Hoàng Nam";
+
+    var html = '<div id="reportCaptureCard" class="report-capture-card">' +
+        '<!-- Header / Branding -->' +
+        '<div class="report-card-banner">' +
+            '<div>' +
+                '<div class="report-brand-title"><i class="fa-solid fa-graduation-cap" style="margin-right: 8px; color: #8E4DFF;"></i> BÁO CÁO TIẾN ĐỘ HỌC TẬP</div>' +
+                '<div class="report-brand-sub">Gia sư phụ trách: <b>' + tutorName + '</b> • Hệ thống quản lý học sinh 1-1</div>' +
+            '</div>' +
+            '<div class="report-meta-pills">' +
+                '<span class="report-meta-pill"><i class="fa-solid fa-user-graduate"></i> ' + targetStudentDisplay + '</span>' +
+                '<span class="report-meta-pill"><i class="fa-regular fa-calendar-days"></i> ' + startDisplay + ' → ' + endDisplay + '</span>' +
+                '<span class="report-meta-pill" style="background: rgba(16,185,129,0.15); border-color: #10B981; color: #6EE7B7;"><i class="fa-solid fa-check"></i> ' + totalSessions + ' buổi học</span>' +
+            '</div>' +
+        '</div>' +
+
+        '<!-- Stats Summary Grid -->' +
+        '<div class="report-stats-grid">' +
+            '<div class="report-stat-box">' +
+                '<div class="report-stat-num text-purple">' + totalSessions + '</div>' +
+                '<div class="report-stat-lbl">Tổng số buổi ghi nhận</div>' +
+            '</div>' +
+            '<div class="report-stat-box">' +
+                '<div class="report-stat-num text-green">' + attRate + '</div>' +
+                '<div class="report-stat-lbl">Tỷ lệ chuyên cần (' + presentCount + '/' + totalSessions + ')</div>' +
+            '</div>' +
+            '<div class="report-stat-box">' +
+                '<div class="report-stat-num text-amber">' + hwRate + '</div>' +
+                '<div class="report-stat-lbl">Hoàn thành bài tập về nhà</div>' +
+            '</div>' +
+        '</div>' +
+
+        '<!-- Detailed Session Cards -->' +
+        '<div class="report-sessions-list">';
+
+    flatSessions.forEach(function(it) {
+        var log = it.log;
+        var stStyle = (typeof getStudentStyle === 'function') 
+            ? getStudentStyle(it.studentName) 
+            : { bg: "rgba(142, 77, 255, 0.15)", border: "#8E4DFF", text: "#C4B5FD" };
+
+        var dateWithDay = fmtFn(log.ngay);
+        var btvnBadge = (typeof getDiaryBtvnBadge === 'function') 
+            ? getDiaryBtvnBadge(log.btvn || log.danhGiaBTVN) 
+            : '<span class="status-badge">' + (log.btvn || "-") + '</span>';
+        var comment = (log.nhanXet || "").trim() || "Chưa có nhận xét";
+
+        html += '<div class="report-session-item">' +
+            '<div class="report-session-top">' +
+                '<div style="display: flex; align-items: center; gap: 8px;">' +
+                    '<span class="report-session-date"><i class="fa-regular fa-calendar-check" style="color: #6EE7B7;"></i> ' + dateWithDay + '</span>' +
+                    '<span style="background:' + stStyle.bg + '; border:1px solid ' + stStyle.border + '; color:' + stStyle.text + '; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700;">' + it.studentName + '</span>' +
+                    '<span style="font-size: 11.5px; color: #A6ADCE;">' + (log.mon || it.studentSubject) + '</span>' +
+                '</div>' +
+                '<div>' + btvnBadge + '</div>' +
+            '</div>' +
+            '<div class="report-session-topic"><b>Nội dung:</b> ' + (log.topic || log.noiDung || "Học theo giáo trình") + '</div>' +
+            '<div class="report-session-comment"><b>Nhận xét gia sư:</b> ' + comment + '</div>' +
+        '</div>';
+    });
+
+    html += '</div>' +
+        '<!-- Footer -->' +
+        '<div class="report-card-footer">' +
+            '<div><i class="fa-solid fa-heart" style="color: #8E4DFF;"></i> Chúc các em luôn học tập tốt và bứt phá điểm số!</div>' +
+            '<div>Thời gian xuất: ' + new Date().toLocaleString('vi-VN') + '</div>' +
+        '</div>' +
+    '</div>';
+
+    container.innerHTML = html;
+}
+window.previewTutorReport = previewTutorReport;
+
+function exportReportToPng() {
+    var card = document.getElementById('reportCaptureCard');
+    if (!card) return;
+
+    var startInput = document.getElementById('reportStartDate');
+    var endInput = document.getElementById('reportEndDate');
+    var studentSelect = document.getElementById('reportStudentSelect');
+    var btn = document.getElementById('btnExportReportPng');
+
+    var sName = studentSelect ? studentSelect.value : "TatCa";
+    if (sName === "all") sName = "TatCaHocSinh";
+    var cleanStudent = sName.replace(/\s+/g, '_');
+
+    var tuNgay = startInput && startInput.value ? startInput.value.replace(/-/g, '') : "TuNgay";
+    var denNgay = endInput && endInput.value ? endInput.value.replace(/-/g, '') : "DenNgay";
+    var fileName = 'BaoCao_' + cleanStudent + '_' + tuNgay + '_' + denNgay + '.png';
+
+    var originalText = btn ? btn.innerHTML : "";
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang xuất ảnh...';
+    }
+
+    if (typeof html2canvas === 'function') {
+        html2canvas(card, {
+            scale: 2,
+            backgroundColor: "#0E0B25",
+            useCORS: true,
+            logging: false
+        }).then(function(canvas) {
+            var link = document.createElement('a');
+            link.download = fileName;
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+            if (typeof showToast === 'function') {
+                showToast("Đã xuất báo cáo thành công!", "success");
+            }
+        }).catch(function(err) {
+            console.error("Export PNG error:", err);
+            if (btn) {
+                btn.disabled = false;
+                btn.innerHTML = originalText;
+            }
+            if (typeof showToast === 'function') {
+                showToast("Lỗi khi xuất ảnh báo cáo!", "error");
+            }
+        });
+    } else {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+        if (typeof showToast === 'function') {
+            showToast("Thư viện html2canvas chưa sẵn sàng!", "error");
+        }
+    }
+}
+window.exportReportToPng = exportReportToPng;
+
 function switchTutorNavTab(element, tabKey) {
     var items = document.querySelectorAll('.sidebar-nav-item');
     items.forEach(function(item) {
@@ -1117,31 +1394,44 @@ function switchTutorNavTab(element, tabKey) {
     }
 
     var overviewSec = document.getElementById('tutorSectionOverview');
+    var reportsSec = document.getElementById('tutorSectionReports');
     var diarySec = document.getElementById('tutorSectionDiary');
     var studentsSec = document.getElementById('tutorSectionStudents');
     var tuitionSec = document.getElementById('tutorSectionTuition');
 
     if (tabKey === 'overview') {
         if (overviewSec) overviewSec.style.display = 'block';
+        if (reportsSec) reportsSec.style.display = 'none';
         if (diarySec) diarySec.style.display = 'none';
         if (studentsSec) studentsSec.style.display = 'none';
         if (tuitionSec) tuitionSec.style.display = 'none';
         renderTutorKpiCards();
         renderUpcomingSchedule();
+    } else if (tabKey === 'reports') {
+        if (overviewSec) overviewSec.style.display = 'none';
+        if (reportsSec) reportsSec.style.display = 'block';
+        if (diarySec) diarySec.style.display = 'none';
+        if (studentsSec) studentsSec.style.display = 'none';
+        if (tuitionSec) tuitionSec.style.display = 'none';
+        initReportFilterOptions();
+        previewTutorReport();
     } else if (tabKey === 'diary') {
         if (overviewSec) overviewSec.style.display = 'none';
+        if (reportsSec) reportsSec.style.display = 'none';
         if (diarySec) diarySec.style.display = 'block';
         if (studentsSec) studentsSec.style.display = 'none';
         if (tuitionSec) tuitionSec.style.display = 'none';
         renderTutorDiarySection(true);
     } else if (tabKey === 'students') {
         if (overviewSec) overviewSec.style.display = 'none';
+        if (reportsSec) reportsSec.style.display = 'none';
         if (diarySec) diarySec.style.display = 'none';
         if (studentsSec) studentsSec.style.display = 'block';
         if (tuitionSec) tuitionSec.style.display = 'none';
         renderTutorStudentsGrid();
     } else if (tabKey === 'tuition') {
         if (overviewSec) overviewSec.style.display = 'none';
+        if (reportsSec) reportsSec.style.display = 'none';
         if (diarySec) diarySec.style.display = 'none';
         if (studentsSec) studentsSec.style.display = 'none';
         if (tuitionSec) tuitionSec.style.display = 'block';
