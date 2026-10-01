@@ -1636,6 +1636,45 @@ function toggleStudentTuitionStatus(idx) {
 }
 window.toggleStudentTuitionStatus = toggleStudentTuitionStatus;
 
+function toDateInputValue(d) {
+    if (!d) return "";
+    var yr = d.getFullYear();
+    var mo = String(d.getMonth() + 1).padStart(2, '0');
+    var da = String(d.getDate()).padStart(2, '0');
+    return yr + '-' + mo + '-' + da;
+}
+
+function parseLogDate(dmyStr) {
+    if (!dmyStr) return null;
+    var parts = dmyStr.split('/');
+    if (parts.length >= 3) {
+        return new Date(parseInt(parts[2], 10), parseInt(parts[1], 10) - 1, parseInt(parts[0], 10), 0, 0, 0, 0);
+    }
+    return null;
+}
+
+function parseInputDate(ymdStr) {
+    if (!ymdStr) return null;
+    var parts = ymdStr.split('-');
+    if (parts.length >= 3) {
+        return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10), 0, 0, 0, 0);
+    }
+    return null;
+}
+
+function generateTuitionPeriodTitle(startDateStr, endDateStr) {
+    if (!startDateStr || !endDateStr) return "HỌC PHÍ KỲ NÀY";
+    var sParts = startDateStr.split('-');
+    var eParts = endDateStr.split('-');
+    if (sParts.length < 3 || eParts.length < 3) return "HỌC PHÍ KỲ NÀY";
+    if (sParts[0] === eParts[0] && sParts[1] === eParts[1]) {
+        var m = parseInt(sParts[1], 10);
+        return "HỌC PHÍ THÁNG " + m + "/" + sParts[0];
+    } else {
+        return "HỌC PHÍ " + sParts[2] + "/" + sParts[1] + " – " + eParts[2] + "/" + eParts[1];
+    }
+}
+
 window.tuitionInvoiceModalState = {
     studentName: "",
     displayMonth: "",
@@ -1652,22 +1691,94 @@ window.tuitionInvoiceModalState = {
         qr: true
     },
     discountAmount: 0,
-    surchargeAmount: 0
+    surchargeAmount: 0,
+    startDate: "",
+    endDate: "",
+    customTitle: "",
+    isCustomTitle: false,
+    restoredFromDraft: false
 };
+
+function autoSaveTuitionDraft() {
+    var state = window.tuitionInvoiceModalState;
+    if (!state || !state.studentName) return;
+    try {
+        var key = 'tuitionDraft_' + state.studentName.trim();
+        var draftData = {
+            studentName: state.studentName,
+            template: state.template || 1,
+            toggles: state.toggles || {},
+            discountAmount: state.discountAmount || 0,
+            surchargeAmount: state.surchargeAmount || 0,
+            startDate: state.startDate,
+            endDate: state.endDate,
+            customTitle: state.customTitle || "",
+            isCustomTitle: !!state.isCustomTitle,
+            savedAt: new Date().toISOString()
+        };
+        localStorage.setItem(key, JSON.stringify(draftData));
+    } catch(e) {
+        console.warn("Unable to save draft:", e);
+    }
+}
+window.autoSaveTuitionDraft = autoSaveTuitionDraft;
+
+function saveTuitionDraftModal() {
+    autoSaveTuitionDraft();
+    if (typeof showToast === 'function') {
+        showToast("Đã lưu bản nháp thành công!", "success");
+    }
+}
+window.saveTuitionDraftModal = saveTuitionDraftModal;
+
+function onTuitionPeriodDateChange() {
+    var sInp = document.getElementById('tuitionPeriodStartDate');
+    var eInp = document.getElementById('tuitionPeriodEndDate');
+    var sVal = sInp ? sInp.value : '';
+    var eVal = eInp ? eInp.value : '';
+
+    if (!window.tuitionInvoiceModalState) window.tuitionInvoiceModalState = {};
+    window.tuitionInvoiceModalState.startDate = sVal;
+    window.tuitionInvoiceModalState.endDate = eVal;
+
+    if (!window.tuitionInvoiceModalState.isCustomTitle) {
+        var autoTitle = generateTuitionPeriodTitle(sVal, eVal);
+        window.tuitionInvoiceModalState.customTitle = autoTitle;
+        var titleInp = document.getElementById('tuitionPeriodTitle');
+        if (titleInp) titleInp.value = autoTitle;
+    }
+
+    renderTuitionLivePreview();
+    autoSaveTuitionDraft();
+}
+window.onTuitionPeriodDateChange = onTuitionPeriodDateChange;
+
+function onTuitionPeriodTitleChange() {
+    var titleInp = document.getElementById('tuitionPeriodTitle');
+    var val = titleInp ? titleInp.value.trim() : '';
+
+    if (!window.tuitionInvoiceModalState) window.tuitionInvoiceModalState = {};
+    window.tuitionInvoiceModalState.customTitle = val;
+    window.tuitionInvoiceModalState.isCustomTitle = (val.length > 0);
+
+    renderTuitionLivePreview();
+    autoSaveTuitionDraft();
+}
+window.onTuitionPeriodTitleChange = onTuitionPeriodTitleChange;
 
 function buildTuitionModalForm(st, studentLogs) {
     var formCol = document.getElementById('tuitionInvoiceFormCol');
     if (!formCol) return;
 
-    var totalSess = studentLogs.length > 0 ? studentLogs.length : (st.totalSessions || 1);
+    var state = window.tuitionInvoiceModalState || {};
+    var toggles = state.toggles || {};
+
+    var totalSess = studentLogs.length;
     var totalHours = (totalSess * 1.5).toFixed(1);
     var unitFee = st.tuition || 200000;
     var unitFeeStr = Number(unitFee).toLocaleString('vi-VN') + " đ" + (st.billing_type === 'month' ? '/tháng' : '/buổi');
     var classSubjectStr = (st.classLevel || 'Lớp 12') + (st.subject ? (' • ' + st.subject) : '');
     var datesCountStr = totalSess + " ngày trong kỳ";
-
-    var state = window.tuitionInvoiceModalState || {};
-    var toggles = state.toggles || {};
 
     var fields = [
         { id: "toggleStudent", key: "student", icon: "fa-solid fa-user-graduate", iconColor: "#8E4DFF", title: "Học sinh", desc: "Học sinh — " + st.name, checked: toggles.student !== false },
@@ -1681,7 +1792,15 @@ function buildTuitionModalForm(st, studentLogs) {
         { id: "toggleQr", key: "qr", icon: "fa-solid fa-qrcode", iconColor: "#6366F1", title: "Ảnh QR", desc: "Ảnh QR — Quét VietQR tự động", checked: toggles.qr !== false }
     ];
 
-    var html = '<div style="margin-bottom: 14px;">' +
+    var html = '';
+
+    // Banner khôi phục bản nháp
+    html += '<div id="tuitionDraftRestoredBanner" style="display: ' + (state.restoredFromDraft ? 'flex' : 'none') + '; background: rgba(16, 185, 129, 0.15); border: 1px solid #10B981; border-radius: 12px; padding: 10px 14px; margin-bottom: 14px; font-size: 12.5px; color: #6EE7B7; align-items: center; gap: 8px;">' +
+        '<i class="fa-solid fa-clock-rotate-left" style="font-size: 14px;"></i>' +
+        '<span><b>Đã khôi phục bản nháp lần trước</b> của em ' + st.name + '</span>' +
+    '</div>';
+
+    html += '<div style="margin-bottom: 14px;">' +
         '<div style="font-size: 14.5px; font-weight: 700; color: #FFF; display: flex; align-items: center; gap: 8px;">' +
             '<i class="fa-solid fa-sliders" style="color: #8E4DFF;"></i>' +
             '<span>Tùy chỉnh thông tin hiển thị</span>' +
@@ -1721,6 +1840,28 @@ function buildTuitionModalForm(st, studentLogs) {
 
         html += '</div>';
     });
+
+    // Section Thông tin kỳ học
+    html += '<div style="margin-top: 18px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08);">' +
+        '<div style="font-size: 14px; font-weight: 700; color: #FFF; margin-bottom: 12px; display: flex; align-items: center; gap: 8px;">' +
+            '<i class="fa-regular fa-calendar-days" style="color: #06B6D4;"></i>' +
+            '<span>Thông tin kỳ học & Khoảng ngày</span>' +
+        '</div>' +
+        '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">' +
+            '<div>' +
+                '<label style="display: block; font-size: 11.5px; color: #A6ADCE; margin-bottom: 4px; font-weight: 600;">Từ ngày:</label>' +
+                '<input type="date" id="tuitionPeriodStartDate" value="' + (state.startDate || '') + '" onchange="onTuitionPeriodDateChange()" style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 7px 10px; color: #FFF; font-size: 12.5px; outline: none; box-sizing: border-box;">' +
+            '</div>' +
+            '<div>' +
+                '<label style="display: block; font-size: 11.5px; color: #A6ADCE; margin-bottom: 4px; font-weight: 600;">Đến ngày:</label>' +
+                '<input type="date" id="tuitionPeriodEndDate" value="' + (state.endDate || '') + '" onchange="onTuitionPeriodDateChange()" style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 7px 10px; color: #FFF; font-size: 12.5px; outline: none; box-sizing: border-box;">' +
+            '</div>' +
+        '</div>' +
+        '<div>' +
+            '<label style="display: block; font-size: 11.5px; color: #A6ADCE; margin-bottom: 4px; font-weight: 600;">Tiêu đề kỳ học (có thể sửa tay):</label>' +
+            '<input type="text" id="tuitionPeriodTitle" value="' + (state.customTitle || '') + '" placeholder="Ví dụ: HỌC PHÍ THÁNG 9/2026" oninput="onTuitionPeriodTitleChange()" style="width: 100%; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.15); border-radius: 10px; padding: 8px 12px; color: #FFD23F; font-weight: 700; font-size: 13px; outline: none; box-sizing: border-box;">' +
+        '</div>' +
+    '</div>';
 
     formCol.innerHTML = html;
 }
@@ -1765,6 +1906,7 @@ function onTuitionToggleChange(id, key) {
     }
 
     renderTuitionLivePreview();
+    autoSaveTuitionDraft();
 }
 window.onTuitionToggleChange = onTuitionToggleChange;
 
@@ -1785,6 +1927,7 @@ function onTuitionFeeAdjustmentChange() {
     if (surDesc) surDesc.textContent = "Phụ thu — " + Number(surVal).toLocaleString('vi-VN') + " đ";
 
     renderTuitionLivePreview();
+    autoSaveTuitionDraft();
 }
 window.onTuitionFeeAdjustmentChange = onTuitionFeeAdjustmentChange;
 
@@ -1794,7 +1937,6 @@ function renderTuitionLivePreview() {
 
     var state = window.tuitionInvoiceModalState || {};
     var sName = state.studentName || "";
-    var displayMonth = state.displayMonth || "Kỳ này";
     var tmpl = state.template || window.currentTuitionTemplate || 1;
     var toggles = state.toggles || {};
     var discount = toggles.discount ? (state.discountAmount || 0) : 0;
@@ -1807,22 +1949,28 @@ function renderTuitionLivePreview() {
     if (!st && students.length > 0) st = students[0];
     if (!st) return;
 
-    // Filter logs for this student
+    // Filter logs for this student using startDate and endDate
+    var sDate = parseInputDate(state.startDate);
+    var eDate = parseInputDate(state.endDate);
+    if (eDate) {
+        eDate.setHours(23, 59, 59, 999);
+    }
+
     var studentLogs = [];
     if (st.logs && Array.isArray(st.logs)) {
         st.logs.forEach(function(l) {
-            if (displayMonth === 'all') {
+            var lDate = parseLogDate(l.ngay);
+            if (lDate) {
+                if (sDate && lDate < sDate) return;
+                if (eDate && lDate > eDate) return;
                 studentLogs.push(l);
-            } else if (l.ngay) {
-                var parts = l.ngay.split('/');
-                if (parts.length >= 3 && (parts[1].padStart(2, '0') + '/' + parts[2]) === displayMonth) {
-                    studentLogs.push(l);
-                }
+            } else {
+                studentLogs.push(l);
             }
         });
     }
 
-    var totalSess = studentLogs.length > 0 ? studentLogs.length : (st.totalSessions || 1);
+    var totalSess = studentLogs.length;
     var absentCount = 0;
     var hwDone = 0;
     var hwMiss = 0;
@@ -1839,12 +1987,22 @@ function renderTuitionLivePreview() {
     if (presentCount < 0) presentCount = 0;
     var totalHours = (totalSess * 1.5).toFixed(1);
 
+    // Update form labels
+    var sessDesc = document.getElementById('desc_toggleSessions');
+    if (sessDesc) sessDesc.textContent = "Số buổi học — " + totalSess + " buổi";
+    var hrsDesc = document.getElementById('desc_toggleHours');
+    if (hrsDesc) hrsDesc.textContent = "Số giờ tích lũy — " + totalHours + " giờ";
+    var datesDesc = document.getElementById('desc_toggleDates');
+    if (datesDesc) datesDesc.textContent = "Ngày học — " + totalSess + " ngày trong kỳ";
+
     var unitFee = st.tuition || 200000;
     var baseFee = (st.billing_type === 'month') ? unitFee : (totalSess * unitFee);
     var grandTotal = Math.max(0, baseFee - discount + surcharge);
     var grandTotalStr = Number(grandTotal).toLocaleString('vi-VN') + " đ";
     var unitFeeStr = Number(unitFee).toLocaleString('vi-VN') + " VNĐ" + (st.billing_type === 'month' ? '/tháng' : '/buổi');
     var classSubjectStr = (st.classLevel || 'Lớp 12') + (st.subject ? (' • ' + st.subject) : '');
+
+    var periodTitle = state.customTitle || generateTuitionPeriodTitle(state.startDate, state.endDate);
 
     var bankName = (tutorDataGlobal && tutorDataGlobal.bankName) ? tutorDataGlobal.bankName : "MB Bank";
     var bankAcc = (tutorDataGlobal && tutorDataGlobal.accountNumber) 
@@ -1865,7 +2023,7 @@ function renderTuitionLivePreview() {
         html += '<span style="width: 28px; height: 28px; border-radius: 8px; background: rgba(142, 77, 255, 0.15); color: #8E4DFF; display: flex; align-items: center; justify-content: center; font-size: 14px;"><i class="fa-solid fa-graduation-cap"></i></span>';
         html += '<span style="font-size: 13px; font-weight: 800; letter-spacing: 0.5px; color: #8E4DFF;">PHIẾU THANH TOÁN HỌC PHÍ</span>';
         html += '</div>';
-        html += '<div style="font-size: 12px; color: #64748B; font-weight: 600; margin-bottom: 14px;">KỲ ' + displayMonth + '</div>';
+        html += '<div style="font-size: 12px; color: #64748B; font-weight: 600; margin-bottom: 14px;">' + periodTitle + '</div>';
 
         // Tên học sinh
         if (toggles.student !== false) {
@@ -1918,7 +2076,7 @@ function renderTuitionLivePreview() {
             html += '<div style="font-size: 12px; color: #64748B; margin-top: 2px; font-weight: 500;">' + classSubjectStr + '</div>';
         }
         html += '</div></div>';
-        html += '<div><span class="inv-pill-status" style="background: rgba(142, 77, 255, 0.1); color: #8E4DFF; border: 1px solid rgba(142, 77, 255, 0.25); font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 20px;"><i class="fa-regular fa-calendar-check"></i> KỲ ' + displayMonth + '</span></div>';
+        html += '<div><span class="inv-pill-status" style="background: rgba(142, 77, 255, 0.1); color: #8E4DFF; border: 1px solid rgba(142, 77, 255, 0.25); font-size: 11.5px; font-weight: 700; padding: 4px 10px; border-radius: 20px;"><i class="fa-regular fa-calendar-check"></i> ' + periodTitle + '</span></div>';
         html += '</div>';
 
         // Metrics Grid (Buổi học / Giờ tích lũy)
@@ -1974,7 +2132,7 @@ function renderTuitionLivePreview() {
         html += '<div style="display: flex; gap: 12px; align-items: stretch;">';
         html += '<div style="flex: 1; background: #F1F5F9; border-radius: 12px; padding: 10px 12px; font-size: 11.5px; line-height: 1.45; color: #334155;">';
         html += '<div style="font-weight: 700; color: #0F172A; margin-bottom: 4px;"><i class="fa-regular fa-comment-dots" style="color: #8E4DFF;"></i> Lời nhắn gửi phụ huynh</div>';
-        html += 'Em gửi phụ huynh bé ' + (toggles.student !== false ? ('<b>' + st.name + '</b>') : 'học sinh') + ' tổng kết học phí kỳ <b>' + displayMonth + '</b>. Tổng thanh toán là <b style="color: #8E4DFF;">' + grandTotalStr + '</b>. Em cảm ơn anh/chị!';
+        html += 'Em gửi phụ huynh bé ' + (toggles.student !== false ? ('<b>' + st.name + '</b>') : 'học sinh') + ' tổng kết <b>' + periodTitle.toLowerCase() + '</b>. Tổng thanh toán là <b style="color: #8E4DFF;">' + grandTotalStr + '</b>. Em cảm ơn anh/chị!';
         html += '</div>';
         if (toggles.qr !== false) {
             html += '<div style="width: 105px; flex-shrink: 0; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 12px; padding: 8px; text-align: center;">';
@@ -2016,6 +2174,7 @@ function switchTuitionTemplate(tmpl) {
         }
     }
     renderTuitionLivePreview();
+    autoSaveTuitionDraft();
 }
 window.switchTuitionTemplate = switchTuitionTemplate;
 
@@ -2045,46 +2204,106 @@ function openStudentInvoiceModal(studentName) {
 
     var selMonth = document.getElementById('tuitionMonthFilter') ? document.getElementById('tuitionMonthFilter').value : 'all';
     var now = new Date();
-    var currentMonthStr = String(now.getMonth() + 1).padStart(2, '0') + '/' + now.getFullYear();
-    var displayMonth = (selMonth === 'all') ? currentMonthStr : selMonth;
+    var yr = now.getFullYear();
+    var mo = now.getMonth();
+    if (selMonth && selMonth !== 'all') {
+        var mParts = selMonth.split('/');
+        if (mParts.length >= 2) {
+            mo = parseInt(mParts[0], 10) - 1;
+            yr = parseInt(mParts[1], 10);
+        }
+    }
+    var firstD = new Date(yr, mo, 1);
+    var lastD = new Date(yr, mo + 1, 0);
+    var defaultStartStr = toDateInputValue(firstD);
+    var defaultEndStr = toDateInputValue(lastD);
+    var defaultTitle = "HỌC PHÍ THÁNG " + (mo + 1) + "/" + yr;
 
-    // Filter logs for this student
+    // Check for existing draft in localStorage
+    var draftKey = 'tuitionDraft_' + st.name.trim();
+    var draftRaw = null;
+    try {
+        draftRaw = localStorage.getItem(draftKey);
+    } catch(e) {}
+
+    var restoredDraft = false;
+    var draftObj = null;
+    if (draftRaw) {
+        try {
+            draftObj = JSON.parse(draftRaw);
+            restoredDraft = true;
+        } catch(e) {}
+    }
+
+    if (restoredDraft && draftObj) {
+        window.tuitionInvoiceModalState = {
+            studentName: st.name,
+            template: draftObj.template || 1,
+            toggles: draftObj.toggles || {
+                student: true,
+                class: true,
+                fee: true,
+                sessions: true,
+                hours: true,
+                dates: true,
+                discount: false,
+                surcharge: false,
+                qr: true
+            },
+            discountAmount: draftObj.discountAmount || 0,
+            surchargeAmount: draftObj.surchargeAmount || 0,
+            startDate: draftObj.startDate || defaultStartStr,
+            endDate: draftObj.endDate || defaultEndStr,
+            customTitle: draftObj.customTitle || defaultTitle,
+            isCustomTitle: !!draftObj.isCustomTitle,
+            restoredFromDraft: true
+        };
+    } else {
+        window.tuitionInvoiceModalState = {
+            studentName: st.name,
+            template: window.currentTuitionTemplate || 1,
+            toggles: {
+                student: true,
+                class: true,
+                fee: true,
+                sessions: true,
+                hours: true,
+                dates: true,
+                discount: false,
+                surcharge: false,
+                qr: true
+            },
+            discountAmount: 0,
+            surchargeAmount: 0,
+            startDate: defaultStartStr,
+            endDate: defaultEndStr,
+            customTitle: defaultTitle,
+            isCustomTitle: false,
+            restoredFromDraft: false
+        };
+    }
+
+    if (typeof switchTuitionTemplate === 'function') {
+        switchTuitionTemplate(window.tuitionInvoiceModalState.template);
+    }
+
+    // Filter logs for this student using startDate and endDate
+    var sDate = parseInputDate(window.tuitionInvoiceModalState.startDate);
+    var eDate = parseInputDate(window.tuitionInvoiceModalState.endDate);
+    if (eDate) eDate.setHours(23, 59, 59, 999);
+
     var studentLogs = [];
     if (st.logs && Array.isArray(st.logs)) {
         st.logs.forEach(function(l) {
-            if (selMonth === 'all') {
+            var lDate = parseLogDate(l.ngay);
+            if (lDate) {
+                if (sDate && lDate < sDate) return;
+                if (eDate && lDate > eDate) return;
                 studentLogs.push(l);
-            } else if (l.ngay) {
-                var parts = l.ngay.split('/');
-                if (parts.length >= 3 && (parts[1].padStart(2, '0') + '/' + parts[2]) === selMonth) {
-                    studentLogs.push(l);
-                }
+            } else {
+                studentLogs.push(l);
             }
         });
-    }
-
-    // Initialize State for Modal
-    window.tuitionInvoiceModalState = {
-        studentName: st.name,
-        displayMonth: displayMonth,
-        template: window.currentTuitionTemplate || 1,
-        toggles: {
-            student: true,
-            class: true,
-            fee: true,
-            sessions: true,
-            hours: true,
-            dates: true,
-            discount: false,
-            surcharge: false,
-            qr: true
-        },
-        discountAmount: 0,
-        surchargeAmount: 0
-    };
-
-    if (typeof switchTuitionTemplate === 'function') {
-        switchTuitionTemplate(window.currentTuitionTemplate || 1);
     }
 
     buildTuitionModalForm(st, studentLogs);
@@ -2092,7 +2311,7 @@ function openStudentInvoiceModal(studentName) {
 
     modal.style.display = "flex";
     modal.setAttribute('data-student', st.name);
-    modal.setAttribute('data-month', displayMonth.replace('/', '-'));
+    modal.setAttribute('data-month', (window.tuitionInvoiceModalState.startDate || "").replace(/-/g, ''));
 }
 window.openStudentInvoiceModal = openStudentInvoiceModal;
 
@@ -2103,8 +2322,10 @@ function closeStudentInvoiceModal() {
 window.closeStudentInvoiceModal = closeStudentInvoiceModal;
 
 function saveTuitionDraftModal() {
-    if (typeof showToast === 'function') showToast("Đã lưu bản nháp!", "success");
+    autoSaveTuitionDraft();
+    if (typeof showToast === 'function') showToast("Đã lưu bản nháp thành công!", "success");
 }
+window.saveTuitionDraftModal = saveTuitionDraftModal;
 window.saveTuitionDraftModal = saveTuitionDraftModal;
 
 function exportTuitionModalPdf() {
