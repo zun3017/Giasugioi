@@ -435,6 +435,10 @@
 
             <!-- Footer Action (Logout & Account) -->
             <div class="tutor-sidebar-footer">
+                <button type="button" class="sidebar-theme-btn" onclick="openThemeSwitcher()" title="Đổi chủ đề giao diện">
+                    <i class="fa-solid fa-palette"></i>
+                    <span>Giao diện</span>
+                </button>
                 <button type="button" class="sidebar-footer-btn" data-title="Tài khoản" onclick="openTutorAccountModal()" title="Cài đặt tài khoản">
                     <i class="fa-solid fa-user-gear"></i>
                     <span>Tài khoản</span>
@@ -2339,5 +2343,350 @@
     </script>
     <!-- PWA Install Script -->
     <script src="js/pwa-install.js"></script>
+
+<!-- ================= THEME SWITCHER MODAL (TASK 12.5) ================= -->
+<div id="themeSwitcherPanel" class="theme-switcher-panel" style="display:none;">
+  <div class="theme-switcher-overlay" onclick="closeThemeSwitcher()"></div>
+  <div class="theme-switcher-content">
+    <div class="theme-switcher-header">
+      <h3>🎨 Chọn giao diện</h3>
+      <button type="button" class="theme-switcher-close" onclick="closeThemeSwitcher()">✕</button>
+    </div>
+
+    <div class="theme-switcher-body">
+      <!-- NHÓM A: Presets màu đơn -->
+      <div class="theme-group-label">Màu sắc đơn</div>
+      <div class="theme-presets-row">
+        <div class="theme-preset-item" data-theme="preset-blue" onclick="applyTheme('preset-blue')">
+          <span class="theme-dot" style="background:#2563EB"></span>
+          <span>Xanh gốc</span>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-preset-item" data-theme="preset-hong-hoa" onclick="applyTheme('preset-hong-hoa')">
+          <span class="theme-dot" style="background:#E11D48"></span>
+          <span>Hồng hoa</span>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-preset-item" data-theme="preset-hong-nhe" onclick="applyTheme('preset-hong-nhe')">
+          <span class="theme-dot" style="background:#F472B6"></span>
+          <span>Hồng nhẹ</span>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-preset-item" data-theme="preset-matcha" onclick="applyTheme('preset-matcha')">
+          <span class="theme-dot" style="background:#059669"></span>
+          <span>Matcha Tea</span>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-preset-item" data-theme="preset-linen" onclick="applyTheme('preset-linen')">
+          <span class="theme-dot" style="background:#854D0E"></span>
+          <span>Linen Cocoa</span>
+          <span class="theme-check">✓</span>
+        </div>
+      </div>
+
+      <!-- NHÓM B: Giao diện đầy đủ -->
+      <div class="theme-group-label" style="display:flex; justify-content:space-between; align-items:center;">
+        <span>Giao diện đầy đủ</span>
+        <span style="font-size:11px; opacity:0.75; font-weight:normal;">30 kiểu phong cách</span>
+      </div>
+      <div class="theme-full-grid">
+        <!-- Default: Tím Đêm -->
+        <div class="theme-full-item" data-theme="theme-dark-purple" onclick="applyTheme('theme-dark-purple')">
+          <span class="theme-orb" style="background:linear-gradient(135deg,#0B0826,#8E4DFF)"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Tím Đêm</div>
+            <div class="theme-variant">Giao diện gốc (Tối)</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+
+        <!-- 1. Azure Mist -->
+        <div class="theme-full-item" data-theme="theme-azure-mist-full" onclick="applyTheme('theme-azure-mist-full')">
+          <span class="theme-orb" style="background:linear-gradient(135deg,#EEF4FB,#7AB4E8)"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Azure Mist</div>
+            <div class="theme-variant">Nền & bóng</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-full-item" data-theme="theme-azure-mist-minimal" onclick="applyTheme('theme-azure-mist-minimal')">
+          <span class="theme-orb" style="background:#7AB4E8"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Azure Mist</div>
+            <div class="theme-variant">Tối giản</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+
+        <!-- 2. Woodland Cottage -->
+        <div class="theme-full-item" data-theme="theme-woodland-cottage-full" onclick="applyTheme('theme-woodland-cottage-full')">
+          <span class="theme-orb" style="background:linear-gradient(135deg,#5C4033,#8B6E58)"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Woodland Cottage</div>
+            <div class="theme-variant">Nền & bóng</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-full-item" data-theme="theme-woodland-cottage-minimal" onclick="applyTheme('theme-woodland-cottage-minimal')">
+          <span class="theme-orb" style="background:#8B6E58"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Woodland Cottage</div>
+            <div class="theme-variant">Tối giản</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+
+        <!-- 3. Sage Blush -->
+        <div class="theme-full-item" data-theme="theme-sage-blush-full" onclick="applyTheme('theme-sage-blush-full')">
+          <span class="theme-orb" style="background:linear-gradient(135deg,#6B8E78,#C49A88)"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Sage Blush</div>
+            <div class="theme-variant">Nền & bóng</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-full-item" data-theme="theme-sage-blush-minimal" onclick="applyTheme('theme-sage-blush-minimal')">
+          <span class="theme-orb" style="background:#6B8E78"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Sage Blush</div>
+            <div class="theme-variant">Tối giản</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+
+        <!-- 4. Golden Caramel -->
+        <div class="theme-full-item" data-theme="theme-golden-caramel-full" onclick="applyTheme('theme-golden-caramel-full')">
+          <span class="theme-orb" style="background:linear-gradient(135deg,#D48820,#9E6010)"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Golden Caramel</div>
+            <div class="theme-variant">Nền & bóng</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-full-item" data-theme="theme-golden-caramel-minimal" onclick="applyTheme('theme-golden-caramel-minimal')">
+          <span class="theme-orb" style="background:#D48820"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Golden Caramel</div>
+            <div class="theme-variant">Tối giản</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+
+        <!-- 5. Pastel Alpine Meadow -->
+        <div class="theme-full-item" data-theme="theme-pastel-alpine-full" onclick="applyTheme('theme-pastel-alpine-full')">
+          <span class="theme-orb" style="background:linear-gradient(135deg,#4A7A50,#98D0A0)"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Pastel Alpine</div>
+            <div class="theme-variant">Nền & bóng</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-full-item" data-theme="theme-pastel-alpine-minimal" onclick="applyTheme('theme-pastel-alpine-minimal')">
+          <span class="theme-orb" style="background:#4A7A50"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Pastel Alpine</div>
+            <div class="theme-variant">Tối giản</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+
+        <!-- 6. Dreamy Cosmic Sky -->
+        <div class="theme-full-item" data-theme="theme-dreamy-cosmic-full" onclick="applyTheme('theme-dreamy-cosmic-full')">
+          <span class="theme-orb" style="background:linear-gradient(135deg,#0A0A1A,#A040FF)"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Dreamy Cosmic</div>
+            <div class="theme-variant">Nền & bóng (Tối)</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-full-item" data-theme="theme-dreamy-cosmic-minimal" onclick="applyTheme('theme-dreamy-cosmic-minimal')">
+          <span class="theme-orb" style="background:#A040FF"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Dreamy Cosmic</div>
+            <div class="theme-variant">Tối giản (Tối)</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+
+        <!-- 7. Sunset Meadow Breeze -->
+        <div class="theme-full-item" data-theme="theme-sunset-meadow-full" onclick="applyTheme('theme-sunset-meadow-full')">
+          <span class="theme-orb" style="background:linear-gradient(135deg,#D45020,#5C7A40)"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Sunset Meadow</div>
+            <div class="theme-variant">Nền & bóng</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-full-item" data-theme="theme-sunset-meadow-minimal" onclick="applyTheme('theme-sunset-meadow-minimal')">
+          <span class="theme-orb" style="background:#D45020"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Sunset Meadow</div>
+            <div class="theme-variant">Tối giản</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+
+        <!-- 8. Neon Seoul -->
+        <div class="theme-full-item" data-theme="theme-neon-seoul-full" onclick="applyTheme('theme-neon-seoul-full')">
+          <span class="theme-orb" style="background:linear-gradient(135deg,#0D0820,#00D4AA)"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Neon Seoul</div>
+            <div class="theme-variant">Nền & bóng (Tối)</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-full-item" data-theme="theme-neon-seoul-minimal" onclick="applyTheme('theme-neon-seoul-minimal')">
+          <span class="theme-orb" style="background:#00D4AA"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Neon Seoul</div>
+            <div class="theme-variant">Tối giản (Tối)</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+
+        <!-- 9. Mystic Blue Room -->
+        <div class="theme-full-item" data-theme="theme-mystic-blue-full" onclick="applyTheme('theme-mystic-blue-full')">
+          <span class="theme-orb" style="background:linear-gradient(135deg,#0A1020,#4080D0)"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Mystic Blue</div>
+            <div class="theme-variant">Nền & bóng (Tối)</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-full-item" data-theme="theme-mystic-blue-minimal" onclick="applyTheme('theme-mystic-blue-minimal')">
+          <span class="theme-orb" style="background:#4080D0"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Mystic Blue</div>
+            <div class="theme-variant">Tối giản (Tối)</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+
+        <!-- 10. Blue Lime Canopy -->
+        <div class="theme-full-item" data-theme="theme-blue-lime-full" onclick="applyTheme('theme-blue-lime-full')">
+          <span class="theme-orb" style="background:linear-gradient(135deg,#1A5090,#80C820)"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Blue Lime</div>
+            <div class="theme-variant">Nền & bóng</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-full-item" data-theme="theme-blue-lime-minimal" onclick="applyTheme('theme-blue-lime-minimal')">
+          <span class="theme-orb" style="background:#1A5090"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Blue Lime</div>
+            <div class="theme-variant">Tối giản</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+
+        <!-- 11. Cloud Meadow -->
+        <div class="theme-full-item" data-theme="theme-cloud-meadow-full" onclick="applyTheme('theme-cloud-meadow-full')">
+          <span class="theme-orb" style="background:linear-gradient(135deg,#5888B0,#6BA870)"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Cloud Meadow</div>
+            <div class="theme-variant">Nền & bóng</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-full-item" data-theme="theme-cloud-meadow-minimal" onclick="applyTheme('theme-cloud-meadow-minimal')">
+          <span class="theme-orb" style="background:#5888B0"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Cloud Meadow</div>
+            <div class="theme-variant">Tối giản</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+
+        <!-- 12. Soft Blue + White -->
+        <div class="theme-full-item" data-theme="theme-soft-blue-white-full" onclick="applyTheme('theme-soft-blue-white-full')">
+          <span class="theme-orb" style="background:linear-gradient(135deg,#DCEEFC,#2070C0)"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Soft Blue</div>
+            <div class="theme-variant">Nền & bóng</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-full-item" data-theme="theme-soft-blue-white-minimal" onclick="applyTheme('theme-soft-blue-white-minimal')">
+          <span class="theme-orb" style="background:#2070C0"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Soft Blue</div>
+            <div class="theme-variant">Tối giản</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+
+        <!-- 13. Blossom Noir -->
+        <div class="theme-full-item" data-theme="theme-blossom-noir-full" onclick="applyTheme('theme-blossom-noir-full')">
+          <span class="theme-orb" style="background:linear-gradient(135deg,#100810,#D44080)"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Blossom Noir</div>
+            <div class="theme-variant">Nền & bóng (Tối)</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-full-item" data-theme="theme-blossom-noir-minimal" onclick="applyTheme('theme-blossom-noir-minimal')">
+          <span class="theme-orb" style="background:#D44080"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Blossom Noir</div>
+            <div class="theme-variant">Tối giản (Tối)</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+
+        <!-- 14. Violet Planet -->
+        <div class="theme-full-item" data-theme="theme-violet-planet-full" onclick="applyTheme('theme-violet-planet-full')">
+          <span class="theme-orb" style="background:linear-gradient(135deg,#0C0618,#9040D0)"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Violet Planet</div>
+            <div class="theme-variant">Nền & bóng (Tối)</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-full-item" data-theme="theme-violet-planet-minimal" onclick="applyTheme('theme-violet-planet-minimal')">
+          <span class="theme-orb" style="background:#9040D0"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Violet Planet</div>
+            <div class="theme-variant">Tối giản (Tối)</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+
+        <!-- 15. Claude -->
+        <div class="theme-full-item" data-theme="theme-claude-full" onclick="applyTheme('theme-claude-full')">
+          <span class="theme-orb" style="background:linear-gradient(135deg,#FAF7F2,#CC785C)"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Claude</div>
+            <div class="theme-variant">Nền & bóng (Ấm)</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+        <div class="theme-full-item" data-theme="theme-claude-minimal" onclick="applyTheme('theme-claude-minimal')">
+          <span class="theme-orb" style="background:#CC785C"></span>
+          <div class="theme-item-meta">
+            <div class="theme-name">Claude</div>
+            <div class="theme-variant">Tối giản (Ấm)</div>
+          </div>
+          <span class="theme-check">✓</span>
+        </div>
+      </div>
+
+      <!-- NHÓM C: Màu tùy chọn đơn -->
+      <div class="theme-group-label">Màu tùy chọn đơn</div>
+      <div class="theme-custom-row">
+        <input type="color" id="customColorPicker" value="#2563EB" title="Chọn màu tùy chỉnh">
+        <span style="font-size:12.5px; font-weight:600; color:var(--text-secondary);">Mã HEX:</span>
+        <input type="text" id="customColorHex" class="theme-custom-hex" value="#2563EB" maxlength="7">
+        <button type="button" class="theme-btn-apply-custom" onclick="applyCustomTheme()">Áp dụng màu</button>
+      </div>
+    </div>
+
+    <div class="theme-switcher-footer">
+      <span>Đang dùng: <b class="theme-current-badge" id="themeCurrentLabel">Tím Đêm</b></span>
+      <span style="opacity:0.65; font-size:11px;">Hệ thống 36 Theme</span>
+    </div>
+  </div>
+</div>
+
 </body>
 </html>

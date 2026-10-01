@@ -582,21 +582,25 @@ function renderRevenueBarChart(selM, selY) {
     var barPct = (period === 12) ? 0.76 : (period === 6 ? 0.50 : 0.32);
     var catPct = (period === 12) ? 0.88 : (period === 6 ? 0.72 : 0.50);
 
+    var themeComp = getComputedStyle(document.documentElement);
+    var chartThemeBar = (themeComp.getPropertyValue('--chart-bar') || '#4A72E8').trim();
+    var chartThemeRgb = (themeComp.getPropertyValue('--chart-bar-rgb') || '74, 114, 232').trim();
+
     var datasets = [];
     if (isLine) {
         var lineGrad = ctx.createLinearGradient(0, 0, 0, 220);
-        lineGrad.addColorStop(0, 'rgba(74, 114, 232, 0.40)');
-        lineGrad.addColorStop(1, 'rgba(74, 114, 232, 0.02)');
+        lineGrad.addColorStop(0, 'rgba(' + chartThemeRgb + ', 0.40)');
+        lineGrad.addColorStop(1, 'rgba(' + chartThemeRgb + ', 0.02)');
 
         datasets = [{
             label: 'Doanh thu',
             data: dataValues,
-            borderColor: '#4A72E8',
+            borderColor: chartThemeBar,
             borderWidth: 3,
             backgroundColor: lineGrad,
             fill: true,
             tension: 0.35,
-            pointBackgroundColor: '#4A72E8',
+            pointBackgroundColor: chartThemeBar,
             pointBorderColor: '#FFFFFF',
             pointBorderWidth: 2,
             pointRadius: 4.5,
@@ -607,8 +611,8 @@ function renderRevenueBarChart(selM, selY) {
             {
                 label: 'Track',
                 data: trackData,
-                backgroundColor: 'rgba(74, 114, 232, 0.16)',
-                hoverBackgroundColor: 'rgba(74, 114, 232, 0.16)',
+                backgroundColor: 'rgba(' + chartThemeRgb + ', 0.16)',
+                hoverBackgroundColor: 'rgba(' + chartThemeRgb + ', 0.16)',
                 borderRadius: 8,
                 borderSkipped: false,
                 barPercentage: barPct,
@@ -619,8 +623,8 @@ function renderRevenueBarChart(selM, selY) {
             {
                 label: 'Doanh thu',
                 data: dataValues,
-                backgroundColor: '#4A72E8',
-                hoverBackgroundColor: '#3B60D4',
+                backgroundColor: chartThemeBar,
+                hoverBackgroundColor: chartThemeBar,
                 borderRadius: 8,
                 borderSkipped: false,
                 barPercentage: barPct,
@@ -8208,3 +8212,250 @@ function mapSubjectToSelectValue(val) {
     
     return "Toán học"; // Mặc định nếu không khớp
 }
+
+
+// ============================================================================
+// PHASE 12: MULTI-THEME SYSTEM (36 THEMES + CUSTOM COLOR PICKER)
+// ============================================================================
+
+var THEME_NAMES = {
+  'theme-dark-purple': 'Tím Đêm (Gốc)',
+  'preset-blue': 'Xanh gốc',
+  'preset-hong-hoa': 'Hồng hoa',
+  'preset-hong-nhe': 'Hồng nhẹ',
+  'preset-matcha': 'Matcha Tea',
+  'preset-linen': 'Linen Cocoa',
+  'theme-azure-mist-full': 'Azure Mist · Nền & bóng',
+  'theme-azure-mist-minimal': 'Azure Mist · Tối giản',
+  'theme-woodland-cottage-full': 'Woodland Cottage · Nền & bóng',
+  'theme-woodland-cottage-minimal': 'Woodland Cottage · Tối giản',
+  'theme-sage-blush-full': 'Sage Blush · Nền & bóng',
+  'theme-sage-blush-minimal': 'Sage Blush · Tối giản',
+  'theme-golden-caramel-full': 'Golden Caramel · Nền & bóng',
+  'theme-golden-caramel-minimal': 'Golden Caramel · Tối giản',
+  'theme-pastel-alpine-full': 'Pastel Alpine · Nền & bóng',
+  'theme-pastel-alpine-minimal': 'Pastel Alpine · Tối giản',
+  'theme-dreamy-cosmic-full': 'Dreamy Cosmic · Nền & bóng (Tối)',
+  'theme-dreamy-cosmic-minimal': 'Dreamy Cosmic · Tối giản (Tối)',
+  'theme-sunset-meadow-full': 'Sunset Meadow · Nền & bóng',
+  'theme-sunset-meadow-minimal': 'Sunset Meadow · Tối giản',
+  'theme-neon-seoul-full': 'Neon Seoul · Nền & bóng (Tối)',
+  'theme-neon-seoul-minimal': 'Neon Seoul · Tối giản (Tối)',
+  'theme-mystic-blue-full': 'Mystic Blue · Nền & bóng (Tối)',
+  'theme-mystic-blue-minimal': 'Mystic Blue · Tối giản (Tối)',
+  'theme-blue-lime-full': 'Blue Lime · Nền & bóng',
+  'theme-blue-lime-minimal': 'Blue Lime · Tối giản',
+  'theme-cloud-meadow-full': 'Cloud Meadow · Nền & bóng',
+  'theme-cloud-meadow-minimal': 'Cloud Meadow · Tối giản',
+  'theme-soft-blue-white-full': 'Soft Blue · Nền & bóng',
+  'theme-soft-blue-white-minimal': 'Soft Blue · Tối giản',
+  'theme-blossom-noir-full': 'Blossom Noir · Nền & bóng (Tối)',
+  'theme-blossom-noir-minimal': 'Blossom Noir · Tối giản (Tối)',
+  'theme-violet-planet-full': 'Violet Planet · Nền & bóng (Tối)',
+  'theme-violet-planet-minimal': 'Violet Planet · Tối giản (Tối)',
+  'theme-claude-full': 'Claude · Nền & bóng (Ấm)',
+  'theme-claude-minimal': 'Claude · Tối giản (Ấm)'
+};
+
+function applyTheme(themeId) {
+  var root = document.documentElement;
+  // 1. Dọn sạch các biến inline do custom theme gán
+  var propsToClear = [
+    '--color-primary', '--color-primary-light', '--color-primary-dark',
+    '--color-primary-rgb', '--chart-bar', '--chart-bar-rgb', '--btn-bg',
+    '--btn-text', '--nav-active-bg', '--nav-active-text', '--bg-page',
+    '--bg-page-gradient', '--bg-sidebar', '--bg-card', '--bg-card-alt',
+    '--bg-input', '--border-color', '--border-card', '--text-primary',
+    '--text-secondary', '--text-muted', '--shadow-card', '--shadow-primary',
+    '--is-dark-theme'
+  ];
+  propsToClear.forEach(function(p) { root.style.removeProperty(p); });
+
+  // 2. Xóa các class theme cũ
+  var allThemes = Object.keys(THEME_NAMES);
+  allThemes.forEach(function(t) {
+    root.classList.remove(t);
+  });
+
+  // 3. Kích hoạt theme mới
+  root.classList.add(themeId);
+  localStorage.setItem('tutorTheme', themeId);
+
+  // 4. Đồng bộ active state trong switcher panel
+  document.querySelectorAll('#themeSwitcherPanel [data-theme]').forEach(function(el) {
+    el.classList.toggle('active', el.dataset.theme === themeId);
+  });
+
+  // 5. Cập nhật nhãn theme
+  var label = document.getElementById('themeCurrentLabel');
+  if (label) label.textContent = THEME_NAMES[themeId] || themeId;
+
+  // 6. Cập nhật biểu đồ doanh thu Chart.js (Task 12.6)
+  if (typeof rerenderChartsForTheme === 'function') {
+    rerenderChartsForTheme();
+  }
+
+  // 7. Cập nhật FullCalendar nếu đang ở trang Lịch
+  if (typeof calendar !== 'undefined' && calendar && typeof calendar.render === 'function') {
+    calendar.render();
+  }
+}
+
+function openThemeSwitcher() {
+  var panel = document.getElementById('themeSwitcherPanel');
+  if (!panel) return;
+  panel.style.display = 'flex';
+
+  var cur = localStorage.getItem('tutorTheme') || 'theme-dark-purple';
+  if (cur.startsWith('custom:')) {
+    var hex = cur.split(':')[1];
+    var p = document.getElementById('customColorPicker');
+    var h = document.getElementById('customColorHex');
+    if (p) p.value = hex;
+    if (h) h.value = hex.toUpperCase();
+    var label = document.getElementById('themeCurrentLabel');
+    if (label) label.textContent = 'Màu tùy chỉnh ' + hex.toUpperCase();
+    document.querySelectorAll('#themeSwitcherPanel [data-theme]').forEach(function(el) {
+      el.classList.remove('active');
+    });
+  } else {
+    document.querySelectorAll('#themeSwitcherPanel [data-theme]').forEach(function(el) {
+      el.classList.toggle('active', el.dataset.theme === cur);
+    });
+    var label = document.getElementById('themeCurrentLabel');
+    if (label) label.textContent = THEME_NAMES[cur] || cur;
+  }
+}
+
+function closeThemeSwitcher() {
+  var panel = document.getElementById('themeSwitcherPanel');
+  if (panel) panel.style.display = 'none';
+}
+
+// Task 12.6: Re-render Chart.js khi đổi theme
+function rerenderChartsForTheme() {
+  if (typeof renderRevenueBarChart === 'function') {
+    renderRevenueBarChart();
+  } else if (typeof revenueBarChartInstance !== 'undefined' && revenueBarChartInstance) {
+    var comp = getComputedStyle(document.documentElement);
+    var chartColor = (comp.getPropertyValue('--chart-bar') || '#4A72E8').trim();
+    var chartRgb = (comp.getPropertyValue('--chart-bar-rgb') || '74, 114, 232').trim();
+    if (revenueBarChartInstance.data.datasets.length > 1) {
+      revenueBarChartInstance.data.datasets[0].backgroundColor = 'rgba(' + chartRgb + ', 0.16)';
+      revenueBarChartInstance.data.datasets[1].backgroundColor = chartColor;
+      revenueBarChartInstance.data.datasets[1].hoverBackgroundColor = chartColor;
+    } else if (revenueBarChartInstance.data.datasets.length === 1) {
+      revenueBarChartInstance.data.datasets[0].borderColor = chartColor;
+      revenueBarChartInstance.data.datasets[0].pointBackgroundColor = chartColor;
+    }
+    revenueBarChartInstance.update();
+  }
+}
+
+// Task 12.7: Custom Color Picker
+function applyCustomTheme() {
+  var hexInput = document.getElementById('customColorHex');
+  if (!hexInput) return;
+  var hex = hexInput.value.trim();
+  if (!/^#[0-9A-Fa-f]{6}$/.test(hex)) {
+    if (typeof showToast === 'function') {
+      showToast('Mã màu không hợp lệ. Vui lòng nhập đúng #RRGGBB (ví dụ: #2563EB)', 'error');
+    } else {
+      alert('Mã màu không hợp lệ. Vui lòng nhập đúng #RRGGBB (ví dụ: #2563EB)');
+    }
+    return;
+  }
+
+  // Parse RGB
+  var r = parseInt(hex.slice(1,3), 16);
+  var g = parseInt(hex.slice(3,5), 16);
+  var b = parseInt(hex.slice(5,7), 16);
+
+  // Phối màu phụ: sáng hơn 50% và tối hơn 30%
+  var lr = Math.round(r + (255 - r) * 0.5);
+  var lg = Math.round(g + (255 - g) * 0.5);
+  var lb = Math.round(b + (255 - b) * 0.5);
+
+  var dr = Math.round(r * 0.7);
+  var dg = Math.round(g * 0.7);
+  var db = Math.round(b * 0.7);
+
+  var toHex = function(n) { return Math.max(0, Math.min(255, n)).toString(16).padStart(2, '0'); };
+
+  var root = document.documentElement;
+  // Xóa class theme tĩnh
+  var allThemes = Object.keys(THEME_NAMES);
+  allThemes.forEach(function(t) { root.classList.remove(t); });
+
+  // Thiết lập biến CSS
+  root.style.setProperty('--color-primary', hex);
+  root.style.setProperty('--color-primary-light', '#' + toHex(lr) + toHex(lg) + toHex(lb));
+  root.style.setProperty('--color-primary-dark', '#' + toHex(dr) + toHex(dg) + toHex(db));
+  root.style.setProperty('--color-primary-rgb', r + ', ' + g + ', ' + b);
+  root.style.setProperty('--chart-bar', hex);
+  root.style.setProperty('--chart-bar-rgb', r + ', ' + g + ', ' + b);
+  root.style.setProperty('--btn-bg', hex);
+  root.style.setProperty('--btn-text', '#FFFFFF');
+  root.style.setProperty('--nav-active-bg', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.12)');
+  root.style.setProperty('--nav-active-text', hex);
+
+  // Giao diện màu tùy chọn luôn ở chế độ sáng thanh lịch
+  root.style.setProperty('--bg-page', '#FAFAFA');
+  root.style.setProperty('--bg-page-gradient', '#FAFAFA');
+  root.style.setProperty('--bg-sidebar', '#F5F5F5');
+  root.style.setProperty('--bg-card', '#FFFFFF');
+  root.style.setProperty('--bg-card-alt', '#F0F0F0');
+  root.style.setProperty('--bg-input', '#FFFFFF');
+  root.style.setProperty('--border-color', 'rgba(' + r + ', ' + g + ', ' + b + ', 0.25)');
+  root.style.setProperty('--border-card', '#E5E5E5');
+  root.style.setProperty('--text-primary', '#1A1A1A');
+  root.style.setProperty('--text-secondary', '#555555');
+  root.style.setProperty('--text-muted', '#888888');
+  root.style.setProperty('--shadow-card', '0 4px 16px rgba(0,0,0,0.06)');
+  root.style.setProperty('--shadow-primary', '0 4px 15px rgba(' + r + ', ' + g + ', ' + b + ', 0.3)');
+  root.style.setProperty('--is-dark-theme', '0');
+
+  localStorage.setItem('tutorTheme', 'custom:' + hex);
+
+  document.querySelectorAll('#themeSwitcherPanel [data-theme]').forEach(function(el) {
+    el.classList.remove('active');
+  });
+
+  var label = document.getElementById('themeCurrentLabel');
+  if (label) label.textContent = 'Màu tùy chỉnh ' + hex.toUpperCase();
+
+  if (typeof rerenderChartsForTheme === 'function') rerenderChartsForTheme();
+  if (typeof calendar !== 'undefined' && calendar && typeof calendar.render === 'function') calendar.render();
+  if (typeof showToast === 'function') showToast('Đã áp dụng màu tùy chỉnh!', 'success');
+}
+
+// Đồng bộ 2 chiều giữa Color Picker & Input HEX
+function setupCustomColorSync() {
+  var picker = document.getElementById('customColorPicker');
+  var hexInput = document.getElementById('customColorHex');
+  if (picker && hexInput) {
+    picker.addEventListener('input', function() {
+      hexInput.value = this.value.toUpperCase();
+    });
+    hexInput.addEventListener('input', function() {
+      var v = this.value.trim();
+      if (/^#[0-9A-Fa-f]{6}$/.test(v)) {
+        picker.value = v;
+      }
+    });
+  }
+}
+
+// Khởi chạy khi DOM sẵn sàng
+document.addEventListener('DOMContentLoaded', function() {
+  setupCustomColorSync();
+  var saved = localStorage.getItem('tutorTheme');
+  if (saved && saved.startsWith('custom:')) {
+    var hex = saved.split(':')[1];
+    var hexInput = document.getElementById('customColorHex');
+    var picker = document.getElementById('customColorPicker');
+    if (hexInput) hexInput.value = hex;
+    if (picker) picker.value = hex;
+    applyCustomTheme();
+  }
+});
