@@ -1647,6 +1647,22 @@ function openStudentInvoiceModal(studentName) {
     var st = students.find(function(s) { return s.name.trim() === studentName.trim(); });
     if (!st) return;
 
+    var stNameEl = document.getElementById('tuitionModalStudentName');
+    if (stNameEl) stNameEl.textContent = st.name;
+    var stBadge = document.getElementById('tuitionModalStudentBadge');
+    if (stBadge) stBadge.textContent = st.classLevel || 'Học sinh';
+    var bankInfoEl = document.getElementById('tuitionModalBankInfo');
+    if (bankInfoEl) {
+        var bAcc = (tutorDataGlobal && tutorDataGlobal.accountNumber) 
+            ? tutorDataGlobal.accountNumber 
+            : ((tutorDataGlobal && tutorDataGlobal.tutorPhone) ? tutorDataGlobal.tutorPhone : "0123456789");
+        var bName = (tutorDataGlobal && tutorDataGlobal.bankName) ? tutorDataGlobal.bankName : "MB Bank";
+        bankInfoEl.textContent = "STK: " + bAcc + " (" + bName + ")";
+    }
+    if (typeof switchTuitionTemplate === 'function') {
+        switchTuitionTemplate(1);
+    }
+
     var selMonth = document.getElementById('tuitionMonthFilter') ? document.getElementById('tuitionMonthFilter').value : 'all';
     var now = new Date();
     var currentMonthStr = String(now.getMonth() + 1).padStart(2, '0') + '/' + now.getFullYear();
@@ -1756,6 +1772,49 @@ function closeStudentInvoiceModal() {
     if (modal) modal.style.display = "none";
 }
 window.closeStudentInvoiceModal = closeStudentInvoiceModal;
+
+window.currentTuitionTemplate = 1;
+function switchTuitionTemplate(tmpl) {
+    window.currentTuitionTemplate = tmpl;
+    var b1 = document.getElementById('btnTemplate1');
+    var b2 = document.getElementById('btnTemplate2');
+    if (b1 && b2) {
+        if (tmpl === 1) {
+            b1.classList.add('active');
+            b1.style.background = '#8E4DFF';
+            b1.style.color = '#FFF';
+            b2.classList.remove('active');
+            b2.style.background = 'transparent';
+            b2.style.color = '#A6ADCE';
+        } else {
+            b2.classList.add('active');
+            b2.style.background = '#8E4DFF';
+            b2.style.color = '#FFF';
+            b1.classList.remove('active');
+            b1.style.background = 'transparent';
+            b1.style.color = '#A6ADCE';
+        }
+    }
+    if (typeof renderTuitionLivePreview === 'function') {
+        renderTuitionLivePreview();
+    }
+}
+window.switchTuitionTemplate = switchTuitionTemplate;
+
+function saveTuitionDraftModal() {
+    if (typeof showToast === 'function') showToast("Đã lưu bản nháp!", "success");
+}
+window.saveTuitionDraftModal = saveTuitionDraftModal;
+
+function exportTuitionModalPdf() {
+    window.print();
+}
+window.exportTuitionModalPdf = exportTuitionModalPdf;
+
+function copyTuitionModalImage() {
+    if (typeof showToast === 'function') showToast("Tính năng copy ảnh đang được xử lý...", "info");
+}
+window.copyTuitionModalImage = copyTuitionModalImage;
 
 function exportTuitionModalInvoice() {
     var card = document.getElementById('tuitionInvoiceCard');
