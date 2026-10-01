@@ -11,13 +11,82 @@ function formatScheduleCell(val) {
     return "<span style='color:#10B981; font-weight:600; font-size:13.5px; white-space:nowrap;'>" + val + "</span>";
 }
 
-function renderTutorKpiCards() {
+var tutorOverviewMonth = new Date().getMonth() + 1;
+var tutorOverviewYear = new Date().getFullYear();
+
+function updateOverviewMonthSelectorUI() {
+    var displayEl = document.getElementById('overviewMonthDisplay');
+    var nextBtn = document.getElementById('overviewNextMonthBtn');
+    if (displayEl) {
+        displayEl.innerText = "Tháng " + tutorOverviewMonth + "/" + tutorOverviewYear;
+    }
+    var now = new Date();
+    var curM = now.getMonth() + 1;
+    var curY = now.getFullYear();
+    var isCurrentOrFuture = (tutorOverviewYear > curY) || (tutorOverviewYear === curY && tutorOverviewMonth >= curM);
+    if (nextBtn) {
+        nextBtn.disabled = isCurrentOrFuture;
+        nextBtn.style.opacity = isCurrentOrFuture ? "0.3" : "1";
+        nextBtn.style.cursor = isCurrentOrFuture ? "not-allowed" : "pointer";
+    }
+}
+window.updateOverviewMonthSelectorUI = updateOverviewMonthSelectorUI;
+
+function navigateOverviewMonth(delta) {
+    var now = new Date();
+    var curM = now.getMonth() + 1;
+    var curY = now.getFullYear();
+
+    var nextM = tutorOverviewMonth + delta;
+    var nextY = tutorOverviewYear;
+    if (nextM < 1) {
+        nextM = 12;
+        nextY--;
+    } else if (nextM > 12) {
+        nextM = 1;
+        nextY++;
+    }
+
+    // Do not allow selecting future months
+    if (nextY > curY || (nextY === curY && nextM > curM)) {
+        return;
+    }
+
+    tutorOverviewMonth = nextM;
+    tutorOverviewYear = nextY;
+    updateOverviewMonthSelectorUI();
+    renderTutorKpiCards(null, tutorOverviewMonth, tutorOverviewYear);
+    renderUpcomingSchedule(null, tutorOverviewMonth, tutorOverviewYear);
+    if (typeof renderOverviewCharts === 'function') {
+        renderOverviewCharts(tutorOverviewMonth, tutorOverviewYear);
+    }
+}
+window.navigateOverviewMonth = navigateOverviewMonth;
+
+function renderTutorKpiCards(data, selM, selY) {
     var studentCountEl = document.getElementById('kpiStudentCount');
     var sessionCountEl = document.getElementById('kpiSessionCount');
     var totalHoursEl = document.getElementById('kpiTotalHours');
     var tuitionTotalEl = document.getElementById('kpiTuitionTotal');
+    var sessionLabelEl = document.getElementById('kpiSessionLabel');
+    var tuitionLabelEl = document.getElementById('kpiTuitionLabel');
 
     if (!studentCountEl) return;
+
+    selM = selM || tutorOverviewMonth || (new Date().getMonth() + 1);
+    selY = selY || tutorOverviewYear || (new Date().getFullYear());
+
+    var now = new Date();
+    var curM = now.getMonth() + 1;
+    var curY = now.getFullYear();
+    var isCurrentMonth = (selM === curM && selY === curY);
+
+    if (sessionLabelEl) {
+        sessionLabelEl.innerText = isCurrentMonth ? "Buổi dạy tháng này" : ("Buổi dạy Tháng " + selM);
+    }
+    if (tuitionLabelEl) {
+        tuitionLabelEl.innerText = isCurrentMonth ? "Học phí tháng này" : ("Học phí Tháng " + selM);
+    }
 
     var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
     var students = (store && store.students && store.students.length > 0)
@@ -27,10 +96,6 @@ function renderTutorKpiCards() {
     var count = students.length;
     var totalSessions = 0;
     var totalFee = 0;
-
-    var now = new Date();
-    var curM = now.getMonth() + 1;
-    var curY = now.getFullYear();
 
     students.forEach(function(st) {
         var unit = (st.tuition && st.tuition > 0) ? Number(st.tuition) : 200000;
@@ -42,7 +107,7 @@ function renderTutorKpiCards() {
                     if (parts.length >= 3) {
                         var m = parseInt(parts[1], 10);
                         var y = parseInt(parts[2], 10);
-                        if (m !== curM || y !== curY) {
+                        if (m !== selM || y !== selY) {
                             inMonth = false;
                         }
                     }
@@ -55,8 +120,8 @@ function renderTutorKpiCards() {
         }
     });
 
-    // Fallback: nếu mock data các log không trùng tháng hiện tại, đếm các buổi "Có mặt" gần nhất
-    if (totalSessions === 0 && students.length > 0) {
+    // Fallback: nếu mock data các log không trùng tháng hiện tại và đang ở tháng hiện tại, đếm các buổi gần nhất
+    if (totalSessions === 0 && students.length > 0 && isCurrentMonth) {
         students.forEach(function(st) {
             var unit = (st.tuition && st.tuition > 0) ? Number(st.tuition) : 200000;
             if (st.logs && Array.isArray(st.logs)) {
@@ -80,56 +145,36 @@ function renderTutorKpiCards() {
 }
 window.renderTutorKpiCards = renderTutorKpiCards;
 
-function renderUpcomingSchedule(scheduleList) {
+function renderUpcomingSchedule(scheduleList, selM, selY) {
     var todayListEl = document.getElementById('upcomingTodayList');
     var tomorrowListEl = document.getElementById('upcomingTomorrowList');
     var todayTitleEl = document.getElementById('upcomingTodayHeaderTitle');
     var tomorrowTitleEl = document.getElementById('upcomingTomorrowHeaderTitle');
     var todayCountBadge = document.getElementById('upcomingTodayCountBadge');
     var tomorrowCountBadge = document.getElementById('upcomingTomorrowCountBadge');
+    var mainTitleEl = document.getElementById('upcomingScheduleTitleText');
+    var subtextEl = document.getElementById('upcomingScheduleSubtext');
 
     if (!todayListEl || !tomorrowListEl) return;
 
-    var dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
-    var today = new Date();
-    var tomorrow = new Date(today.getTime() + 86400000);
+    selM = selM || tutorOverviewMonth || (new Date().getMonth() + 1);
+    selY = selY || tutorOverviewYear || (new Date().getFullYear());
 
-    var todayKey = dayKeys[today.getDay()];
-    var tomorrowKey = dayKeys[tomorrow.getDay()];
+    var now = new Date();
+    var curM = now.getMonth() + 1;
+    var curY = now.getFullYear();
+    var isCurrentMonth = (selM === curM && selY === curY);
 
-    function formatDmy(d) {
-        var day = String(d.getDate()).padStart(2, '0');
-        var month = String(d.getMonth() + 1).padStart(2, '0');
-        var year = d.getFullYear();
-        return day + "/" + month + "/" + year;
-    }
-
-    var fmtFn = (typeof window.formatDateWithDayOfWeek === 'function') 
-        ? window.formatDateWithDayOfWeek 
-        : function(str) { return str; };
-
-    var todayDateFormatted = fmtFn(formatDmy(today));
-    var tomorrowDateFormatted = fmtFn(formatDmy(tomorrow));
-
-    if (todayTitleEl) {
-        todayTitleEl.innerHTML = '<i class="fa-solid fa-sun" style="color: #FFD23F; margin-right: 6px;"></i> Hôm nay — ' + todayDateFormatted;
-    }
-    if (tomorrowTitleEl) {
-        tomorrowTitleEl.innerHTML = '<i class="fa-solid fa-calendar-day" style="color: #8E4DFF; margin-right: 6px;"></i> Ngày mai — ' + tomorrowDateFormatted;
-    }
-
-    // Lấy dữ liệu schedule
     var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
     var sched = scheduleList || (store && store.tutorSchedule ? store.tutorSchedule : []);
     var students = (store && store.students) ? store.students : (tutorDataGlobal && tutorDataGlobal.students ? tutorDataGlobal.students : []);
 
-    // Helper map subject
+    // Helper map subject & style
     var subjectMap = {};
     students.forEach(function(st) {
         subjectMap[st.name.trim()] = st.subject || "Gia sư";
     });
 
-    // Helper student style
     var studentColorMap = {
         "Lê Minh Thư": { bg: "rgba(142, 77, 255, 0.15)", border: "#8E4DFF", text: "#C4B5FD" },
         "Nguyễn Hoàng Nam": { bg: "rgba(16, 185, 129, 0.15)", border: "#10B981", text: "#6EE7B7" },
@@ -148,66 +193,162 @@ function renderUpcomingSchedule(scheduleList) {
         return palette[hash % palette.length];
     }
 
-    function buildItems(dayKey) {
-        var items = [];
-        if (Array.isArray(sched)) {
-            sched.forEach(function(s) {
-                var timeSlot = s[dayKey];
-                if (timeSlot && String(timeSlot).trim() !== "") {
-                    items.push({
-                        studentName: s.studentName.trim(),
-                        time: timeSlot.trim(),
-                        subject: subjectMap[s.studentName.trim()] || "Gia sư 1-1",
-                        color: s.color || ""
-                    });
-                }
-            });
+    if (isCurrentMonth) {
+        if (mainTitleEl) mainTitleEl.innerText = "Lịch dạy sắp tới";
+        if (subtextEl) subtextEl.innerHTML = '<i class="fa-solid fa-bolt" style="color: #8E4DFF;"></i> Hôm nay & Ngày mai';
+
+        var dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
+        var today = new Date();
+        var tomorrow = new Date(today.getTime() + 86400000);
+
+        var todayKey = dayKeys[today.getDay()];
+        var tomorrowKey = dayKeys[tomorrow.getDay()];
+
+        function formatDmy(d) {
+            var day = String(d.getDate()).padStart(2, '0');
+            var month = String(d.getMonth() + 1).padStart(2, '0');
+            var year = d.getFullYear();
+            return day + "/" + month + "/" + year;
         }
-        return items;
-    }
 
-    var todayItems = buildItems(todayKey);
-    var tomorrowItems = buildItems(tomorrowKey);
+        var fmtFn = (typeof window.formatDateWithDayOfWeek === 'function') 
+            ? window.formatDateWithDayOfWeek 
+            : function(str) { return str; };
 
-    if (todayCountBadge) todayCountBadge.innerText = todayItems.length + " buổi";
-    if (tomorrowCountBadge) tomorrowCountBadge.innerText = tomorrowItems.length + " buổi";
+        var todayDateFormatted = fmtFn(formatDmy(today));
+        var tomorrowDateFormatted = fmtFn(formatDmy(tomorrow));
 
-    // Render Hôm nay
-    if (todayItems.length === 0) {
-        todayListEl.innerHTML = '<div class="upcoming-empty-card"><i class="fa-solid fa-face-smile-beam" style="font-size: 22px; color: #10B981; margin-bottom: 6px;"></i><span>Không có lịch dạy hôm nay 🎉</span></div>';
+        if (todayTitleEl) {
+            todayTitleEl.innerHTML = '<i class="fa-solid fa-sun" style="color: #FFD23F; margin-right: 6px;"></i> Hôm nay — ' + todayDateFormatted;
+        }
+        if (tomorrowTitleEl) {
+            tomorrowTitleEl.innerHTML = '<i class="fa-solid fa-calendar-day" style="color: #8E4DFF; margin-right: 6px;"></i> Ngày mai — ' + tomorrowDateFormatted;
+        }
+
+        function buildItems(dayKey) {
+            var items = [];
+            if (Array.isArray(sched)) {
+                sched.forEach(function(s) {
+                    var timeSlot = s[dayKey];
+                    if (timeSlot && String(timeSlot).trim() !== "") {
+                        items.push({
+                            studentName: s.studentName.trim(),
+                            time: timeSlot.trim(),
+                            subject: subjectMap[s.studentName.trim()] || "Gia sư 1-1",
+                            color: s.color || ""
+                        });
+                    }
+                });
+            }
+            return items;
+        }
+
+        var todayItems = buildItems(todayKey);
+        var tomorrowItems = buildItems(tomorrowKey);
+
+        if (todayCountBadge) todayCountBadge.innerText = todayItems.length + " buổi";
+        if (tomorrowCountBadge) tomorrowCountBadge.innerText = tomorrowItems.length + " buổi";
+
+        // Render Hôm nay
+        if (todayItems.length === 0) {
+            todayListEl.innerHTML = '<div class="upcoming-empty-card"><i class="fa-solid fa-face-smile-beam" style="font-size: 22px; color: #10B981; margin-bottom: 6px;"></i><span>Không có lịch dạy hôm nay 🎉</span></div>';
+        } else {
+            var html = "";
+            todayItems.forEach(function(it) {
+                var st = getStudentStyle(it.studentName);
+                var customBorder = it.color || st.border;
+                html += '<div class="upcoming-session-card">' +
+                    '<div class="upcoming-session-info">' +
+                        '<span class="upcoming-student-tag" style="background: ' + st.bg + '; border-color: ' + customBorder + '; color: ' + st.text + ';"><i class="fa-solid fa-user-graduate"></i> ' + it.studentName + '</span>' +
+                        '<span class="upcoming-subject-badge"><i class="fa-solid fa-book-bookmark" style="color: #8E4DFF;"></i> ' + it.subject + '</span>' +
+                    '</div>' +
+                    '<span class="upcoming-time-badge"><i class="fa-regular fa-clock"></i> ' + it.time + '</span>' +
+                '</div>';
+            });
+            todayListEl.innerHTML = html;
+        }
+
+        // Render Ngày mai
+        if (tomorrowItems.length === 0) {
+            tomorrowListEl.innerHTML = '<div class="upcoming-empty-card"><i class="fa-solid fa-mug-hot" style="font-size: 20px; color: #8E95BE; margin-bottom: 6px;"></i><span>Không có lịch dạy ngày mai 🎉</span></div>';
+        } else {
+            var html = "";
+            tomorrowItems.forEach(function(it) {
+                var st = getStudentStyle(it.studentName);
+                var customBorder = it.color || st.border;
+                html += '<div class="upcoming-session-card">' +
+                    '<div class="upcoming-session-info">' +
+                        '<span class="upcoming-student-tag" style="background: ' + st.bg + '; border-color: ' + customBorder + '; color: ' + st.text + ';"><i class="fa-solid fa-user-graduate"></i> ' + it.studentName + '</span>' +
+                        '<span class="upcoming-subject-badge"><i class="fa-solid fa-book-bookmark" style="color: #8E4DFF;"></i> ' + it.subject + '</span>' +
+                    '</div>' +
+                    '<span class="upcoming-time-badge"><i class="fa-regular fa-clock"></i> ' + it.time + '</span>' +
+                '</div>';
+            });
+            tomorrowListEl.innerHTML = html;
+        }
     } else {
-        var html = "";
-        todayItems.forEach(function(it) {
-            var st = getStudentStyle(it.studentName);
-            var customBorder = it.color || st.border;
-            html += '<div class="upcoming-session-card">' +
-                '<div class="upcoming-session-info">' +
-                    '<span class="upcoming-student-tag" style="background: ' + st.bg + '; border-color: ' + customBorder + '; color: ' + st.text + ';"><i class="fa-solid fa-user-graduate"></i> ' + it.studentName + '</span>' +
-                    '<span class="upcoming-subject-badge"><i class="fa-solid fa-book-bookmark" style="color: #8E4DFF;"></i> ' + it.subject + '</span>' +
-                '</div>' +
-                '<span class="upcoming-time-badge"><i class="fa-regular fa-clock"></i> ' + it.time + '</span>' +
-            '</div>';
-        });
-        todayListEl.innerHTML = html;
-    }
+        // Viewing past month: show sessions conducted in that month from student logs
+        if (mainTitleEl) mainTitleEl.innerText = "Lịch dạy Tháng " + selM + "/" + selY;
+        if (subtextEl) subtextEl.innerHTML = '<i class="fa-solid fa-history" style="color: #8E4DFF;"></i> Dữ liệu lịch sử Tháng ' + selM + '/' + selY;
 
-    // Render Ngày mai
-    if (tomorrowItems.length === 0) {
-        tomorrowListEl.innerHTML = '<div class="upcoming-empty-card"><i class="fa-solid fa-mug-hot" style="font-size: 20px; color: #8E95BE; margin-bottom: 6px;"></i><span>Không có lịch dạy ngày mai 🎉</span></div>';
-    } else {
-        var html = "";
-        tomorrowItems.forEach(function(it) {
-            var st = getStudentStyle(it.studentName);
-            var customBorder = it.color || st.border;
-            html += '<div class="upcoming-session-card">' +
-                '<div class="upcoming-session-info">' +
-                    '<span class="upcoming-student-tag" style="background: ' + st.bg + '; border-color: ' + customBorder + '; color: ' + st.text + ';"><i class="fa-solid fa-user-graduate"></i> ' + it.studentName + '</span>' +
-                    '<span class="upcoming-subject-badge"><i class="fa-solid fa-book-bookmark" style="color: #8E4DFF;"></i> ' + it.subject + '</span>' +
-                '</div>' +
-                '<span class="upcoming-time-badge"><i class="fa-regular fa-clock"></i> ' + it.time + '</span>' +
-            '</div>';
+        var monthLogs = [];
+        students.forEach(function(st) {
+            if (st.logs && Array.isArray(st.logs)) {
+                st.logs.forEach(function(log) {
+                    if (log.ngay) {
+                        var parts = log.ngay.split('/');
+                        if (parts.length >= 3) {
+                            var m = parseInt(parts[1], 10);
+                            var y = parseInt(parts[2], 10);
+                            if (m === selM && y === selY) {
+                                monthLogs.push({
+                                    studentName: st.name.trim(),
+                                    date: log.ngay,
+                                    topic: log.topic || "",
+                                    chuyenCan: log.chuyenCan || "Có mặt",
+                                    subject: subjectMap[st.name.trim()] || "Gia sư 1-1"
+                                });
+                            }
+                        }
+                    }
+                });
+            }
         });
-        tomorrowListEl.innerHTML = html;
+
+        var half = Math.ceil(monthLogs.length / 2);
+        var firstHalf = monthLogs.slice(0, half);
+        var secondHalf = monthLogs.slice(half);
+
+        if (todayTitleEl) {
+            todayTitleEl.innerHTML = '<i class="fa-solid fa-calendar-check" style="color: #FFD23F; margin-right: 6px;"></i> Buổi dạy đầu tháng (' + firstHalf.length + ')';
+        }
+        if (tomorrowTitleEl) {
+            tomorrowTitleEl.innerHTML = '<i class="fa-solid fa-calendar-check" style="color: #8E4DFF; margin-right: 6px;"></i> Buổi dạy cuối tháng (' + secondHalf.length + ')';
+        }
+        if (todayCountBadge) todayCountBadge.innerText = firstHalf.length + " buổi";
+        if (tomorrowCountBadge) tomorrowCountBadge.innerText = secondHalf.length + " buổi";
+
+        function renderMonthLogs(listEl, items, emptyText) {
+            if (!items || items.length === 0) {
+                listEl.innerHTML = '<div class="upcoming-empty-card"><i class="fa-regular fa-calendar-xmark" style="font-size: 20px; color: #8E95BE; margin-bottom: 6px;"></i><span>' + emptyText + '</span></div>';
+            } else {
+                var html = "";
+                items.forEach(function(it) {
+                    var st = getStudentStyle(it.studentName);
+                    html += '<div class="upcoming-session-card">' +
+                        '<div class="upcoming-session-info">' +
+                            '<span class="upcoming-student-tag" style="background: ' + st.bg + '; border-color: ' + st.border + '; color: ' + st.text + ';"><i class="fa-solid fa-user-graduate"></i> ' + it.studentName + '</span>' +
+                            '<span class="upcoming-subject-badge" title="' + it.topic + '"><i class="fa-solid fa-book-bookmark" style="color: #8E4DFF;"></i> ' + (it.topic ? (it.topic.length > 25 ? it.topic.substring(0, 25) + '...' : it.topic) : it.subject) + '</span>' +
+                        '</div>' +
+                        '<span class="upcoming-time-badge"><i class="fa-regular fa-calendar"></i> ' + it.date + '</span>' +
+                    '</div>';
+                });
+                listEl.innerHTML = html;
+            }
+        }
+
+        renderMonthLogs(todayListEl, firstHalf, "Không có buổi dạy ghi nhận");
+        renderMonthLogs(tomorrowListEl, secondHalf, "Không có buổi dạy ghi nhận");
     }
 }
 window.renderUpcomingSchedule = renderUpcomingSchedule;
@@ -1405,8 +1546,9 @@ function switchTutorNavTab(element, tabKey) {
         if (diarySec) diarySec.style.display = 'none';
         if (studentsSec) studentsSec.style.display = 'none';
         if (tuitionSec) tuitionSec.style.display = 'none';
-        renderTutorKpiCards();
-        renderUpcomingSchedule();
+        updateOverviewMonthSelectorUI();
+        renderTutorKpiCards(null, tutorOverviewMonth, tutorOverviewYear);
+        renderUpcomingSchedule(null, tutorOverviewMonth, tutorOverviewYear);
     } else if (tabKey === 'reports') {
         if (overviewSec) overviewSec.style.display = 'none';
         if (reportsSec) reportsSec.style.display = 'block';
@@ -1513,8 +1655,9 @@ window.initTutorSidebarState = initTutorSidebarState;
             }
             
             // Render 4 KPI Cards for Overview
-            renderTutorKpiCards();
-            renderUpcomingSchedule();
+            updateOverviewMonthSelectorUI();
+            renderTutorKpiCards(data, tutorOverviewMonth, tutorOverviewYear);
+            renderUpcomingSchedule(null, tutorOverviewMonth, tutorOverviewYear);
             
             // Hiển thị thông báo chạy chữ từ Admin
             var marqueeContainer = document.getElementById('tutorMarqueeContainer');
