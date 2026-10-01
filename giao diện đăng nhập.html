@@ -2,24 +2,13 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Hệ Thống Quản Lý Học Tập | Cổng Thông Tin</title>
     
-    <!-- PWA & Favicon -->
-    <link rel="icon" type="image/png" href="https://i.postimg.cc/66rKbPmb/trinh-duyet.png">
-    <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#3B82F6">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Gia Sư">
-    <link rel="apple-touch-icon" href="https://i.postimg.cc/66rKbPmb/trinh-duyet.png">
-    
-    <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <script>
         tailwind.config = {
@@ -56,9 +45,9 @@
             from { transform: rotate(0deg); }
             to { transform: rotate(360deg); }
         }
-        /* Hiệu ứng chuyển tab mượt mà */
+        /* Hiệu ứng mượt mà khi chuyển trang */
         .page-transition {
-            transition: opacity 0.35s ease-in-out, transform 0.35s ease-in-out;
+            transition: opacity 0.4s ease-in-out, transform 0.4s ease-in-out;
         }
         .page-hidden {
             opacity: 0;
@@ -78,16 +67,14 @@
 
 <body class="relative min-h-screen bg-gradient-to-b from-primary-50 via-white to-primary-50 text-slate-800 antialiased overflow-x-hidden selection:bg-primary-200 selection:text-primary-900">
     
-    <!-- Hiệu ứng quả cầu ánh sáng nền -->
     <div class="absolute top-[-10%] left-[-5%] w-[40rem] h-[40rem] bg-blue-400 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 pointer-events-none z-0"></div>
     <div class="absolute top-[30%] right-[-10%] w-[35rem] h-[35rem] bg-cyan-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 pointer-events-none z-0"></div>
 
-    <!-- Header Navigation Bar -->
     <header class="relative z-50 bg-white/80 backdrop-blur-md border-b border-gray-100 sticky top-0 w-full">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="flex justify-between items-center h-20">
                 <!-- Logo -->
-                <a href="index.html" class="flex-shrink-0 flex items-center gap-3 cursor-pointer no-underline text-inherit">
+                <div class="flex-shrink-0 flex items-center gap-3 cursor-pointer" onclick="window.location.href='index.html'">
                     <div class="w-10 h-10 bg-gradient-to-tr from-primary-700 to-primary-500 rounded-xl flex items-center justify-center shadow-md shadow-primary-500/30">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path d="M12 14l9-5-9-5-9 5 9 5z" />
@@ -98,26 +85,26 @@
                         <h1 class="text-xl font-bold text-slate-900 tracking-tight leading-tight">Hệ thống giáo dục</h1>
                         <p class="text-xs text-slate-500 font-medium">Cổng thông tin trực tuyến</p>
                     </div>
-                </a>
+                </div>
 
                 <!-- Desktop Navigation -->
                 <nav class="hidden md:flex items-center space-x-1 lg:space-x-2" id="desktopNav">
-                    <a href="index.html" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:text-primary-600 hover:bg-primary-50 transition-colors flex items-center gap-2 no-underline">
+                    <button onclick="window.location.href='index.html'" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:text-primary-600 hover:bg-primary-50 transition-colors flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
                         Trang chủ
-                    </a>
+                    </button>
                     <!-- Nút PH/HS (Mặc định active) -->
-                    <button type="button" onclick="switchTab('page-ph-hs')" id="btn-ph-hs" class="nav-btn active px-5 py-2.5 rounded-full text-sm font-bold bg-teal-600 text-white shadow-md shadow-teal-500/20 hover:bg-teal-700 transition-all flex items-center gap-2">
+                    <button onclick="switchTab('page-ph-hs')" id="btn-ph-hs" class="nav-btn active px-5 py-2.5 rounded-full text-sm font-bold bg-teal-600 text-white shadow-md shadow-teal-500/20 hover:bg-teal-700 transition-all flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z" /></svg>
                         PH/HS
                     </button>
                     <!-- Nút BÀI TẬP -->
-                    <button type="button" onclick="switchTab('page-bai-tap')" id="btn-bai-tap" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:text-primary-600 hover:bg-primary-50 transition-colors flex items-center gap-2">
+                    <button onclick="switchTab('page-bai-tap')" id="btn-bai-tap" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:text-primary-600 hover:bg-primary-50 transition-colors flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                         BÀI TẬP
                     </button>
                     <!-- Nút GIA SƯ -->
-                    <button type="button" onclick="switchTab('page-gia-su')" id="btn-gia-su" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:text-primary-600 hover:bg-primary-50 transition-colors flex items-center gap-2">
+                    <button onclick="switchTab('page-gia-su')" id="btn-gia-su" class="nav-btn px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:text-primary-600 hover:bg-primary-50 transition-colors flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M21 13.255A23.931 23.931 0 0112 15c-3.183 0-6.22-.62-9-1.745M16 6V4a2 2 0 00-2-2h-4a2 2 0 00-2 2v2m4 6h.01M5 20h14a2 2 0 002-2V8a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" /></svg>
                         GIA SƯ
                     </button>
@@ -125,7 +112,7 @@
 
                 <!-- Mobile menu button -->
                 <div class="md:hidden flex items-center">
-                    <button type="button" id="mobileMenuBtn" class="text-slate-500 hover:text-primary-600 focus:outline-none p-2 bg-slate-50 rounded-lg">
+                    <button id="mobileMenuBtn" class="text-slate-500 hover:text-primary-600 focus:outline-none p-2 bg-slate-50 rounded-lg">
                         <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16" />
                         </svg>
@@ -137,16 +124,15 @@
         <!-- Mobile Menu -->
         <div id="mobileMenu" class="hidden md:hidden bg-white border-b border-gray-100 absolute w-full shadow-lg">
             <div class="px-4 pt-2 pb-6 space-y-2">
-                <a href="index.html" class="block w-full text-left px-4 py-3 rounded-xl text-base font-medium text-slate-700 hover:bg-primary-50 no-underline">Trang chủ</a>
-                <button type="button" onclick="switchTab('page-ph-hs')" id="mob-btn-ph-hs" class="w-full text-left px-4 py-3 rounded-xl text-base font-bold bg-teal-50 text-teal-600">PH/HS</button>
-                <button type="button" onclick="switchTab('page-bai-tap')" id="mob-btn-bai-tap" class="w-full text-left px-4 py-3 rounded-xl text-base font-medium text-slate-700 hover:bg-primary-50">BÀI TẬP</button>
-                <button type="button" onclick="switchTab('page-gia-su')" id="mob-btn-gia-su" class="w-full text-left px-4 py-3 rounded-xl text-base font-medium text-slate-700 hover:bg-primary-50">GIA SƯ</button>
+                <button onclick="window.location.href='index.html'" class="w-full text-left px-4 py-3 rounded-xl text-base font-medium text-slate-700 hover:bg-primary-50">Trang chủ</button>
+                <button onclick="switchTab('page-ph-hs')" id="mob-btn-ph-hs" class="w-full text-left px-4 py-3 rounded-xl text-base font-bold bg-teal-50 text-teal-600">PH/HS</button>
+                <button onclick="switchTab('page-bai-tap')" id="mob-btn-bai-tap" class="w-full text-left px-4 py-3 rounded-xl text-base font-medium text-slate-700 hover:bg-primary-50">Bài tập</button>
+                <button onclick="switchTab('page-gia-su')" id="mob-btn-gia-su" class="w-full text-left px-4 py-3 rounded-xl text-base font-medium text-slate-700 hover:bg-primary-50">Gia sư</button>
             </div>
         </div>
     </header>
 
-    <!-- Toast Notification Component -->
-    <div id="toastNotification" class="fixed top-24 right-4 z-[100] transform translate-x-full opacity-0 transition-all duration-300 pointer-events-none">
+    <div id="toastNotification" class="fixed top-24 right-4 z-[100] transform translate-x-full opacity-0 transition-all duration-300">
         <div class="bg-white px-5 py-4 rounded-2xl shadow-xl border-l-4 flex items-center gap-3 min-w-[300px]">
             <div id="toastIcon" class="w-8 h-8 rounded-full flex items-center justify-center shrink-0">
                 <!-- Icon chèn qua JS -->
@@ -158,52 +144,32 @@
         </div>
     </div>
 
-    <!-- Modal Chọn Học Sinh (Trường hợp 1 SĐT đăng ký nhiều con) -->
-    <div id="childSelectorModal" class="hidden fixed inset-0 bg-slate-900/50 backdrop-blur-sm z-[9999] flex items-center justify-center p-4">
-        <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full shadow-2xl border border-gray-100 text-center animate-in fade-in zoom-in duration-200">
-            <div class="w-16 h-16 bg-teal-50 text-teal-600 rounded-2xl flex items-center justify-center mx-auto mb-4 text-2xl shadow-sm">
-                <i class="fa-solid fa-users"></i>
-            </div>
-            <h3 class="text-xl font-bold text-slate-800 mb-2">Vui lòng chọn học sinh</h3>
-            <p class="text-sm text-slate-500 mb-6 leading-relaxed">Số điện thoại này đăng ký cho nhiều con. Hãy chọn tên học sinh bạn muốn xem kết quả học tập:</p>
-            
-            <div id="childrenBtnContainer" class="space-y-3 mb-6">
-                <!-- Thẻ các nút tên con sẽ được render động từ JS -->
-            </div>
-
-            <button type="button" onclick="closeChildSelectorModal()" class="w-full py-3 px-4 rounded-xl text-sm font-semibold text-slate-600 bg-slate-100 hover:bg-slate-200 transition-colors">
-                Hủy bỏ
-            </button>
-        </div>
-    </div>
-
-    <!-- VÙNG NỘI DUNG CHÍNH (SPA) -->
-    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-10 pb-24 overflow-hidden">
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-12 pb-24 overflow-hidden">
         
-        <!-- ================= SECTION 1: PH/HS ================= -->
+        <!-- SECTION: PH/HS -->
         <section id="page-ph-hs" class="page-transition page-visible">
             
-            <div class="text-center max-w-3xl mx-auto mb-10">
+            <div class="text-center max-w-3xl mx-auto mb-12">
                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-100 border border-teal-200 mb-6 shadow-sm">
                     <span class="text-yellow-500 text-sm">⭐</span>
                     <span class="text-xs sm:text-sm font-bold text-teal-700 tracking-wide uppercase">Hệ Thống Tra Cứu Học Tập</span>
                 </div>
                 
-                <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-800 tracking-tight leading-tight mb-5">
+                <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-800 tracking-tight leading-tight mb-6">
                     Khám phá kết quả <br class="hidden sm:block" />
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-teal-500 to-primary-600">Học tập của bạn</span> ✨
                 </h2>
                 
-                <p class="text-base sm:text-lg text-slate-500 font-medium">
+                <p class="text-lg sm:text-xl text-slate-500 font-medium">
                     Tra cứu điểm số và theo dõi tiến trình học tập mọi lúc, mọi nơi 🚀
                 </p>
             </div>
 
             <!-- Form Tra cứu PH/HS -->
-            <div class="max-w-2xl mx-auto mb-6">
-                <form id="formPhHs" class="bg-white p-2 sm:p-2.5 rounded-full shadow-2xl shadow-teal-500/20 border border-gray-100 flex items-center transition-all duration-300 focus-within:ring-4 focus-within:ring-teal-100 hover:shadow-glow">
+            <div class="max-w-2xl mx-auto mb-20">
+                <form id="formPhHs" class="bg-white p-2.5 rounded-full shadow-2xl shadow-teal-500/20 border border-gray-100 flex items-center transition-all duration-300 focus-within:ring-4 focus-within:ring-teal-100 hover:shadow-glow">
                     
-                    <div class="pl-4 sm:pl-5 pr-2 sm:pr-3 text-slate-400">
+                    <div class="pl-5 pr-3 text-slate-400">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
                         </svg>
@@ -211,11 +177,11 @@
                     
                     <input 
                         type="text" id="maHocSinh"
-                        class="flex-grow bg-transparent text-slate-800 text-sm sm:text-base px-2 py-3 focus:outline-none placeholder-slate-400 font-medium w-full"
-                        placeholder="Nhập số điện thoại tra cứu (VD: 0912345678)..." required autocomplete="off"
+                        class="flex-grow bg-transparent text-slate-800 text-base sm:text-lg px-2 py-3 focus:outline-none placeholder-slate-400 font-medium w-full"
+                        placeholder="Nhập mã học sinh để tra cứu..." required autocomplete="off"
                     >
                     
-                    <button type="submit" id="btnSubmitPhHs" class="flex-shrink-0 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3 px-5 sm:py-3.5 sm:px-8 rounded-full flex items-center gap-2 transition-all duration-200 active:scale-95 shadow-md shadow-teal-500/30">
+                    <button type="submit" id="btnSubmitPhHs" class="flex-shrink-0 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3.5 px-6 sm:px-8 rounded-full flex items-center gap-2 transition-all duration-200 active:scale-95">
                         <span class="btn-text">Tra cứu</span>
                         <svg class="btn-icon h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -228,85 +194,67 @@
                 </form>
             </div>
 
-            <!-- Nút Tra Cứu Nhanh 1 Chạm Demo PH/HS -->
-            <div class="max-w-2xl mx-auto mb-16 p-3 bg-white/70 backdrop-blur-sm rounded-2xl border border-teal-100 shadow-sm text-xs text-slate-500">
-                <div class="mb-2 font-semibold text-slate-700 flex items-center gap-1.5">
-                    <span class="text-amber-500">⚡</span> Tra cứu Dùng thử nhanh 1 chạm:
-                </div>
-                <div class="flex gap-2 flex-wrap">
-                    <button type="button" onclick="fillQuickStudent('0912345678')" class="bg-teal-50 hover:bg-teal-100 border border-teal-200 text-teal-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">
-                        👦 Nguyễn Hoàng Nam (0912345678)
-                    </button>
-                    <button type="button" onclick="fillQuickStudent('0987654321')" class="bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">
-                        👧 Lê Minh Thư (0987654321)
-                    </button>
-                    <button type="button" onclick="fillQuickStudent('0905123456')" class="bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">
-                        👦 Phạm Hải Đăng (0905123456)
-                    </button>
-                </div>
-            </div>
-
-            <!-- 4 Thẻ tính năng PH/HS -->
+            <!-- 4 Thẻ tính năng -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Card 1 -->
                 <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                    <div class="w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300 shadow-sm">
+                    <div class="w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M7 12l3-3 3 3 4-4M8 21l4-4 4 4M3 4h18M4 4h16v12a1 1 0 01-1 1H5a1 1 0 01-1-1V4z" /></svg>
                     </div>
                     <h3 class="text-lg font-bold text-slate-800 mb-2">Kết quả học tập</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Xem điểm số chi tiết và bảng thống kê kết quả học tập qua từng buổi học.</p>
+                    <p class="text-sm text-slate-500 leading-relaxed">Xem điểm số và kết quả các môn học trong học kỳ hiện tại.</p>
                 </div>
                 <!-- Card 2 -->
                 <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300 shadow-sm">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M5 3v4M3 5h4M6 17v4m-2-2h4m5-16l2.286 6.857L21 12l-5.714 2.143L13 21l-2.286-6.857L5 12l5.714-2.143L13 3z" /></svg>
                     </div>
                     <h3 class="text-lg font-bold text-slate-800 mb-2">Thành tích</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Khám phá huy hiệu nỗ lực, danh hiệu đạt được và khen thưởng của gia sư.</p>
+                    <p class="text-sm text-slate-500 leading-relaxed">Khám phá thành tích, bằng khen và các danh hiệu đã đạt được.</p>
                 </div>
                 <!-- Card 3 -->
                 <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                    <div class="w-14 h-14 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-green-600 group-hover:text-white transition-colors duration-300 shadow-sm">
+                    <div class="w-14 h-14 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-green-600 group-hover:text-white transition-colors duration-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
                     </div>
                     <h3 class="text-lg font-bold text-slate-800 mb-2">Tiến trình học tập</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Theo dõi lộ trình bài học, mức độ hoàn thành và sự tiến bộ từng tuần.</p>
+                    <p class="text-sm text-slate-500 leading-relaxed">Theo dõi quá trình học tập và sự tiến bộ qua từng giai đoạn.</p>
                 </div>
                 <!-- Card 4 -->
                 <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                    <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300 shadow-sm">
+                    <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
                     </div>
                     <h3 class="text-lg font-bold text-slate-800 mb-2">Thông tin chi tiết</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Xem lời dặn dò, nhật ký buổi học và các thông báo mới nhất từ gia sư.</p>
+                    <p class="text-sm text-slate-500 leading-relaxed">Xem thông tin chi tiết và các thông báo mới nhất từ hệ thống.</p>
                 </div>
             </div>
         </section>
 
-        <!-- ================= SECTION 2: BÀI TẬP ================= -->
+        <!-- Đổi page-bai-tap thành ẩn mặc định vì page-ph-hs sẽ làm màn hình chính -->
         <section id="page-bai-tap" class="page-transition page-hidden">
             
-            <div class="text-center max-w-3xl mx-auto mb-10">
+            <div class="text-center max-w-3xl mx-auto mb-12">
                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 border border-blue-200 mb-6 shadow-sm">
                     <span class="text-yellow-500 text-sm">⭐</span>
                     <span class="text-xs sm:text-sm font-bold text-primary-700 tracking-wide uppercase">Cổng Nộp Bài Tập Học Viên</span>
                 </div>
                 
-                <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-800 tracking-tight leading-tight mb-5">
+                <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-800 tracking-tight leading-tight mb-6">
                     Đăng nhập & Nộp bài <br class="hidden sm:block" />
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-cyan-500">Bài tập học viên</span> 📝
                 </h2>
                 
-                <p class="text-base sm:text-lg text-slate-500 font-medium">
+                <p class="text-lg sm:text-xl text-slate-500 font-medium">
                     Nộp bài tập của bạn trực tuyến và theo dõi kết quả chấm điểm nhanh chóng, thuận tiện 🚀
                 </p>
             </div>
 
-            <!-- Form Tra cứu Bài Tập -->
-            <div class="max-w-2xl mx-auto mb-6">
-                <form id="formBaiTap" class="bg-white p-2 sm:p-2.5 rounded-full shadow-2xl shadow-primary-500/20 border border-gray-100 flex items-center transition-all duration-300 focus-within:ring-4 focus-within:ring-primary-100 hover:shadow-glow">
+            <!-- Form Tra cứu Bài Tập (Dạng Pill) -->
+            <div class="max-w-2xl mx-auto mb-20">
+                <form id="formBaiTap" class="bg-white p-2.5 rounded-full shadow-2xl shadow-primary-500/20 border border-gray-100 flex items-center transition-all duration-300 focus-within:ring-4 focus-within:ring-primary-100 hover:shadow-glow">
                     
-                    <div class="pl-4 sm:pl-5 pr-2 sm:pr-3 text-slate-400">
+                    <div class="pl-5 pr-3 text-slate-400">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" />
                         </svg>
@@ -314,11 +262,11 @@
                     
                     <input 
                         type="text" id="maBaiTap"
-                        class="flex-grow bg-transparent text-slate-800 text-sm sm:text-base px-2 py-3 focus:outline-none placeholder-slate-400 font-medium w-full"
+                        class="flex-grow bg-transparent text-slate-800 text-base sm:text-lg px-2 py-3 focus:outline-none placeholder-slate-400 font-medium w-full"
                         placeholder="Nhập mã bài tập của bạn để đăng nhập (VD: BT101)..." required autocomplete="off"
                     >
                     
-                    <button type="submit" id="btnSubmitBaiTap" class="flex-shrink-0 bg-primary-600 hover:bg-primary-700 text-white font-bold py-3 px-5 sm:py-3.5 sm:px-8 rounded-full flex items-center gap-2 transition-all duration-200 active:scale-95 shadow-md shadow-primary-500/30">
+                    <button type="submit" id="btnSubmitBaiTap" class="flex-shrink-0 bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-6 sm:px-8 rounded-full flex items-center gap-2 transition-all duration-200 active:scale-95">
                         <span class="btn-text">Đăng nhập cổng</span>
                         <svg class="btn-icon h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
@@ -331,62 +279,43 @@
                 </form>
             </div>
 
-            <!-- Nút Tra Cứu Nhanh 1 Chạm Demo BÀI TẬP -->
-            <div class="max-w-2xl mx-auto mb-16 p-3 bg-white/70 backdrop-blur-sm rounded-2xl border border-blue-100 shadow-sm text-xs text-slate-500">
-                <div class="mb-2 font-semibold text-slate-700 flex items-center gap-1.5">
-                    <span class="text-amber-500">⚡</span> Mã bài tập Dùng thử nhanh:
-                </div>
-                <div class="flex gap-2 flex-wrap">
-                    <button type="button" onclick="fillQuickHw('0987654321')" class="bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">
-                        👧 Lê Minh Thư (0987654321)
-                    </button>
-                    <button type="button" onclick="fillQuickHw('0912345678')" class="bg-blue-50 hover:bg-blue-100 border border-blue-200 text-blue-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">
-                        👦 Nguyễn Hoàng Nam (0912345678)
-                    </button>
-                    <button type="button" onclick="fillQuickHw('BT101')" class="bg-amber-50 hover:bg-amber-100 border border-amber-200 text-amber-700 px-3 py-1.5 rounded-lg text-xs font-semibold transition-all">
-                        📑 Mã Đề Mẫu (BT101)
-                    </button>
-                </div>
-            </div>
-
-            <!-- 4 Thẻ tính năng BÀI TẬP -->
+            <!-- 4 Thẻ tính năng -->
             <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
                 <!-- Card 1 -->
                 <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                    <div class="w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300 shadow-sm">
+                    <div class="w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253" /></svg>
                     </div>
                     <h3 class="text-lg font-bold text-slate-800 mb-2">Bài giảng</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Tải và xem lại các tài liệu bài giảng, tóm tắt lý thuyết sau mỗi tiết học.</p>
+                    <p class="text-sm text-slate-500 leading-relaxed">Tải và xem lại các file bài giảng, slide tiết học một cách dễ dàng.</p>
                 </div>
                 <!-- Card 2 -->
                 <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300 shadow-sm">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" /></svg>
                     </div>
                     <h3 class="text-lg font-bold text-slate-800 mb-2">Bài tập về nhà</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Tra cứu bài tập rèn luyện được giao, nộp file ảnh và tài liệu nhanh chóng.</p>
+                    <p class="text-sm text-slate-500 leading-relaxed">Tra cứu và tải bài tập rèn luyện hàng tuần, nộp bài nhanh chóng.</p>
                 </div>
                 <!-- Card 3 -->
                 <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                    <div class="w-14 h-14 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-green-600 group-hover:text-white transition-colors duration-300 shadow-sm">
+                    <div class="w-14 h-14 bg-green-50 text-green-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-green-600 group-hover:text-white transition-colors duration-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
                     </div>
                     <h3 class="text-lg font-bold text-slate-800 mb-2">Bài kiểm tra</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Xem kết quả chấm thi, nhận xét sai sót và hướng dẫn giải bài chi tiết.</p>
+                    <p class="text-sm text-slate-500 leading-relaxed">Tải xuống và ôn tập các đề kiểm tra định kỳ để chuẩn bị tốt nhất.</p>
                 </div>
                 <!-- Card 4 -->
                 <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
-                    <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300 shadow-sm">
+                    <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" /></svg>
                     </div>
                     <h3 class="text-lg font-bold text-slate-800 mb-2">Lưu trữ dễ dàng</h3>
-                    <p class="text-sm text-slate-500 leading-relaxed">Tự động đồng bộ Google Drive, lưu trữ lịch sử nộp bài trọn vẹn.</p>
+                    <p class="text-sm text-slate-500 leading-relaxed">Hệ thống tự động lưu trữ tài liệu vĩnh viễn, truy cập mọi lúc.</p>
                 </div>
             </div>
         </section>
 
-        <!-- ================= SECTION 3: GIA SƯ ================= -->
         <section id="page-gia-su" class="page-transition page-hidden">
             
             <div class="text-center max-w-3xl mx-auto mb-10">
@@ -395,27 +324,27 @@
                     <span class="text-xs sm:text-sm font-bold text-indigo-700 tracking-wide uppercase">Cổng Thông Tin Gia Sư</span>
                 </div>
                 
-                <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-800 tracking-tight leading-tight mb-5">
+                <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-800 tracking-tight leading-tight mb-6">
                     Gia sư <span class="text-transparent bg-clip-text bg-gradient-to-r from-indigo-600 to-primary-500">Đăng nhập</span> 🔐
                 </h2>
                 
-                <p class="text-base sm:text-lg text-slate-500 font-medium">
+                <p class="text-lg sm:text-xl text-slate-500 font-medium">
                     Nhập số điện thoại đăng ký và mã PIN để vào trang quản lý lớp học.
                 </p>
             </div>
 
             <!-- Form Đăng nhập Gia sư (Dạng Card lớn) -->
             <div class="max-w-md mx-auto">
-                <div class="bg-white/90 backdrop-blur-xl p-6 sm:p-8 rounded-3xl shadow-glass border border-white">
+                <div class="bg-white/90 backdrop-blur-xl p-8 rounded-3xl shadow-glass border border-white">
                     
-                    <div class="flex items-center gap-3 mb-6 pb-4 border-b border-gray-100">
+                    <div class="flex items-center gap-3 mb-8 pb-4 border-b border-gray-100">
                         <div class="bg-indigo-100 p-2 rounded-lg text-indigo-600">
                             <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" /></svg>
                         </div>
                         <h3 class="text-xl font-bold text-slate-800">Đăng nhập hệ thống</h3>
                     </div>
 
-                    <form id="formGiaSu" class="space-y-5">
+                    <form id="formGiaSu" class="space-y-6">
                         <!-- Input Số điện thoại -->
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Số điện thoại đăng nhập</label>
@@ -423,7 +352,7 @@
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
                                 </div>
-                                <input type="tel" id="gsPhone" class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors placeholder-slate-400" placeholder="Nhập số điện thoại gia sư..." required autocomplete="tel">
+                                <input type="tel" id="gsPhone" class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors placeholder-slate-400" placeholder="Nhập số điện thoại gia sư..." required>
                             </div>
                         </div>
 
@@ -434,12 +363,12 @@
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
                                 </div>
-                                <input type="password" id="gsPin" maxlength="6" class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors placeholder-slate-400 tracking-[0.2em]" placeholder="Nhập mã PIN bảo mật..." required autocomplete="current-password">
+                                <input type="password" id="gsPin" maxlength="6" pattern="[0-9]{4,6}" class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors placeholder-slate-400 tracking-[0.2em]" placeholder="Nhập mã PIN gồm 4-6 số..." required>
                             </div>
                         </div>
 
                         <!-- Submit -->
-                        <button type="submit" id="btnSubmitGiaSu" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 shadow-lg shadow-indigo-500/30 active:scale-[0.98]">
+                        <button type="submit" id="btnSubmitGiaSu" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-6 rounded-xl flex items-center justify-center gap-2 transition-all duration-200 shadow-lg shadow-indigo-500/30 active:scale-[0.98] mt-4">
                             <span class="btn-text">Đăng nhập hệ thống</span>
                             <svg class="btn-icon h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                 <path stroke-linecap="round" stroke-linejoin="round" d="M11 16l-4-4m0 0l4-4m-4 4h14m-5 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h7a3 3 0 013 3v1" />
@@ -450,38 +379,26 @@
                             </svg>
                         </button>
                     </form>
-
-                    <!-- Nút Đăng nhập Nhanh 1 Chạm Demo Gia Sư -->
-                    <div class="mt-5 pt-3 border-t border-dashed border-indigo-200 text-xs text-slate-500">
-                        <div class="mb-2 font-semibold text-slate-700 flex items-center gap-1.5">
-                            <span class="text-amber-500">⚡</span> Đăng nhập Dùng thử nhanh:
-                        </div>
-                        <button type="button" onclick="fillQuickTutor('0123456789', '1234')" class="w-full bg-indigo-50 hover:bg-indigo-100 border border-indigo-200 text-indigo-700 py-2.5 px-3 rounded-xl text-xs font-bold transition-all flex items-center justify-center gap-2">
-                            👨‍🏫 Thầy Trần Hoàng Nam (0123456789 - PIN: 1234)
-                        </button>
-                    </div>
-
                 </div>
             </div>
         </section>
 
     </main>
 
-    <!-- CORE SCRIPTS: Demo Data & API Mock Gateway -->
+    <!-- Kết nối dữ liệu hệ thống Demo -->
     <script src="js/demo-data.js"></script>
     <script src="js/api.js?v=2.0.0"></script>
-    <script src="js/pwa-install.js"></script>
 
     <script>
-        // ================= SPA TAB SWITCHING LOGIC =================
+        // Hàm chuyển đổi giữa các trang (SPA Logic)
         function switchTab(pageId) {
-            // Ẩn tất cả các tab
+            // Ẩn tất cả các trang
             document.querySelectorAll('section[id^="page-"]').forEach(el => {
                 el.classList.remove('page-visible');
                 el.classList.add('page-hidden');
             });
 
-            // Hiển thị tab được chọn
+            // Hiển thị trang được chọn
             const targetPage = document.getElementById(pageId);
             if (targetPage) {
                 targetPage.classList.remove('page-hidden');
@@ -490,146 +407,37 @@
 
             // Reset Desktop Nav Styles
             document.querySelectorAll('#desktopNav .nav-btn').forEach(btn => {
-                if (btn.tagName.toLowerCase() === 'button') {
-                    btn.className = 'nav-btn px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:text-primary-600 hover:bg-primary-50 transition-colors flex items-center gap-2';
-                }
+                btn.className = 'nav-btn px-4 py-2 rounded-full text-sm font-semibold text-slate-600 hover:text-primary-600 hover:bg-primary-50 transition-colors flex items-center gap-2';
             });
             
-            // Set Active Desktop Nav Style theo tab
+            // Set Active Desktop Nav Style theo từng màu chủ đạo của Tab
             const activeBtn = document.getElementById(`btn-${pageId.replace('page-', '')}`);
-            if (activeBtn) {
-                let colorClass = 'bg-primary-600 hover:bg-primary-700 shadow-primary-500/20';
+            if(activeBtn) {
+                let colorClass = 'bg-primary-600 hover:bg-primary-700 shadow-primary-500/20'; // Mặc định cho Bài Tập
                 if (pageId === 'page-ph-hs') colorClass = 'bg-teal-600 hover:bg-teal-700 shadow-teal-500/20';
                 if (pageId === 'page-gia-su') colorClass = 'bg-indigo-600 hover:bg-indigo-700 shadow-indigo-500/20';
                 
                 activeBtn.className = `nav-btn active px-5 py-2.5 rounded-full text-sm font-bold text-white shadow-md transition-all flex items-center gap-2 ${colorClass}`;
             }
 
-            // Xử lý Mobile Nav Styles (bỏ qua Trang chủ)
-            document.querySelectorAll('#mobileMenu button').forEach(btn => {
+            // Xử lý Mobile Nav Styles (Bỏ qua nút Trang chủ)
+            document.querySelectorAll('#mobileMenu button:not(:first-child)').forEach(btn => {
                 btn.className = 'w-full text-left px-4 py-3 rounded-xl text-base font-medium text-slate-700 hover:bg-primary-50';
             });
             const mobActiveBtn = document.getElementById(`mob-btn-${pageId.replace('page-', '')}`);
-            if (mobActiveBtn) {
-                let textColor = 'text-primary-600 bg-primary-50';
+            if(mobActiveBtn) {
+                let textColor = 'text-primary-600 bg-primary-50'; // Mặc định cho Bài Tập
                 if (pageId === 'page-ph-hs') textColor = 'text-teal-600 bg-teal-50';
                 if (pageId === 'page-gia-su') textColor = 'text-indigo-600 bg-indigo-50';
                 
                 mobActiveBtn.className = `w-full text-left px-4 py-3 rounded-xl text-base font-bold ${textColor}`;
             }
             
-            // Đóng mobile menu nếu mở
+            // Tự động đóng mobile menu nếu đang mở
             const mobileMenu = document.getElementById('mobileMenu');
             if (mobileMenu) mobileMenu.classList.add('hidden');
-
-            // Cập nhật hash trên URL (không nhảy trang)
-            const cleanHash = pageId.replace('page-', '');
-            if (history.replaceState) {
-                history.replaceState(null, null, '#' + cleanHash);
-            } else {
-                location.hash = '#' + cleanHash;
-            }
         }
 
-        // ================= TOAST NOTIFICATION LOGIC =================
-        let toastTimeout;
-        function showToast(type, title, message) {
-            const toast = document.getElementById('toastNotification');
-            const toastIcon = document.getElementById('toastIcon');
-            if (!toast || !toastIcon) return;
-            
-            if (type === 'success') {
-                toast.className = 'fixed top-24 right-4 z-[100] transform transition-all duration-300 translate-x-0 opacity-100 pointer-events-auto';
-                toast.querySelector('.bg-white').className = 'bg-white px-5 py-4 rounded-2xl shadow-xl border-l-4 border-green-500 flex items-center gap-3 min-w-[300px]';
-                toastIcon.className = 'w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-green-100 text-green-600';
-                toastIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>`;
-            } else {
-                toast.className = 'fixed top-24 right-4 z-[100] transform transition-all duration-300 translate-x-0 opacity-100 pointer-events-auto';
-                toast.querySelector('.bg-white').className = 'bg-white px-5 py-4 rounded-2xl shadow-xl border-l-4 border-red-500 flex items-center gap-3 min-w-[300px]';
-                toastIcon.className = 'w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-red-100 text-red-600';
-                toastIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>`;
-            }
-
-            document.getElementById('toastTitle').textContent = title;
-            document.getElementById('toastMessage').textContent = message;
-
-            clearTimeout(toastTimeout);
-            toastTimeout = setTimeout(() => {
-                toast.classList.remove('translate-x-0', 'opacity-100', 'pointer-events-auto');
-                toast.classList.add('translate-x-full', 'opacity-0', 'pointer-events-none');
-            }, 3500);
-        }
-
-        // ================= MODAL CHỌN CON (PH/HS) =================
-        function hienThiTheChonCon(childrenList, phone) {
-            const modal = document.getElementById('childSelectorModal');
-            const container = document.getElementById('childrenBtnContainer');
-            if (!modal || !container) return;
-
-            container.innerHTML = '';
-            childrenList.forEach(child => {
-                const btn = document.createElement('button');
-                btn.type = 'button';
-                btn.className = 'w-full p-4 bg-gradient-to-r from-teal-500 to-primary-600 hover:from-teal-600 hover:to-primary-700 text-white font-bold rounded-2xl flex items-center justify-between shadow-md transition-all active:scale-[0.99]';
-                btn.innerHTML = `
-                    <div class="flex items-center gap-3">
-                        <span class="text-xl">🎓</span>
-                        <div class="text-left">
-                            <div class="font-bold text-sm sm:text-base">${child.name}</div>
-                            <div class="text-xs text-teal-100 font-normal">${child.classLevel || 'Học sinh'} • ${child.subject || 'Chương trình 1-1'}</div>
-                        </div>
-                    </div>
-                    <svg class="h-5 w-5 text-white/80" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" /></svg>
-                `;
-                btn.onclick = () => {
-                    chonConVaDangNhap(phone, child.name);
-                };
-                container.appendChild(btn);
-            });
-
-            modal.classList.remove('hidden');
-        }
-
-        function closeChildSelectorModal() {
-            const modal = document.getElementById('childSelectorModal');
-            if (modal) modal.classList.add('hidden');
-        }
-
-        function chonConVaDangNhap(phone, childName) {
-            closeChildSelectorModal();
-            showToast('success', 'Đang tải kết quả', `Đang kết nối dữ liệu của ${childName}...`);
-            
-            google.script.run.withSuccessHandler(function(ketQua) {
-                if (ketQua && ketQua.data && ketQua.data.timThay) {
-                    sessionStorage.setItem('userRole', 'student');
-                    sessionStorage.setItem('userPhone', phone);
-                    sessionStorage.setItem('userPin', '');
-                    sessionStorage.setItem('dashboardData', JSON.stringify(ketQua.data));
-                    window.location.href = 'student-dashboard.html';
-                } else {
-                    showToast('error', 'Lỗi dữ liệu', 'Không thể nạp dữ liệu của học sinh này.');
-                }
-            }).loginSystem(phone, '', childName);
-        }
-
-        // ================= DÙNG THỬ NHANH 1 CHẠM =================
-        function fillQuickStudent(phone) {
-            document.getElementById('maHocSinh').value = phone;
-            document.getElementById('formPhHs').dispatchEvent(new Event('submit'));
-        }
-
-        function fillQuickHw(code) {
-            document.getElementById('maBaiTap').value = code;
-            document.getElementById('formBaiTap').dispatchEvent(new Event('submit'));
-        }
-
-        function fillQuickTutor(phone, pin) {
-            document.getElementById('gsPhone').value = phone;
-            document.getElementById('gsPin').value = pin;
-            document.getElementById('formGiaSu').dispatchEvent(new Event('submit'));
-        }
-
-        // ================= EVENT LISTENERS & BACKEND WIRING =================
         document.addEventListener('DOMContentLoaded', () => {
             // Mobile Menu Toggle
             const mobileMenuBtn = document.getElementById('mobileMenuBtn');
@@ -640,18 +448,42 @@
                 });
             }
 
-            // Xử lý Form 1: PH/HS Tra cứu
+            // Hàm hiển thị Toast Notification
+            let toastTimeout;
+            function showToast(type, title, message) {
+                const toast = document.getElementById('toastNotification');
+                const toastIcon = document.getElementById('toastIcon');
+                if (!toast || !toastIcon) return;
+                
+                if(type === 'success') {
+                    toast.className = 'fixed top-24 right-4 z-[100] transform transition-all duration-300 translate-x-0 opacity-100';
+                    toast.querySelector('.bg-white').className = 'bg-white px-5 py-4 rounded-2xl shadow-xl border-l-4 border-green-500 flex items-center gap-3 min-w-[300px]';
+                    toastIcon.className = 'w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-green-100 text-green-600';
+                    toastIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd" /></svg>`;
+                } else {
+                    toast.className = 'fixed top-24 right-4 z-[100] transform transition-all duration-300 translate-x-0 opacity-100';
+                    toast.querySelector('.bg-white').className = 'bg-white px-5 py-4 rounded-2xl shadow-xl border-l-4 border-red-500 flex items-center gap-3 min-w-[300px]';
+                    toastIcon.className = 'w-8 h-8 rounded-full flex items-center justify-center shrink-0 bg-red-100 text-red-600';
+                    toastIcon.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor"><path fill-rule="evenodd" d="M4.293 4.293a1 1 0 011.414 0L10 8.586l4.293-4.293a1 1 0 111.414 1.414L11.414 10l4.293 4.293a1 1 0 01-1.414 1.414L10 11.414l-4.293 4.293a1 1 0 01-1.414-1.414L8.586 10 4.293 5.707a1 1 0 010-1.414z" clip-rule="evenodd" /></svg>`;
+                }
+
+                document.getElementById('toastTitle').textContent = title;
+                document.getElementById('toastMessage').textContent = message;
+
+                clearTimeout(toastTimeout);
+                toastTimeout = setTimeout(() => {
+                    toast.classList.remove('translate-x-0', 'opacity-100');
+                    toast.classList.add('translate-x-full', 'opacity-0');
+                }, 3500);
+            }
+
+            // Xử lý Form PH/HS
             const formPhHs = document.getElementById('formPhHs');
             if (formPhHs) {
                 formPhHs.addEventListener('submit', (e) => {
                     e.preventDefault();
                     const btn = document.getElementById('btnSubmitPhHs');
-                    const phone = document.getElementById('maHocSinh').value.trim();
-
-                    if (!phone) {
-                        showToast('error', 'Thiếu thông tin', 'Vui lòng nhập số điện thoại hoặc mã học sinh!');
-                        return;
-                    }
+                    const maHocSinh = document.getElementById('maHocSinh').value.trim();
 
                     btn.disabled = true;
                     btn.querySelector('.btn-text').textContent = 'Đang tra cứu...';
@@ -666,31 +498,24 @@
                             btn.querySelector('.loading-icon').classList.add('hidden');
 
                             if (ketQua.error) {
-                                showToast('error', 'Không tìm thấy', ketQua.error);
+                                showToast('error', 'Lỗi tra cứu', ketQua.error);
                                 return;
                             }
-
                             if (ketQua.requiresPin) {
-                                showToast('error', 'Tài khoản Gia sư', 'Số điện thoại này thuộc tài khoản Gia sư. Vui lòng bấm tab "GIA SƯ" để đăng nhập.');
+                                showToast('error', 'Thông báo', 'Số điện thoại này thuộc tài khoản Gia sư. Vui lòng chuyển sang tab GIA SƯ!');
                                 return;
                             }
-
-                            if (ketQua.role === 'student' && ketQua.multipleStudents && ketQua.childrenList) {
-                                hienThiTheChonCon(ketQua.childrenList, phone);
-                                return;
-                            }
-
                             if (ketQua.role === 'student' && ketQua.data && ketQua.data.timThay) {
-                                showToast('success', 'Tra cứu thành công', `Chào mừng ${ketQua.data.studentName || 'bạn'}! Đang mở bảng điểm...`);
+                                showToast('success', 'Tra cứu thành công', `Đang tải kết quả cho học sinh: ${ketQua.data.studentName || maHocSinh}`);
                                 sessionStorage.setItem('userRole', 'student');
-                                sessionStorage.setItem('userPhone', phone);
+                                sessionStorage.setItem('userPhone', maHocSinh);
                                 sessionStorage.setItem('userPin', '');
                                 sessionStorage.setItem('dashboardData', JSON.stringify(ketQua.data));
                                 setTimeout(() => {
                                     window.location.href = 'student-dashboard.html';
-                                }, 600);
+                                }, 800);
                             } else {
-                                showToast('error', 'Lỗi tra cứu', 'Không tìm thấy hồ sơ học sinh tương ứng!');
+                                showToast('error', 'Không tìm thấy', 'Không tìm thấy thông tin học sinh với mã/SĐT này!');
                             }
                         })
                         .withFailureHandler(function(err) {
@@ -700,25 +525,20 @@
                             btn.querySelector('.loading-icon').classList.add('hidden');
                             showToast('error', 'Lỗi hệ thống', 'Có lỗi kết nối: ' + err.toString());
                         })
-                        .loginSystem(phone, '');
+                        .loginSystem(maHocSinh, '');
                 });
             }
 
-            // Xử lý Form 2: BÀI TẬP Tra cứu & Nộp bài
+            // Xử lý Form BÀI TẬP
             const formBaiTap = document.getElementById('formBaiTap');
             if (formBaiTap) {
                 formBaiTap.addEventListener('submit', (e) => {
                     e.preventDefault();
                     const btn = document.getElementById('btnSubmitBaiTap');
-                    const code = document.getElementById('maBaiTap').value.trim();
-
-                    if (!code) {
-                        showToast('error', 'Thiếu thông tin', 'Vui lòng nhập mã bài tập!');
-                        return;
-                    }
+                    const maBaiTap = document.getElementById('maBaiTap').value.trim();
 
                     btn.disabled = true;
-                    btn.querySelector('.btn-text').textContent = 'Đang xác thực...';
+                    btn.querySelector('.btn-text').textContent = 'Đang xử lý...';
                     btn.querySelector('.btn-icon').classList.add('hidden');
                     btn.querySelector('.loading-icon').classList.remove('hidden');
 
@@ -730,13 +550,13 @@
                             btn.querySelector('.loading-icon').classList.add('hidden');
 
                             if (res && res.timThay) {
-                                showToast('success', 'Đăng nhập thành công', `Đang tải cổng bài tập cho học viên: ${res.studentName || code}`);
-                                sessionStorage.setItem('currentHwCode', res.ma || code);
+                                showToast('success', 'Đăng nhập thành công', `Đang tải dữ liệu bài tập: ${res.studentName || maBaiTap}`);
+                                sessionStorage.setItem('currentHwCode', res.ma || maBaiTap);
                                 setTimeout(() => {
-                                    window.location.href = 'homework.html?code=' + encodeURIComponent(res.ma || code);
-                                }, 600);
+                                    window.location.href = 'homework.html?code=' + encodeURIComponent(res.ma || maBaiTap);
+                                }, 800);
                             } else {
-                                showToast('error', 'Không tìm thấy bài tập', (res && res.thongBao) ? res.thongBao : 'Mã bài tập không hợp lệ!');
+                                showToast('error', 'Không tìm thấy', (res && res.thongBao) ? res.thongBao : 'Mã bài tập không hợp lệ!');
                             }
                         })
                         .withFailureHandler(function(err) {
@@ -746,11 +566,11 @@
                             btn.querySelector('.loading-icon').classList.add('hidden');
                             showToast('error', 'Lỗi hệ thống', 'Có lỗi kết nối: ' + err.toString());
                         })
-                        .xacThucMaBaiTap(code);
+                        .xacThucMaBaiTap(maBaiTap);
                 });
             }
 
-            // Xử lý Form 3: GIA SƯ Đăng nhập
+            // Xử lý Form GIA SƯ
             const formGiaSu = document.getElementById('formGiaSu');
             if (formGiaSu) {
                 formGiaSu.addEventListener('submit', (e) => {
@@ -763,8 +583,8 @@
                         showToast('error', 'Lỗi nhập liệu', 'Vui lòng nhập số điện thoại gia sư!');
                         return;
                     }
-                    if (!pin || pin.length < 4) {
-                        showToast('error', 'Lỗi xác thực', 'Mã PIN bảo mật phải có ít nhất 4 chữ số!');
+                    if (pin.length < 4) {
+                        showToast('error', 'Lỗi xác thực', 'Mã PIN bảo mật phải bao gồm từ 4-6 chữ số!');
                         return;
                     }
 
@@ -784,50 +604,37 @@
                                 showToast('error', 'Đăng nhập thất bại', ketQua.error);
                                 return;
                             }
-
                             if (ketQua.role === 'tutor') {
-                                showToast('success', 'Xác thực thành công', 'Chào mừng Thầy/Cô! Đang mở trang quản lý lớp học...');
+                                showToast('success', 'Xác thực thành công', 'Đang chuyển hướng đến trang quản lý lớp học...');
                                 sessionStorage.setItem('userRole', 'tutor');
                                 sessionStorage.setItem('userPhone', phone);
                                 sessionStorage.setItem('userPin', pin);
                                 sessionStorage.setItem('dashboardData', JSON.stringify(ketQua.data));
                                 setTimeout(() => {
                                     window.location.href = 'tutor-dashboard.html';
-                                }, 600);
+                                }, 800);
                             } else if (ketQua.role === 'admin') {
-                                showToast('success', 'Quản trị viên', 'Đăng nhập Admin thành công!');
+                                showToast('success', 'Xác thực thành công', 'Đang chuyển hướng đến trang quản trị admin...');
                                 sessionStorage.setItem('userRole', 'admin');
                                 sessionStorage.setItem('userPhone', phone);
                                 sessionStorage.setItem('userPin', pin);
                                 sessionStorage.setItem('dashboardData', JSON.stringify(ketQua.data));
                                 setTimeout(() => {
                                     window.location.href = 'admin-dashboard.html';
-                                }, 600);
+                                }, 800);
                             } else {
-                                showToast('error', 'Xác thực thất bại', 'Mã PIN hoặc số điện thoại không chính xác!');
+                                showToast('error', 'Lỗi xác thực', 'Mã PIN hoặc số điện thoại không chính xác!');
                             }
                         })
                         .withFailureHandler(function(err) {
                             btn.disabled = false;
-                            btn.querySelector('.btn-text').textContent = 'Đăng nhập hệ thống';
+                            btn.querySelector('.btn-text').textContent = 'Đang nhập hệ thống';
                             btn.querySelector('.btn-icon').classList.remove('hidden');
                             btn.querySelector('.loading-icon').classList.add('hidden');
                             showToast('error', 'Lỗi hệ thống', 'Có lỗi kết nối: ' + err.toString());
                         })
                         .loginSystem(phone, pin);
                 });
-            }
-
-            // Tự động kích hoạt tab dựa theo hash hoặc URL params
-            const hash = window.location.hash.toLowerCase();
-            const search = window.location.search.toLowerCase();
-
-            if (hash.includes('gia-su') || search.includes('tab=gia-su')) {
-                switchTab('page-gia-su');
-            } else if (hash.includes('bai-tap') || search.includes('tab=bai-tap')) {
-                switchTab('page-bai-tap');
-            } else {
-                switchTab('page-ph-hs');
             }
         });
     </script>
