@@ -453,7 +453,7 @@
         }
 
         .fc-timegrid .fc-scrollgrid {
-            border: 1px solid #E5D9CC !important;
+            border: 1px solid #ECE7F6 !important;
             background: #FFFFFF !important;
             border-radius: 12px;
             overflow: hidden;
@@ -466,7 +466,7 @@
 
         .fc-timegrid td, 
         .fc-timegrid th {
-            border: 1px solid #E5D9CC !important;
+            border: 1px solid #ECE7F6 !important;
         }
 
         /* Table header cells (Thứ 2, 3...) */
@@ -484,9 +484,9 @@
         }
 
         .fc-timegrid .fc-col-header-cell {
-            border: 1px solid #E5D9CC !important;
-            background: #F3EDE4 !important;
-            padding: 8px 0 !important;
+            border: 1px solid #ECE7F6 !important;
+            background: #FAF9FD !important;
+            padding: 4px 0 !important;
             text-align: center !important;
         }
 
@@ -502,16 +502,22 @@
         }
 
         .fc-timegrid .fc-col-header-cell-cushion {
-            color: #6B4226 !important;
-            font-size: 12.5px !important;
+            display: block !important;
+            width: 100% !important;
+            padding: 0 !important;
+            text-decoration: none !important;
         }
 
         /* TimeGrid styling */
         .fc-timegrid-slot {
-            border-bottom: 1px solid #E5D9CC !important;
-            border-right: 1px solid #E5D9CC !important;
-            height: 24px !important;
+            border-bottom: 1px solid #ECE7F6 !important;
+            border-right: 1px solid #ECE7F6 !important;
+            height: 28px !important;
             background: #FFFFFF !important;
+        }
+
+        .fc-timegrid-slot-minor {
+            border-bottom: 1px solid #F6F3FA !important;
         }
 
         .fc-timegrid-slot-lane {
@@ -520,17 +526,17 @@
 
         .fc-timegrid-slot-label {
             vertical-align: top !important;
-            background: #F8F3EC !important;
-            border-color: #E5D9CC !important;
+            background: #FAF9FD !important;
+            border-color: #ECE7F6 !important;
         }
 
         .fc-timegrid-slot-label-cushion {
-            color: #6B4226 !important;
+            color: #716584 !important;
             font-size: 11px !important;
-            font-weight: 500 !important;
+            font-weight: 600 !important;
             display: inline-block !important;
             transform: translateY(-50%) !important;
-            background: #F8F3EC !important;
+            background: #FAF9FD !important;
             padding: 0 4px !important;
             position: relative !important;
             z-index: 5 !important;
@@ -538,9 +544,15 @@
 
         .fc-timegrid-axis-frame,
         .fc-timegrid-axis {
-            color: #6B4226 !important;
-            background: #F8F3EC !important;
-            border-color: #E5D9CC !important;
+            color: #716584 !important;
+            background: #FAF9FD !important;
+            border-color: #ECE7F6 !important;
+        }
+
+        .fc-theme-standard th.fc-timegrid-axis {
+            background: #FAF9FD !important;
+            border-bottom: 1px solid #ECE7F6 !important;
+            border-right: 1px solid #ECE7F6 !important;
         }
 
         /* DayGrid (Month view: Thẻ Card độc lập bo tròn) */
@@ -776,28 +788,113 @@
 
         /* Now Indicator */
         .fc .fc-timegrid-now-indicator-line {
-            border-color: #C05E8E !important;
+            border-color: #8E4DFF !important;
             border-width: 2px !important;
         }
         .fc .fc-timegrid-now-indicator-arrow {
-            border-left-color: #C05E8E !important;
+            border-left-color: #8E4DFF !important;
         }
 
         /* --- SỰ KIỆN LỊCH (EVENTS) --- */
         .fc-v-event {
-            background: rgba(192, 94, 142, 0.12) !important;
-            border: 1px solid rgba(192, 94, 142, 0.3) !important;
-            border-left: 3px solid #C05E8E !important;
-            border-radius: 6px !important;
-            box-shadow: 0 2px 6px rgba(0,0,0,0.04) !important;
-            padding: 2px 5px !important;
+            background: transparent !important;
+            border: none !important;
+            box-shadow: none !important;
+            padding: 2px 3px !important;
             cursor: pointer !important;
-            transition: transform 0.2s, box-shadow 0.2s !important;
         }
 
-        .fc-v-event:hover {
-            transform: scale(1.02) !important;
-            box-shadow: 0 4px 12px rgba(192, 94, 142, 0.2) !important;
+        .fc-timegrid-event {
+            margin: 2px 3px 2px 2px !important;
+            border-radius: 8px !important;
+            box-shadow: none !important;
+            border: none !important;
+            background: transparent !important;
+            overflow: visible !important;
+        }
+
+        .fc-timegrid-event .fc-event-main {
+            padding: 0 !important;
+            height: 100% !important;
+            width: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+        }
+
+        /* Thẻ ca dạy Tuần (Thiết kế Image 2: bo góc 8px, pastel, 3 dòng rõ ràng) */
+        .fc-week-card-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 8px;
+            padding: 6px 8px;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            box-sizing: border-box;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            transition: transform 0.15s ease, box-shadow 0.15s ease;
+            overflow: hidden;
+            position: relative;
+            user-select: none;
+        }
+
+        .fc-week-card-inner:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .fc-week-card-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+            margin-bottom: 3px;
+            line-height: 1.1;
+        }
+
+        .fc-week-card-time {
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: -0.2px;
+            white-space: nowrap;
+        }
+
+        .fc-week-card-icon {
+            font-size: 10px;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            margin-left: 4px;
+            flex-shrink: 0;
+            opacity: 0.85;
+        }
+
+        .fc-week-card-subject {
+            font-size: 12.5px;
+            font-weight: 700;
+            line-height: 1.25;
+            margin-bottom: 3px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .fc-week-card-fee {
+            font-size: 11px;
+            font-weight: 600;
+            line-height: 1.2;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            opacity: 0.9;
+        }
+
+        .fc-timegrid-event-short .fc-week-card-fee {
+            display: none;
+        }
+
+        .fc-timegrid-event-short .fc-week-card-inner {
+            padding: 3px 5px;
         }
 
         /* EVENT CHIPS Ở MONTH VIEW: DẠNG VIÊN THUỐC CAPSULE CÓ CHẤM TRÒN MÀU */
@@ -875,6 +972,42 @@
             color: #2D1F0E !important;
             white-space: normal !important;
             word-break: break-word !important;
+        }
+
+        /* Column Header Styles for Week & Day View (Thiết kế Image 2) */
+        .fc-week-header-cell {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 0;
+            gap: 3px;
+            line-height: 1.15;
+            user-select: none;
+        }
+
+        .fc-week-header-day {
+            font-size: 11.5px;
+            font-weight: 600;
+            color: #716584;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .fc-week-header-date {
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #4A3E5D;
+        }
+
+        .fc-week-header-cell.fc-header-today .fc-week-header-day {
+            color: #8E4DFF;
+            font-weight: 700;
+        }
+
+        .fc-week-header-cell.fc-header-today .fc-week-header-date {
+            color: #8E4DFF;
+            font-weight: 800;
         }
 
         /* --- BẢNG MÀU CHO MODAL --- */
@@ -1899,6 +2032,12 @@
                     <div id="detailRecurrence" class="detail-recurrence-info">Tần suất lặp</div>
                 </div>
             </div>
+            <div class="detail-info-item" id="detailFeeContainer">
+                <i class="fa-solid fa-coins" style="color: #10B981;"></i>
+                <div>
+                    <div id="detailFee" style="font-weight: 700; color: #059669;">500.000 đ / buổi</div>
+                </div>
+            </div>
             <div class="detail-info-item" id="detailNotesContainer">
                 <i class="fa-regular fa-note-sticky"></i>
                 <div id="detailNotes">Ghi chú ca học</div>
@@ -2011,6 +2150,11 @@
                     </div>
                 </div>
 
+                <div class="form-group">
+                    <label>Học phí / buổi (VNĐ)</label>
+                    <input type="number" class="form-control" id="eventFee" placeholder="Ví dụ: 750000" min="0" step="10000">
+                </div>
+
                 <!-- Trường Ghi chú tùy chọn -->
                 <div class="form-group">
                     <label>Ghi chú môn học/nội dung (Tùy chọn)</label>
@@ -2078,11 +2222,91 @@
         let tutorDataGlobal = dashDataStr ? JSON.parse(dashDataStr) : null;
         const isDemoMode = !userPhone;
 
-        // Dữ liệu mô phỏng theo cấu trúc sheet Lịch học (khớp 100% hình ảnh tham chiếu)
+        // Dữ liệu mô phỏng theo cấu trúc sheet Lịch học (khớp 100% hình ảnh tham chiếu Image 2 + demo)
         let tutorScheduleSheetData = [
             {
+                studentName: "Toán 8",
+                subject: "Toán 8",
+                color: localStorage.getItem('student_color_Toán 8') || "#D4E7B5",
+                fee: 750000,
+                mon: "07:30 - 09:30",
+                tue: "",
+                wed: "07:30 - 09:30",
+                thu: "",
+                fri: "07:30 - 09:30",
+                sat: "",
+                sun: ""
+            },
+            {
+                studentName: "Toán 9 NC",
+                subject: "Toán 9 NC",
+                color: localStorage.getItem('student_color_Toán 9 NC') || "#DFD6F2",
+                fee: 500000,
+                mon: "09:30 - 11:30",
+                tue: "",
+                wed: "09:30 - 11:30",
+                thu: "",
+                fri: "09:30 - 11:30",
+                sat: "",
+                sun: ""
+            },
+            {
+                studentName: "Toán 9 CB",
+                subject: "Toán 9 CB",
+                color: localStorage.getItem('student_color_Toán 9 CB') || "#F9D5CA",
+                fee: 800000,
+                mon: "14:00 - 16:00",
+                tue: "",
+                wed: "14:00 - 16:00",
+                thu: "",
+                fri: "14:00 - 16:00",
+                sat: "",
+                sun: ""
+            },
+            {
+                studentName: "Toán 10",
+                subject: "Toán 10",
+                color: localStorage.getItem('student_color_Toán 10') || "#BDD7EE",
+                fee: 1000000,
+                mon: "16:00 - 18:00",
+                tue: "",
+                wed: "16:00 - 18:00",
+                thu: "",
+                fri: "16:00 - 18:00",
+                sat: "",
+                sun: ""
+            },
+            {
+                studentName: "Toán 11",
+                subject: "Toán 11",
+                color: localStorage.getItem('student_color_Toán 11') || "#FDE8B3",
+                fee: 500000,
+                mon: "",
+                tue: "14:00 - 16:00",
+                wed: "",
+                thu: "14:00 - 16:00",
+                fri: "",
+                sat: "07:30 - 09:30",
+                sun: ""
+            },
+            {
+                studentName: "Toán 12",
+                subject: "Toán 12",
+                color: localStorage.getItem('student_color_Toán 12') || "#6D675E",
+                fee: 500000,
+                mon: "",
+                tue: "16:00 - 18:00",
+                wed: "",
+                thu: "16:00 - 18:00",
+                fri: "",
+                sat: "09:30 - 11:30",
+                sun: ""
+            },
+            {
                 studentName: "GTPX 17",
+                subject: "GTPX 17",
                 color: localStorage.getItem('student_color_GTPX 17') || "#E11D48",
+                fee: 750000,
                 mon: "19:00 - 20:00 (7:00-8:00PM) SKIP 31/08/2026 | 28/09/2026: 19:00 - 20:00 (7:00-8:00PM)",
                 tue: "",
                 wed: "19:00 - 20:00 (7:00-8:00PM) SKIP 02/09/2026, 09/09/2026",
@@ -2093,7 +2317,9 @@
             },
             {
                 studentName: "Pre-Inter A2+",
+                subject: "Pre-Inter A2+",
                 color: localStorage.getItem('student_color_Pre-Inter A2+') || "#0284C7",
+                fee: 500000,
                 mon: "31/08/2026: 21:00 - 22:30 | 07/09/2026: 21:00 - 22:30 | 14/09/2026: 20:00 - 21:30 | 21/09/2026: 20:00 - 21:30 | 28/09/2026: 20:00 - 21:30",
                 tue: "",
                 wed: "20:00 - 21:30 SKIP 02/09/2026, 09/09/2026",
@@ -2104,7 +2330,9 @@
             },
             {
                 studentName: "GTPX 18",
+                subject: "GTPX 18",
                 color: localStorage.getItem('student_color_GTPX 18') || "#059669",
+                fee: 800000,
                 mon: "20:15 - 21:15 (8:15-9:15_TH) SKIP 31/08/2026",
                 tue: "",
                 wed: "20:15 - 21:15 (8:15-9:15_TH) SKIP 02/09/2026, 09/09/2026",
@@ -2115,7 +2343,9 @@
             },
             {
                 studentName: "ARAVA GTPX 15",
+                subject: "ARAVA GTPX 15",
                 color: localStorage.getItem('student_color_ARAVA GTPX 15') || "#7C3AED",
+                fee: 1000000,
                 mon: "",
                 tue: "19:00 - 20:30 (T3-5-7) SKIP 01/09/2026, 22/09/2026, 29/09/2026",
                 wed: "",
@@ -2126,7 +2356,9 @@
             },
             {
                 studentName: "IELTS 5.0-6.0",
+                subject: "IELTS 5.0-6.0",
                 color: localStorage.getItem('student_color_IELTS 5.0-6.0') || "#D97706",
+                fee: 500000,
                 mon: "21/09/2026: 18:45 - 20:00 (Phương)",
                 tue: "15/09/2026: 15:00 - 16:30 (Phương) | 29/09/2026: 15:00 - 16:30 (Phương)",
                 wed: "23/09/2026: 15:00 - 16:30 (Phương)",
@@ -2137,7 +2369,9 @@
             },
             {
                 studentName: "ELE 04 - A1",
+                subject: "ELE 04 - A1",
                 color: localStorage.getItem('student_color_ELE 04 - A1') || "#EA580C",
+                fee: 500000,
                 mon: "",
                 tue: "",
                 wed: "",
@@ -2148,7 +2382,9 @@
             },
             {
                 studentName: "Huy-Đạt Tiếng Anh 9",
+                subject: "Huy-Đạt Tiếng Anh 9",
                 color: localStorage.getItem('student_color_Huy-Đạt Tiếng Anh 9') || "#10B981",
+                fee: 600000,
                 mon: "31/08/2026: 09:00 - 10:30",
                 tue: "",
                 wed: "",
@@ -2159,7 +2395,9 @@
             },
             {
                 studentName: "Trần Thị B",
+                subject: "Trần Thị B",
                 color: localStorage.getItem('student_color_Trần Thị B') || "#9CA3AF",
+                fee: 500000,
                 mon: "",
                 tue: "",
                 wed: "",
@@ -2198,9 +2436,15 @@
                             // Đọc màu lưu trong localStorage, hoặc gán màu mặc định tuần tự từ danh sách bảng màu
                             let savedColor = localStorage.getItem('student_color_' + st.name.trim()) || PRESET_COLORS[idx % PRESET_COLORS.length];
                             
+                            let tuitionVal = st.tuition || (st.fee ? parseInt(st.fee.replace(/\D/g, '')) : 500000) || 500000;
+                            let subjName = (st.subject ? st.subject : '') + (st.classLevel ? (' ' + st.classLevel) : '');
+                            if (!subjName.trim()) subjName = st.name.trim();
+
                             tutorScheduleSheetData.push({
                                 studentName: st.name.trim(),
+                                subject: subjName.trim(),
                                 color: savedColor,
+                                fee: tuitionVal,
                                 mon: s.mon || '',
                                 tue: s.tue || '',
                                 wed: s.wed || '',
@@ -2679,6 +2923,8 @@
                                 studentIndex: studentIdx,
                                 subIndex: subIdx,
                                 studentName: row.studentName,
+                                subject: row.subject || row.studentName,
+                                fee: row.fee || 500000,
                                 dayKey: dayKey,
                                 startTime: startHour.padStart(2, '0') + ':' + startMin,
                                 endTime:   endHour.padStart(2, '0')   + ':' + endMin,
@@ -2969,12 +3215,17 @@
                     customGroup.style.display = "block";
                     document.getElementById("eventCustomStudentName").required = true;
                     selectPresetColor('');
+                    document.getElementById("eventFee").value = "500000";
                 } else if (val !== "") {
                     customGroup.style.display = "none";
                     document.getElementById("eventCustomStudentName").required = false;
-                    let studentColor = tutorScheduleSheetData[val].color || '#8E4DFF';
+                    let stRow = tutorScheduleSheetData[val];
+                    let studentColor = (stRow && stRow.color) || '#8E4DFF';
                     setColorScope('student');
                     selectPresetColor(studentColor);
+                    if (stRow && stRow.fee) {
+                        document.getElementById("eventFee").value = stRow.fee;
+                    }
                 } else {
                     customGroup.style.display = "none";
                     document.getElementById("eventCustomStudentName").required = false;
@@ -2983,6 +3234,86 @@
             });
 
             
+            // === BỘ HÀM TẠO MÀU PASTEL & TƯƠNG PHẢN CHO THẺ BUỔI HỌC (THIẾT KẾ IMAGE 2) ===
+            function hexToRgb(hex) {
+                if (!hex) return { r: 142, g: 77, b: 255 };
+                hex = hex.replace('#', '').trim();
+                if (hex.length === 3) {
+                    hex = hex[0] + hex[0] + hex[1] + hex[1] + hex[2] + hex[2];
+                }
+                if (hex.length !== 6) return { r: 142, g: 77, b: 255 };
+                let num = parseInt(hex, 16);
+                if (isNaN(num)) return { r: 142, g: 77, b: 255 };
+                return {
+                    r: (num >> 16) & 255,
+                    g: (num >> 8) & 255,
+                    b: num & 255
+                };
+            }
+
+            function rgbToHex(r, g, b) {
+                return '#' + [r, g, b].map(x => {
+                    let h = Math.round(Math.max(0, Math.min(255, x))).toString(16);
+                    return h.length === 1 ? '0' + h : h;
+                }).join('');
+            }
+
+            function getCardThemeStyles(colorHex) {
+                if (!colorHex || !colorHex.startsWith('#')) {
+                    colorHex = '#8E4DFF';
+                }
+                let rgb = hexToRgb(colorHex);
+                // Relative luminance
+                let lum = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+
+                // Thẻ tông tối (ví dụ #6D675E như Toán 12 trong Image 2) -> chữ trắng
+                if (lum < 0.45) {
+                    return {
+                        bg: colorHex,
+                        border: rgbToHex(rgb.r * 0.85, rgb.g * 0.85, rgb.b * 0.85),
+                        text: '#FFFFFF',
+                        icon: '#FFFFFF'
+                    };
+                }
+
+                // Màu đã là pastel hoặc độ bão hòa dịu (ví dụ #D4E7B5, #DFD6F2, #F9D5CA, #BDD7EE, #FDE8B3)
+                let max = Math.max(rgb.r, rgb.g, rgb.b);
+                let min = Math.min(rgb.r, rgb.g, rgb.b);
+                let sat = max === 0 ? 0 : (max - min) / max;
+
+                if (lum >= 0.72 || sat < 0.35) {
+                    let darkR = Math.round(rgb.r * 0.35);
+                    let darkG = Math.round(rgb.g * 0.35);
+                    let darkB = Math.round(rgb.b * 0.35);
+                    return {
+                        bg: colorHex,
+                        border: rgbToHex(rgb.r * 0.88, rgb.g * 0.88, rgb.b * 0.88),
+                        text: rgbToHex(darkR, darkG, darkB),
+                        icon: rgbToHex(darkR, darkG, darkB)
+                    };
+                }
+
+                // Màu đậm rực rỡ -> hòa 22% vào nền trắng để tạo nền pastel mịn, viền 40%, chữ đậm tương phản cao
+                let bgR = Math.round(rgb.r * 0.22 + 255 * 0.78);
+                let bgG = Math.round(rgb.g * 0.22 + 255 * 0.78);
+                let bgB = Math.round(rgb.b * 0.22 + 255 * 0.78);
+
+                let bdrR = Math.round(rgb.r * 0.40 + 255 * 0.60);
+                let bdrG = Math.round(rgb.g * 0.40 + 255 * 0.60);
+                let bdrB = Math.round(rgb.b * 0.40 + 255 * 0.60);
+
+                let txtR = Math.round(rgb.r * 0.45);
+                let txtG = Math.round(rgb.g * 0.45);
+                let txtB = Math.round(rgb.b * 0.45);
+
+                return {
+                    bg: rgbToHex(bgR, bgG, bgB),
+                    border: rgbToHex(bdrR, bdrG, bdrB),
+                    text: rgbToHex(txtR, txtG, txtB),
+                    icon: rgbToHex(txtR, txtG, txtB)
+                };
+            }
+
             var calendarEl = document.getElementById('calendar');
             const initialViewType = 'dayGridMonth';
 
@@ -3006,20 +3337,40 @@
                     hour12: false
                 },
                 dayHeaderContent: function(arg) {
-                    const days = ['CN', 'THỨ 2', 'THỨ 3', 'THỨ 4', 'THỨ 5', 'THỨ 6', 'THỨ 7'];
-                    let dayName = days[arg.date.getDay()];
+                    const shortDays = ['CN', 'T2', 'T3', 'T4', 'T5', 'T6', 'T7'];
+                    let dayIdx = arg.date.getDay();
                     if (arg.view.type === 'dayGridMonth') {
-                        return dayName;
-                    } else {
+                        const monthDays = ['CN', 'THỨ 2', 'THỨ 3', 'THỨ 4', 'THỨ 5', 'THỨ 6', 'THỨ 7'];
+                        return monthDays[dayIdx];
+                    } else if (arg.view.type === 'timeGridWeek') {
                         let d = arg.date.getDate().toString().padStart(2, '0');
                         let m = (arg.date.getMonth() + 1).toString().padStart(2, '0');
-                        return dayName + ' ' + d + '/' + m;
+                        let isToday = arg.isToday;
+                        return {
+                            html: '<div class="fc-week-header-cell ' + (isToday ? 'fc-header-today' : '') + '">' +
+                                  '<div class="fc-week-header-day">' + shortDays[dayIdx] + '</div>' +
+                                  '<div class="fc-week-header-date">' + d + '/' + m + '</div>' +
+                                  '</div>'
+                        };
+                    } else {
+                        // timeGridDay
+                        let daysFull = ['Chủ Nhật', 'Thứ Hai', 'Thứ Ba', 'Thứ Tư', 'Thứ Năm', 'Thứ Sáu', 'Thứ Bảy'];
+                        let d = arg.date.getDate().toString().padStart(2, '0');
+                        let m = (arg.date.getMonth() + 1).toString().padStart(2, '0');
+                        let y = arg.date.getFullYear();
+                        let isToday = arg.isToday;
+                        return {
+                            html: '<div class="fc-week-header-cell ' + (isToday ? 'fc-header-today' : '') + '">' +
+                                  '<div class="fc-week-header-day">' + daysFull[dayIdx] + '</div>' +
+                                  '<div class="fc-week-header-date">' + d + '/' + m + '/' + y + '</div>' +
+                                  '</div>'
+                        };
                     }
                 },
                 eventContent: function(arg) {
                     if (arg.view.type === 'dayGridMonth') {
                         let props = arg.event.extendedProps || {};
-                        let color = props.eventColor || '#3B82F6';
+                        let color = props.eventColor || '#8E4DFF';
                         let timeStr = props.startTime || (arg.timeText || '');
                         let titleStr = props.studentName || arg.event.title || '';
                         if (props.notes && !titleStr.includes(props.notes)) {
@@ -3044,45 +3395,81 @@
                                    '</div>';
                         return { html: html };
                     }
+
+                    if (arg.view.type === 'timeGridWeek' || arg.view.type === 'timeGridDay') {
+                        let props = arg.event.extendedProps || {};
+                        let color = props.eventColor || '#8E4DFF';
+                        
+                        let timeStr = '';
+                        if (props.startTime && props.endTime) {
+                            timeStr = props.startTime + '-' + props.endTime;
+                        } else if (arg.timeText) {
+                            timeStr = arg.timeText.replace(/\s+/g, '');
+                        } else {
+                            let s = arg.event.start;
+                            let e = arg.event.end;
+                            if (s && e) {
+                                let sh = s.getHours().toString().padStart(2, '0');
+                                let sm = s.getMinutes().toString().padStart(2, '0');
+                                let eh = e.getHours().toString().padStart(2, '0');
+                                let em = e.getMinutes().toString().padStart(2, '0');
+                                timeStr = sh + ':' + sm + '-' + eh + ':' + em;
+                            }
+                        }
+
+                        let titleStr = props.studentName || arg.event.title || '';
+                        let feeNum = props.fee || 500000;
+                        let feeStr = Number(feeNum).toLocaleString('vi-VN') + ' đ';
+
+                        let theme = getCardThemeStyles(color);
+                        let isCancelled = props.status === 'cancelled';
+                        let cardBg = isCancelled ? '#F3F4F6' : theme.bg;
+                        let cardBorder = isCancelled ? '#D1D5DB' : theme.border;
+                        let textColor = isCancelled ? '#9CA3AF' : theme.text;
+                        let iconColor = isCancelled ? '#9CA3AF' : theme.icon;
+                        let textDecor = isCancelled ? 'text-decoration: line-through;' : '';
+
+                        let repeatIconHtml = !props.isOneTime
+                            ? '<span class="fc-week-card-icon" style="color: ' + iconColor + ';" title="Lịch lặp lại hàng tuần"><i class="fa-solid fa-repeat"></i></span>'
+                            : '<span class="fc-week-card-icon" style="color: ' + iconColor + '; opacity: 0.65;" title="Buổi học 1 lần"><i class="fa-regular fa-clock"></i></span>';
+
+                        let html = '<div class="fc-week-card-inner" style="background: ' + cardBg + '; border: 1px solid ' + cardBorder + '; color: ' + textColor + '; ' + textDecor + '">' +
+                                   '<div class="fc-week-card-header">' +
+                                       '<span class="fc-week-card-time" style="color: ' + textColor + ';">' + timeStr + '</span>' +
+                                       repeatIconHtml +
+                                   '</div>' +
+                                   '<div class="fc-week-card-subject" style="color: ' + textColor + ';" title="' + titleStr + '">' + titleStr + '</div>' +
+                                   '<div class="fc-week-card-fee" style="color: ' + textColor + ';">' + feeStr + '</div>' +
+                                   '</div>';
+                        return { html: html };
+                    }
+
                     return null;
                 },
-                slotMinTime: "00:00:00",
-                slotMaxTime: "24:00:00",
-                slotDuration: '00:30:00',   // Chia ô 30 phút - đúng chuẩn Google Calendar
-                scrollTime: '07:00:00',      // Tự động cuộn xuống 7 giờ sáng khi mở lịch
+                slotMinTime: "07:00:00",
+                slotMaxTime: "23:00:00",
+                slotDuration: '00:30:00',   // Chia ô 30 phút
+                slotLabelInterval: '01:00:00', // Chỉ hiện nhãn tròn giờ (7:00, 8:00...) đúng như Image 2
+                scrollTime: '07:00:00',      // Mặc định hiển thị từ 7h sáng
+                slotLabelContent: function(arg) {
+                    let h = arg.date.getHours();
+                    let m = arg.date.getMinutes();
+                    return h + ':' + (m < 10 ? '0' : '') + m;
+                },
                 allDaySlot: false,
                 editable: true,
                 selectable: true,
                 selectMirror: true,          // Hiển thị khối sự kiện ảo xem trước khi kéo thả chọn vùng thời gian
                 selectLongPressDelay: 350,   // Nhấn giữ 350ms trên điện thoại rồi kéo để chọn vùng thời gian
                 eventLongPressDelay: 350,    // Nhấn giữ 350ms trên điện thoại để bắt đầu kéo thả di chuyển sự kiện
-                nowIndicator: true, // Kích hoạt đường chỉ giờ hiện tại màu đỏ giống Google Calendar
+                nowIndicator: true, // Kích hoạt đường chỉ giờ hiện tại
                 eventDidMount: function(info) {
                     let props = info.event.extendedProps;
-                    let evColor = props.eventColor;
 
-                    if (info.view.type === 'dayGridMonth') {
-                        info.el.style.setProperty('background', 'transparent', 'important');
-                        info.el.style.setProperty('border', 'none', 'important');
-                        info.el.style.setProperty('box-shadow', 'none', 'important');
-                    } else if (evColor) {
-                        info.el.style.setProperty('border-left', '3px solid ' + evColor, 'important');
-                        info.el.style.setProperty('background', 'linear-gradient(0deg, ' + evColor + '25, ' + evColor + '25), #FFFFFF', 'important');
-                        info.el.style.setProperty('border-color', evColor + '40', 'important');
-                        let textC = evColor;
-                        info.el.style.setProperty('color', textC, 'important');
-
-                        let titleEl = info.el.querySelector('.fc-event-title');
-                        if (titleEl) {
-                            titleEl.style.setProperty('color', textC, 'important');
-                            titleEl.style.setProperty('font-weight', '700', 'important');
-                        }
-                        let timeEl = info.el.querySelector('.fc-event-time');
-                        if (timeEl) {
-                            timeEl.style.setProperty('color', textC, 'important');
-                            timeEl.style.setProperty('font-weight', '600', 'important');
-                        }
-                    }
+                    info.el.style.setProperty('background', 'transparent', 'important');
+                    info.el.style.setProperty('border', 'none', 'important');
+                    info.el.style.setProperty('box-shadow', 'none', 'important');
+                    info.el.style.setProperty('padding', '0', 'important');
 
                     // Xử lý hiển thị buổi học đã hủy
                     if (props.status === 'cancelled') {
@@ -3498,6 +3885,12 @@
             }
             document.getElementById("detailRecurrence").innerText = recurrenceText;
 
+            const feeEl = document.getElementById("detailFee");
+            if (feeEl) {
+                let fVal = props.fee || 500000;
+                feeEl.innerText = Number(fVal).toLocaleString('vi-VN') + ' đ / buổi';
+            }
+
             const notesContainer = document.getElementById("detailNotesContainer");
             if (props.notes && props.notes.trim() !== "") {
                 document.getElementById("detailNotes").innerText = props.notes;
@@ -3646,6 +4039,7 @@
 
             document.getElementById("eventStartTime").value = startTime;
             document.getElementById("eventEndTime").value = endTime;
+            document.getElementById("eventFee").value = "500000";
             document.getElementById("eventNotes").value = "";
 
             // Reset color picker
@@ -3690,6 +4084,7 @@
 
             document.getElementById("eventStartTime").value = props.startTime;
             document.getElementById("eventEndTime").value = props.endTime;
+            document.getElementById("eventFee").value = props.fee || (tutorScheduleSheetData[props.studentIndex] && tutorScheduleSheetData[props.studentIndex].fee) || 500000;
             document.getElementById("eventNotes").value = props.notes;
 
             // Set color picker theo cấu hình của event
@@ -3765,6 +4160,10 @@
             if (isNaN(targetStudentIdx)) return;
             let row = tutorScheduleSheetData[targetStudentIdx];
 
+            let feeInputVal = parseInt(document.getElementById("eventFee").value);
+            if (!isNaN(feeInputVal) && feeInputVal >= 0) {
+                row.fee = feeInputVal;
+            }
 
             // Đọc màu sắc và scope được chọn
             let selectedColor = document.getElementById("eventColor").value;
@@ -3903,6 +4302,7 @@
 
         // --- CHƯƠNG TRÌNH CUSTOM MÀU SẮC CHO HỌC SINH/BUỔI HỌC ---
         const PRESET_COLORS = [
+            '#D4E7B5', '#DFD6F2', '#F9D5CA', '#BDD7EE', '#FDE8B3', '#6D675E',
             '#8E4DFF', '#4D9EFF', '#00D2FC', '#4DFFC3', '#4CAF50', '#AEEA00', 
             '#FFD23F', '#FF9100', '#FF6B9D', '#FF4D4D', '#90A4AE', '#D1C4E9'
         ];
