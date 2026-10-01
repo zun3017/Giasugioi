@@ -1915,6 +1915,256 @@
                 margin: 0 auto 12px auto;
             }
         }
+    
+        /* === THEME OVERRIDES FOR CALENDAR === */
+        body {
+            background-color: var(--bg-page) !important;
+            background-image: var(--bg-page-gradient) !important;
+            color: var(--text-primary) !important;
+        }
+
+        .container {
+            background: var(--bg-sidebar) !important;
+            border-bottom: 1px solid var(--border-card) !important;
+        }
+
+        .btn-back-dashboard {
+            background: var(--bg-input) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+        .btn-back-dashboard:hover {
+            background: var(--nav-hover-bg) !important;
+            border-color: var(--color-primary) !important;
+        }
+
+        .cal-nav-btn {
+            background: var(--bg-input) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+        .cal-nav-btn:hover {
+            background: var(--nav-hover-bg) !important;
+            border-color: var(--color-primary) !important;
+        }
+
+        .cal-today-btn {
+            background: var(--bg-input) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+        .cal-today-btn:hover {
+            background: var(--nav-hover-bg) !important;
+            border-color: var(--color-primary) !important;
+        }
+
+        .calendar-month-title {
+            color: var(--color-primary) !important;
+        }
+
+        .cal-filter-pill {
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border-card) !important;
+            color: var(--text-secondary) !important;
+        }
+        .cal-filter-pill:hover {
+            background: var(--nav-hover-bg) !important;
+            border-color: var(--border-color) !important;
+        }
+        .cal-filter-pill.active {
+            background: var(--nav-active-bg) !important;
+            border-color: var(--color-primary) !important;
+            color: var(--color-primary) !important;
+            box-shadow: var(--shadow-primary) !important;
+        }
+        .cal-filter-pill.active i {
+            color: var(--color-primary) !important;
+        }
+
+        .cal-view-pills {
+            background: var(--bg-input) !important;
+            border: 1px solid var(--border-card) !important;
+        }
+        .cal-view-pill {
+            color: var(--text-secondary) !important;
+        }
+        .cal-view-pill:hover:not(.active) {
+            color: var(--text-primary) !important;
+            background: var(--nav-hover-bg) !important;
+        }
+        .cal-view-pill.active {
+            background: var(--btn-bg) !important;
+            color: var(--btn-text) !important;
+            box-shadow: var(--shadow-primary) !important;
+        }
+
+        .cal-sheet-toggle-btn {
+            background: var(--bg-input) !important;
+            border: 1px solid var(--border-color) !important;
+            color: var(--text-primary) !important;
+        }
+        .cal-sheet-toggle-btn:hover {
+            background: var(--nav-hover-bg) !important;
+            border-color: var(--color-primary) !important;
+        }
+
+        .calendar-bottom-bar {
+            background: var(--bg-sidebar) !important;
+            border-top: 1px solid var(--border-card) !important;
+        }
+        .cal-legend-item {
+            color: var(--text-primary) !important;
+        }
+        .cal-status-bar {
+            background: var(--bg-input) !important;
+            border: 1px solid var(--border-card) !important;
+            color: var(--text-secondary) !important;
+        }
+
+        /* FullCalendar Standard Overrides */
+        .fc-theme-standard .fc-scrollgrid {
+            border: none !important;
+            background: transparent !important;
+        }
+        .fc-timegrid .fc-scrollgrid {
+            border: 1px solid var(--border-card) !important;
+            background: var(--bg-card) !important;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+        .fc-timegrid td, .fc-timegrid th {
+            border: 1px solid var(--border-card) !important;
+        }
+        .fc-col-header-cell {
+            border: none !important;
+            background: transparent !important;
+        }
+        .fc-timegrid .fc-col-header-cell {
+            border: 1px solid var(--border-card) !important;
+            background: var(--bg-card-alt) !important;
+        }
+        .fc-col-header-cell-cushion {
+            color: var(--text-secondary) !important;
+        }
+        .fc-timegrid-slot {
+            border-bottom: 1px solid var(--border-card) !important;
+            border-right: 1px solid var(--border-card) !important;
+            background: var(--bg-card) !important;
+        }
+        .fc-timegrid-slot-minor {
+            border-bottom: 1px solid var(--border-card) !important;
+        }
+        .fc-timegrid-slot-lane {
+            background: var(--bg-card) !important;
+        }
+        .fc-timegrid-slot-label {
+            background: var(--bg-card-alt) !important;
+            border-color: var(--border-card) !important;
+        }
+        .fc-timegrid-slot-label-cushion {
+            color: var(--text-muted) !important;
+            background: var(--bg-card-alt) !important;
+        }
+        .fc-timegrid-axis-frame, .fc-timegrid-axis {
+            color: var(--text-muted) !important;
+            background: var(--bg-card-alt) !important;
+            border-color: var(--border-card) !important;
+        }
+        .fc-theme-standard th.fc-timegrid-axis {
+            background: var(--bg-card-alt) !important;
+            border-bottom: 1px solid var(--border-card) !important;
+            border-right: 1px solid var(--border-card) !important;
+        }
+        .fc-daygrid-day-frame {
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border-card) !important;
+            box-shadow: var(--shadow-card) !important;
+        }
+        .fc-daygrid-day-frame:hover {
+            border-color: var(--color-primary) !important;
+        }
+        .fc-daygrid-day-number {
+            color: var(--text-primary) !important;
+        }
+        .fc-day-other .fc-daygrid-day-frame {
+            background: var(--bg-page) !important;
+            border-color: var(--border-card) !important;
+            opacity: 0.65;
+        }
+        .fc-day-other .fc-daygrid-day-number {
+            color: var(--text-muted) !important;
+        }
+        .fc-daygrid-day.fc-day-today .fc-daygrid-day-frame {
+            border: 1.5px solid var(--color-primary) !important;
+            background: var(--bg-card) !important;
+        }
+        .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
+            background: var(--color-primary) !important;
+            color: var(--btn-text) !important;
+        }
+        .fc th.fc-day-today .fc-col-header-cell-cushion {
+            color: var(--color-primary) !important;
+        }
+        .fc .fc-daygrid-more-link {
+            color: var(--text-secondary) !important;
+        }
+        .fc .fc-daygrid-more-link:hover {
+            color: var(--text-primary) !important;
+            background: var(--nav-hover-bg) !important;
+        }
+        .fc .fc-popover {
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border-card) !important;
+            box-shadow: var(--shadow-card) !important;
+        }
+        .fc .fc-popover-header {
+            background: var(--bg-card-alt) !important;
+            border-bottom: 1px solid var(--border-card) !important;
+            color: var(--text-primary) !important;
+        }
+        .fc-timegrid-now-indicator-line {
+            border-color: var(--color-primary) !important;
+        }
+
+        /* Modals & Dialogs */
+        .modal-overlay {
+            background: var(--bg-overlay) !important;
+        }
+        .calendar-modal {
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border-card) !important;
+            box-shadow: var(--shadow-card) !important;
+            color: var(--text-primary) !important;
+        }
+        .recurrence-dialog-overlay {
+            background: var(--bg-overlay) !important;
+        }
+        .recurrence-dialog {
+            background: var(--bg-card) !important;
+            border: 1px solid var(--border-card) !important;
+            box-shadow: var(--shadow-card) !important;
+            color: var(--text-primary) !important;
+        }
+        .recurrence-dialog h4 {
+            color: var(--text-primary) !important;
+        }
+        .recurrence-dialog p {
+            color: var(--text-secondary) !important;
+        }
+        .recurrence-option {
+            background: var(--bg-input) !important;
+            border: 1px solid var(--border-card) !important;
+            color: var(--text-primary) !important;
+        }
+        .recurrence-option:hover, .recurrence-option.selected {
+            background: var(--nav-hover-bg) !important;
+            border-color: var(--color-primary) !important;
+        }
+        .recurrence-option.selected .recurrence-radio-dot {
+            border-color: var(--color-primary) !important;
+            background: var(--color-primary) !important;
+        }
+
     </style>
 </head>
 <body>
@@ -1963,6 +2213,11 @@
                 <button type="button" class="cal-sheet-toggle-btn" onclick="toggleSheetPanel()" title="Xem bảng phân bổ lịch dạy">
                     <i class="fa-solid fa-table-list"></i>
                     <span class="cal-sheet-btn-text">Lịch tóm tắt</span>
+                </button>
+
+                <!-- Nút chọn giao diện Theme -->
+                <button type="button" class="cal-sheet-toggle-btn" onclick="openThemeSwitcher()" title="Chọn giao diện" style="padding: 0 10px; font-size: 15px;">
+                    <span>🎨</span>
                 </button>
             </div>
         </div>
@@ -3295,6 +3550,21 @@
                 }).join('');
             }
 
+            
+            function hexToRgbStr(hex) {
+                let rgb = hexToRgb(hex);
+                return rgb.r + ',' + rgb.g + ',' + rgb.b;
+            }
+
+            function darkenColor(hex, amount) {
+                if (!hex || !hex.startsWith('#')) hex = '#8E4DFF';
+                let rgb = hexToRgb(hex);
+                let r = Math.max(0, Math.round(rgb.r * (1 - amount)));
+                let g = Math.max(0, Math.round(rgb.g * (1 - amount)));
+                let b = Math.max(0, Math.round(rgb.b * (1 - amount)));
+                return rgbToHex(r, g, b);
+            }
+
             function getCardThemeStyles(colorHex) {
                 if (!colorHex || !colorHex.startsWith('#')) {
                     colorHex = '#8E4DFF';
@@ -3428,7 +3698,7 @@
                         let html = '<div class="fc-month-chip-inner" style="background: ' + chipBg + '; border: 1px solid ' + chipBorder + '; ' + textDecor + '">' +
                                    '<span class="fc-chip-dot" style="background-color: ' + dotColor + ';"></span>' +
                                    (timeStr ? '<span class="fc-chip-time" style="color: ' + textColor + ';">' + timeStr + '</span>' : '') +
-                                   '<span class="fc-chip-title" style="color: #2D1F0E;">' + titleStr + '</span>' +
+                                   '<span class="fc-chip-title" style="color: var(--text-primary);">' + titleStr + '</span>' +
                                    '</div>';
                         return { html: html };
                     }
@@ -3501,12 +3771,31 @@
                 eventLongPressDelay: 350,    // Nhấn giữ 350ms trên điện thoại để bắt đầu kéo thả di chuyển sự kiện
                 nowIndicator: true, // Kích hoạt đường chỉ giờ hiện tại
                 eventDidMount: function(info) {
-                    let props = info.event.extendedProps;
+                    let props = info.event.extendedProps || {};
+                    let evColor = props.eventColor || props.color || '#8E4DFF';
+                    let isDark = getComputedStyle(document.documentElement).getPropertyValue('--is-dark-theme').trim() === '1';
 
                     info.el.style.setProperty('background', 'transparent', 'important');
                     info.el.style.setProperty('border', 'none', 'important');
                     info.el.style.setProperty('box-shadow', 'none', 'important');
                     info.el.style.setProperty('padding', '0', 'important');
+
+                    if (info.view.type === 'dayGridMonth') {
+                        var innerChip = info.el.querySelector('.fc-month-chip-inner');
+                        if (innerChip) {
+                            if (isDark) {
+                                innerChip.style.setProperty('background', 'rgba(' + hexToRgbStr(evColor) + ', 0.28)', 'important');
+                                innerChip.style.setProperty('border', '1px solid ' + evColor, 'important');
+                                var chipTitle = innerChip.querySelector('.fc-chip-title');
+                                if (chipTitle) chipTitle.style.setProperty('color', '#FFFFFF', 'important');
+                            } else {
+                                innerChip.style.setProperty('background', evColor + '18', 'important');
+                                innerChip.style.setProperty('border', '1px solid ' + evColor + '38', 'important');
+                                var chipTitle = innerChip.querySelector('.fc-chip-title');
+                                if (chipTitle) chipTitle.style.setProperty('color', darkenColor(evColor, 0.4), 'important');
+                            }
+                        }
+                    }
 
                     // Xử lý hiển thị buổi học đã hủy
                     if (props.status === 'cancelled') {
