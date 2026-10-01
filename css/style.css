@@ -2041,6 +2041,118 @@
             gap: 6px;
         }
 
+        /* Overview 2-Column Grid */
+        .overview-body-grid {
+            display: grid;
+            grid-template-columns: minmax(0, 1.1fr) minmax(0, 1fr);
+            gap: 20px;
+            margin-bottom: 25px;
+            align-items: start;
+        }
+
+        .overview-col-left,
+        .overview-col-right {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+            min-width: 0;
+        }
+
+        /* Overview Chart Box */
+        .overview-chart-box {
+            background: rgba(11, 8, 38, 0.95);
+            border: 1px solid rgba(142, 77, 255, 0.25);
+            border-radius: 18px;
+            padding: 20px 22px;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            box-sizing: border-box;
+            width: 100%;
+        }
+
+        .overview-chart-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .overview-chart-title {
+            color: #FFFFFF;
+            font-size: 15px;
+            font-weight: 700;
+            margin: 0 0 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .revenue-big-total-wrap {
+            display: flex;
+            align-items: baseline;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .revenue-big-total {
+            font-size: 26px;
+            font-weight: 800;
+            color: #FFD23F;
+            letter-spacing: -0.5px;
+            line-height: 1.1;
+        }
+
+        .revenue-big-subtext {
+            font-size: 12px;
+            color: #A6ADCE;
+            font-weight: 500;
+        }
+
+        .overview-chart-filters {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-wrap: wrap;
+        }
+
+        .chart-filter-select {
+            background: rgba(24, 18, 59, 0.95);
+            border: 1px solid rgba(142, 77, 255, 0.4);
+            border-radius: 8px;
+            color: #E2E8F0;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 6px 10px;
+            outline: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .chart-filter-select:hover {
+            border-color: #8E4DFF;
+            background: rgba(142, 77, 255, 0.15);
+        }
+
+        .chart-filter-select option {
+            background: #0B0826;
+            color: #FFFFFF;
+        }
+
+        .chart-canvas-container {
+            position: relative;
+            height: 240px;
+            width: 100%;
+        }
+
+        @media (max-width: 1024px) {
+            .overview-body-grid {
+                grid-template-columns: 1fr !important;
+                gap: 16px !important;
+            }
+        }
+
         @media (max-width: 768px) {
             .overview-top-bar {
                 margin-bottom: 14px !important;
@@ -2065,6 +2177,31 @@
                 width: 26px !important;
                 height: 26px !important;
                 font-size: 11px !important;
+            }
+
+            .overview-chart-box {
+                padding: 16px 14px !important;
+                border-radius: 14px !important;
+            }
+            .revenue-big-total {
+                font-size: 22px !important;
+            }
+            .overview-chart-header {
+                flex-direction: column !important;
+                gap: 10px !important;
+            }
+            .overview-chart-filters {
+                width: 100%;
+                justify-content: flex-start;
+            }
+            .chart-filter-select {
+                font-size: 11px !important;
+                padding: 5px 8px !important;
+                flex: 1;
+                min-width: 80px;
+            }
+            .chart-canvas-container {
+                height: 200px !important;
             }
 
             .tutor-kpi-grid {
