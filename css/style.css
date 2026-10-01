@@ -1506,6 +1506,15 @@
             padding: 24px 14px 20px 14px;
             z-index: 990;
             box-sizing: border-box;
+            overflow-x: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .tutor-sidebar::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
         }
 
         .tutor-sidebar-brand {
@@ -1559,6 +1568,15 @@
             margin-top: 18px;
             flex: 1;
             overflow-y: auto;
+            overflow-x: hidden;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .tutor-sidebar-nav::-webkit-scrollbar {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
         }
 
         .sidebar-nav-item {
@@ -1701,6 +1719,11 @@
             .tutor-app-layout.sidebar-collapsed .tutor-sidebar {
                 width: 60px !important;
                 padding: 24px 8px 20px 8px !important;
+                overflow: visible !important;
+            }
+
+            .tutor-app-layout.sidebar-collapsed .tutor-sidebar-nav {
+                overflow: visible !important;
             }
 
             .tutor-app-layout.sidebar-collapsed .tutor-main-content {
@@ -1773,6 +1796,7 @@
                 border-radius: 8px;
                 white-space: nowrap;
                 opacity: 0;
+                visibility: hidden;
                 pointer-events: none;
                 transition: opacity 0.15s ease, transform 0.15s ease;
                 z-index: 1002;
@@ -1783,7 +1807,21 @@
             .tutor-app-layout.sidebar-collapsed .sidebar-footer-btn:hover::after,
             .tutor-app-layout.sidebar-collapsed .sidebar-theme-btn:hover::after {
                 opacity: 1;
+                visibility: visible;
                 transform: translateY(-50%) translateX(2px);
+            }
+
+            .tutor-app-layout.sidebar-collapsed .tutor-sidebar,
+            .tutor-app-layout.sidebar-collapsed .tutor-sidebar * {
+                scrollbar-width: none !important;
+                -ms-overflow-style: none !important;
+            }
+
+            .tutor-app-layout.sidebar-collapsed .tutor-sidebar::-webkit-scrollbar,
+            .tutor-app-layout.sidebar-collapsed .tutor-sidebar *::-webkit-scrollbar {
+                display: none !important;
+                width: 0 !important;
+                height: 0 !important;
             }
         }
 
