@@ -1233,6 +1233,7 @@ function renderTutorStudentsGrid() {
         return;
     }
 
+    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
     var schedList = lastLoadedTutorSchedule || ((store && store.tutorSchedule) ? store.tutorSchedule : []);
     var schedMap = {};
     if (Array.isArray(schedList)) {
@@ -3720,12 +3721,44 @@ function switchTutorNavTab(element, tabKey) {
     var layout = document.getElementById('tutorDashboardBox');
     if (layout) {
         layout.classList.toggle('calendar-tab-active', isCalTab);
+        if (isCalTab) {
+            layout.style.height = '100vh';
+            layout.style.maxHeight = '100vh';
+            layout.style.overflow = 'hidden';
+        } else {
+            layout.style.height = '';
+            layout.style.maxHeight = '';
+            layout.style.overflow = '';
+        }
     }
     if (document.body) {
         document.body.classList.toggle('calendar-tab-active', isCalTab);
+        document.body.style.overflow = isCalTab ? 'hidden' : '';
     }
     if (document.documentElement) {
         document.documentElement.classList.toggle('calendar-tab-active', isCalTab);
+        document.documentElement.style.overflow = isCalTab ? 'hidden' : '';
+    }
+
+    var mainContentEl = document.getElementById('tutorMainContent') || document.querySelector('.tutor-main-content');
+    if (mainContentEl) {
+        if (isCalTab) {
+            mainContentEl.style.height = '100vh';
+            mainContentEl.style.maxHeight = '100vh';
+            mainContentEl.style.overflow = 'hidden';
+            mainContentEl.style.padding = '14px 20px 14px 20px';
+            mainContentEl.style.display = 'flex';
+            mainContentEl.style.flexDirection = 'column';
+            mainContentEl.style.boxSizing = 'border-box';
+        } else {
+            mainContentEl.style.height = '';
+            mainContentEl.style.maxHeight = '';
+            mainContentEl.style.overflow = '';
+            mainContentEl.style.padding = '';
+            mainContentEl.style.display = '';
+            mainContentEl.style.flexDirection = '';
+            mainContentEl.style.boxSizing = '';
+        }
     }
 
     var overviewSec = document.getElementById('tutorSectionOverview');
@@ -3738,7 +3771,7 @@ function switchTutorNavTab(element, tabKey) {
     if (overviewSec) overviewSec.style.display = (tabKey === 'overview') ? 'block' : 'none';
     if (reportsSec) reportsSec.style.display = (tabKey === 'reports') ? 'block' : 'none';
     if (diarySec) diarySec.style.display = (tabKey === 'diary') ? 'block' : 'none';
-    if (calendarSec) calendarSec.style.display = (tabKey === 'calendar') ? 'block' : 'none';
+    if (calendarSec) calendarSec.style.display = (tabKey === 'calendar') ? 'flex' : 'none';
     if (studentsSec) studentsSec.style.display = (tabKey === 'students') ? 'block' : 'none';
     if (tuitionSec) tuitionSec.style.display = (tabKey === 'tuition') ? 'block' : 'none';
 
@@ -3759,13 +3792,24 @@ function switchTutorNavTab(element, tabKey) {
         if (calFrame) {
             if (!calFrame.src || calFrame.src.indexOf('tutor-calendar.html') === -1) {
                 calFrame.src = 'tutor-calendar.html?embedded=1';
-            } else if (calFrame.contentWindow && calFrame.contentWindow.calendar) {
-                setTimeout(function() {
-                    try {
-                        calFrame.contentWindow.calendar.updateSize();
-                    } catch(e) {}
-                }, 100);
             }
+            var triggerCalendarResize = function() {
+                try {
+                    if (calFrame.contentWindow && calFrame.contentWindow.calendar && typeof calFrame.contentWindow.calendar.updateSize === 'function') {
+                        calFrame.contentWindow.calendar.updateSize();
+                    }
+                } catch(e) {}
+                try {
+                    if (calFrame.contentWindow) {
+                        calFrame.contentWindow.postMessage('updateCalendarSize', '*');
+                        calFrame.contentWindow.dispatchEvent(new Event('resize'));
+                    }
+                } catch(e) {}
+            };
+            setTimeout(triggerCalendarResize, 50);
+            setTimeout(triggerCalendarResize, 150);
+            setTimeout(triggerCalendarResize, 350);
+            setTimeout(triggerCalendarResize, 700);
         }
     } else if (tabKey === 'students') {
         renderTutorStudentsGrid();

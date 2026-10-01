@@ -23,8 +23,8 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Apps Script API Client -->
-    <script src="js/demo-data.js"></script>
-    <script src="js/api.js?v=2.0.0"></script>
+    <script src="js/demo-data.js?v=202610012235"></script>
+    <script src="js/api.js?v=202610012235"></script>
     <!-- FullCalendar JS v6 -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     
@@ -109,6 +109,8 @@
         body.is-embedded-calendar .calendar-wrapper {
             background: var(--bg-card, #FFFFFF) !important;
             padding: 6px 10px 10px 10px !important;
+            min-height: 480px !important;
+            flex: 1 1 auto !important;
         }
         body.is-embedded-calendar .calendar-bottom-bar {
             background: var(--bg-card, rgba(255, 255, 255, 0.95)) !important;
@@ -160,7 +162,8 @@
 
         /* Vùng lịch chiếm toàn bộ chiều cao còn lại */
         .calendar-wrapper {
-            flex: 1;
+            flex: 1 1 auto;
+            min-height: 480px;
             overflow: hidden;
             background: transparent;
             padding: 0 10px 10px 10px;
@@ -168,6 +171,7 @@
 
         .calendar-wrapper #calendar {
             height: 100%;
+            min-height: 480px;
         }
 
         /* --- CUSTOM CALENDAR HEADER (TASK 10.2) --- */
@@ -2569,11 +2573,12 @@
 
     <script>
         let calendar = null;
+        window.calendar = null;
 
         const userPhone = sessionStorage.getItem('userPhone');
         const dashDataStr = sessionStorage.getItem('dashboardData');
         let tutorDataGlobal = dashDataStr ? JSON.parse(dashDataStr) : null;
-        const isDemoMode = !userPhone;
+        const isDemoMode = !userPhone || userPhone === '0123456789' || window.location.search.indexOf('demo=1') !== -1;
 
         const PRESET_COLORS = [
             '#8E4DFF', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6366F1',
@@ -3924,6 +3929,34 @@
             });
 
             calendar.render();
+            window.calendar = calendar;
+
+            // Đảm bảo FullCalendar luôn tự động cập nhật kích thước ngay khi iframe hiển thị hoặc thay đổi kích thước
+            if (window.ResizeObserver) {
+                try {
+                    var calResizeObs = new ResizeObserver(function() {
+                        if (calendar && typeof calendar.updateSize === 'function') {
+                            calendar.updateSize();
+                        }
+                    });
+                    if (calendarEl) calResizeObs.observe(calendarEl);
+                    if (document.body) calResizeObs.observe(document.body);
+                } catch(e) {}
+            }
+
+            window.addEventListener('resize', function() {
+                if (calendar && typeof calendar.updateSize === 'function') {
+                    calendar.updateSize();
+                }
+            });
+
+            window.addEventListener('message', function(e) {
+                if (e.data === 'updateCalendarSize' || (e.data && e.data.type === 'updateCalendarSize')) {
+                    if (calendar && typeof calendar.updateSize === 'function') {
+                        calendar.updateSize();
+                    }
+                }
+            });
 
             // Cho phép cuộn ngang danh sách học sinh (legend) bằng con lăn chuột
             let legendListEl = document.getElementById('calStudentLegendList');

@@ -68,7 +68,7 @@
       })();
     </script>
     <!-- Global CSS -->
-    <link rel="stylesheet" href="css/style.css?v=202610012025">
+    <link rel="stylesheet" href="css/style.css?v=202610012235">
     <style>
         /* Đảm bảo nút thu gọn Sidebar luôn hiển thị tròn nguyên vẹn, không bao giờ bị cắt cụt */
         .tutor-sidebar {
@@ -979,9 +979,9 @@
         </div> <!-- End #tutorSectionDiary -->
         
         <!-- SECTION LỊCH DẠY (FULLCALENDAR NHÚNG TRỰC TIẾP TRONG DASHBOARD - KHÔNG CHUYỂN TRANG) -->
-        <div id="tutorSectionCalendar" class="tutor-section" style="display: none; height: 100%; flex: 1; min-height: 0;">
-            <div class="calendar-embed-wrapper" style="width: 100%; height: 100%; min-height: 0; background: var(--bg-card, #FFFFFF); border: 1px solid var(--border-card, #E2E8F0); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-card, 0 4px 16px rgba(0,0,0,0.06)); display: flex; flex-direction: column;">
-                <iframe id="tutorCalendarIframe" src="tutor-calendar.html?embedded=1" style="width: 100%; height: 100%; flex: 1; border: none; background: transparent; display: block;" title="Lịch dạy Gia Sư"></iframe>
+        <div id="tutorSectionCalendar" class="tutor-section" style="display: none; width: 100%; height: calc(100vh - 28px); min-height: 560px; flex: 1; box-sizing: border-box;">
+            <div class="calendar-embed-wrapper" style="width: 100%; height: 100%; min-height: 560px; flex: 1; background: var(--bg-card, #FFFFFF); border: 1px solid var(--border-card, #E2E8F0); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-card, 0 4px 16px rgba(0,0,0,0.06)); display: flex; flex-direction: column;">
+                <iframe id="tutorCalendarIframe" src="tutor-calendar.html?embedded=1" style="width: 100%; height: 100%; min-height: 540px; flex: 1; border: none; background: transparent; display: block;" title="Lịch dạy Gia Sư"></iframe>
             </div>
         </div> <!-- End #tutorSectionCalendar -->
 
@@ -2333,9 +2333,9 @@
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="js/demo-data.js?v=202610011120"></script>
-    <script src="js/api.js?v=202610011120"></script>
-    <script src="js/tutor.js?v=202610011120"></script>
+    <script src="js/demo-data.js?v=202610012235"></script>
+    <script src="js/api.js?v=202610012235"></script>
+    <script src="js/tutor.js?v=202610012235"></script>
     <script>
         window.addEventListener('DOMContentLoaded', () => {
             var phone = sessionStorage.getItem('userPhone') || '0123456789';

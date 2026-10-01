@@ -4754,7 +4754,7 @@
             flex: 1 !important;
             height: 100% !important;
             max-height: 100% !important;
-            min-height: 0 !important;
+            min-height: 520px !important;
             overflow: hidden !important;
             margin: 0 !important;
         }
@@ -4763,7 +4763,7 @@
             flex: 1 !important;
             height: 100% !important;
             width: 100% !important;
-            min-height: 0 !important;
+            min-height: 520px !important;
             border: none !important;
             display: block !important;
         }
