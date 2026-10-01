@@ -441,10 +441,10 @@
                     <i class="fa-solid fa-book-open"></i>
                     <span>Nhật ký buổi học</span>
                 </button>
-                <a href="tutor-calendar.html" class="sidebar-nav-item" data-tab="calendar" data-title="Lịch dạy">
+                <button type="button" class="sidebar-nav-item" data-tab="calendar" data-title="Lịch dạy" onclick="switchTutorNavTab(this, 'calendar')">
                     <i class="fa-solid fa-calendar-days"></i>
                     <span>Lịch dạy</span>
-                </a>
+                </button>
                 <button type="button" class="sidebar-nav-item" data-tab="students" data-title="Học sinh" onclick="switchTutorNavTab(this, 'students')">
                     <i class="fa-solid fa-user-graduate"></i>
                     <span>Học sinh</span>
@@ -562,9 +562,9 @@
                     </h3>
                     <div style="display: flex; align-items: center; gap: 12px; flex-wrap: wrap;">
                         <span style="font-size: 12px; color: var(--text-secondary);" id="upcomingScheduleSubtext"><i class="fa-solid fa-bolt" style="color: var(--color-primary);"></i> Hôm nay & Ngày mai</span>
-                        <a href="tutor-calendar.html" class="upcoming-all-schedule-btn" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: var(--nav-active-bg); border: 1px solid var(--border-color); color: var(--nav-active-text); transition: all 0.2s ease;">
+                        <button type="button" class="upcoming-all-schedule-btn" onclick="openTutorCalendarTab()" style="padding: 5px 12px; font-size: 12px; font-weight: 600; border-radius: 8px; text-decoration: none; display: inline-flex; align-items: center; gap: 6px; background: var(--nav-active-bg); border: 1px solid var(--border-color); color: var(--nav-active-text); transition: all 0.2s ease; cursor: pointer;">
                             <i class="fa-regular fa-calendar-days" style="color: var(--color-primary);"></i> Xem toàn bộ lịch dạy
-                        </a>
+                        </button>
                     </div>
                 </div>
                 <div class="upcoming-days-grid" id="tutorUpcomingDaysGrid">
@@ -679,9 +679,9 @@
             <div class="schedule-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                 <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;"><i class="fa-regular fa-calendar-alt" style="color: var(--color-primary);"></i> Thời khóa biểu tổng hợp</h3>
-                <a href="tutor-calendar.html" class="modal-btn modal-btn-primary" style="width: auto; padding: 8px 18px; background: var(--btn-bg); color: var(--btn-text); font-weight: bold; border-radius: 20px; display: inline-flex; align-items: center; gap: 8px; box-shadow: var(--shadow-primary); text-decoration: none; font-size: 13px; font-family: 'Inter', sans-serif;">
+                <button type="button" onclick="openTutorCalendarTab()" class="modal-btn modal-btn-primary" style="width: auto; padding: 8px 18px; background: var(--btn-bg); color: var(--btn-text); font-weight: bold; border-radius: 20px; display: inline-flex; align-items: center; gap: 8px; box-shadow: var(--shadow-primary); text-decoration: none; font-size: 13px; font-family: 'Inter', sans-serif; cursor: pointer;">
                     <i class="fa-solid fa-calendar-days"></i> Quản lý & Tạo thời khóa biểu
-                </a>
+                </button>
             </div>
             
             <div class="table-wrapper desktop-table-view" style="margin-top: 10px; width: 100%; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 12px;">
@@ -981,6 +981,13 @@
                 </div>
             </div>
         </div> <!-- End #tutorSectionDiary -->
+        
+        <!-- SECTION LỊCH DẠY (FULLCALENDAR NHÚNG TRỰC TIẾP TRONG DASHBOARD - KHÔNG CHUYỂN TRANG) -->
+        <div id="tutorSectionCalendar" class="tutor-section" style="display: none;">
+            <div class="calendar-embed-wrapper" style="width: 100%; height: calc(100vh - 85px); min-height: 720px; background: var(--bg-card, #FFFFFF); border: 1px solid var(--border-card, #E2E8F0); border-radius: 20px; overflow: hidden; box-shadow: var(--shadow-card, 0 4px 16px rgba(0,0,0,0.06)); display: flex; flex-direction: column;">
+                <iframe id="tutorCalendarIframe" src="tutor-calendar.html?embedded=1" style="width: 100%; height: 100%; flex: 1; border: none; background: transparent; display: block;" title="Lịch dạy Gia Sư"></iframe>
+            </div>
+        </div> <!-- End #tutorSectionCalendar -->
 
         <!-- SECTION HỌC SINH -->
         <div id="tutorSectionStudents" class="tutor-section" style="display: none;">
@@ -2370,6 +2377,25 @@
             if (document.getElementById('maPin')) document.getElementById('maPin').value = pin;
             
             renderTutorView(data);
+
+            // Kích hoạt tab nếu có hash hoặc query param
+            var hash = window.location.hash.toLowerCase();
+            var search = window.location.search.toLowerCase();
+            if (hash.includes('calendar') || search.includes('tab=calendar')) {
+                openTutorCalendarTab();
+            } else if (hash.includes('reports') || search.includes('tab=reports')) {
+                var rBtn = document.querySelector('.sidebar-nav-item[data-tab="reports"]');
+                if (rBtn) switchTutorNavTab(rBtn, 'reports');
+            } else if (hash.includes('diary') || search.includes('tab=diary')) {
+                var dBtn = document.querySelector('.sidebar-nav-item[data-tab="diary"]');
+                if (dBtn) switchTutorNavTab(dBtn, 'diary');
+            } else if (hash.includes('students') || search.includes('tab=students')) {
+                var sBtn = document.querySelector('.sidebar-nav-item[data-tab="students"]');
+                if (sBtn) switchTutorNavTab(sBtn, 'students');
+            } else if (hash.includes('tuition') || search.includes('tab=tuition')) {
+                var tBtn = document.querySelector('.sidebar-nav-item[data-tab="tuition"]');
+                if (tBtn) switchTutorNavTab(tBtn, 'tuition');
+            }
         });
     </script>
     <!-- PWA Install Script -->

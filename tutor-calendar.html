@@ -70,6 +70,14 @@
         } else {
           document.documentElement.className = t;
         }
+
+        // Tự động nhận diện khi được nhúng trong Dashboard (iframe / ?embedded=1)
+        if (window.self !== window.top || window.location.search.indexOf('embedded=1') !== -1) {
+          document.documentElement.classList.add('is-embedded-calendar');
+          window.addEventListener('DOMContentLoaded', function() {
+            document.body.classList.add('is-embedded-calendar');
+          });
+        }
       })();
     </script>
 
@@ -79,6 +87,33 @@
             padding: 0;
             box-sizing: border-box;
             font-family: 'Inter', sans-serif;
+        }
+
+        /* === EMBEDDED MODE TRONG DASHBOARD (KHÔNG CHUYỂN TRANG) === */
+        html.is-embedded-calendar,
+        body.is-embedded-calendar {
+            background: transparent !important;
+            padding: 0 !important;
+            height: 100% !important;
+            overflow: hidden !important;
+        }
+        body.is-embedded-calendar .container {
+            background: var(--bg-card, rgba(255, 255, 255, 0.95)) !important;
+            border-bottom: 1px solid var(--border-color, #E5D9CC) !important;
+            padding: 10px 18px !important;
+            border-radius: 16px 16px 0 0 !important;
+        }
+        body.is-embedded-calendar .btn-back-dashboard {
+            display: none !important;
+        }
+        body.is-embedded-calendar .calendar-wrapper {
+            background: var(--bg-card, #FFFFFF) !important;
+            padding: 6px 10px 10px 10px !important;
+        }
+        body.is-embedded-calendar .calendar-bottom-bar {
+            background: var(--bg-card, rgba(255, 255, 255, 0.95)) !important;
+            border-top: 1px solid var(--border-color, #E5D9CC) !important;
+            border-radius: 0 0 16px 16px !important;
         }
 
         /* === FULL-SCREEN LAYOUT NHƯ GOOGLE CALENDAR === */

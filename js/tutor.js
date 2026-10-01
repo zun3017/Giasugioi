@@ -1,4 +1,4 @@
-﻿var tutorChartInstance = null;
+var tutorChartInstance = null;
 var tutorDataGlobal = null;
 var currentTutorStudent = null;
 var currentTutorPhone = "";
@@ -3696,6 +3696,14 @@ function exportReportToPdf() {
 }
 window.exportReportToPdf = exportReportToPdf;
 
+function openTutorCalendarTab() {
+    var calBtn = document.querySelector('.sidebar-nav-item[data-tab="calendar"]');
+    if (typeof switchTutorNavTab === 'function') {
+        switchTutorNavTab(calBtn, 'calendar');
+    }
+}
+window.openTutorCalendarTab = openTutorCalendarTab;
+
 function switchTutorNavTab(element, tabKey) {
     var items = document.querySelectorAll('.sidebar-nav-item');
     items.forEach(function(item) {
@@ -3703,20 +3711,26 @@ function switchTutorNavTab(element, tabKey) {
     });
     if (element) {
         element.classList.add('active');
+    } else {
+        var targetBtn = document.querySelector('.sidebar-nav-item[data-tab="' + tabKey + '"]');
+        if (targetBtn) targetBtn.classList.add('active');
     }
 
     var overviewSec = document.getElementById('tutorSectionOverview');
     var reportsSec = document.getElementById('tutorSectionReports');
     var diarySec = document.getElementById('tutorSectionDiary');
+    var calendarSec = document.getElementById('tutorSectionCalendar');
     var studentsSec = document.getElementById('tutorSectionStudents');
     var tuitionSec = document.getElementById('tutorSectionTuition');
 
+    if (overviewSec) overviewSec.style.display = (tabKey === 'overview') ? 'block' : 'none';
+    if (reportsSec) reportsSec.style.display = (tabKey === 'reports') ? 'block' : 'none';
+    if (diarySec) diarySec.style.display = (tabKey === 'diary') ? 'block' : 'none';
+    if (calendarSec) calendarSec.style.display = (tabKey === 'calendar') ? 'block' : 'none';
+    if (studentsSec) studentsSec.style.display = (tabKey === 'students') ? 'block' : 'none';
+    if (tuitionSec) tuitionSec.style.display = (tabKey === 'tuition') ? 'block' : 'none';
+
     if (tabKey === 'overview') {
-        if (overviewSec) overviewSec.style.display = 'block';
-        if (reportsSec) reportsSec.style.display = 'none';
-        if (diarySec) diarySec.style.display = 'none';
-        if (studentsSec) studentsSec.style.display = 'none';
-        if (tuitionSec) tuitionSec.style.display = 'none';
         updateOverviewMonthSelectorUI();
         renderTutorKpiCards(null, tutorOverviewMonth, tutorOverviewYear);
         renderUpcomingSchedule(null, tutorOverviewMonth, tutorOverviewYear);
@@ -3724,33 +3738,26 @@ function switchTutorNavTab(element, tabKey) {
             renderOverviewCharts(tutorOverviewMonth, tutorOverviewYear);
         }
     } else if (tabKey === 'reports') {
-        if (overviewSec) overviewSec.style.display = 'none';
-        if (reportsSec) reportsSec.style.display = 'block';
-        if (diarySec) diarySec.style.display = 'none';
-        if (studentsSec) studentsSec.style.display = 'none';
-        if (tuitionSec) tuitionSec.style.display = 'none';
         initReportFilterOptions();
         previewTutorReport();
     } else if (tabKey === 'diary') {
-        if (overviewSec) overviewSec.style.display = 'none';
-        if (reportsSec) reportsSec.style.display = 'none';
-        if (diarySec) diarySec.style.display = 'block';
-        if (studentsSec) studentsSec.style.display = 'none';
-        if (tuitionSec) tuitionSec.style.display = 'none';
         renderTutorDiarySection(true);
+    } else if (tabKey === 'calendar') {
+        var calFrame = document.getElementById('tutorCalendarIframe');
+        if (calFrame) {
+            if (!calFrame.src || calFrame.src.indexOf('tutor-calendar.html') === -1) {
+                calFrame.src = 'tutor-calendar.html?embedded=1';
+            } else if (calFrame.contentWindow && calFrame.contentWindow.calendar) {
+                setTimeout(function() {
+                    try {
+                        calFrame.contentWindow.calendar.updateSize();
+                    } catch(e) {}
+                }, 100);
+            }
+        }
     } else if (tabKey === 'students') {
-        if (overviewSec) overviewSec.style.display = 'none';
-        if (reportsSec) reportsSec.style.display = 'none';
-        if (diarySec) diarySec.style.display = 'none';
-        if (studentsSec) studentsSec.style.display = 'block';
-        if (tuitionSec) tuitionSec.style.display = 'none';
         renderTutorStudentsGrid();
     } else if (tabKey === 'tuition') {
-        if (overviewSec) overviewSec.style.display = 'none';
-        if (reportsSec) reportsSec.style.display = 'none';
-        if (diarySec) diarySec.style.display = 'none';
-        if (studentsSec) studentsSec.style.display = 'none';
-        if (tuitionSec) tuitionSec.style.display = 'block';
         renderTutorTuitionSection();
     }
 }
@@ -3777,6 +3784,13 @@ function toggleTutorSidebar() {
     if (btn) {
         btn.title = isCollapsed ? 'Mở rộng menu' : 'Thu gọn menu';
     }
+
+    setTimeout(function() {
+        var calFrame = document.getElementById('tutorCalendarIframe');
+        if (calFrame && calFrame.contentWindow && calFrame.contentWindow.calendar) {
+            try { calFrame.contentWindow.calendar.updateSize(); } catch(e) {}
+        }
+    }, 280);
 }
 window.toggleTutorSidebar = toggleTutorSidebar;
 
@@ -8299,6 +8313,10 @@ function applyTheme(themeId) {
   // 7. Cập nhật FullCalendar nếu đang ở trang Lịch
   if (typeof calendar !== 'undefined' && calendar && typeof calendar.render === 'function') {
     calendar.render();
+  }
+  var calFrame = document.getElementById('tutorCalendarIframe');
+  if (calFrame && calFrame.contentWindow && typeof calFrame.contentWindow.applyTheme === 'function') {
+    try { calFrame.contentWindow.applyTheme(themeId); } catch(e) {}
   }
 }
 
