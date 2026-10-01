@@ -4081,8 +4081,10 @@ window.initTutorSidebarState = initTutorSidebarState;
             clearTutorSelectedFile();
             
             // Reset trạng thái thu gọn hóa đơn
-            document.getElementById('invoiceCollapseContainer').style.display = 'none';
-            document.getElementById('btnToggleInvoice').innerHTML = '<i class="fa-solid fa-file-invoice-dollar"></i> Xuất Hóa Đơn (Phiếu Học Tập)';
+            var invContainer = document.getElementById('invoiceCollapseContainer');
+            if (invContainer) invContainer.style.display = 'none';
+            var btnToggle = document.getElementById('btnToggleInvoice');
+            if (btnToggle) btnToggle.innerHTML = '<i class="fa-solid fa-file-invoice-dollar"></i> Xuất Hóa Đơn (Phiếu Học Tập)';
             
             // Fetch logs for this student to render invoice and stats
             google.script.run
@@ -5706,51 +5708,17 @@ window.initTutorSidebarState = initTutorSidebarState;
                 
                 // 1. Desktop View (Table)
                 htmlLichSu += "<div class='desktop-table-view'>";
-                htmlLichSu += "<table><tr><th style='width: 105px; text-align: center;' title='Tích chọn để đóng học phí hàng loạt cho tất cả các buổi học chưa đóng'><div style='display: flex; align-items: center; justify-content: center; gap: 6px; cursor: pointer;' onclick='var c=document.getElementById(\"tutorSelectAllLessons\"); if(c){c.checked=!c.checked;toggleSelectAllTutorLessons(c);}event.stopPropagation();'><input type='checkbox' id='tutorSelectAllLessons' onchange='toggleSelectAllTutorLessons(this)' onclick='event.stopPropagation();' style='cursor: pointer; width: 15px; height: 15px;' title='Tích chọn để đóng học phí cho tất cả các buổi'><span style='font-size: 12px; font-weight: bold; display: inline-flex; align-items: center; gap: 4px; user-select: none;'><i class='fa-solid fa-wallet' style='color:#10B981;'></i> Đóng tiền</span></div></th><th>Tuần</th><th>Ngày dạy</th><th>Môn</th><th>Nội dung</th><th>Đánh giá BTVN</th><th>KT Đầu giờ</th><th>KT Định kì</th><th>Trạng thái</th><th style='width: 90px; text-align: center;'>Thao tác</th></tr>";
+                htmlLichSu += "<table><tr><th>Tuần</th><th>Ngày dạy</th><th>Môn</th><th>Nội dung</th><th>Đánh giá BTVN</th><th>KT Đầu giờ</th><th>KT Định kì</th><th>Trạng thái</th><th style='width: 90px; text-align: center;'>Thao tác</th></tr>";
                 
                 // 2. Mobile View (Accordion list)
                 var htmlMobile = "<div class='mobile-cards-view'>";
-                htmlMobile += "  <div class='mobile-select-all-container' style='display: flex; align-items: center; gap: 10px; padding: 12px 16px; background: rgba(255, 255, 255, 0.02); border: 1px solid rgba(255, 255, 255, 0.05); border-radius: 12px; margin-bottom: 12px;'>";
-                htmlMobile += "      <input type='checkbox' id='tutorSelectAllLessonsMobile' onchange='toggleSelectAllTutorLessons(this)' style='cursor: pointer; width: 16px; height: 16px;' title='Tích chọn để đóng học phí cho tất cả các buổi'>";
-                htmlMobile += "      <label for='tutorSelectAllLessonsMobile' style='cursor: pointer; font-size: 13.5px; font-weight: bold; margin: 0; user-select: none; display: inline-flex; align-items: center; gap: 6px;'><i class='fa-solid fa-wallet' style='color:#10B981;'></i> Đóng học phí tất cả các buổi</label>";
-                htmlMobile += "  </div>";
 
                 logs.slice().reverse().forEach(function(item, idx) {
                     var styleStr = (idx >= 5) ? 'style="display: none;" class="tutor-history-row tutor-hidden-row"' : 'class="tutor-history-row"';
-                    var isPaid = (item.tienDong || item.paid_status || "").toString().trim().toLowerCase().indexOf("đã đóng") !== -1 || (item.tienDong || item.paid_status || "").toString().trim().toLowerCase() === "true" || item.isPaid === true || item.paid === true;
                     var btvnValue = (item.btvn || item.danhGiaBTVN || "");
-                    var rawStatus = item.trangThai || item.chuyenCan || item.attendance_status || item.attendance || item.status || "";
-                    var tt = String(rawStatus).toLowerCase().normalize('NFD').replace(/[\u0300-\u036f]/g, '').replace(/đ/g, 'd').trim();
-                    var isDaBu = (tt.indexOf("da bu") !== -1 || tt.indexOf("hoc bu") !== -1);
-                    var isAbsent = !isDaBu && (
-                        tt.indexOf("nghi") !== -1 || 
-                        tt.indexOf("huy") !== -1 || 
-                        tt.indexOf("vang") !== -1 || 
-                        tt.indexOf("off") !== -1 || 
-                        tt.indexOf("khong hoc") !== -1 ||
-                        tt.indexOf("chua hoc") !== -1 ||
-                        tt.indexOf("tam hoan") !== -1 ||
-                        tt === "v" || 
-                        tt === "n" || 
-                        tt === "x"
-                    );
-                    var isPresent = !isAbsent;
-                    
-                    var chkHtml = "";
-                    var mobileChkHtml = "";
-                    if (isPresent || isDaBu) {
-                        var isChecked = isPaid ? "checked" : "";
-                        var titleText = isPaid ? "Đã đóng học phí (Bấm để HỦY đóng tiền)" : "Chưa đóng học phí (Bấm để báo ĐÃ ĐÓNG TIỀN)";
-                        chkHtml = '<input type="checkbox" class="tutor-lesson-chk" data-rowindex="' + item.rowIndex + '" data-tuan="' + (item.tuan || "") + '" onchange="checkTutorLessonCheckboxSelection(this)" style="cursor: pointer; width: 16px; height: 16px;" title="' + titleText + '" ' + isChecked + '>';
-                        mobileChkHtml = '<input type="checkbox" class="tutor-lesson-chk" data-rowindex="' + item.rowIndex + '" data-tuan="' + (item.tuan || "") + '" onclick="event.stopPropagation();" onchange="checkTutorLessonCheckboxSelection(this)" style="margin-right: 8px; width: 16px; height: 16px; cursor: pointer;" title="' + titleText + '" ' + isChecked + '>';
-                    } else {
-                        chkHtml = '<span style="color: rgba(255,255,255,0.2); font-size: 12px;">-</span>';
-                        mobileChkHtml = '<span style="color: rgba(255,255,255,0.2); font-size: 12px; margin-right: 8px;">-</span>';
-                    }
 
                     // Desktop Row
                     htmlLichSu += "<tr " + styleStr + ">";
-                    htmlLichSu += "<td style='text-align: center;'>" + chkHtml + "</td>";
                     htmlLichSu += "<td>" + (item.tuan || "") + "</td>";
                     htmlLichSu += "<td>" + (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "")) + "</td>";
                     htmlLichSu += "<td>" + (item.mon || "") + "</td>";
@@ -5770,7 +5738,6 @@ window.initTutorSidebarState = initTutorSidebarState;
                     htmlMobile += "<div " + mobileStyleStr + ">";
                     htmlMobile += "  <div class='accordion-header' onclick='toggleTutorAccordion(" + idx + ")'>";
                     htmlMobile += "    <div style='display: flex; align-items: center;'>";
-                    htmlMobile += "      " + mobileChkHtml;
                     htmlMobile += "      <div class='accordion-header-title'>";
                     htmlMobile += "        <span>" + (item.tuan || "") + "</span>";
                     htmlMobile += "        <span class='accordion-header-date'>" + (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "")) + "</span>";
