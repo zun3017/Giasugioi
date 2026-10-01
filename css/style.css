@@ -3297,6 +3297,62 @@
             min-width: 140px;
         }
 
+        /* Vietnamese Date Picker Container & Controls (DD/MM/YYYY) */
+        .vn-date-picker-box {
+            position: relative;
+            display: inline-flex;
+            align-items: center;
+            width: 100%;
+            min-width: 140px;
+        }
+
+        .vn-date-picker-box .vn-date-input {
+            width: 100%;
+            padding-right: 36px !important;
+            font-variant-numeric: tabular-nums;
+            letter-spacing: 0.3px;
+            box-sizing: border-box;
+        }
+
+        .vn-date-picker-box .vn-date-picker-icon-btn {
+            position: absolute;
+            right: 8px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: transparent;
+            border: none;
+            color: #A6ADCE;
+            font-size: 13.5px;
+            padding: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1;
+            pointer-events: none;
+            transition: color 0.2s ease;
+        }
+
+        .vn-date-picker-box:hover .vn-date-picker-icon-btn {
+            color: #8E4DFF;
+        }
+
+        .vn-date-picker-box .vn-hidden-native-picker {
+            position: absolute;
+            right: 2px;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 34px;
+            height: 34px;
+            opacity: 0;
+            cursor: pointer;
+            z-index: 2;
+            padding: 0;
+            margin: 0;
+            border: none;
+            background: transparent;
+            color-scheme: dark;
+        }
+
         .report-select {
             min-width: 160px;
             cursor: pointer;

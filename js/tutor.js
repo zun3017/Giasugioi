@@ -1662,6 +1662,66 @@ function toDateInputValue(d) {
     return yr + '-' + mo + '-' + da;
 }
 
+// Chuyển đổi linh hoạt chuỗi ngày hoặc Date object sang DD/MM/YYYY (Việt Nam)
+function formatToDmy(val) {
+    if (!val) return "";
+    if (val instanceof Date) {
+        var d = String(val.getDate()).padStart(2, '0');
+        var m = String(val.getMonth() + 1).padStart(2, '0');
+        var y = val.getFullYear();
+        return d + '/' + m + '/' + y;
+    }
+    var s = String(val).trim().split(' ')[0];
+    if (s.indexOf('/') !== -1) {
+        var p = s.split('/');
+        if (p.length === 3) {
+            if (p[0].length === 4) { // YYYY/MM/DD -> DD/MM/YYYY
+                return String(p[2]).padStart(2, '0') + '/' + String(p[1]).padStart(2, '0') + '/' + p[0];
+            }
+            return String(p[0]).padStart(2, '0') + '/' + String(p[1]).padStart(2, '0') + '/' + p[2];
+        }
+        if (p.length === 2) {
+            return String(p[0]).padStart(2, '0') + '/' + String(p[1]).padStart(2, '0');
+        }
+    }
+    if (s.indexOf('-') !== -1) {
+        var p = s.split('-');
+        if (p.length === 3) {
+            if (p[0].length === 4) { // YYYY-MM-DD -> DD/MM/YYYY
+                return String(p[2]).padStart(2, '0') + '/' + String(p[1]).padStart(2, '0') + '/' + p[0];
+            } else { // DD-MM-YYYY -> DD/MM/YYYY
+                return String(p[0]).padStart(2, '0') + '/' + String(p[1]).padStart(2, '0') + '/' + p[2];
+            }
+        }
+    }
+    return s;
+}
+window.formatToDmy = formatToDmy;
+
+// Chuyển đổi chuỗi DD/MM/YYYY sang YYYY-MM-DD (cho native input type="date")
+function formatToYmd(val) {
+    if (!val) return "";
+    if (val instanceof Date) {
+        return toDateInputValue(val);
+    }
+    var s = String(val).trim().split(' ')[0];
+    if (s.indexOf('/') !== -1) {
+        var p = s.split('/');
+        if (p.length === 3) {
+            var y = p[2].length === 4 ? p[2] : ('20' + p[2]);
+            return y + '-' + String(p[1]).padStart(2, '0') + '-' + String(p[0]).padStart(2, '0');
+        }
+    }
+    if (s.indexOf('-') !== -1) {
+        var p = s.split('-');
+        if (p.length === 3 && p[0].length === 4) {
+            return p[0] + '-' + String(p[1]).padStart(2, '0') + '-' + String(p[2]).padStart(2, '0');
+        }
+    }
+    return s;
+}
+window.formatToYmd = formatToYmd;
+
 function parseLogDate(dmyStr) {
     if (!dmyStr) return null;
     var parts = dmyStr.split('/');
@@ -1671,31 +1731,125 @@ function parseLogDate(dmyStr) {
     return null;
 }
 
-function parseInputDate(ymdStr) {
-    if (!ymdStr) return null;
-    var parts = ymdStr.split('-');
-    if (parts.length >= 3) {
-        return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10), 0, 0, 0, 0);
+// Phân tích an toàn cả chuỗi DD/MM/YYYY và YYYY-MM-DD
+function parseInputDate(str) {
+    if (!str) return null;
+    var s = String(str).trim().split(' ')[0];
+    if (s.indexOf('/') !== -1) {
+        var parts = s.split('/');
+        if (parts.length >= 3) {
+            var y = parts[2].length === 4 ? parseInt(parts[2], 10) : parseInt('20' + parts[2], 10);
+            return new Date(y, parseInt(parts[1], 10) - 1, parseInt(parts[0], 10), 0, 0, 0, 0);
+        } else if (parts.length === 2) {
+            var nowYear = new Date().getFullYear();
+            return new Date(nowYear, parseInt(parts[1], 10) - 1, parseInt(parts[0], 10), 0, 0, 0, 0);
+        }
+    }
+    if (s.indexOf('-') !== -1) {
+        var parts = s.split('-');
+        if (parts.length >= 3) {
+            if (parts[0].length === 4) {
+                return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10), 0, 0, 0, 0);
+            } else {
+                var y = parts[2].length === 4 ? parseInt(parts[2], 10) : parseInt('20' + parts[2], 10);
+                return new Date(y, parseInt(parts[1], 10) - 1, parseInt(parts[0], 10), 0, 0, 0, 0);
+            }
+        }
     }
     return null;
 }
+window.parseInputDate = parseInputDate;
 
 function generateTuitionPeriodTitle(startDateStr, endDateStr, tmpl) {
     tmpl = tmpl || (window.tuitionInvoiceModalState ? window.tuitionInvoiceModalState.template : 1);
     if (!startDateStr || !endDateStr) return tmpl === 1 ? "KỲ HỌC NÀY" : "HỌC PHÍ KỲ NÀY";
-    var sParts = startDateStr.split('-');
-    var eParts = endDateStr.split('-');
-    if (sParts.length < 3 || eParts.length < 3) return tmpl === 1 ? "KỲ HỌC NÀY" : "HỌC PHÍ KỲ NÀY";
-    if (sParts[0] === eParts[0] && sParts[1] === eParts[1]) {
-        var m = parseInt(sParts[1], 10);
-        var y = sParts[0];
-        return tmpl === 1 ? ("KỲ HỌC THÁNG " + m) : ("HỌC PHÍ THÁNG " + m + "/" + y);
+    var sD = parseInputDate(startDateStr);
+    var eD = parseInputDate(endDateStr);
+    if (!sD || !eD) return tmpl === 1 ? "KỲ HỌC NÀY" : "HỌC PHÍ KỲ NÀY";
+    var sM = sD.getMonth() + 1;
+    var sY = sD.getFullYear();
+    var eM = eD.getMonth() + 1;
+    var eY = eD.getFullYear();
+    var sDay = String(sD.getDate()).padStart(2, '0');
+    var sMo = String(sM).padStart(2, '0');
+    var eDay = String(eD.getDate()).padStart(2, '0');
+    var eMo = String(eM).padStart(2, '0');
+    if (sY === eY && sM === eM) {
+        return tmpl === 1 ? ("KỲ HỌC THÁNG " + sM) : ("HỌC PHÍ THÁNG " + sM + "/" + sY);
     } else {
         return tmpl === 1 
-            ? ("KỲ HỌC " + sParts[2] + "/" + sParts[1] + " – " + eParts[2] + "/" + eParts[1])
-            : ("HỌC PHÍ " + sParts[2] + "/" + sParts[1] + " – " + eParts[2] + "/" + eParts[1] + "/" + eParts[0]);
+            ? ("KỲ HỌC " + sDay + "/" + sMo + " – " + eDay + "/" + eMo)
+            : ("HỌC PHÍ " + sDay + "/" + sMo + " – " + eDay + "/" + eMo + "/" + eY);
     }
 }
+window.generateTuitionPeriodTitle = generateTuitionPeriodTitle;
+
+// Bộ điều khiển Date Picker tiếng Việt chuẩn DD/MM/YYYY
+function initVietnameseDatePicker(textInputId, pickerInputId, onChangeCallback) {
+    var textInput = document.getElementById(textInputId);
+    var picker = document.getElementById(pickerInputId);
+    if (!textInput || !picker) return;
+
+    // Đồng bộ giá trị khởi tạo
+    if (textInput.value) {
+        var dmy = formatToDmy(textInput.value);
+        textInput.value = dmy;
+        var ymd = formatToYmd(dmy);
+        if (ymd) picker.value = ymd;
+    } else if (picker.value) {
+        textInput.value = formatToDmy(picker.value);
+    }
+
+    if (textInput._vnPickerAttached) return;
+    textInput._vnPickerAttached = true;
+
+    // Khi người dùng chọn ngày từ popup lịch
+    picker.addEventListener('change', function() {
+        if (this.value) {
+            var dmy = formatToDmy(this.value);
+            textInput.value = dmy;
+            var evt = new Event('change', { bubbles: true });
+            textInput.dispatchEvent(evt);
+            if (typeof onChangeCallback === 'function') onChangeCallback(dmy);
+        }
+    });
+
+    // Khi nhập tay: tự động thêm dấu gạch chéo phân cách DD/MM/YYYY
+    textInput.addEventListener('input', function(e) {
+        var v = this.value.replace(/[^\d/]/g, '');
+        if (e.inputType !== 'deleteContentBackward') {
+            if (v.length === 2 && v.indexOf('/') === -1) {
+                v = v + '/';
+            } else if (v.length === 5 && v.split('/').length === 2) {
+                v = v + '/';
+            }
+        }
+        this.value = v;
+        if (v.length === 10) {
+            var ymd = formatToYmd(v);
+            if (ymd && !isNaN(new Date(ymd).getTime())) {
+                picker.value = ymd;
+                var evt = new Event('change', { bubbles: true });
+                textInput.dispatchEvent(evt);
+                if (typeof onChangeCallback === 'function') onChangeCallback(v);
+            }
+        }
+    });
+
+    // Khi blur ra ngoài: tự chuẩn hóa
+    textInput.addEventListener('blur', function() {
+        var v = this.value.trim();
+        if (v) {
+            var dmy = formatToDmy(v);
+            var ymd = formatToYmd(dmy);
+            if (ymd && !isNaN(new Date(ymd).getTime())) {
+                picker.value = ymd;
+                this.value = dmy;
+            }
+        }
+    });
+}
+window.initVietnameseDatePicker = initVietnameseDatePicker;
 
 window.tuitionInvoiceModalState = {
     studentName: "",
@@ -2011,12 +2165,19 @@ function buildTuitionModalForm(st, studentLogs) {
     html += '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 12px;">';
     html += '<div>';
     html += '<label style="display: block; font-size: 11.5px; color: #64748B; margin-bottom: 4px; font-weight: 600;">Từ ngày:</label>';
-    html += '<input type="date" id="tuitionPeriodStartDate" value="' + (state.startDate || '') + '" onchange="onTuitionPeriodDateChange()" style="width: 100%; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 10px; color: #0F172A; font-size: 12.5px; outline: none; box-sizing: border-box;">';
-    html += '</div>';
+    html += '<div class="vn-date-picker-box" style="width: 100%;">';
+    html += '<input type="text" id="tuitionPeriodStartDate" value="' + (formatToDmy(state.startDate) || '') + '" placeholder="dd/mm/yyyy" maxlength="10" autocomplete="off" onchange="onTuitionPeriodDateChange()" style="width: 100%; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 36px 8px 10px; color: #0F172A; font-size: 12.5px; font-weight: 600; outline: none; box-sizing: border-box;">';
+    html += '<button type="button" class="vn-date-picker-icon-btn" style="color: #64748B;" tabindex="-1"><i class="fa-regular fa-calendar"></i></button>';
+    html += '<input type="date" id="tuitionPeriodStartDate_picker" class="vn-hidden-native-picker" tabindex="-1">';
+    html += '</div></div>';
+
     html += '<div>';
     html += '<label style="display: block; font-size: 11.5px; color: #64748B; margin-bottom: 4px; font-weight: 600;">Đến ngày:</label>';
-    html += '<input type="date" id="tuitionPeriodEndDate" value="' + (state.endDate || '') + '" onchange="onTuitionPeriodDateChange()" style="width: 100%; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 10px; color: #0F172A; font-size: 12.5px; outline: none; box-sizing: border-box;">';
-    html += '</div></div>';
+    html += '<div class="vn-date-picker-box" style="width: 100%;">';
+    html += '<input type="text" id="tuitionPeriodEndDate" value="' + (formatToDmy(state.endDate) || '') + '" placeholder="dd/mm/yyyy" maxlength="10" autocomplete="off" onchange="onTuitionPeriodDateChange()" style="width: 100%; background: #F8FAFC; border: 1px solid #E2E8F0; border-radius: 10px; padding: 8px 36px 8px 10px; color: #0F172A; font-size: 12.5px; font-weight: 600; outline: none; box-sizing: border-box;">';
+    html += '<button type="button" class="vn-date-picker-icon-btn" style="color: #64748B;" tabindex="-1"><i class="fa-regular fa-calendar-check"></i></button>';
+    html += '<input type="date" id="tuitionPeriodEndDate_picker" class="vn-hidden-native-picker" tabindex="-1">';
+    html += '</div></div></div>';
 
     html += '<div>';
     html += '<label style="display: block; font-size: 11.5px; color: #64748B; margin-bottom: 4px; font-weight: 600;">Tiêu đề kỳ học:</label>';
@@ -2026,6 +2187,13 @@ function buildTuitionModalForm(st, studentLogs) {
     html += '</div>'; // End Box 2
 
     formCol.innerHTML = html;
+
+    initVietnameseDatePicker('tuitionPeriodStartDate', 'tuitionPeriodStartDate_picker', function() {
+        onTuitionPeriodDateChange();
+    });
+    initVietnameseDatePicker('tuitionPeriodEndDate', 'tuitionPeriodEndDate_picker', function() {
+        onTuitionPeriodDateChange();
+    });
 }
 
 function onTuitionToggleChange(id, key) {
@@ -2632,8 +2800,8 @@ function openStudentInvoiceModal(studentName) {
     }
     var firstD = new Date(yr, mo, 1);
     var lastD = new Date(yr, mo + 1, 0);
-    var defaultStartStr = toDateInputValue(firstD);
-    var defaultEndStr = toDateInputValue(lastD);
+    var defaultStartStr = formatToDmy(firstD);
+    var defaultEndStr = formatToDmy(lastD);
     var defaultTmpl = window.currentTuitionTemplate || 1;
     var defaultTitle = generateTuitionPeriodTitle(defaultStartStr, defaultEndStr, defaultTmpl);
 
@@ -2654,8 +2822,8 @@ function openStudentInvoiceModal(studentName) {
     }
 
     if (restoredDraft && draftObj) {
-        var sDateVal = draftObj.startDate || defaultStartStr;
-        var eDateVal = draftObj.endDate || defaultEndStr;
+        var sDateVal = formatToDmy(draftObj.startDate) || defaultStartStr;
+        var eDateVal = formatToDmy(draftObj.endDate) || defaultEndStr;
         // If draft range has 0 logs while default range has logs, and not custom titled, use default range
         if (!draftObj.isCustomTitle && sDateVal !== defaultStartStr) {
             var hasLogsInDraft = false;
@@ -3051,10 +3219,23 @@ function getTuitionInvoiceFileName(studentName, startDateStr) {
         .replace(/^_|_$/g, "");
     
     var monthPart = "";
-    if (startDateStr && startDateStr.indexOf('-') !== -1) {
-        var sp = startDateStr.split('-');
-        if (sp.length >= 2) {
-            monthPart = "Thang" + sp[1] + "_" + sp[0];
+    if (startDateStr) {
+        if (startDateStr.indexOf('/') !== -1) {
+            var sp = startDateStr.split('/');
+            if (sp.length >= 3) {
+                monthPart = "Thang" + sp[1] + "_" + sp[2];
+            } else if (sp.length === 2) {
+                monthPart = "Thang" + sp[1] + "_" + new Date().getFullYear();
+            }
+        } else if (startDateStr.indexOf('-') !== -1) {
+            var sp = startDateStr.split('-');
+            if (sp.length >= 2) {
+                if (sp[0].length === 4) {
+                    monthPart = "Thang" + sp[1] + "_" + sp[0];
+                } else {
+                    monthPart = "Thang" + sp[1] + "_" + sp[2];
+                }
+            }
         }
     }
     if (!monthPart) {
@@ -3130,10 +3311,10 @@ function initReportFilterOptions() {
 
     var now = new Date();
     var pad = function(n) { return String(n).padStart(2, '0'); };
-    var todayStr = now.getFullYear() + '-' + pad(now.getMonth() + 1) + '-' + pad(now.getDate());
+    var todayStr = pad(now.getDate()) + '/' + pad(now.getMonth() + 1) + '/' + now.getFullYear();
 
     var past = new Date(now.getTime() - (30 * 24 * 60 * 60 * 1000));
-    var pastStr = past.getFullYear() + '-' + pad(past.getMonth() + 1) + '-' + pad(past.getDate());
+    var pastStr = pad(past.getDate()) + '/' + pad(past.getMonth() + 1) + '/' + past.getFullYear();
 
     if (startInput && !startInput.value) {
         startInput.value = pastStr;
@@ -3141,6 +3322,13 @@ function initReportFilterOptions() {
     if (endInput && !endInput.value) {
         endInput.value = todayStr;
     }
+
+    initVietnameseDatePicker('reportStartDate', 'reportStartDate_picker', function() {
+        previewTutorReport();
+    });
+    initVietnameseDatePicker('reportEndDate', 'reportEndDate_picker', function() {
+        previewTutorReport();
+    });
 
     if (studentSelect) {
         var curVal = studentSelect.value || "";
@@ -3166,12 +3354,7 @@ function initReportFilterOptions() {
 window.initReportFilterOptions = initReportFilterOptions;
 
 function parseDateInputYmd(str) {
-    if (!str) return null;
-    var parts = str.split('-');
-    if (parts.length >= 3) {
-        return new Date(parseInt(parts[0], 10), parseInt(parts[1], 10) - 1, parseInt(parts[2], 10), 0, 0, 0, 0);
-    }
-    return null;
+    return parseInputDate(str);
 }
 
 function parseLogDateDmy(str) {
@@ -3273,8 +3456,8 @@ function previewTutorReport() {
             ? window.formatDateWithDayOfWeek 
             : function(s) { return s; };
 
-        var startDisplay = startInput && startInput.value ? startInput.value.split('-').reverse().join('/') : "Đầu kỳ";
-        var endDisplay = endInput && endInput.value ? endInput.value.split('-').reverse().join('/') : "Hiện tại";
+        var startDisplay = startInput && startInput.value ? formatToDmy(startInput.value) : "Đầu kỳ";
+        var endDisplay = endInput && endInput.value ? formatToDmy(endInput.value) : "Hiện tại";
         var targetStudentDisplay = selStudent || (students[0] ? students[0].name.trim() : "Học sinh");
         var tutorName = (tutorDataGlobal && tutorDataGlobal.tutorName) ? tutorDataGlobal.tutorName : "Thầy Trần Hoàng Nam";
 
@@ -3376,8 +3559,8 @@ function exportReportToPng() {
     }
     var cleanStudent = sName.replace(/\s+/g, '_');
 
-    var tuNgay = startInput && startInput.value ? startInput.value.replace(/-/g, '') : "TuNgay";
-    var denNgay = endInput && endInput.value ? endInput.value.replace(/-/g, '') : "DenNgay";
+    var tuNgay = startInput && startInput.value ? startInput.value.replace(/[-/]/g, '') : "TuNgay";
+    var denNgay = endInput && endInput.value ? endInput.value.replace(/[-/]/g, '') : "DenNgay";
     var fileName = 'BaoCao_' + cleanStudent + '_' + tuNgay + '_' + denNgay + '.png';
 
     var originalText = btn ? btn.innerHTML : "";

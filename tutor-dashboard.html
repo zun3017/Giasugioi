@@ -665,13 +665,21 @@
                     <!-- Từ ngày -->
                     <div class="report-control-group">
                         <label class="report-control-label" for="reportStartDate"><i class="fa-regular fa-calendar"></i> Từ ngày:</label>
-                        <input type="date" id="reportStartDate" class="report-input-box report-date-input" onchange="previewTutorReport()">
+                        <div class="vn-date-picker-box">
+                            <input type="text" id="reportStartDate" class="report-input-box report-date-input vn-date-input" placeholder="dd/mm/yyyy" maxlength="10" autocomplete="off" onchange="previewTutorReport()">
+                            <button type="button" class="vn-date-picker-icon-btn" tabindex="-1" title="Chọn ngày"><i class="fa-regular fa-calendar"></i></button>
+                            <input type="date" id="reportStartDate_picker" class="vn-hidden-native-picker" tabindex="-1" aria-hidden="true">
+                        </div>
                     </div>
 
                     <!-- Đến ngày -->
                     <div class="report-control-group">
                         <label class="report-control-label" for="reportEndDate"><i class="fa-regular fa-calendar-check"></i> Đến ngày:</label>
-                        <input type="date" id="reportEndDate" class="report-input-box report-date-input" onchange="previewTutorReport()">
+                        <div class="vn-date-picker-box">
+                            <input type="text" id="reportEndDate" class="report-input-box report-date-input vn-date-input" placeholder="dd/mm/yyyy" maxlength="10" autocomplete="off" onchange="previewTutorReport()">
+                            <button type="button" class="vn-date-picker-icon-btn" tabindex="-1" title="Chọn ngày"><i class="fa-regular fa-calendar-check"></i></button>
+                            <input type="date" id="reportEndDate_picker" class="vn-hidden-native-picker" tabindex="-1" aria-hidden="true">
+                        </div>
                     </div>
 
                     <!-- Học sinh -->
