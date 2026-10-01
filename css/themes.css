@@ -41,6 +41,10 @@
   --nav-hover-bg: rgba(255, 255, 255, 0.05);
   --sidebar-border: rgba(142, 77, 255, 0.2);
   --scrollbar-thumb: rgba(142, 77, 255, 0.4);
+  --text-heading: #C4B5FD;
+  --header-bg: rgba(3, 8, 29, 0.7);
+  --header-border: rgba(255, 255, 255, 0.05);
+  --nav-btn-text: #E2E8F0;
   --is-dark-theme: 1;
 }
 
@@ -79,6 +83,10 @@
   --nav-hover-bg: rgba(0, 0, 0, 0.03);
   --sidebar-border: #CBD5E1;
   --scrollbar-thumb: rgba(37, 99, 235, 0.4);
+  --text-heading: #1D4ED8;
+  --header-bg: rgba(237, 242, 247, 0.97);
+  --header-border: #E2E8F0;
+  --nav-btn-text: #475569;
   --is-dark-theme: 0;
 }
 
@@ -113,6 +121,10 @@
   --nav-hover-bg: rgba(192, 96, 142, 0.05);
   --sidebar-border: #F8BBD0;
   --scrollbar-thumb: rgba(192, 96, 142, 0.4);
+  --text-heading: #9A406C;
+  --header-bg: rgba(252, 232, 239, 0.97);
+  --header-border: #FCE4EC;
+  --nav-btn-text: #88385A;
   --is-dark-theme: 0;
 }
 
@@ -147,6 +159,10 @@
   --nav-hover-bg: rgba(232, 130, 154, 0.05);
   --sidebar-border: #FBCFD8;
   --scrollbar-thumb: rgba(232, 130, 154, 0.4);
+  --text-heading: #9E334D;
+  --header-bg: rgba(255, 237, 240, 0.97);
+  --header-border: #FFE0E6;
+  --nav-btn-text: #8A3A4D;
   --is-dark-theme: 0;
 }
 
@@ -181,6 +197,10 @@
   --nav-hover-bg: rgba(61, 112, 64, 0.05);
   --sidebar-border: #C2D6C3;
   --scrollbar-thumb: rgba(61, 112, 64, 0.4);
+  --text-heading: #2C522E;
+  --header-bg: rgba(229, 238, 229, 0.97);
+  --header-border: #D5E4D6;
+  --nav-btn-text: #2E5230;
   --is-dark-theme: 0;
 }
 
@@ -215,6 +235,10 @@
   --nav-hover-bg: rgba(125, 74, 40, 0.05);
   --sidebar-border: #DECBB3;
   --scrollbar-thumb: rgba(125, 74, 40, 0.4);
+  --text-heading: #583219;
+  --header-bg: rgba(239, 230, 216, 0.97);
+  --header-border: #EADECF;
+  --nav-btn-text: #5C361C;
   --is-dark-theme: 0;
 }
 
@@ -252,6 +276,10 @@
   --nav-hover-bg: rgba(46, 126, 196, 0.05);
   --sidebar-border: #C8DDEF;
   --scrollbar-thumb: rgba(46, 126, 196, 0.4);
+  --text-heading: #1F5E96;
+  --header-bg: rgba(224, 235, 248, 0.97);
+  --header-border: #D8E7F5;
+  --nav-btn-text: #3060A0;
   --is-dark-theme: 0;
 }
 .theme-azure-mist-full {
@@ -295,6 +323,10 @@
   --nav-hover-bg: rgba(91, 122, 61, 0.05);
   --sidebar-border: #C8DEBB;
   --scrollbar-thumb: rgba(91, 122, 61, 0.4);
+  --text-heading: #435D29;
+  --header-bg: rgba(224, 237, 216, 0.97);
+  --header-border: #D5E7CB;
+  --nav-btn-text: #3D5A28;
   --is-dark-theme: 0;
 }
 .theme-woodland-cottage-full {
@@ -338,6 +370,10 @@
   --nav-hover-bg: rgba(155, 107, 138, 0.05);
   --sidebar-border: #DDD0E4;
   --scrollbar-thumb: rgba(155, 107, 138, 0.4);
+  --text-heading: #7D4F6E;
+  --header-bg: rgba(234, 224, 238, 0.97);
+  --header-border: #E6DCED;
+  --nav-btn-text: #7A5080;
   --is-dark-theme: 0;
 }
 .theme-sage-blush-full {
@@ -381,6 +417,10 @@
   --nav-hover-bg: rgba(196, 138, 44, 0.05);
   --sidebar-border: #EDD8A8;
   --scrollbar-thumb: rgba(196, 138, 44, 0.4);
+  --text-heading: #9E6B1B;
+  --header-bg: rgba(245, 232, 204, 0.97);
+  --header-border: #F3E4BE;
+  --nav-btn-text: #7A5010;
   --is-dark-theme: 0;
 }
 .theme-golden-caramel-full {
@@ -424,6 +464,10 @@
   --nav-hover-bg: rgba(74, 122, 80, 0.05);
   --sidebar-border: #C8E4D4;
   --scrollbar-thumb: rgba(74, 122, 80, 0.4);
+  --text-heading: #375B3C;
+  --header-bg: rgba(228, 239, 232, 0.97);
+  --header-border: #D8ECDF;
+  --nav-btn-text: #3A6A48;
   --is-dark-theme: 0;
 }
 .theme-pastel-alpine-full {
@@ -467,6 +511,10 @@
   --nav-hover-bg: rgba(255, 255, 255, 0.05);
   --sidebar-border: rgba(123, 104, 212, 0.25);
   --scrollbar-thumb: rgba(123, 104, 212, 0.4);
+  --text-heading: #B0A0EE;
+  --header-bg: rgba(0, 0, 0, 0.6);
+  --header-border: rgba(255, 255, 255, 0.05);
+  --nav-btn-text: #E2E8F0;
   --is-dark-theme: 1;
 }
 .theme-dreamy-cosmic-full {
@@ -510,6 +558,10 @@
   --nav-hover-bg: rgba(224, 122, 95, 0.05);
   --sidebar-border: #F0D0C0;
   --scrollbar-thumb: rgba(224, 122, 95, 0.4);
+  --text-heading: #B85840;
+  --header-bg: rgba(248, 232, 228, 0.97);
+  --header-border: #F7DDD3;
+  --nav-btn-text: #8A4030;
   --is-dark-theme: 0;
 }
 .theme-sunset-meadow-full {
@@ -553,6 +605,10 @@
   --nav-hover-bg: rgba(255, 255, 255, 0.05);
   --sidebar-border: rgba(0, 212, 170, 0.2);
   --scrollbar-thumb: rgba(0, 212, 170, 0.4);
+  --text-heading: #60E8D0;
+  --header-bg: rgba(0, 0, 0, 0.6);
+  --header-border: rgba(255, 255, 255, 0.05);
+  --nav-btn-text: #E2E8F0;
   --is-dark-theme: 1;
 }
 .theme-neon-seoul-full {
@@ -596,6 +652,10 @@
   --nav-hover-bg: rgba(255, 255, 255, 0.05);
   --sidebar-border: rgba(59, 95, 160, 0.25);
   --scrollbar-thumb: rgba(59, 95, 160, 0.4);
+  --text-heading: #7898D0;
+  --header-bg: rgba(0, 0, 0, 0.6);
+  --header-border: rgba(255, 255, 255, 0.05);
+  --nav-btn-text: #E2E8F0;
   --is-dark-theme: 1;
 }
 .theme-mystic-blue-full {
@@ -639,6 +699,10 @@
   --nav-hover-bg: rgba(58, 173, 168, 0.05);
   --sidebar-border: #B8E4D8;
   --scrollbar-thumb: rgba(58, 173, 168, 0.4);
+  --text-heading: #28807C;
+  --header-bg: rgba(216, 240, 232, 0.97);
+  --header-border: #CCEFE6;
+  --nav-btn-text: #2A6858;
   --is-dark-theme: 0;
 }
 .theme-blue-lime-full {
@@ -682,6 +746,10 @@
   --nav-hover-bg: rgba(88, 136, 176, 0.05);
   --sidebar-border: #CCE4F4;
   --scrollbar-thumb: rgba(88, 136, 176, 0.4);
+  --text-heading: #3E6A8E;
+  --header-bg: rgba(232, 244, 252, 0.97);
+  --header-border: #DDEEFA;
+  --nav-btn-text: #3A6888;
   --is-dark-theme: 0;
 }
 .theme-cloud-meadow-full {
@@ -726,6 +794,10 @@
   --nav-hover-bg: rgba(74, 154, 196, 0.05);
   --sidebar-border: #B8D8F8;
   --scrollbar-thumb: rgba(74, 154, 196, 0.4);
+  --text-heading: #327599;
+  --header-bg: rgba(240, 247, 255, 0.97);
+  --header-border: #DCECFB;
+  --nav-btn-text: #285888;
   --is-dark-theme: 0;
 }
 .theme-soft-blue-white-full, .theme-soft-blue-full {
@@ -769,6 +841,10 @@
   --nav-hover-bg: rgba(255, 255, 255, 0.05);
   --sidebar-border: rgba(232, 149, 180, 0.2);
   --scrollbar-thumb: rgba(232, 149, 180, 0.4);
+  --text-heading: #F0B8D0;
+  --header-bg: rgba(0, 0, 0, 0.6);
+  --header-border: rgba(255, 255, 255, 0.05);
+  --nav-btn-text: #E2E8F0;
   --is-dark-theme: 1;
 }
 .theme-blossom-noir-full {
@@ -812,6 +888,10 @@
   --nav-hover-bg: rgba(255, 255, 255, 0.05);
   --sidebar-border: rgba(139, 92, 246, 0.22);
   --scrollbar-thumb: rgba(139, 92, 246, 0.4);
+  --text-heading: #BDA8FA;
+  --header-bg: rgba(0, 0, 0, 0.6);
+  --header-border: rgba(255, 255, 255, 0.05);
+  --nav-btn-text: #E2E8F0;
   --is-dark-theme: 1;
 }
 .theme-violet-planet-full {
@@ -855,6 +935,10 @@
   --nav-hover-bg: rgba(217, 119, 6, 0.05);
   --sidebar-border: #E8DCCC;
   --scrollbar-thumb: rgba(217, 119, 6, 0.4);
+  --text-heading: #AC5E04;
+  --header-bg: rgba(244, 240, 232, 0.97);
+  --header-border: #F0E6D8;
+  --nav-btn-text: #6A4A20;
   --is-dark-theme: 0;
 }
 .theme-claude-full {
