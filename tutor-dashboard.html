@@ -464,6 +464,39 @@
                 </div>
             </div>
 
+            <!-- Lịch dạy sắp tới (Hôm nay & Ngày mai) -->
+            <div class="upcoming-schedule-box" id="tutorUpcomingScheduleBox">
+                <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
+                    <h3 style="color: #FFF; font-size: 16px; margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-calendar-check" style="color: #FFD23F;"></i>
+                        <span>Lịch dạy sắp tới</span>
+                    </h3>
+                    <span style="font-size: 12px; color: #A6ADCE;"><i class="fa-solid fa-bolt" style="color: #8E4DFF;"></i> Hôm nay & Ngày mai</span>
+                </div>
+                <div class="upcoming-days-grid" id="tutorUpcomingDaysGrid">
+                    <!-- Hôm nay -->
+                    <div class="upcoming-day-column" id="upcomingTodayCol">
+                        <div class="upcoming-day-header">
+                            <span id="upcomingTodayHeaderTitle"><i class="fa-solid fa-sun"></i> Hôm nay</span>
+                            <span style="font-size: 11px; opacity: 0.8;" id="upcomingTodayCountBadge">0 buổi</span>
+                        </div>
+                        <div class="upcoming-items-list" id="upcomingTodayList">
+                            <!-- Items or Empty -->
+                        </div>
+                    </div>
+                    <!-- Ngày mai -->
+                    <div class="upcoming-day-column" id="upcomingTomorrowCol">
+                        <div class="upcoming-day-header">
+                            <span id="upcomingTomorrowHeaderTitle"><i class="fa-solid fa-calendar-day"></i> Ngày mai</span>
+                            <span style="font-size: 11px; opacity: 0.8;" id="upcomingTomorrowCountBadge">0 buổi</span>
+                        </div>
+                        <div class="upcoming-items-list" id="upcomingTomorrowList">
+                            <!-- Items or Empty -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
             <div class="schedule-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                 <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;"><i class="fa-regular fa-calendar-alt" style="color: #8E4DFF;"></i> Thời khóa biểu tổng hợp</h3>

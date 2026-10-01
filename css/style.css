@@ -1877,6 +1877,151 @@
             }
         }
 
+        /* Upcoming Schedule Section */
+        .upcoming-schedule-box {
+            background: rgba(11, 8, 38, 0.95);
+            border: 1px solid rgba(142, 77, 255, 0.3);
+            border-radius: 20px;
+            padding: 22px 24px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 4px 25px rgba(0, 0, 0, 0.25);
+        }
+
+        .upcoming-days-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 14px;
+        }
+
+        .upcoming-day-column {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 16px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .upcoming-day-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 8px 12px;
+            background: rgba(142, 77, 255, 0.1);
+            border: 1px solid rgba(142, 77, 255, 0.2);
+            border-radius: 10px;
+            margin-bottom: 12px;
+            color: #FFD23F;
+            font-size: 13.5px;
+            font-weight: 700;
+        }
+
+        .upcoming-day-header i {
+            color: #8E4DFF;
+        }
+
+        .upcoming-items-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            flex: 1;
+        }
+
+        .upcoming-session-card {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 12px;
+            padding: 12px 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .upcoming-session-card:hover {
+            background: rgba(142, 77, 255, 0.08);
+            border-color: rgba(142, 77, 255, 0.25);
+            transform: translateX(2px);
+        }
+
+        .upcoming-session-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .upcoming-student-tag {
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12.5px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            border: 1px solid transparent;
+        }
+
+        .upcoming-subject-badge {
+            font-size: 12px;
+            color: #A6ADCE;
+            font-weight: 500;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .upcoming-time-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            background: rgba(16, 185, 129, 0.12);
+            border: 1px solid rgba(16, 185, 129, 0.25);
+            color: #6EE7B7;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .upcoming-empty-card {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 24px 16px;
+            text-align: center;
+            color: #8E95BE;
+            font-size: 13px;
+            font-style: italic;
+            background: rgba(255, 255, 255, 0.02);
+            border-radius: 12px;
+            border: 1px dashed rgba(255, 255, 255, 0.08);
+            min-height: 80px;
+        }
+
+        @media (max-width: 768px) {
+            .upcoming-days-grid {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+            .upcoming-schedule-box {
+                padding: 16px 14px !important;
+            }
+            .upcoming-session-card {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 8px !important;
+            }
+            .upcoming-time-badge {
+                align-self: flex-start !important;
+            }
+        }
+
         /* Schedule Table */
         .schedule-section {
             background: rgba(11, 8, 38, 0.95);
