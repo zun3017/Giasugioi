@@ -3018,22 +3018,34 @@ function closeStudentInvoiceModal(isExplicitCancel) {
 }
 window.closeStudentInvoiceModal = closeStudentInvoiceModal;
 
-function createPdfBlobFromJpeg(jpegBytes, imgWidth, imgHeight) {
+function createPdfBlobFromJpeg(jpegBytes, imgWidth, imgHeight, customFit) {
     var a4W = 595.28;
     var a4H = 841.89;
     var margin = 20;
-    var maxW = a4W - margin * 2;
-    var maxH = a4H - margin * 2;
 
-    var renderW = maxW;
-    var renderH = (imgHeight / imgWidth) * renderW;
-    if (renderH > maxH) {
-        renderH = maxH;
-        renderW = (imgWidth / imgHeight) * renderH;
+    var pageW = a4W;
+    var pageH = a4H;
+
+    // Nếu ảnh dài hơn tỷ lệ A4 tiêu chuẩn (như báo cáo nhiều buổi học), tự động co giãn chiều cao trang
+    // để nội dung luôn hiển thị rộng rãi, sắc nét, không bị thu nhỏ li ti
+    if (customFit || (imgHeight / imgWidth > a4H / a4W)) {
+        var renderW = a4W - margin * 2;
+        var renderH = (imgHeight / imgWidth) * renderW;
+        pageH = renderH + margin * 2;
+        var posX = margin;
+        var posY = margin;
+    } else {
+        var maxW = a4W - margin * 2;
+        var maxH = a4H - margin * 2;
+        var renderW = maxW;
+        var renderH = (imgHeight / imgWidth) * renderW;
+        if (renderH > maxH) {
+            renderH = maxH;
+            renderW = (imgWidth / imgHeight) * renderH;
+        }
+        var posX = (a4W - renderW) / 2;
+        var posY = (a4H - renderH) / 2;
     }
-
-    var posX = (a4W - renderW) / 2;
-    var posY = (a4H - renderH) / 2;
 
     var contentStream = 'q\n' +
         renderW.toFixed(2) + ' 0 0 ' + renderH.toFixed(2) + ' ' + posX.toFixed(2) + ' ' + posY.toFixed(2) + ' cm\n' +
@@ -3043,7 +3055,7 @@ function createPdfBlobFromJpeg(jpegBytes, imgWidth, imgHeight) {
     var header = '%PDF-1.4\n';
     var obj1 = '1 0 obj\n<< /Type /Catalog /Pages 2 0 R >>\nendobj\n';
     var obj2 = '2 0 obj\n<< /Type /Pages /Kids [3 0 R] /Count 1 >>\nendobj\n';
-    var obj3 = '3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + a4W.toFixed(2) + ' ' + a4H.toFixed(2) + '] /Resources << /XObject << /Img 4 0 R >> >> /Contents 5 0 R >>\nendobj\n';
+    var obj3 = '3 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ' + pageW.toFixed(2) + ' ' + pageH.toFixed(2) + '] /Resources << /XObject << /Img 4 0 R >> >> /Contents 5 0 R >>\nendobj\n';
     var obj4Start = '4 0 obj\n<< /Type /XObject /Subtype /Image /Width ' + imgWidth + ' /Height ' + imgHeight + ' /ColorSpace /DeviceRGB /BitsPerComponent 8 /Filter /DCTDecode /Length ' + jpegBytes.length + ' >>\nstream\n';
     var obj4End = '\nendstream\nendobj\n';
     var obj5 = '5 0 obj\n<< /Length ' + contentStream.length + ' >>\nstream\n' + contentStream + 'endstream\nendobj\n';
@@ -3417,6 +3429,7 @@ function previewTutorReport() {
     var studentSelect = document.getElementById('reportStudentSelect');
     var container = document.getElementById('reportPreviewContainer');
     var exportBtn = document.getElementById('btnExportReportPng');
+    var exportPdfBtn = document.getElementById('btnExportReportPdf');
 
     if (!container) return;
 
@@ -3472,10 +3485,12 @@ function previewTutorReport() {
                 '<p style="color: #A6ADCE; font-size: 13px; margin: 0;">Vui lòng điều chỉnh lại khoảng thời gian "Từ ngày" - "Đến ngày" hoặc chọn học sinh khác.</p>' +
             '</div>';
             if (exportBtn) exportBtn.style.display = 'none';
+            if (exportPdfBtn) exportPdfBtn.style.display = 'none';
             return;
         }
 
         if (exportBtn) exportBtn.style.display = 'inline-flex';
+        if (exportPdfBtn) exportPdfBtn.style.display = 'inline-flex';
 
         // Calculate metrics
         var totalSessions = flatSessions.length;
@@ -3578,6 +3593,7 @@ function previewTutorReport() {
             '<p style="color: #A6ADCE; font-size: 13px; margin: 0;">Vui lòng thử lại hoặc chọn học sinh khác.</p>' +
         '</div>';
         if (exportBtn) exportBtn.style.display = 'none';
+        if (exportPdfBtn) exportPdfBtn.style.display = 'none';
     }
 }
 window.previewTutorReport = previewTutorReport;
@@ -3649,6 +3665,98 @@ function exportReportToPng() {
     }
 }
 window.exportReportToPng = exportReportToPng;
+
+function exportReportToPdf() {
+    var card = document.getElementById('reportCaptureCard');
+    if (!card) return;
+
+    var startInput = document.getElementById('reportStartDate');
+    var endInput = document.getElementById('reportEndDate');
+    var studentSelect = document.getElementById('reportStudentSelect');
+    var btn = document.getElementById('btnExportReportPdf');
+
+    var sName = studentSelect ? studentSelect.value : "";
+    if (!sName || sName === "all") {
+        var students = (typeof getTutorStudentsResolved === 'function') 
+            ? getTutorStudentsResolved() 
+            : ((tutorDataGlobal && tutorDataGlobal.students) ? tutorDataGlobal.students : []);
+        sName = (students.length > 0) ? students[0].name.trim() : "HocSinh";
+    }
+    var cleanStudent = sName.replace(/\s+/g, '_');
+
+    var tuNgay = startInput && startInput.value ? startInput.value.replace(/[-/]/g, '') : "TuNgay";
+    var denNgay = endInput && endInput.value ? endInput.value.replace(/[-/]/g, '') : "DenNgay";
+    var fileName = 'BaoCao_' + cleanStudent + '_' + tuNgay + '_' + denNgay + '.pdf';
+
+    var originalText = btn ? btn.innerHTML : "";
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang tạo PDF...';
+    }
+
+    var restoreBtn = function() {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    };
+
+    if (typeof html2canvas !== 'function') {
+        restoreBtn();
+        if (typeof showToast === 'function') {
+            showToast("Thư viện html2canvas chưa sẵn sàng!", "error");
+        }
+        return;
+    }
+
+    html2canvas(card, {
+        scale: 2,
+        backgroundColor: "#0E0B25",
+        useCORS: true,
+        logging: false
+    }).then(function(canvas) {
+        try {
+            var dataUrl = canvas.toDataURL('image/jpeg', 0.95);
+            var base64 = dataUrl.split(',')[1];
+            var binaryStr = atob(base64);
+            var len = binaryStr.length;
+            var jpegBytes = new Uint8Array(len);
+            for (var i = 0; i < len; i++) {
+                jpegBytes[i] = binaryStr.charCodeAt(i);
+            }
+
+            var pdfBlob = createPdfBlobFromJpeg(jpegBytes, canvas.width, canvas.height, true);
+            var url = URL.createObjectURL(pdfBlob);
+            var a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            setTimeout(function() {
+                URL.revokeObjectURL(url);
+            }, 5000);
+
+            restoreBtn();
+            if (typeof showToast === 'function') {
+                showToast("Đã xuất file PDF báo cáo thành công!", "success");
+            }
+        } catch(err) {
+            console.error("PDF generation error:", err);
+            restoreBtn();
+            if (typeof showToast === 'function') {
+                showToast("Lỗi khi tạo file PDF!", "error");
+            }
+        }
+    }).catch(function(err) {
+        console.error("html2canvas error during PDF export:", err);
+        restoreBtn();
+        if (typeof showToast === 'function') {
+            showToast("Lỗi khi chụp nội dung báo cáo để xuất PDF!", "error");
+        }
+    });
+}
+window.exportReportToPdf = exportReportToPdf;
 
 function switchTutorNavTab(element, tabKey) {
     var items = document.querySelectorAll('.sidebar-nav-item');

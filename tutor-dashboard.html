@@ -658,7 +658,7 @@
                         <i class="fa-solid fa-file-image" style="color: #8E4DFF;"></i>
                         <span>Xuất báo cáo học tập & Lịch sử buổi học</span>
                     </h3>
-                    <p>Chọn khoảng thời gian và học sinh để xem trước phiếu báo cáo và xuất ảnh PNG gửi phụ huynh</p>
+                    <p>Chọn khoảng thời gian và học sinh để xuất ảnh PNG hoặc tải file PDF gửi phụ huynh</p>
                 </div>
 
                 <div class="report-filter-controls">
@@ -691,13 +691,13 @@
 
                     <!-- Actions -->
                     <div class="report-actions">
-                        <button type="button" class="btn-report-preview" onclick="previewTutorReport()">
-                            <i class="fa-solid fa-magnifying-glass"></i>
-                            <span>Xem trước</span>
-                        </button>
                         <button type="button" id="btnExportReportPng" class="btn-report-export" onclick="exportReportToPng()" style="display: none;">
                             <i class="fa-solid fa-camera"></i>
                             <span>Xuất ảnh PNG</span>
+                        </button>
+                        <button type="button" id="btnExportReportPdf" class="btn-report-pdf" onclick="exportReportToPdf()" style="display: none;">
+                            <i class="fa-solid fa-file-pdf"></i>
+                            <span>Xuất file PDF</span>
                         </button>
                     </div>
                 </div>
