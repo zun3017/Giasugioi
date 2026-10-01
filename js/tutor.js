@@ -942,19 +942,22 @@ function initTutorDiaryFilters() {
     var monthSelect = document.getElementById('diaryMonthFilter');
     if (!studentSelect || !monthSelect) return;
 
-    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
-    var students = (store && store.students) ? store.students : (tutorDataGlobal && tutorDataGlobal.students ? tutorDataGlobal.students : []);
+    var students = (typeof getTutorStudentsResolved === 'function') 
+        ? getTutorStudentsResolved() 
+        : ((tutorDataGlobal && tutorDataGlobal.students) ? tutorDataGlobal.students : []);
 
-    var prevStudent = studentSelect.value || "all";
-    studentSelect.innerHTML = '<option value="all">Tất cả học sinh</option>';
+    var prevStudent = studentSelect.value || "";
+    studentSelect.innerHTML = '';
     students.forEach(function(st) {
         var opt = document.createElement('option');
         opt.value = st.name.trim();
         opt.innerText = st.name.trim();
         studentSelect.appendChild(opt);
     });
-    if (prevStudent && studentSelect.querySelector('option[value="' + prevStudent + '"]')) {
+    if (prevStudent && prevStudent !== 'all' && studentSelect.querySelector('option[value="' + prevStudent + '"]')) {
         studentSelect.value = prevStudent;
+    } else if (students.length > 0) {
+        studentSelect.value = students[0].name.trim();
     }
 
     var prevMonth = monthSelect.value || "all";
@@ -1011,11 +1014,18 @@ function renderTutorDiarySection(reinitFilters) {
 
     if (!tableBody || !mobileList) return;
 
-    var selStudent = studentSelect ? studentSelect.value : "all";
+    var students = (typeof getTutorStudentsResolved === 'function') 
+        ? getTutorStudentsResolved() 
+        : ((tutorDataGlobal && tutorDataGlobal.students) ? tutorDataGlobal.students : []);
+
+    var selStudent = studentSelect ? studentSelect.value : "";
+    if ((!selStudent || selStudent === "all") && students.length > 0) {
+        selStudent = students[0].name.trim();
+        if (studentSelect) studentSelect.value = selStudent;
+    }
     var selMonth = monthSelect ? monthSelect.value : "all";
 
     var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
-    var students = (store && store.students) ? store.students : (tutorDataGlobal && tutorDataGlobal.students ? tutorDataGlobal.students : []);
     var sched = (store && store.tutorSchedule) ? store.tutorSchedule : [];
 
     var timeSlotMap = {};
@@ -1032,7 +1042,7 @@ function renderTutorDiarySection(reinitFilters) {
 
     var flatLogs = [];
     students.forEach(function(st) {
-        if (selStudent !== 'all' && st.name.trim() !== selStudent) return;
+        if (st.name.trim() !== selStudent) return;
         if (st.logs && Array.isArray(st.logs)) {
             st.logs.forEach(function(log, lIdx) {
                 if (selMonth !== 'all' && log.ngay) {
@@ -1811,12 +1821,12 @@ function initReportFilterOptions() {
     }
 
     if (studentSelect) {
-        var curVal = studentSelect.value || "all";
+        var curVal = studentSelect.value || "";
         var students = (typeof getTutorStudentsResolved === 'function') 
             ? getTutorStudentsResolved() 
             : ((tutorDataGlobal && tutorDataGlobal.students) ? tutorDataGlobal.students : []);
 
-        studentSelect.innerHTML = '<option value="all">Tất cả học sinh</option>';
+        studentSelect.innerHTML = '';
         students.forEach(function(st) {
             var opt = document.createElement('option');
             opt.value = st.name.trim();
@@ -1824,7 +1834,11 @@ function initReportFilterOptions() {
             studentSelect.appendChild(opt);
         });
 
-        studentSelect.value = curVal;
+        if (curVal && curVal !== 'all' && studentSelect.querySelector('option[value="' + curVal + '"]')) {
+            studentSelect.value = curVal;
+        } else if (students.length > 0) {
+            studentSelect.value = students[0].name.trim();
+        }
     }
 }
 window.initReportFilterOptions = initReportFilterOptions;
@@ -1862,16 +1876,21 @@ function previewTutorReport() {
         endDate.setHours(23, 59, 59, 999);
     }
 
-    var selStudent = studentSelect ? studentSelect.value : 'all';
+    var selStudent = studentSelect ? studentSelect.value : '';
 
     var students = (typeof getTutorStudentsResolved === 'function') 
         ? getTutorStudentsResolved() 
         : ((tutorDataGlobal && tutorDataGlobal.students) ? tutorDataGlobal.students : []);
 
+    if ((!selStudent || selStudent === 'all') && students.length > 0) {
+        selStudent = students[0].name.trim();
+        if (studentSelect) studentSelect.value = selStudent;
+    }
+
     var flatSessions = [];
     students.forEach(function(st) {
         var sName = st.name.trim();
-        if (selStudent !== 'all' && sName !== selStudent) return;
+        if (sName !== selStudent) return;
 
         if (st.logs && Array.isArray(st.logs)) {
             st.logs.forEach(function(log) {
@@ -1928,8 +1947,7 @@ function previewTutorReport() {
         : function(s) { return s; };
 
     var startDisplay = startInput && startInput.value ? startInput.value.split('-').reverse().join('/') : "Đầu kỳ";
-    var endDisplay = endInput && endInput.value ? endInput.value.split('-').reverse().join('/') : "Hiện tại";
-    var targetStudentDisplay = (selStudent === 'all') ? "Tất cả học sinh" : selStudent;
+    var targetStudentDisplay = selStudent || (students[0] ? students[0].name.trim() : "Học sinh");
     var tutorName = (tutorDataGlobal && tutorDataGlobal.tutorName) ? tutorDataGlobal.tutorName : "Thầy Trần Hoàng Nam";
 
     var html = '<div id="reportCaptureCard" class="report-capture-card">' +
@@ -2012,8 +2030,13 @@ function exportReportToPng() {
     var studentSelect = document.getElementById('reportStudentSelect');
     var btn = document.getElementById('btnExportReportPng');
 
-    var sName = studentSelect ? studentSelect.value : "TatCa";
-    if (sName === "all") sName = "TatCaHocSinh";
+    var sName = studentSelect ? studentSelect.value : "";
+    if (!sName || sName === "all") {
+        var students = (typeof getTutorStudentsResolved === 'function') 
+            ? getTutorStudentsResolved() 
+            : ((tutorDataGlobal && tutorDataGlobal.students) ? tutorDataGlobal.students : []);
+        sName = (students.length > 0) ? students[0].name.trim() : "HocSinh";
+    }
     var cleanStudent = sName.replace(/\s+/g, '_');
 
     var tuNgay = startInput && startInput.value ? startInput.value.replace(/-/g, '') : "TuNgay";
