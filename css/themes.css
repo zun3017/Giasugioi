@@ -1,4 +1,4 @@
-/**
+﻿/**
  * ============================================================================
  * THEMES.CSS — HỆ THỐNG 36 THEME ĐA GIAO DIỆN (PHASE 12)
  * ============================================================================
@@ -45,6 +45,10 @@
   --header-bg: rgba(3, 8, 29, 0.7);
   --header-border: rgba(255, 255, 255, 0.05);
   --nav-btn-text: #E2E8F0;
+  --glass-bg: rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.08);
+  --glass-blur: 20px;
   --is-dark-theme: 1;
 }
 
@@ -87,6 +91,10 @@
   --header-bg: rgba(237, 242, 247, 0.97);
   --header-border: #E2E8F0;
   --nav-btn-text: #475569;
+  --glass-bg: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  --glass-blur: 18px;
   --is-dark-theme: 0;
 }
 
@@ -125,6 +133,10 @@
   --header-bg: rgba(252, 232, 239, 0.97);
   --header-border: #FCE4EC;
   --nav-btn-text: #88385A;
+  --glass-bg: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  --glass-blur: 18px;
   --is-dark-theme: 0;
 }
 
@@ -163,6 +175,10 @@
   --header-bg: rgba(255, 237, 240, 0.97);
   --header-border: #FFE0E6;
   --nav-btn-text: #8A3A4D;
+  --glass-bg: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  --glass-blur: 18px;
   --is-dark-theme: 0;
 }
 
@@ -201,6 +217,10 @@
   --header-bg: rgba(229, 238, 229, 0.97);
   --header-border: #D5E4D6;
   --nav-btn-text: #2E5230;
+  --glass-bg: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  --glass-blur: 18px;
   --is-dark-theme: 0;
 }
 
@@ -239,6 +259,10 @@
   --header-bg: rgba(239, 230, 216, 0.97);
   --header-border: #EADECF;
   --nav-btn-text: #5C361C;
+  --glass-bg: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  --glass-blur: 18px;
   --is-dark-theme: 0;
 }
 
@@ -280,6 +304,10 @@
   --header-bg: rgba(224, 235, 248, 0.97);
   --header-border: #D8E7F5;
   --nav-btn-text: #3060A0;
+  --glass-bg: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  --glass-blur: 18px;
   --is-dark-theme: 0;
 }
 .theme-azure-mist-full {
@@ -327,6 +355,10 @@
   --header-bg: rgba(224, 237, 216, 0.97);
   --header-border: #D5E7CB;
   --nav-btn-text: #3D5A28;
+  --glass-bg: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  --glass-blur: 18px;
   --is-dark-theme: 0;
 }
 .theme-woodland-cottage-full {
@@ -374,6 +406,10 @@
   --header-bg: rgba(234, 224, 238, 0.97);
   --header-border: #E6DCED;
   --nav-btn-text: #7A5080;
+  --glass-bg: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  --glass-blur: 18px;
   --is-dark-theme: 0;
 }
 .theme-sage-blush-full {
@@ -421,6 +457,10 @@
   --header-bg: rgba(245, 232, 204, 0.97);
   --header-border: #F3E4BE;
   --nav-btn-text: #7A5010;
+  --glass-bg: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  --glass-blur: 18px;
   --is-dark-theme: 0;
 }
 .theme-golden-caramel-full {
@@ -468,6 +508,10 @@
   --header-bg: rgba(228, 239, 232, 0.97);
   --header-border: #D8ECDF;
   --nav-btn-text: #3A6A48;
+  --glass-bg: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  --glass-blur: 18px;
   --is-dark-theme: 0;
 }
 .theme-pastel-alpine-full {
@@ -515,6 +559,10 @@
   --header-bg: rgba(0, 0, 0, 0.6);
   --header-border: rgba(255, 255, 255, 0.05);
   --nav-btn-text: #E2E8F0;
+  --glass-bg: rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.08);
+  --glass-blur: 20px;
   --is-dark-theme: 1;
 }
 .theme-dreamy-cosmic-full {
@@ -562,6 +610,10 @@
   --header-bg: rgba(248, 232, 228, 0.97);
   --header-border: #F7DDD3;
   --nav-btn-text: #8A4030;
+  --glass-bg: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  --glass-blur: 18px;
   --is-dark-theme: 0;
 }
 .theme-sunset-meadow-full {
@@ -609,6 +661,10 @@
   --header-bg: rgba(0, 0, 0, 0.6);
   --header-border: rgba(255, 255, 255, 0.05);
   --nav-btn-text: #E2E8F0;
+  --glass-bg: rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.08);
+  --glass-blur: 20px;
   --is-dark-theme: 1;
 }
 .theme-neon-seoul-full {
@@ -656,6 +712,10 @@
   --header-bg: rgba(0, 0, 0, 0.6);
   --header-border: rgba(255, 255, 255, 0.05);
   --nav-btn-text: #E2E8F0;
+  --glass-bg: rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.08);
+  --glass-blur: 20px;
   --is-dark-theme: 1;
 }
 .theme-mystic-blue-full {
@@ -703,6 +763,10 @@
   --header-bg: rgba(216, 240, 232, 0.97);
   --header-border: #CCEFE6;
   --nav-btn-text: #2A6858;
+  --glass-bg: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  --glass-blur: 18px;
   --is-dark-theme: 0;
 }
 .theme-blue-lime-full {
@@ -750,6 +814,10 @@
   --header-bg: rgba(232, 244, 252, 0.97);
   --header-border: #DDEEFA;
   --nav-btn-text: #3A6888;
+  --glass-bg: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  --glass-blur: 18px;
   --is-dark-theme: 0;
 }
 .theme-cloud-meadow-full {
@@ -798,6 +866,10 @@
   --header-bg: rgba(240, 247, 255, 0.97);
   --header-border: #DCECFB;
   --nav-btn-text: #285888;
+  --glass-bg: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  --glass-blur: 18px;
   --is-dark-theme: 0;
 }
 .theme-soft-blue-white-full, .theme-soft-blue-full {
@@ -845,6 +917,10 @@
   --header-bg: rgba(0, 0, 0, 0.6);
   --header-border: rgba(255, 255, 255, 0.05);
   --nav-btn-text: #E2E8F0;
+  --glass-bg: rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.08);
+  --glass-blur: 20px;
   --is-dark-theme: 1;
 }
 .theme-blossom-noir-full {
@@ -892,6 +968,10 @@
   --header-bg: rgba(0, 0, 0, 0.6);
   --header-border: rgba(255, 255, 255, 0.05);
   --nav-btn-text: #E2E8F0;
+  --glass-bg: rgba(255, 255, 255, 0.07);
+  --glass-border: rgba(255, 255, 255, 0.12);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255,255,255,0.08);
+  --glass-blur: 20px;
   --is-dark-theme: 1;
 }
 .theme-violet-planet-full {
@@ -939,6 +1019,10 @@
   --header-bg: rgba(244, 240, 232, 0.97);
   --header-border: #F0E6D8;
   --nav-btn-text: #6A4A20;
+  --glass-bg: rgba(255, 255, 255, 0.60);
+  --glass-border: rgba(255, 255, 255, 0.55);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.06), inset 0 1px 0 rgba(255,255,255,0.9);
+  --glass-blur: 18px;
   --is-dark-theme: 0;
 }
 .theme-claude-full {

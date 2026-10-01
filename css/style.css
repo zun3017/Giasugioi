@@ -925,15 +925,16 @@
         }
         
         .summary-card {
-            background: var(--bg-card-alt);
-            border: 1px solid var(--border-card);
+            background: var(--glass-bg, var(--bg-card-alt));
+            border: 1px solid var(--glass-border, var(--border-card));
             border-radius: 16px;
             padding: 16px 20px;
             display: flex;
             align-items: center;
             gap: 16px;
             transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(var(--glass-blur, 18px));
+            -webkit-backdrop-filter: blur(var(--glass-blur, 18px));
             text-align: left;
         }
         
@@ -977,12 +978,13 @@
         
         /* Chart container */
         .chart-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
+            background: var(--glass-bg, var(--bg-card));
+            border: 1px solid var(--glass-border, var(--border-color));
             border-radius: 20px;
             padding: 24px;
             margin-bottom: 25px;
-            backdrop-filter: blur(10px);
+            backdrop-filter: blur(var(--glass-blur, 20px));
+            -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
             text-align: left;
         }
         
@@ -1947,11 +1949,12 @@
         }
 
         .tutor-kpi-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
+            background: var(--glass-bg, var(--bg-card));
+            border: 1px solid var(--glass-border, var(--border-card));
             border-radius: 18px;
             padding: 18px 20px;
-            backdrop-filter: blur(25px);
+            backdrop-filter: blur(var(--glass-blur, 20px));
+            -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
             display: flex;
             flex-direction: column;
             justify-content: space-between;
@@ -2049,12 +2052,13 @@
 
         /* Overview Chart Box */
         .overview-chart-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
+            background: var(--glass-bg, var(--bg-card));
+            border: 1px solid var(--glass-border, var(--border-card));
             border-radius: 18px;
             padding: 20px 22px;
-            backdrop-filter: blur(25px);
-            box-shadow: var(--shadow-card);
+            backdrop-filter: blur(var(--glass-blur, 20px));
+            -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
+            box-shadow: var(--glass-shadow, var(--shadow-card));
             box-sizing: border-box;
             width: 100%;
             display: flex;
@@ -2391,13 +2395,14 @@
 
         /* Upcoming Schedule Section */
         .upcoming-schedule-box {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
+            background: var(--glass-bg, var(--bg-card));
+            border: 1px solid var(--glass-border, var(--border-card));
             border-radius: 20px;
             padding: 22px 24px;
             margin-bottom: 25px;
-            backdrop-filter: blur(25px);
-            box-shadow: var(--shadow-card);
+            backdrop-filter: blur(var(--glass-blur, 20px));
+            -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
+            box-shadow: var(--glass-shadow, var(--shadow-card));
         }
 
         .upcoming-all-schedule-btn:hover {
@@ -2415,8 +2420,8 @@
         }
 
         .upcoming-day-column {
-            background: var(--bg-card-alt);
-            border: 1px solid var(--border-card);
+            background: var(--glass-bg, var(--bg-card-alt));
+            border: 1px solid var(--glass-border, var(--border-card));
             border-radius: 16px;
             padding: 16px;
             display: flex;
@@ -2543,13 +2548,14 @@
 
         /* Diary Section Styles */
         .diary-toolbar {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
+            background: var(--glass-bg, var(--bg-card));
+            border: 1px solid var(--glass-border, var(--border-card));
             border-radius: 20px;
             padding: 20px 24px;
             margin-bottom: 20px;
-            backdrop-filter: blur(25px);
-            box-shadow: var(--shadow-card);
+            backdrop-filter: blur(var(--glass-blur, 20px));
+            -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
+            box-shadow: var(--glass-shadow, var(--shadow-card));
         }
 
         .diary-filters {
@@ -2720,13 +2726,14 @@
 
         /* Students Section Styles */
         .students-toolbar {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
+            background: var(--glass-bg, var(--bg-card));
+            border: 1px solid var(--glass-border, var(--border-card));
             border-radius: 20px;
             padding: 20px 24px;
             margin-bottom: 20px;
-            backdrop-filter: blur(25px);
-            box-shadow: var(--shadow-card);
+            backdrop-filter: blur(var(--glass-blur, 20px));
+            -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
+            box-shadow: var(--glass-shadow, var(--shadow-card));
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -2826,8 +2833,8 @@
         }
 
         .student-profile-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
+            background: var(--glass-bg, var(--bg-card));
+            border: 1px solid var(--glass-border, var(--border-card));
             border-radius: 18px;
             padding: 18px 20px;
             display: flex;
@@ -2837,7 +2844,8 @@
             cursor: pointer;
             position: relative;
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(var(--glass-blur, 18px));
+            -webkit-backdrop-filter: blur(var(--glass-blur, 18px));
         }
 
         .student-profile-card:hover {
@@ -3048,13 +3056,14 @@
 
         /* Tuition Section Styles */
         .tuition-toolbar {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
+            background: var(--glass-bg, var(--bg-card));
+            border: 1px solid var(--glass-border, var(--border-card));
             border-radius: 20px;
             padding: 20px 24px;
             margin-bottom: 20px;
-            backdrop-filter: blur(25px);
-            box-shadow: var(--shadow-card);
+            backdrop-filter: blur(var(--glass-blur, 20px));
+            -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
+            box-shadow: var(--glass-shadow, var(--shadow-card));
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -3139,16 +3148,17 @@
         }
 
         .tuition-banner-card {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
+            background: var(--glass-bg, var(--bg-card));
+            border: 1px solid var(--glass-border, var(--border-card));
             border-radius: 16px;
             padding: 18px 20px;
             display: flex;
             flex-direction: column;
             gap: 8px;
-            backdrop-filter: blur(15px);
+            backdrop-filter: blur(var(--glass-blur, 18px));
+            -webkit-backdrop-filter: blur(var(--glass-blur, 18px));
             transition: all 0.25s ease;
-            box-shadow: var(--shadow-card);
+            box-shadow: var(--glass-shadow, var(--shadow-card));
         }
 
         .tuition-banner-card:hover {
@@ -3255,13 +3265,14 @@
 
         /* Report Section Styles */
         .report-filter-toolbar {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
+            background: var(--glass-bg, var(--bg-card));
+            border: 1px solid var(--glass-border, var(--border-card));
             border-radius: 20px;
             padding: 20px 24px;
             margin-bottom: 22px;
-            backdrop-filter: blur(25px);
-            box-shadow: var(--shadow-card);
+            backdrop-filter: blur(var(--glass-blur, 20px));
+            -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
+            box-shadow: var(--glass-shadow, var(--shadow-card));
         }
 
         .report-toolbar-header {
@@ -3665,12 +3676,13 @@
 
         /* Schedule Table */
         .schedule-section {
-            background: var(--bg-card);
-            border: 1px solid var(--border-card);
+            background: var(--glass-bg, var(--bg-card));
+            border: 1px solid var(--glass-border, var(--border-card));
             border-radius: 20px;
             padding: 25px;
             margin-bottom: 25px;
-            backdrop-filter: blur(25px);
+            backdrop-filter: blur(var(--glass-blur, 20px));
+            -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
             overflow-x: auto;
         }
         .schedule-section h3 { color: var(--color-primary); margin-bottom: 15px; font-size: 18px; }
@@ -4036,9 +4048,11 @@
             box-sizing: border-box;
         }
         .modal-content {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            box-shadow: var(--shadow-card);
+            background: var(--glass-bg, var(--bg-card));
+            border: 1px solid var(--glass-border, var(--border-color));
+            box-shadow: var(--glass-shadow, var(--shadow-card));
+            backdrop-filter: blur(var(--glass-blur, 20px));
+            -webkit-backdrop-filter: blur(var(--glass-blur, 20px));
             border-radius: 20px;
             width: 100%;
             max-width: 500px;
