@@ -536,9 +536,9 @@
         }
 
         .fc-col-header-cell-cushion {
-            color: #7D6F63 !important;
-            font-size: 11.5px !important;
-            font-weight: 700 !important;
+            color: var(--text-primary) !important;
+            font-size: 12px !important;
+            font-weight: 800 !important;
             letter-spacing: 0.5px !important;
             text-transform: uppercase !important;
             text-decoration: none !important;
@@ -639,9 +639,9 @@
         }
 
         .fc-daygrid-day-number {
-            color: #2D1F0E !important;
-            font-size: 12.5px !important;
-            font-weight: 600 !important;
+            color: var(--text-primary) !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
             padding: 0 !important;
             text-decoration: none !important;
             line-height: 1 !important;
@@ -725,18 +725,19 @@
         }
 
         .fc-day-other .fc-daygrid-day-frame {
-            background: #FAF7F2 !important;
-            border-color: #EFE8E0 !important;
+            background: var(--bg-card-alt) !important;
+            border-color: var(--border-card) !important;
             box-shadow: none !important;
+            opacity: 0.88 !important;
         }
 
         .fc-day-other .fc-daygrid-day-number {
-            color: #C5B8AC !important;
-            font-weight: 500 !important;
+            color: var(--text-muted) !important;
+            font-weight: 600 !important;
         }
 
         .fc-day-other .fc-daygrid-day-events {
-            opacity: 0.55 !important;
+            opacity: 0.9 !important;
         }
 
         /* Hôm nay (Today highlight): Viền đỏ Card + Badge tròn đỏ số ngày */
@@ -958,11 +959,11 @@
         .fc-month-chip-inner {
             display: flex !important;
             align-items: center !important;
-            gap: 5px !important;
-            padding: 2.5px 6px !important;
+            gap: 6px !important;
+            padding: 3px 7px !important;
             border-radius: 6px !important;
-            font-size: 10.5px !important;
-            line-height: 1.3 !important;
+            font-size: 11.5px !important;
+            line-height: 1.35 !important;
             white-space: nowrap !important;
             overflow: hidden !important;
             text-overflow: ellipsis !important;
@@ -973,31 +974,34 @@
 
         .fc-month-chip-inner:hover {
             transform: translateY(-1px) !important;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08) !important;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.12) !important;
         }
 
         .fc-chip-dot {
-            width: 5px !important;
-            height: 5px !important;
+            width: 7px !important;
+            height: 7px !important;
             border-radius: 50% !important;
             flex-shrink: 0 !important;
             display: inline-block !important;
+            box-shadow: 0 0 2px rgba(0, 0, 0, 0.25) !important;
         }
 
         .fc-chip-time {
             font-weight: 700 !important;
-            font-size: 10px !important;
+            font-size: 11px !important;
             flex-shrink: 0 !important;
             letter-spacing: -0.2px !important;
+            color: var(--text-primary) !important;
         }
 
         .fc-chip-title {
-            font-weight: 500 !important;
-            font-size: 10.5px !important;
+            font-weight: 600 !important;
+            font-size: 11.5px !important;
             overflow: hidden !important;
             text-overflow: ellipsis !important;
             white-space: nowrap !important;
             flex: 1 !important;
+            color: var(--text-primary) !important;
         }
 
         .fc-event-main-frame {
@@ -2052,7 +2056,9 @@
             background: var(--bg-card-alt) !important;
         }
         .fc-col-header-cell-cushion {
-            color: var(--text-secondary) !important;
+            color: var(--text-primary) !important;
+            font-size: 12px !important;
+            font-weight: 800 !important;
         }
         .fc-timegrid-slot {
             border-bottom: 1px solid var(--border-card) !important;
@@ -2093,14 +2099,17 @@
         }
         .fc-daygrid-day-number {
             color: var(--text-primary) !important;
+            font-size: 13px !important;
+            font-weight: 700 !important;
         }
         .fc-day-other .fc-daygrid-day-frame {
             background: var(--bg-page) !important;
             border-color: var(--border-card) !important;
-            opacity: 0.65;
+            opacity: 0.88 !important;
         }
         .fc-day-other .fc-daygrid-day-number {
             color: var(--text-muted) !important;
+            font-weight: 600 !important;
         }
         .fc-daygrid-day.fc-day-today .fc-daygrid-day-frame {
             border: 1.5px solid var(--color-primary) !important;
@@ -2114,7 +2123,8 @@
             color: var(--color-primary) !important;
         }
         .fc .fc-daygrid-more-link {
-            color: var(--text-secondary) !important;
+            color: var(--color-primary, var(--text-primary)) !important;
+            font-weight: 700 !important;
         }
         .fc .fc-daygrid-more-link:hover {
             color: var(--text-primary) !important;
@@ -3578,54 +3588,31 @@
                     colorHex = '#8E4DFF';
                 }
                 let rgb = hexToRgb(colorHex);
-                // Relative luminance
-                let lum = (0.299 * rgb.r + 0.587 * rgb.g + 0.114 * rgb.b) / 255;
+                let isDark = getComputedStyle(document.documentElement).getPropertyValue('--is-dark-theme').trim() === '1';
 
-                // Thẻ tông tối (ví dụ #6D675E như Toán 12 trong Image 2) -> chữ trắng
-                if (lum < 0.45) {
+                if (isDark) {
                     return {
-                        bg: colorHex,
-                        border: rgbToHex(rgb.r * 0.85, rgb.g * 0.85, rgb.b * 0.85),
+                        bg: 'rgba(' + rgb.r + ', ' + rgb.g + ', ' + rgb.b + ', 0.32)',
+                        border: colorHex,
                         text: '#FFFFFF',
                         icon: '#FFFFFF'
                     };
                 }
 
-                // Màu đã là pastel hoặc độ bão hòa dịu (ví dụ #D4E7B5, #DFD6F2, #F9D5CA, #BDD7EE, #FDE8B3)
-                let max = Math.max(rgb.r, rgb.g, rgb.b);
-                let min = Math.min(rgb.r, rgb.g, rgb.b);
-                let sat = max === 0 ? 0 : (max - min) / max;
+                // Nền sáng: hòa 16% vào nền trắng để tạo nền pastel mịn, viền 45%, chữ đen đậm tương phản tuyệt đối
+                let bgR = Math.round(rgb.r * 0.16 + 255 * 0.84);
+                let bgG = Math.round(rgb.g * 0.16 + 255 * 0.84);
+                let bgB = Math.round(rgb.b * 0.16 + 255 * 0.84);
 
-                if (lum >= 0.72 || sat < 0.35) {
-                    let darkR = Math.round(rgb.r * 0.35);
-                    let darkG = Math.round(rgb.g * 0.35);
-                    let darkB = Math.round(rgb.b * 0.35);
-                    return {
-                        bg: colorHex,
-                        border: rgbToHex(rgb.r * 0.88, rgb.g * 0.88, rgb.b * 0.88),
-                        text: rgbToHex(darkR, darkG, darkB),
-                        icon: rgbToHex(darkR, darkG, darkB)
-                    };
-                }
-
-                // Màu đậm rực rỡ -> hòa 22% vào nền trắng để tạo nền pastel mịn, viền 40%, chữ đậm tương phản cao
-                let bgR = Math.round(rgb.r * 0.22 + 255 * 0.78);
-                let bgG = Math.round(rgb.g * 0.22 + 255 * 0.78);
-                let bgB = Math.round(rgb.b * 0.22 + 255 * 0.78);
-
-                let bdrR = Math.round(rgb.r * 0.40 + 255 * 0.60);
-                let bdrG = Math.round(rgb.g * 0.40 + 255 * 0.60);
-                let bdrB = Math.round(rgb.b * 0.40 + 255 * 0.60);
-
-                let txtR = Math.round(rgb.r * 0.45);
-                let txtG = Math.round(rgb.g * 0.45);
-                let txtB = Math.round(rgb.b * 0.45);
+                let bdrR = Math.round(rgb.r * 0.45 + 255 * 0.55);
+                let bdrG = Math.round(rgb.g * 0.45 + 255 * 0.55);
+                let bdrB = Math.round(rgb.b * 0.45 + 255 * 0.55);
 
                 return {
                     bg: rgbToHex(bgR, bgG, bgB),
                     border: rgbToHex(bdrR, bdrG, bdrB),
-                    text: rgbToHex(txtR, txtG, txtB),
-                    icon: rgbToHex(txtR, txtG, txtB)
+                    text: 'var(--text-primary)',
+                    icon: colorHex
                 };
             }
 
@@ -3683,9 +3670,11 @@
                     }
                 },
                 eventContent: function(arg) {
+                    let isDark = getComputedStyle(document.documentElement).getPropertyValue('--is-dark-theme').trim() === '1';
+
                     if (arg.view.type === 'dayGridMonth') {
                         let props = arg.event.extendedProps || {};
-                        let color = props.eventColor || '#8E4DFF';
+                        let color = props.eventColor || props.color || '#8E4DFF';
                         let timeStr = props.startTime || (arg.timeText || '');
                         let titleStr = props.studentName || arg.event.title || '';
                         if (props.notes && !titleStr.includes(props.notes)) {
@@ -3697,23 +3686,33 @@
                         }
                         
                         let isCancelled = props.status === 'cancelled';
-                        let chipBg = isCancelled ? '#F3F4F6' : (color + '18');
-                        let chipBorder = isCancelled ? '#D1D5DB' : (color + '38');
-                        let textColor = isCancelled ? '#9CA3AF' : color;
                         let textDecor = isCancelled ? 'text-decoration: line-through;' : '';
                         let dotColor = isCancelled ? '#9CA3AF' : color;
+                        let textClr = isCancelled ? '#9CA3AF' : (isDark ? '#FFFFFF' : 'var(--text-primary)');
                         
-                        let html = '<div class="fc-month-chip-inner" style="background: ' + chipBg + '; border: 1px solid ' + chipBorder + '; ' + textDecor + '">' +
+                        let chipBg, chipBorder;
+                        if (isCancelled) {
+                            chipBg = isDark ? 'rgba(255, 255, 255, 0.06)' : '#F1F5F9';
+                            chipBorder = isDark ? 'rgba(255, 255, 255, 0.15)' : '#CBD5E1';
+                        } else if (isDark) {
+                            chipBg = 'rgba(' + hexToRgbStr(color) + ', 0.28)';
+                            chipBorder = color;
+                        } else {
+                            chipBg = 'rgba(' + hexToRgbStr(color) + ', 0.12)';
+                            chipBorder = 'rgba(' + hexToRgbStr(color) + ', 0.45)';
+                        }
+                        
+                        let html = '<div class="fc-month-chip-inner" style="background: ' + chipBg + '; border: 1px solid ' + chipBorder + '; border-left: 3.5px solid ' + dotColor + '; ' + textDecor + '">' +
                                    '<span class="fc-chip-dot" style="background-color: ' + dotColor + ';"></span>' +
-                                   (timeStr ? '<span class="fc-chip-time" style="color: ' + textColor + ';">' + timeStr + '</span>' : '') +
-                                   '<span class="fc-chip-title" style="color: var(--text-primary);">' + titleStr + '</span>' +
+                                   (timeStr ? '<span class="fc-chip-time" style="color: ' + textClr + '; font-weight: 700;">' + timeStr + '</span>' : '') +
+                                   '<span class="fc-chip-title" style="color: ' + textClr + '; font-weight: 600;">' + titleStr + '</span>' +
                                    '</div>';
                         return { html: html };
                     }
 
                     if (arg.view.type === 'timeGridWeek' || arg.view.type === 'timeGridDay') {
                         let props = arg.event.extendedProps || {};
-                        let color = props.eventColor || '#8E4DFF';
+                        let color = props.eventColor || props.color || '#8E4DFF';
                         
                         let timeStr = '';
                         if (props.startTime && props.endTime) {
@@ -3740,21 +3739,21 @@
                         let isCancelled = props.status === 'cancelled';
                         let cardBg = isCancelled ? '#F3F4F6' : theme.bg;
                         let cardBorder = isCancelled ? '#D1D5DB' : theme.border;
-                        let textColor = isCancelled ? '#9CA3AF' : theme.text;
-                        let iconColor = isCancelled ? '#9CA3AF' : theme.icon;
+                        let textColor = isCancelled ? '#9CA3AF' : (isDark ? '#FFFFFF' : 'var(--text-primary)');
+                        let iconColor = isCancelled ? '#9CA3AF' : (isDark ? '#FFFFFF' : color);
                         let textDecor = isCancelled ? 'text-decoration: line-through;' : '';
 
                         let repeatIconHtml = !props.isOneTime
                             ? '<span class="fc-week-card-icon" style="color: ' + iconColor + ';" title="Lịch lặp lại hàng tuần"><i class="fa-solid fa-repeat"></i></span>'
                             : '<span class="fc-week-card-icon" style="color: ' + iconColor + '; opacity: 0.65;" title="Buổi học 1 lần"><i class="fa-regular fa-clock"></i></span>';
 
-                        let html = '<div class="fc-week-card-inner" style="background: ' + cardBg + '; border: 1px solid ' + cardBorder + '; color: ' + textColor + '; ' + textDecor + '">' +
+                        let html = '<div class="fc-week-card-inner" style="background: ' + cardBg + '; border: 1px solid ' + cardBorder + '; border-left: 3.5px solid ' + color + '; color: ' + textColor + '; ' + textDecor + '">' +
                                    '<div class="fc-week-card-header">' +
-                                       '<span class="fc-week-card-time" style="color: ' + textColor + ';">' + timeStr + '</span>' +
+                                       '<span class="fc-week-card-time" style="color: ' + textColor + '; font-weight: 700;">' + timeStr + '</span>' +
                                        repeatIconHtml +
                                    '</div>' +
-                                   '<div class="fc-week-card-subject" style="color: ' + textColor + ';" title="' + titleStr + '">' + titleStr + '</div>' +
-                                   '<div class="fc-week-card-fee" style="color: ' + textColor + ';">' + feeStr + '</div>' +
+                                   '<div class="fc-week-card-subject" style="color: ' + textColor + '; font-weight: 700;" title="' + titleStr + '">' + titleStr + '</div>' +
+                                   '<div class="fc-week-card-fee" style="color: ' + (isDark ? 'rgba(255,255,255,0.85)' : 'var(--text-secondary)') + '; font-weight: 600;">' + feeStr + '</div>' +
                                    '</div>';
                         return { html: html };
                     }
@@ -3791,16 +3790,20 @@
                     if (info.view.type === 'dayGridMonth') {
                         var innerChip = info.el.querySelector('.fc-month-chip-inner');
                         if (innerChip) {
+                            var chipTitle = innerChip.querySelector('.fc-chip-title');
+                            var chipTime = innerChip.querySelector('.fc-chip-time');
                             if (isDark) {
                                 innerChip.style.setProperty('background', 'rgba(' + hexToRgbStr(evColor) + ', 0.28)', 'important');
                                 innerChip.style.setProperty('border', '1px solid ' + evColor, 'important');
-                                var chipTitle = innerChip.querySelector('.fc-chip-title');
+                                innerChip.style.setProperty('border-left', '3.5px solid ' + evColor, 'important');
                                 if (chipTitle) chipTitle.style.setProperty('color', '#FFFFFF', 'important');
+                                if (chipTime) chipTime.style.setProperty('color', '#FFFFFF', 'important');
                             } else {
-                                innerChip.style.setProperty('background', evColor + '18', 'important');
-                                innerChip.style.setProperty('border', '1px solid ' + evColor + '38', 'important');
-                                var chipTitle = innerChip.querySelector('.fc-chip-title');
-                                if (chipTitle) chipTitle.style.setProperty('color', darkenColor(evColor, 0.4), 'important');
+                                innerChip.style.setProperty('background', 'rgba(' + hexToRgbStr(evColor) + ', 0.12)', 'important');
+                                innerChip.style.setProperty('border', '1px solid rgba(' + hexToRgbStr(evColor) + ', 0.45)', 'important');
+                                innerChip.style.setProperty('border-left', '3.5px solid ' + evColor, 'important');
+                                if (chipTitle) chipTitle.style.setProperty('color', 'var(--text-primary)', 'important');
+                                if (chipTime) chipTime.style.setProperty('color', 'var(--text-primary)', 'important');
                             }
                         }
                     }
@@ -4781,8 +4784,13 @@ function applyTheme(themeId) {
   }
 
   // 7. Cập nhật FullCalendar nếu đang ở trang Lịch
-  if (typeof calendar !== 'undefined' && calendar && typeof calendar.render === 'function') {
-    calendar.render();
+  if (typeof calendar !== 'undefined' && calendar) {
+    if (typeof calendar.refetchEvents === 'function') {
+      calendar.refetchEvents();
+    }
+    if (typeof calendar.render === 'function') {
+      calendar.render();
+    }
   }
 }
 
