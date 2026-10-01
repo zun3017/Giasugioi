@@ -13,7 +13,7 @@
     <title>Google Calendar style for Tutors - Recurrence Timetable</title>
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0B0826">
+    <meta name="theme-color" content="#F8F3EC">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Gia Sư">
@@ -43,8 +43,8 @@
         }
 
         body {
-            background: radial-gradient(circle at 50% 30%, #150F3B 0%, #08051A 100%) no-repeat fixed;
-            color: #FFF;
+            background: #F8F3EC;
+            color: #2D1F0E;
             display: flex;
             flex-direction: column;
         }
@@ -53,8 +53,8 @@
         .container {
             flex-shrink: 0;
             width: 100%;
-            background: rgba(11, 8, 38, 0.85);
-            border-bottom: 1px solid rgba(142, 77, 255, 0.2);
+            background: #F3EDE4;
+            border-bottom: 1px solid #E5D9CC;
             padding: 12px 25px;
             padding-top: calc(constant(safe-area-inset-top, 0px) + 12px);
             padding-top: calc(env(safe-area-inset-top, 0px) + 12px);
@@ -95,171 +95,228 @@
 
         .calendar-title-wrap i {
             font-size: 24px;
-            color: #8E4DFF;
-            text-shadow: 0 0 10px rgba(142, 77, 255, 0.5);
+            color: #C05E8E;
         }
 
         .calendar-title-wrap h2 {
             font-size: 19px;
             font-weight: 800;
-            background: linear-gradient(135deg, #FFF 0%, #E2D1FF 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            color: #2D1F0E;
         }
 
         .calendar-subtitle {
             font-size: 12.5px;
-            color: #A6ADCE;
+            color: #6B4226;
             margin-top: 4px;
         }
 
-        /* --- GOOGLE CALENDAR CUSTOM STYLING (DARK BLUE/PURPLE) --- */
+        /* --- GOOGLE CALENDAR CUSTOM STYLING (LIGHT CREAM/BEIGE) --- */
         #calendar {
-            background: rgba(12, 8, 39, 0.45);
+            background: transparent;
             border-radius: 16px;
-            border: 1px solid rgba(142, 77, 255, 0.2);
-            padding: 15px;
-            backdrop-filter: blur(10px);
+            border: none;
+            padding: 4px 0;
         }
 
         /* Toolbar buttons */
+        .fc .fc-toolbar {
+            margin-bottom: 12px !important;
+        }
+
+        .fc .fc-button,
         .fc .fc-button-primary {
-            background: rgba(255, 255, 255, 0.05) !important;
-            border: 1px solid rgba(255, 255, 255, 0.45) !important;
-            color: #E2D1FF !important;
+            background: #E8DDD0 !important;
+            border: none !important;
+            color: #2D1F0E !important;
             font-weight: 600 !important;
             font-size: 13px !important;
             text-transform: capitalize !important;
             border-radius: 30px !important;
             padding: 6px 16px !important;
-            transition: all 0.3s !important;
+            transition: all 0.25s !important;
+            box-shadow: none !important;
         }
 
         .fc .fc-button-primary:hover {
-            background: rgba(142, 77, 255, 0.2) !important;
-            border-color: #8E4DFF !important;
-            color: #FFF !important;
+            background: #DFD2C3 !important;
+            color: #2D1F0E !important;
         }
 
         .fc .fc-button-active,
         .fc .fc-button-primary:not(:disabled).fc-button-active {
-            background: linear-gradient(135deg, #8E4DFF 0%, #5B21B6 100%) !important;
-            border-color: #8E4DFF !important;
-            color: #FFFFFF !important;   /* Chữ trắng, rõ ràng trên nền tím */
-            box-shadow: 0 4px 12px rgba(142, 77, 255, 0.4) !important;
+            background: #C05E8E !important;
+            border: none !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 4px 12px rgba(192, 94, 142, 0.35) !important;
         }
 
         .fc .fc-toolbar-title {
             font-size: 16px !important;
             font-weight: 800 !important;
-            color: #FFF !important;
+            color: #2D1F0E !important;
             text-transform: capitalize !important;
         }
 
-        /* Table header cells */
-        .fc th {
-            border: 1px solid rgba(255, 255, 255, 0.15) !important;
-            background: rgba(142, 77, 255, 0.07) !important;
+        /* Scrollgrid and table borders */
+        .fc-theme-standard .fc-scrollgrid {
+            border: 1px solid #E5D9CC !important;
+            background: #FFFFFF !important;
+            border-radius: 12px;
+            overflow: hidden;
+        }
+
+        .fc-theme-standard td, 
+        .fc-theme-standard th {
+            border: 1px solid #E5D9CC !important;
+        }
+
+        /* Table header cells (Thứ 2, 3...) */
+        .fc th,
+        .fc-col-header-cell {
+            border: 1px solid #E5D9CC !important;
+            background: #F3EDE4 !important;
             padding: 8px 0 !important;
         }
 
         .fc-col-header-cell-cushion {
-            color: #E2D1FF !important;
+            color: #6B4226 !important;
             font-size: 13px !important;
             font-weight: 700 !important;
             text-decoration: none !important;
         }
 
+        /* TimeGrid styling */
         .fc-timegrid-slot {
-            border-bottom: 1px solid rgba(255, 255, 255, 0.12) !important; /* Đường kẻ ngang giờ */
-            border-right: 1px solid rgba(255, 255, 255, 0.12) !important;  /* Đường kẻ dọc ngăn cột */
+            border-bottom: 1px solid #E5D9CC !important;
+            border-right: 1px solid #E5D9CC !important;
             height: 24px !important;
+            background: #FFFFFF !important;
+        }
+
+        .fc-timegrid-slot-lane {
+            background: #FFFFFF !important;
         }
 
         .fc-timegrid-slot-label {
-            vertical-align: top !important; /* Căn ở đỉnh ô để khớp vị trí dòng kẻ ngang */
+            vertical-align: top !important;
+            background: #F8F3EC !important;
+            border-color: #E5D9CC !important;
         }
 
         .fc-timegrid-slot-label-cushion {
-            color: #A6ADCE !important;
+            color: #6B4226 !important;
             font-size: 11px !important;
             font-weight: 500 !important;
             display: inline-block !important;
-            transform: translateY(-50%) !important; /* Nhấc chữ lên giữa dòng kẻ */
-            background: #0F0A30 !important; /* Trùng màu nền xám tối/tím vũ trụ của calendar để che bớt đường kẻ phía dưới */
+            transform: translateY(-50%) !important;
+            background: #F8F3EC !important;
             padding: 0 4px !important;
             position: relative !important;
             z-index: 5 !important;
         }
 
-        .fc-timegrid-axis-frame {
-            color: #A6ADCE !important;
+        .fc-timegrid-axis-frame,
+        .fc-timegrid-axis {
+            color: #6B4226 !important;
+            background: #F8F3EC !important;
+            border-color: #E5D9CC !important;
         }
 
-        .fc-theme-standard td, .fc-theme-standard th {
-            border: 1px solid rgba(255, 255, 255, 0.15) !important; /* Đường viền ô lưới rõ trên nền đen */
+        /* DayGrid (Month view & Day cells) */
+        .fc-daygrid-day {
+            background: #FFFFFF !important;
         }
 
-        /* Gỡ bỏ màu highlight vàng/đục của cột hôm nay để giữ nền vũ trụ trong suốt */
+        .fc-daygrid-day-number {
+            color: #2D1F0E !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            padding: 4px 8px !important;
+            text-decoration: none !important;
+        }
+
+        /* Ngày ngoài tháng */
+        .fc-day-other {
+            background: #F8F3EC !important;
+        }
+
+        .fc-day-other .fc-daygrid-day-number {
+            color: #BFA89A !important;
+        }
+
+        /* Hôm nay (Today highlight) */
+        .fc .fc-day-today,
         .fc-theme-standard td.fc-day-today {
-            background-color: transparent !important;
+            background-color: #FFF0F6 !important;
         }
 
-        /* Làm nổi bật tiêu đề cột của ngày hôm nay bằng màu tím sáng giống nút Lịch Tuần */
+        .fc-day-today .fc-daygrid-day-number {
+            color: #C05E8E !important;
+            font-weight: 900 !important;
+        }
+
         .fc th.fc-day-today {
-            background: linear-gradient(135deg, #8E4DFF 0%, #5B21B6 100%) !important;
-        }
-        .fc th.fc-day-today .fc-col-header-cell-cushion {
-            color: #FFFFFF !important;
-            text-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+            background: #FFF0F6 !important;
+            border-bottom: 2px solid #C05E8E !important;
         }
 
-        /* Đường chỉ giờ hiện tại (Now Indicator) màu đỏ giống Google Calendar */
+        .fc th.fc-day-today .fc-col-header-cell-cushion {
+            color: #C05E8E !important;
+            font-weight: 800 !important;
+            text-shadow: none !important;
+        }
+
+        /* Now Indicator */
         .fc .fc-timegrid-now-indicator-line {
-            border-color: #EA4335 !important;
+            border-color: #C05E8E !important;
             border-width: 2px !important;
         }
         .fc .fc-timegrid-now-indicator-arrow {
-            border-left-color: #EA4335 !important;
+            border-left-color: #C05E8E !important;
         }
 
         /* --- SỰ KIỆN LỊCH (EVENTS) --- */
         .fc-v-event {
-            background: rgba(142, 77, 255, 0.15) !important;
-            border: 1px solid rgba(142, 77, 255, 0.4) !important;
-            border-left: 4px solid #8E4DFF !important;
-            border-radius: 8px !important;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2) !important;
-            padding: 3px 6px !important;
+            background: rgba(192, 94, 142, 0.12) !important;
+            border: 1px solid rgba(192, 94, 142, 0.3) !important;
+            border-left: 3px solid #C05E8E !important;
+            border-radius: 6px !important;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.04) !important;
+            padding: 2px 5px !important;
             cursor: pointer !important;
             transition: transform 0.2s, box-shadow 0.2s !important;
         }
 
         .fc-v-event:hover {
             transform: scale(1.02) !important;
-            box-shadow: 0 6px 15px rgba(142, 77, 255, 0.3) !important;
+            box-shadow: 0 4px 12px rgba(192, 94, 142, 0.2) !important;
+        }
+
+        .fc-daygrid-event {
+            border-radius: 6px !important;
+            padding: 2px 5px !important;
+            margin-top: 2px !important;
+            cursor: pointer !important;
         }
 
         .fc-event-main-frame {
-            padding: 2px 4px !important;
+            padding: 1px 3px !important;
         }
 
         .fc-event-time {
             font-size: 10.5px !important;
             font-weight: 700 !important;
-            color: #E2D1FF !important;
+            color: #6B4226 !important;
             margin-bottom: 2px !important;
         }
 
         .fc-event-title {
             font-size: 11.5px !important;
             font-weight: 700 !important;
-            color: #FFF !important;
-            white-space: normal !important; /* Cho phép xuống dòng tự động */
-            word-break: break-word !important; /* Tự động ngắt từ dài */
+            color: #2D1F0E !important;
+            white-space: normal !important;
+            word-break: break-word !important;
         }
-
-
 
         /* --- BẢNG MÀU CHO MODAL --- */
         .color-picker-section {
@@ -275,18 +332,18 @@
             padding: 5px 0;
             font-size: 11.5px;
             font-weight: 600;
-            border: 1px solid rgba(255,255,255,0.15);
+            border: 1px solid #E5D9CC;
             border-radius: 8px;
             background: transparent;
-            color: #8892B0;
+            color: #6B4226;
             cursor: pointer;
             transition: all 0.2s;
             font-family: 'Inter', sans-serif;
         }
         .color-scope-btn.active {
-            background: rgba(142, 77, 255, 0.2);
-            border-color: rgba(142, 77, 255, 0.6);
-            color: #E2D1FF;
+            background: #FFF0F6;
+            border-color: #C05E8E;
+            color: #C05E8E;
         }
         .color-swatches {
             display: flex;
@@ -305,9 +362,9 @@
         }
         .color-swatch:hover { transform: scale(1.18); }
         .color-swatch.selected {
-            border-color: #FFF;
+            border-color: #2D1F0E;
             transform: scale(1.15);
-            box-shadow: 0 0 0 2px rgba(255,255,255,0.3);
+            box-shadow: 0 0 0 2px rgba(45, 31, 14, 0.2);
         }
         .color-swatch.selected::after {
             content: '✓';
@@ -326,7 +383,7 @@
             align-items: center;
             gap: 6px;
             font-size: 11px;
-            color: #8892B0;
+            color: #6B4226;
             margin-top: 7px;
         }
         .color-preview-dot {
@@ -528,8 +585,8 @@
         .modal-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(8px);
+            background: rgba(45, 31, 14, 0.45);
+            backdrop-filter: blur(6px);
             z-index: 1000;
             display: none;
             justify-content: center;
@@ -538,9 +595,9 @@
         }
 
         .calendar-modal {
-            background: rgba(15, 11, 46, 0.98);
-            border: 1px solid #8E4DFF;
-            box-shadow: 0 0 40px rgba(142, 77, 255, 0.4);
+            background: #FDF8F3;
+            border: 1px solid #E5D9CC;
+            box-shadow: 0 10px 40px rgba(45, 31, 14, 0.15);
             border-radius: 20px;
             width: 100%;
             max-width: 440px;
@@ -548,6 +605,7 @@
             position: relative;
             transform: scale(0.9);
             transition: all 0.3s;
+            color: #2D1F0E;
         }
 
         .modal-overlay.active {
@@ -562,7 +620,7 @@
         .recurrence-dialog-overlay {
             position: fixed;
             top: 0; left: 0; width: 100%; height: 100%;
-            background: rgba(0, 0, 0, 0.65);
+            background: rgba(45, 31, 14, 0.45);
             backdrop-filter: blur(6px);
             z-index: 2000;
             display: none;
@@ -572,9 +630,9 @@
         .recurrence-dialog-overlay.active { display: flex; }
 
         .recurrence-dialog {
-            background: rgba(18, 13, 55, 0.98);
-            border: 1px solid rgba(142, 77, 255, 0.5);
-            box-shadow: 0 8px 40px rgba(91, 46, 255, 0.35);
+            background: #FDF8F3;
+            border: 1px solid #E5D9CC;
+            box-shadow: 0 8px 40px rgba(45, 31, 14, 0.15);
             border-radius: 16px;
             padding: 24px 28px;
             width: 100%;
@@ -587,12 +645,12 @@
         .recurrence-dialog h4 {
             font-size: 15px;
             font-weight: 700;
-            color: #E2D1FF;
+            color: #2D1F0E;
             margin-bottom: 6px;
         }
         .recurrence-dialog p {
             font-size: 12px;
-            color: #8892B0;
+            color: #6B4226;
             margin-bottom: 20px;
             line-height: 1.5;
         }
@@ -603,33 +661,33 @@
             display: flex;
             align-items: flex-start;
             gap: 12px;
-            background: rgba(255,255,255,0.03);
-            border: 1px solid rgba(255,255,255,0.08);
+            background: #FFFFFF;
+            border: 1px solid #E5D9CC;
             border-radius: 12px;
             padding: 13px 15px;
             cursor: pointer;
             transition: all 0.2s;
         }
         .recurrence-option:hover {
-            background: rgba(142,77,255,0.12);
-            border-color: rgba(142,77,255,0.4);
+            background: #FFF0F6;
+            border-color: #C05E8E;
         }
         .recurrence-option.selected {
-            background: rgba(142,77,255,0.15);
-            border-color: #8E4DFF;
+            background: #FFF0F6;
+            border-color: #C05E8E;
         }
         .recurrence-option input[type="radio"] { display: none; }
         .recurrence-radio-dot {
             width: 18px; height: 18px; flex-shrink: 0;
             border-radius: 50%;
-            border: 2px solid rgba(255,255,255,0.3);
+            border: 2px solid #E5D9CC;
             display: flex; align-items: center; justify-content: center;
             margin-top: 1px;
             transition: 0.2s;
         }
         .recurrence-option.selected .recurrence-radio-dot {
-            border-color: #8E4DFF;
-            background: #8E4DFF;
+            border-color: #C05E8E;
+            background: #C05E8E;
         }
         .recurrence-option.selected .recurrence-radio-dot::after {
             content: '';
@@ -639,13 +697,13 @@
         }
         .recurrence-option-text strong {
             font-size: 13px;
-            color: #E2D1FF;
+            color: #2D1F0E;
             font-weight: 600;
         }
         .recurrence-option-text span {
             display: block;
             font-size: 11px;
-            color: #6B7280;
+            color: #8C786A;
             margin-top: 2px;
         }
 
@@ -656,8 +714,8 @@
         }
         .btn-rec-cancel {
             background: transparent;
-            border: 1px solid rgba(255,255,255,0.15);
-            color: #A6ADCE;
+            border: 1px solid #E5D9CC;
+            color: #6B4226;
             border-radius: 30px;
             padding: 8px 18px;
             font-size: 13px;
@@ -665,9 +723,9 @@
             font-family: 'Inter', sans-serif;
             transition: 0.2s;
         }
-        .btn-rec-cancel:hover { border-color: rgba(255,255,255,0.35); color: #FFF; }
+        .btn-rec-cancel:hover { border-color: #C05E8E; color: #2D1F0E; background: #E8DDD0; }
         .btn-rec-ok {
-            background: linear-gradient(135deg, #8E4DFF, #5B21B6);
+            background: #C05E8E;
             border: none;
             color: #FFF;
             border-radius: 30px;
@@ -692,9 +750,9 @@
             position: fixed;
             z-index: 3000;
             width: 300px;
-            background: rgba(15, 11, 46, 0.98);
-            border: 1px solid rgba(142, 77, 255, 0.45);
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.55), 0 0 0 1px rgba(142,77,255,0.08);
+            background: #FDF8F3;
+            border: 1px solid #E5D9CC;
+            box-shadow: 0 8px 32px rgba(45, 31, 14, 0.15);
             border-radius: 14px;
             padding: 12px 16px 18px 16px;
             display: none;
@@ -713,7 +771,7 @@
             justify-content: space-between;
             align-items: center;
             margin-bottom: 10px;
-            border-bottom: 1px solid rgba(255, 255, 255, 0.07);
+            border-bottom: 1px solid #E5D9CC;
             padding-bottom: 8px;
         }
         .detail-actions-left {
@@ -723,7 +781,7 @@
         .btn-detail-action {
             background: transparent;
             border: none;
-            color: #A6ADCE;
+            color: #6B4226;
             font-size: 14px;
             cursor: pointer;
             width: 30px;
@@ -735,8 +793,8 @@
             transition: all 0.2s;
         }
         .btn-detail-action:hover {
-            background: rgba(255, 255, 255, 0.1);
-            color: #FFF;
+            background: #E8DDD0;
+            color: #2D1F0E;
         }
         .detail-content {
             display: flex;
@@ -753,36 +811,35 @@
             width: 11px;
             height: 11px;
             border-radius: 50%;
-            background-color: #8E4DFF;
+            background-color: #C05E8E;
             flex-shrink: 0;
-            box-shadow: 0 0 7px rgba(142, 77, 255, 0.6);
+            box-shadow: 0 0 7px rgba(192, 94, 142, 0.4);
         }
         #detailTitle {
             font-size: 15px;
             font-weight: 700;
-            color: #FFF;
+            color: #2D1F0E;
         }
         .detail-info-item {
             display: flex;
             align-items: flex-start;
             gap: 10px;
-            color: #E2D1FF;
+            color: #6B4226;
             font-size: 12.5px;
             line-height: 1.45;
         }
         .detail-info-item i {
             font-size: 13px;
-            color: #A6ADCE;
+            color: #8C786A;
             margin-top: 2px;
             width: 14px;
             text-align: center;
         }
         .detail-recurrence-info {
             font-size: 11px;
-            color: #8892B0;
+            color: #8C786A;
             margin-top: 2px;
         }
-
 
         .modal-header {
             display: flex;
@@ -794,22 +851,25 @@
         .modal-header h3 {
             font-size: 16px;
             font-weight: 800;
-            color: #FFD23F;
+            color: #2D1F0E;
             display: flex;
             align-items: center;
             gap: 8px;
+        }
+        .modal-header h3 i {
+            color: #C05E8E;
         }
 
         .btn-close {
             background: transparent;
             border: none;
-            color: #A6ADCE;
+            color: #8C786A;
             font-size: 18px;
             cursor: pointer;
             transition: 0.3s;
         }
 
-        .btn-close:hover { color: #FFF; }
+        .btn-close:hover { color: #2D1F0E; }
 
         .form-group {
             margin-bottom: 16px;
@@ -819,7 +879,7 @@
             display: block;
             font-size: 11px;
             font-weight: 700;
-            color: #A6ADCE;
+            color: #6B4226;
             text-transform: uppercase;
             margin-bottom: 6px;
             letter-spacing: 0.5px;
@@ -827,19 +887,19 @@
 
         .form-control {
             width: 100%;
-            background: rgba(4, 2, 10, 0.6);
-            border: 1px solid rgba(142, 77, 255, 0.3);
+            background: #FFFFFF;
+            border: 1px solid #E5D9CC;
             border-radius: 10px;
             padding: 10px 14px;
-            color: #FFF;
+            color: #2D1F0E;
             font-size: 13.5px;
             outline: none;
             transition: all 0.3s;
         }
 
         .form-control:focus {
-            border-color: #8E4DFF;
-            box-shadow: 0 0 10px rgba(142, 77, 255, 0.2);
+            border-color: #C05E8E;
+            box-shadow: 0 0 10px rgba(192, 94, 142, 0.2);
         }
 
         .row-grid {
@@ -870,21 +930,21 @@
             display: block;
             text-align: center;
             padding: 8px 4px;
-            background: rgba(255, 255, 255, 0.02);
-            border: 1px solid rgba(255, 255, 255, 0.06);
+            background: #F8F3EC;
+            border: 1px solid #E5D9CC;
             border-radius: 8px;
             font-size: 11px;
             font-weight: 600;
-            color: #A6ADCE;
+            color: #6B4226;
             cursor: pointer;
             transition: all 0.2s;
         }
 
         .day-checkbox-item input:checked + .day-checkbox-label {
-            background: rgba(142, 77, 255, 0.25);
-            border-color: #8E4DFF;
-            color: #FFF;
-            box-shadow: 0 0 10px rgba(142, 77, 255, 0.2);
+            background: #FFF0F6;
+            border-color: #C05E8E;
+            color: #C05E8E;
+            box-shadow: 0 0 10px rgba(192, 94, 142, 0.2);
         }
 
         /* Actions Footer Buttons */
@@ -893,7 +953,7 @@
             justify-content: flex-end;
             gap: 10px;
             margin-top: 25px;
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            border-top: 1px solid #E5D9CC;
             padding-top: 15px;
         }
 
@@ -909,13 +969,13 @@
 
         .btn-cancel {
             background: transparent;
-            color: #A6ADCE;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            color: #6B4226;
+            border: 1px solid #E5D9CC;
         }
-        .btn-cancel:hover { background: rgba(255, 255, 255, 0.03); color: #FFF; }
+        .btn-cancel:hover { background: #E8DDD0; color: #2D1F0E; }
 
         .btn-delete {
-            background: rgba(239, 68, 68, 0.1);
+            background: rgba(239, 68, 68, 0.08);
             color: #EF4444;
             border: 1px solid rgba(239, 68, 68, 0.2);
             margin-right: auto;
@@ -923,12 +983,12 @@
         .btn-delete:hover { background: #EF4444; color: #FFF; }
 
         .btn-save {
-            background: linear-gradient(135deg, #8E4DFF 0%, #5B21B6 100%);
+            background: #C05E8E;
             color: #FFF;
-            box-shadow: 0 4px 15px rgba(142, 77, 255, 0.3);
+            box-shadow: 0 4px 15px rgba(192, 94, 142, 0.3);
         }
         .btn-save:hover {
-            box-shadow: 0 6px 20px rgba(142, 77, 255, 0.5);
+            box-shadow: 0 6px 20px rgba(192, 94, 142, 0.5);
             transform: translateY(-1px);
         }
 
@@ -940,14 +1000,14 @@
             width: 56px;
             height: 56px;
             border-radius: 28px;
-            background: linear-gradient(135deg, #8E4DFF 0%, #5B21B6 100%);
+            background: #C05E8E;
             color: #FFF;
             display: none;
             justify-content: center;
             align-items: center;
             font-size: 22px;
-            box-shadow: 0 4px 20px rgba(91, 46, 255, 0.5);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 4px 20px rgba(192, 94, 142, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.4);
             cursor: pointer;
             z-index: 900;
             transition: all 0.3s;
@@ -963,7 +1023,7 @@
             .container { 
                 padding: 10px 15px !important; 
                 border-radius: 0 !important; 
-                border-bottom: 1px solid rgba(142, 77, 255, 0.15) !important;
+                border-bottom: 1px solid #E5D9CC !important;
             }
             .calendar-header { margin-bottom: 0px; }
             .calendar-subtitle { display: none; } /* Ẩn subtitle trên mobile để tiết kiệm diện tích */
@@ -1052,7 +1112,7 @@
                 display: block;
                 position: fixed;
                 top: 0; left: 0; right: 0; bottom: 0;
-                background: rgba(0, 0, 0, 0.55);
+                background: rgba(45, 31, 14, 0.45);
                 backdrop-filter: blur(2px);
                 z-index: 2999;
                 opacity: 0;
@@ -1075,8 +1135,8 @@
                 max-width: 100% !important;
                 border-radius: 24px 24px 0 0 !important;
                 border: none !important;
-                border-top: 1px solid rgba(142, 77, 255, 0.2) !important;
-                box-shadow: 0 -8px 32px rgba(0, 0, 0, 0.6) !important;
+                border-top: 1px solid #E5D9CC !important;
+                box-shadow: 0 -8px 32px rgba(45, 31, 14, 0.2) !important;
                 padding: 12px 20px 30px 20px !important;
                 transform: translateY(100%) !important;
                 transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1) !important;
@@ -1093,7 +1153,7 @@
                 display: block;
                 width: 40px;
                 height: 4px;
-                background: rgba(255, 255, 255, 0.25);
+                background: #D4C3B3;
                 border-radius: 2px;
                 margin: 0 auto 12px auto;
             }
@@ -1113,7 +1173,7 @@
                 </div>
             </div>
             <div>
-                <a href="tutor-dashboard.html" class="modal-btn modal-btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 20px; font-weight: bold; font-size: 13.5px; font-family: 'Inter', sans-serif; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.15); color: #FFF; transition: background 0.2s;" onmouseover="this.style.background='rgba(255,255,255,0.12)'" onmouseout="this.style.background='rgba(255,255,255,0.06)'">
+                <a href="tutor-dashboard.html" class="modal-btn modal-btn-secondary" style="text-decoration: none; display: inline-flex; align-items: center; gap: 8px; padding: 10px 22px; border-radius: 20px; font-weight: bold; font-size: 13.5px; font-family: 'Inter', sans-serif; background: #E8DDD0; border: 1px solid #E5D9CC; color: #2D1F0E; transition: background 0.2s;" onmouseover="this.style.background='#DFD2C3'" onmouseout="this.style.background='#E8DDD0'">
                     <i class="fa-solid fa-arrow-left"></i> Quay lại Dashboard
                 </a>
             </div>
@@ -1167,7 +1227,7 @@
     <!-- HỘP THOẠI XÁC NHẬN KHI CHỈNH SỬA SỰ KIỆN LẶP LẠI -->
     <div class="recurrence-dialog-overlay" id="recurrenceDialogOverlay">
         <div class="recurrence-dialog">
-            <h4 id="recurrenceDialogTitle"><i class="fa-solid fa-rotate" style="color:#8E4DFF;margin-right:8px;"></i>Chỉnh sửa sự kiện lặp lại</h4>
+            <h4 id="recurrenceDialogTitle"><i class="fa-solid fa-rotate" style="color:#C05E8E;margin-right:8px;"></i>Chỉnh sửa sự kiện lặp lại</h4>
             <p id="recurrenceDialogDesc">Sự kiện này lặp lại hàng tuần. Bạn muốn thay đổi:</p>
             <div class="recurrence-options">
                 <div class="recurrence-option selected" id="recOptThis" onclick="selectRecOption('this')">
@@ -1611,10 +1671,10 @@
                 if (skipDates.includes(skipCheck)) return null;
             }
 
-            let studentDefaultColor = row.color || '#8E4DFF';
+            let studentDefaultColor = row.color || '#C05E8E';
             let eventColor  = sessionColor || studentDefaultColor;
-            let bgColor     = eventColor + '4D';
-            let bdColor     = eventColor + '99';
+            let bgColor     = eventColor + '25';
+            let bdColor     = eventColor + '40';
             let eventType   = isReschedule ? 'rs' : (isOneTime ? 'ot' : 'rp');
 
             return {
@@ -1624,7 +1684,7 @@
                 end:   dateStr + 'T' + endHour.padStart(2,'0')   + ':' + endMin,
                 backgroundColor: bgColor,
                 borderColor: bdColor,
-                textColor: '#FFFFFF',
+                textColor: eventColor,
                 classNames: [isOneTime ? 'event-status-onetime' : 'event-status-recurring'],
                 extendedProps: {
                     studentIndex: studentIdx,
@@ -2081,23 +2141,26 @@
                     let props = info.event.extendedProps;
                     let evColor = props.eventColor;
                     if (evColor) {
-                        info.el.style.setProperty('border-left', '4px solid ' + evColor, 'important');
+                        info.el.style.setProperty('border-left', '3px solid ' + evColor, 'important');
                         
-                        // Kỹ thuật che dòng kẻ: Sử dụng nền phụ đè lên (solid #0F0A30) làm lớp dưới cùng 
-                        // và phủ lớp màu của ca học có độ trong suốt 30% (#4D) ở trên.
-                        // Việc này giúp thẻ có màu bán trong suốt đẹp như cũ nhưng hoàn toàn che đi các dòng kẻ lưới bên dưới!
-                        let solidBg = '#0F0A30'; 
-                        info.el.style.setProperty('background', 'linear-gradient(0deg, ' + evColor + '4D, ' + evColor + '4D), ' + solidBg, 'important');
-                        info.el.style.setProperty('border-color', evColor + '99', 'important');
+                        // Thay background "#0F0A30" thành evColor+"25" (pastel), color = evColor, border-left: 3px solid evColor
+                        info.el.style.setProperty('background', 'linear-gradient(0deg, ' + evColor + '25, ' + evColor + '25), #FFFFFF', 'important');
+                        info.el.style.setProperty('border-color', evColor + '40', 'important');
 
-                        // Màu chữ mặc định là trắng sáng trên nền tối
-                        let textC = '#FFFFFF';
+                        // Màu chữ dùng evColor (pastel nhạt nền + chữ màu đậm)
+                        let textC = evColor;
                         info.el.style.setProperty('color', textC, 'important');
 
                         let titleEl = info.el.querySelector('.fc-event-title');
-                        if (titleEl) titleEl.style.setProperty('color', textC, 'important');
+                        if (titleEl) {
+                            titleEl.style.setProperty('color', textC, 'important');
+                            titleEl.style.setProperty('font-weight', '700', 'important');
+                        }
                         let timeEl = info.el.querySelector('.fc-event-time');
-                        if (timeEl) timeEl.style.setProperty('color', textC, 'important');
+                        if (timeEl) {
+                            timeEl.style.setProperty('color', textC, 'important');
+                            timeEl.style.setProperty('font-weight', '600', 'important');
+                        }
                     }
                 },
                 headerToolbar: {
