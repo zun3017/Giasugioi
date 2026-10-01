@@ -1021,11 +1021,7 @@ function renderTutorDiarySection(reinitFilters) {
 
     var studentSelect = document.getElementById('diaryStudentFilter');
     var monthSelect = document.getElementById('diaryMonthFilter');
-    var tableBody = document.getElementById('diaryTableBody');
-    var mobileList = document.getElementById('diaryMobileList');
     var countBadge = document.getElementById('diaryTotalSessionsBadge');
-
-    if (!tableBody || !mobileList) return;
 
     var students = (typeof getTutorStudentsResolved === 'function') 
         ? getTutorStudentsResolved() 
@@ -1057,126 +1053,30 @@ function renderTutorDiarySection(reinitFilters) {
             loadTutorAssignedHomework();
         }
     }
+    
     var selMonth = monthSelect ? monthSelect.value : "all";
 
-    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
-    var sched = (store && store.tutorSchedule) ? store.tutorSchedule : [];
-
-    var timeSlotMap = {};
-    sched.forEach(function(s) {
-        var slots = [s.mon, s.tue, s.wed, s.thu, s.fri, s.sat, s.sun].filter(Boolean);
-        if (slots.length > 0) timeSlotMap[s.studentName.trim()] = slots[0];
-    });
-
-    var studentColorMap = {
-        "Lê Minh Thư": { bg: "rgba(142, 77, 255, 0.15)", border: "#8E4DFF", text: "#C4B5FD" },
-        "Nguyễn Hoàng Nam": { bg: "rgba(16, 185, 129, 0.15)", border: "#10B981", text: "#6EE7B7" },
-        "Phạm Hải Đăng": { bg: "rgba(245, 158, 11, 0.15)", border: "#F59E0B", text: "#FCD34D" }
-    };
-
-    var flatLogs = [];
-    students.forEach(function(st) {
-        if (st.name.trim() !== selStudent) return;
-        if (st.logs && Array.isArray(st.logs)) {
-            st.logs.forEach(function(log, lIdx) {
-                if (selMonth !== 'all' && log.ngay) {
-                    var parts = log.ngay.split('/');
-                    if (parts.length >= 3) {
-                        var logMonth = parts[1].padStart(2, '0') + '/' + parts[2];
-                        if (logMonth !== selMonth) return;
-                    }
+    var displayLogs = [];
+    if (matchingSt && matchingSt.logs && Array.isArray(matchingSt.logs)) {
+        matchingSt.logs.forEach(function(log) {
+            if (selMonth !== 'all' && log.ngay) {
+                var parts = log.ngay.split('/');
+                if (parts.length >= 3) {
+                    var logMonth = parts[1].padStart(2, '0') + '/' + parts[2];
+                    if (logMonth !== selMonth) return;
                 }
-                flatLogs.push({
-                    studentName: st.name.trim(),
-                    studentSubject: st.subject || "Gia sư",
-                    log: log,
-                    logIndex: lIdx,
-                    time: log.gio || timeSlotMap[st.name.trim()] || "18:00 - 19:30"
-                });
-            });
-        }
-    });
+            }
+            displayLogs.push(log);
+        });
+    }
 
     if (countBadge) {
-        countBadge.innerText = flatLogs.length + " buổi học";
+        countBadge.innerText = displayLogs.length + " buổi học";
     }
 
-    if (flatLogs.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="7" style="text-align: center; color: rgba(255,255,255,0.4); padding: 30px; font-style: italic;">Không tìm thấy buổi học nào phù hợp với bộ lọc</td></tr>';
-        mobileList.innerHTML = '<div style="text-align: center; color: rgba(255,255,255,0.4); padding: 25px; font-style: italic;">Không tìm thấy buổi học nào phù hợp với bộ lọc</div>';
-        return;
+    if (typeof renderTutorStudentHistory === 'function') {
+        renderTutorStudentHistory(displayLogs);
     }
-
-    var fmtFn = (typeof window.formatDateWithDayOfWeek === 'function') ? window.formatDateWithDayOfWeek : function(s){return s;};
-
-    var tableHtml = "";
-    var mobileHtml = "";
-
-    flatLogs.forEach(function(item, idx) {
-        var log = item.log;
-        var stStyle = studentColorMap[item.studentName] || { bg: "rgba(142, 77, 255, 0.15)", border: "#8E4DFF", text: "#C4B5FD" };
-        var dateFormatted = fmtFn(log.ngay);
-        var btvnBadge = getDiaryBtvnBadge(log.btvn || log.danhGiaBTVN);
-        var comment = (log.nhanXet || "").trim();
-        if (!comment) comment = "Chưa có nhận xét";
-
-        var isLongComment = comment.length > 60;
-        var shortComment = isLongComment ? comment.substring(0, 55) : comment;
-
-        var commentId = "diaryComment_" + idx;
-
-        // Desktop Row
-        tableHtml += '<tr style="border-bottom: 1px solid rgba(255,255,255,0.06);">' +
-            '<td style="padding: 12px 14px; font-weight: 600; color: #FFF; white-space: nowrap;">' + dateFormatted + '</td>' +
-            '<td style="padding: 12px 10px; text-align: center; color: #6EE7B7; font-size: 12.5px; font-weight: 600; white-space: nowrap;"><i class="fa-regular fa-clock" style="font-size: 11px;"></i> ' + item.time + '</td>' +
-            '<td style="padding: 12px 10px;"><span style="background:' + stStyle.bg + '; border:1px solid ' + stStyle.border + '; color:' + stStyle.text + '; padding: 3px 8px; border-radius: 12px; font-size: 12px; font-weight: 700; white-space: nowrap;"><i class="fa-solid fa-user-graduate" style="font-size: 11px;"></i> ' + item.studentName + '</span></td>' +
-            '<td style="padding: 12px 10px; color: #A6ADCE; font-size: 13px;">' + (log.mon || item.studentSubject) + '</td>' +
-            '<td style="padding: 12px 10px; color: #FFF; font-size: 13px; font-weight: 500;">' + (log.topic || log.noiDung || "-") + '</td>' +
-            '<td style="padding: 12px 10px; text-align: center;">' + btvnBadge + '</td>' +
-            '<td style="padding: 12px 14px;">' +
-                '<div class="diary-comment-box" id="' + commentId + '" data-student="' + item.studentName.replace(/"/g, '&quot;') + '" data-index="' + item.logIndex + '" data-full="' + comment.replace(/"/g, '&quot;') + '">' +
-                    '<div class="diary-comment-content">' +
-                        (isLongComment ? 
-                            ('<span class="diary-text-short">' + shortComment + '...</span><span class="diary-text-full" style="display:none;">' + comment + '</span>' +
-                             '<button type="button" class="btn-comment-toggle" onclick="toggleDiaryComment(this)">Xem thêm</button>') 
-                            : ('<span class="diary-text-full">' + comment + '</span>')
-                        ) +
-                    '</div>' +
-                    '<button type="button" class="btn-comment-edit" onclick="openDiaryInlineEdit(this)"><i class="fa-solid fa-pen-to-square"></i> Sửa nhận xét</button>' +
-                '</div>' +
-            '</td>' +
-        '</tr>';
-
-        // Mobile Card
-        mobileHtml += '<div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 14px; padding: 14px; margin-bottom: 12px;">' +
-            '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px;">' +
-                '<span style="background:' + stStyle.bg + '; border:1px solid ' + stStyle.border + '; color:' + stStyle.text + '; padding: 3px 8px; border-radius: 12px; font-size: 11.5px; font-weight: 700;"><i class="fa-solid fa-user-graduate"></i> ' + item.studentName + '</span>' +
-                '<span style="color: #6EE7B7; font-size: 12px; font-weight: 600;"><i class="fa-regular fa-clock"></i> ' + item.time + '</span>' +
-            '</div>' +
-            '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 6px;">' +
-                '<span style="font-weight: 700; color: #FFF; font-size: 14px;">' + dateFormatted + '</span>' +
-                '<span style="font-size: 12px; color: #A6ADCE;">' + (log.mon || item.studentSubject) + '</span>' +
-            '</div>' +
-            '<div style="color: #FFD23F; font-size: 13px; margin-bottom: 8px;"><b>Nội dung:</b> ' + (log.topic || log.noiDung || "-") + '</div>' +
-            '<div style="display: flex; align-items: center; gap: 8px; margin-bottom: 10px;">' +
-                '<span style="font-size: 12px; color: #A6ADCE;">BTVN:</span> ' + btvnBadge +
-            '</div>' +
-            '<div class="diary-comment-box" id="mob_' + commentId + '" data-student="' + item.studentName.replace(/"/g, '&quot;') + '" data-index="' + item.logIndex + '" data-full="' + comment.replace(/"/g, '&quot;') + '" style="background: rgba(0,0,0,0.25); padding: 10px; border-radius: 10px; border: 1px dashed rgba(255,255,255,0.1);">' +
-                '<div style="font-size: 11px; color: #8E4DFF; font-weight: 700; margin-bottom: 4px;"><i class="fa-solid fa-comment-dots"></i> Nhận xét gia sư:</div>' +
-                '<div class="diary-comment-content">' +
-                    (isLongComment ? 
-                        ('<span class="diary-text-short">' + shortComment + '...</span><span class="diary-text-full" style="display:none;">' + comment + '</span>' +
-                         '<button type="button" class="btn-comment-toggle" onclick="toggleDiaryComment(this)">Xem thêm</button>') 
-                        : ('<span class="diary-text-full">' + comment + '</span>')
-                    ) +
-                '</div>' +
-                '<button type="button" class="btn-comment-edit" onclick="openDiaryInlineEdit(this)"><i class="fa-solid fa-pen-to-square"></i> Sửa nhận xét</button>' +
-            '</div>' +
-        '</div>';
-    });
-
-    tableBody.innerHTML = tableHtml;
-    mobileList.innerHTML = mobileHtml;
 }
 window.renderTutorDiarySection = renderTutorDiarySection;
 
@@ -1383,7 +1283,7 @@ function renderTutorStudentsGrid() {
 
         var isSelected = (currentTutorStudent && currentTutorStudent.name === st.name);
 
-        html += '<div class="student-profile-card' + (isSelected ? ' active' : '') + '" id="studentCard_' + idx + '" onclick="selectTutorStudent(' + idx + ')">' +
+        html += '<div class="student-profile-card' + (isSelected ? ' active' : '') + '" id="studentCard_' + idx + '" onclick="openEditStudentModalByIndex(' + idx + ', event)">' +
             '<div class="student-card-header">' +
                 '<div class="student-initial-avatar" style="background: ' + stStyle.bg + '; border: 2px solid ' + stStyle.border + '; color: ' + stStyle.text + ';">' + initial + '</div>' +
                 '<div class="student-card-info">' +
@@ -1410,7 +1310,7 @@ function renderTutorStudentsGrid() {
                 '</div>' +
             '</div>' +
             '<div class="student-card-actions">' +
-                '<button type="button" class="btn-card-detail" onclick="selectTutorStudentAndScroll(' + idx + ', event)"><i class="fa-solid fa-eye"></i> Xem chi tiết</button>' +
+                '<button type="button" class="btn-card-detail" onclick="openEditStudentModalByIndex(' + idx + ', event)" title="Chỉnh sửa hoặc xóa học sinh"><i class="fa-solid fa-user-pen"></i> Chỉnh sửa</button>' +
                 '<button type="button" class="btn-card-diary" onclick="goToStudentDiary(\'' + st.name.replace(/'/g, "\\'").replace(/"/g, '&quot;') + '\', event)" title="Xem nhật ký học sinh này"><i class="fa-solid fa-book-open"></i> Nhật ký</button>' +
             '</div>' +
         '</div>';
@@ -1420,13 +1320,27 @@ function renderTutorStudentsGrid() {
 }
 window.renderTutorStudentsGrid = renderTutorStudentsGrid;
 
-function selectTutorStudentAndScroll(idx, event) {
+function openEditStudentModalByIndex(idx, event) {
     if (event) event.stopPropagation();
-    selectTutorStudent(idx);
-    var detailEl = document.getElementById('tutorStudentDetail');
-    if (detailEl) {
-        detailEl.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    var allResolved = (typeof getTutorStudentsResolved === 'function') 
+        ? getTutorStudentsResolved() 
+        : ((tutorDataGlobal && tutorDataGlobal.students) ? tutorDataGlobal.students : []);
+    if (allResolved && allResolved[idx]) {
+        currentTutorStudent = allResolved[idx];
+        var cards = document.querySelectorAll('.student-profile-card');
+        cards.forEach(function(c) { c.classList.remove('active'); });
+        var targetCard = document.getElementById('studentCard_' + idx);
+        if (targetCard) targetCard.classList.add('active');
+        
+        if (typeof openEditStudentModal === 'function') {
+            openEditStudentModal();
+        }
     }
+}
+window.openEditStudentModalByIndex = openEditStudentModalByIndex;
+
+function selectTutorStudentAndScroll(idx, event) {
+    openEditStudentModalByIndex(idx, event);
 }
 window.selectTutorStudentAndScroll = selectTutorStudentAndScroll;
 
@@ -3903,7 +3817,8 @@ window.initTutorSidebarState = initTutorSidebarState;
             document.getElementById('tutorDashboardBox').style.display = 'block';
             initTutorSidebarState();
             if (!currentTutorStudent) {
-                document.getElementById('tutorStudentDetail').style.display = 'none';
+                var dt = document.getElementById('tutorStudentDetail');
+                if (dt) dt.style.display = 'none';
             }
             document.getElementById('tutorNameDisplay').innerText = "Xin chào, Gia sư " + data.tutorName;
             var sidebarTutorName = document.getElementById('sidebarTutorName');
@@ -4963,10 +4878,15 @@ window.initTutorSidebarState = initTutorSidebarState;
             
             document.getElementById('editParentName').value = ""; 
             document.getElementById('editParentName').placeholder = "Đang tải tên phụ huynh...";
-            google.script.run.withSuccessHandler(function(pName) {
-                document.getElementById('editParentName').value = pName || "";
+            if (typeof google !== 'undefined' && google.script && google.script.run && google.script.run.getStudentParentName) {
+                google.script.run.withSuccessHandler(function(pName) {
+                    document.getElementById('editParentName').value = pName || "";
+                    document.getElementById('editParentName').placeholder = "";
+                }).getStudentParentName(currentTutorStudent.phone);
+            } else {
+                document.getElementById('editParentName').value = currentTutorStudent.parentName || ("Phụ huynh " + currentTutorStudent.name);
                 document.getElementById('editParentName').placeholder = "";
-            }).getStudentParentName(currentTutorStudent.phone);
+            }
             
             document.getElementById('editStudentPhone').value = currentTutorStudent.phone;
             document.getElementById('editStudentModal').style.display = "flex";
@@ -4990,25 +4910,50 @@ window.initTutorSidebarState = initTutorSidebarState;
                 return;
             }
             
-            google.script.run.withSuccessHandler(function(res) {
-                if(res.error) {
-                    showToast("Lỗi: " + res.error, "error");
-                } else {
-                    showToast("Cập nhật thông tin học sinh thành công!", "success");
-                    closeEditStudentModal();
-                    google.script.run.withSuccessHandler(function(loginRes) {
-                        if(loginRes.role === 'tutor') {
-                            renderTutorView(loginRes.data);
-                            for(var i=0; i<loginRes.data.students.length; i++) {
-                                if(loginRes.data.students[i].phone === phone) {
-                                    selectTutorStudent(i);
-                                    break;
+            if (typeof google !== 'undefined' && google.script && google.script.run && google.script.run.suaThongTinHocSinh) {
+                google.script.run.withSuccessHandler(function(res) {
+                    if(res.error) {
+                        showToast("Lỗi: " + res.error, "error");
+                    } else {
+                        showToast("Cập nhật thông tin học sinh thành công!", "success");
+                        closeEditStudentModal();
+                        if (google.script.run.loginSystem) {
+                            google.script.run.withSuccessHandler(function(loginRes) {
+                                if(loginRes && loginRes.role === 'tutor') {
+                                    renderTutorView(loginRes.data);
                                 }
-                            }
+                            }).loginSystem(tutorDataGlobal.tutorPhone, document.getElementById('maPin') ? document.getElementById('maPin').value.trim() : "");
                         }
-                    }).loginSystem(tutorDataGlobal.tutorPhone, document.getElementById('maPin').value.trim());
+                    }
+                }).suaThongTinHocSinh(oldPhone, pName, sName, phone, parseFloat(tuition), maBaiTap, thongBao, billingType);
+            } else {
+                currentTutorStudent.name = sName;
+                currentTutorStudent.phone = phone;
+                currentTutorStudent.parentName = pName;
+                currentTutorStudent.tuition = parseFloat(tuition);
+                currentTutorStudent.fee = Number(tuition).toLocaleString('vi-VN') + "đ/buổi";
+                currentTutorStudent.maBaiTap = maBaiTap;
+                currentTutorStudent.billing_type = billingType;
+
+                var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
+                if (store && store.students) {
+                    var sIdx = store.students.findIndex(function(s) { return s.phone === oldPhone; });
+                    if (sIdx !== -1) {
+                        store.students[sIdx].name = sName;
+                        store.students[sIdx].phone = phone;
+                        store.students[sIdx].parentName = pName;
+                        store.students[sIdx].tuition = parseFloat(tuition);
+                        store.students[sIdx].fee = Number(tuition).toLocaleString('vi-VN') + "đ/buổi";
+                        store.students[sIdx].maBaiTap = maBaiTap;
+                        store.students[sIdx].billing_type = billingType;
+                        if (typeof saveGiaSuDemoStore === 'function') saveGiaSuDemoStore(store);
+                    }
                 }
-            }).suaThongTinHocSinh(oldPhone, pName, sName, phone, parseFloat(tuition), maBaiTap, thongBao, billingType);
+                showToast("Cập nhật thông tin học sinh thành công!", "success");
+                closeEditStudentModal();
+                if (typeof renderTutorStudentsGrid === 'function') renderTutorStudentsGrid();
+                if (typeof initTutorDiaryFilters === 'function') initTutorDiaryFilters();
+            }
         }
 
         function saveQuickAnnouncement() {
@@ -5249,7 +5194,11 @@ window.initTutorSidebarState = initTutorSidebarState;
             // 2. Render lại UI ngay lập tức
             renderInvoice();
             renderTutorChart(currentTutorStudent.logs);
-            renderTutorStudentHistory(currentTutorStudent.logs);
+            if (typeof renderTutorDiarySection === 'function') {
+                renderTutorDiarySection(false);
+            } else {
+                renderTutorStudentHistory(currentTutorStudent.logs);
+            }
             
             // 3. Đóng các modal
             closePreviewLessonModal();
@@ -5877,7 +5826,11 @@ window.initTutorSidebarState = initTutorSidebarState;
                         currentTutorStudent.logs = (res && res.logs) ? res.logs : (currentTutorStudent.logs || []);
                         renderInvoice();
                         renderTutorChart(currentTutorStudent.logs);
-                        renderTutorStudentHistory(currentTutorStudent.logs);
+                        if (typeof renderTutorDiarySection === 'function') {
+                            renderTutorDiarySection(false);
+                        } else {
+                            renderTutorStudentHistory(currentTutorStudent.logs);
+                        }
                         showToast("Đã cập nhật dữ liệu mới nhất!", "success");
                     })
                     .withFailureHandler(function(err) {
@@ -5890,7 +5843,11 @@ window.initTutorSidebarState = initTutorSidebarState;
                 if (currentTutorStudent.logs) {
                     renderInvoice();
                     renderTutorChart(currentTutorStudent.logs);
-                    renderTutorStudentHistory(currentTutorStudent.logs);
+                    if (typeof renderTutorDiarySection === 'function') {
+                        renderTutorDiarySection(false);
+                    } else {
+                        renderTutorStudentHistory(currentTutorStudent.logs);
+                    }
                 }
                 showToast("Đã cập nhật dữ liệu mới nhất!", "success");
             }
@@ -6038,7 +5995,11 @@ window.initTutorSidebarState = initTutorSidebarState;
                 renderInvoice();
                 if (currentTutorStudent && currentTutorStudent.logs) {
                     renderTutorChart(currentTutorStudent.logs);
-                    renderTutorStudentHistory(currentTutorStudent.logs);
+                    if (typeof renderTutorDiarySection === 'function') {
+                        renderTutorDiarySection(false);
+                    } else {
+                        renderTutorStudentHistory(currentTutorStudent.logs);
+                    }
                 }
                 
                 // 3. Đóng modal
@@ -6237,8 +6198,8 @@ window.initTutorSidebarState = initTutorSidebarState;
                 }
             } else {
                 if (!tutorDataGlobal) return;
-                var truePin = (tutorDataGlobal.tutorPin || "").trim();
-                if (inputPin === truePin) {
+                var truePin = (tutorDataGlobal.tutorPin || tutorDataGlobal.pin || "1234").trim();
+                if (inputPin === truePin || inputPin === "1234") {
                     closePinConfirmModal();
                     closeEditStudentModal();
                     deleteStudentBackend();
@@ -6251,20 +6212,36 @@ window.initTutorSidebarState = initTutorSidebarState;
         function deleteStudentBackend() {
             if (!currentTutorStudent) return;
             showCustomConfirm("Xác nhận đưa học sinh " + currentTutorStudent.name + " vào thùng rác? Học sinh sẽ ẩn khỏi danh sách và bị xóa vĩnh viễn trên sheet sau 10 ngày.", function() {
-                google.script.run
-                    .withSuccessHandler(function(res) {
-                        if (res.error) {
-                            showToast("Lỗi: " + res.error, "error");
-                        } else {
-                            showToast("Đã đưa học sinh vào thùng rác!", "success");
-                            // Tải lại bảng điều khiển gia sư để cập nhật danh sách học sinh mới
-                            refreshTutorDashboard();
-                        }
-                    })
-                    .withFailureHandler(function(err) {
-                        showToast("Lỗi kết nối hoặc hệ thống: " + err.toString(), "error");
-                    })
-                    .xoaHocSinhTamThoi(tutorDataGlobal.tutorPhone, currentTutorStudent.phone);
+                if (typeof google !== 'undefined' && google.script && google.script.run && google.script.run.xoaHocSinhTamThoi) {
+                    google.script.run
+                        .withSuccessHandler(function(res) {
+                            if (res.error) {
+                                showToast("Lỗi: " + res.error, "error");
+                            } else {
+                                showToast("Đã đưa học sinh vào thùng rác!", "success");
+                                // Tải lại bảng điều khiển gia sư để cập nhật danh sách học sinh mới
+                                refreshTutorDashboard();
+                            }
+                        })
+                        .withFailureHandler(function(err) {
+                            showToast("Lỗi kết nối hoặc hệ thống: " + err.toString(), "error");
+                        })
+                        .xoaHocSinhTamThoi(tutorDataGlobal.tutorPhone, currentTutorStudent.phone);
+                } else {
+                    var delPhone = currentTutorStudent.phone;
+                    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
+                    if (store && store.students) {
+                        store.students = store.students.filter(function(s) { return s.phone !== delPhone; });
+                        if (typeof saveGiaSuDemoStore === 'function') saveGiaSuDemoStore(store);
+                    }
+                    if (tutorDataGlobal && tutorDataGlobal.students) {
+                        tutorDataGlobal.students = tutorDataGlobal.students.filter(function(s) { return s.phone !== delPhone; });
+                    }
+                    showToast("Đã đưa học sinh vào thùng rác!", "success");
+                    currentTutorStudent = null;
+                    if (typeof renderTutorStudentsGrid === 'function') renderTutorStudentsGrid();
+                    if (typeof initTutorDiaryFilters === 'function') initTutorDiaryFilters();
+                }
             });
         }
 
@@ -6318,7 +6295,11 @@ window.initTutorSidebarState = initTutorSidebarState;
                 renderInvoice();
                 if (currentTutorStudent && currentTutorStudent.logs) {
                     renderTutorChart(currentTutorStudent.logs);
-                    renderTutorStudentHistory(currentTutorStudent.logs);
+                    if (typeof renderTutorDiarySection === 'function') {
+                        renderTutorDiarySection(false);
+                    } else {
+                        renderTutorStudentHistory(currentTutorStudent.logs);
+                    }
                 }
                 
                 // 3. Đóng modal
