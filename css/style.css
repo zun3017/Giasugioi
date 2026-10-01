@@ -3838,6 +3838,16 @@
             margin-top: 8px;
             font-style: italic;
         }
+        .btn-draft-saved {
+            background: #F5F3FF !important;
+            border-color: #DDD6FE !important;
+            color: #6D28D9 !important;
+            font-weight: 700 !important;
+        }
+        .btn-draft-saved:hover {
+            background: #EDE9FE !important;
+            border-color: #C4B5FD !important;
+        }
 
         .qr-card {
             background: #FFFFFF;

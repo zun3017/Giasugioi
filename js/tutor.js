@@ -1718,14 +1718,31 @@ window.tuitionInvoiceModalState = {
     endDate: "",
     customTitle: "",
     isCustomTitle: false,
-    restoredFromDraft: false
+    restoredFromDraft: false,
+    isDraftSaved: false
 };
 
 window.tuitionInvoiceHasUnsavedChanges = false;
 
+function updateTuitionDraftButtonUI(isSaved) {
+    var btn = document.getElementById('btnTuitionSaveDraft');
+    if (!btn) return;
+    if (isSaved) {
+        btn.innerHTML = '<i class="fa-solid fa-bookmark" style="color: #7C3AED;"></i> <span>Đã lưu nháp</span>';
+        btn.classList.add('btn-draft-saved');
+        btn.setAttribute('title', 'Đã lưu nháp (Nhấp một lần nữa để hủy lưu bản nháp)');
+    } else {
+        btn.innerHTML = '<i class="fa-regular fa-bookmark"></i> <span>Lưu bản nháp</span>';
+        btn.classList.remove('btn-draft-saved');
+        btn.setAttribute('title', 'Lưu bản nháp phiếu học phí này');
+    }
+}
+window.updateTuitionDraftButtonUI = updateTuitionDraftButtonUI;
+
 function autoSaveTuitionDraft() {
     var state = window.tuitionInvoiceModalState;
     if (!state || !state.studentName) return;
+    if (!state.isDraftSaved) return; // Chỉ tự động cập nhật nếu bản nháp đang được lưu
     try {
         var key = 'tuitionDraft_' + state.studentName.trim();
         var draftData = {
@@ -1748,10 +1765,50 @@ function autoSaveTuitionDraft() {
 window.autoSaveTuitionDraft = autoSaveTuitionDraft;
 
 function saveTuitionDraftModal() {
-    autoSaveTuitionDraft();
-    window.tuitionInvoiceHasUnsavedChanges = false;
-    if (typeof showToast === 'function') {
-        showToast("Đã lưu bản nháp thành công!", "success");
+    var state = window.tuitionInvoiceModalState;
+    if (!state || !state.studentName) return;
+    var draftKey = 'tuitionDraft_' + state.studentName.trim();
+
+    if (state.isDraftSaved) {
+        // Toggle: Hủy lưu bản nháp -> trở lại như cũ không tô nữa
+        state.isDraftSaved = false;
+        try {
+            localStorage.removeItem(draftKey);
+        } catch(e) {}
+        updateTuitionDraftButtonUI(false);
+        var draftTxt = document.getElementById('tuitionDraftRestoredText');
+        if (draftTxt && draftTxt.parentElement) {
+            draftTxt.parentElement.style.display = 'none';
+        }
+        window.tuitionInvoiceHasUnsavedChanges = false;
+        if (typeof showToast === 'function') {
+            showToast("Đã hủy lưu bản nháp!", "info");
+        }
+    } else {
+        // Toggle: Lưu bản nháp -> huy hiệu bị tô đi
+        state.isDraftSaved = true;
+        try {
+            var draftData = {
+                studentName: state.studentName,
+                template: state.template || 1,
+                toggles: state.toggles || {},
+                discountAmount: state.discountAmount || 0,
+                surchargeAmount: state.surchargeAmount || 0,
+                startDate: state.startDate,
+                endDate: state.endDate,
+                customTitle: state.customTitle || "",
+                isCustomTitle: !!state.isCustomTitle,
+                savedAt: new Date().toISOString()
+            };
+            localStorage.setItem(draftKey, JSON.stringify(draftData));
+        } catch(e) {
+            console.warn("Unable to save draft:", e);
+        }
+        updateTuitionDraftButtonUI(true);
+        window.tuitionInvoiceHasUnsavedChanges = false;
+        if (typeof showToast === 'function') {
+            showToast("Đã lưu bản nháp thành công!", "success");
+        }
     }
 }
 window.saveTuitionDraftModal = saveTuitionDraftModal;
@@ -2641,7 +2698,8 @@ function openStudentInvoiceModal(studentName) {
             endDate: eDateVal,
             customTitle: draftObj.customTitle || generateTuitionPeriodTitle(sDateVal, eDateVal, restoredTmpl),
             isCustomTitle: !!draftObj.isCustomTitle,
-            restoredFromDraft: true
+            restoredFromDraft: true,
+            isDraftSaved: true
         };
     } else {
         window.tuitionInvoiceModalState = {
@@ -2664,7 +2722,8 @@ function openStudentInvoiceModal(studentName) {
             endDate: defaultEndStr,
             customTitle: defaultTitle,
             isCustomTitle: false,
-            restoredFromDraft: false
+            restoredFromDraft: false,
+            isDraftSaved: false
         };
     }
 
@@ -2704,6 +2763,9 @@ function openStudentInvoiceModal(studentName) {
     modal.setAttribute('data-student', st.name);
     modal.setAttribute('data-start', (window.tuitionInvoiceModalState.startDate || ""));
     modal.setAttribute('data-month', (window.tuitionInvoiceModalState.startDate || "").replace(/-/g, ''));
+    
+    // Đồng bộ trạng thái nút lưu bản nháp theo dữ liệu học sinh
+    updateTuitionDraftButtonUI(restoredDraft);
 }
 window.openStudentInvoiceModal = openStudentInvoiceModal;
 
@@ -2717,15 +2779,6 @@ function closeStudentInvoiceModal(isExplicitCancel) {
     if (modal) modal.style.display = "none";
 }
 window.closeStudentInvoiceModal = closeStudentInvoiceModal;
-
-function saveTuitionDraftModal() {
-    autoSaveTuitionDraft();
-    window.tuitionInvoiceHasUnsavedChanges = false;
-    if (typeof showToast === 'function') {
-        showToast("Đã lưu bản nháp thành công!", "success");
-    }
-}
-window.saveTuitionDraftModal = saveTuitionDraftModal;
 
 function exportTuitionModalPdf() {
     var btn = document.getElementById('btnTuitionExportPdf');

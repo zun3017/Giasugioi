@@ -1832,6 +1832,16 @@
             transform: translateY(-1px);
             background: #F1F5F9;
         }
+        .btn-draft-saved {
+            background: #F5F3FF !important;
+            border-color: #DDD6FE !important;
+            color: #6D28D9 !important;
+            font-weight: 700 !important;
+        }
+        .btn-draft-saved:hover {
+            background: #EDE9FE !important;
+            border-color: #C4B5FD !important;
+        }
         .btn-tuition-primary {
             background: linear-gradient(135deg, #7C3AED 0%, #6D28D9 100%) !important;
             border: 1px solid #6D28D9 !important;
@@ -2166,8 +2176,8 @@
                     <button type="button" id="btnTuitionCancel" onclick="closeStudentInvoiceModal(true)" class="btn-tuition-action">
                         Hủy bỏ
                     </button>
-                    <button type="button" id="btnTuitionSaveDraft" onclick="saveTuitionDraftModal()" class="btn-tuition-action">
-                        <i class="fa-regular fa-bookmark"></i> Lưu bản nháp
+                    <button type="button" id="btnTuitionSaveDraft" onclick="saveTuitionDraftModal()" class="btn-tuition-action" title="Lưu bản nháp phiếu học phí này">
+                        <i class="fa-regular fa-bookmark"></i> <span>Lưu bản nháp</span>
                     </button>
                     <button type="button" id="btnTuitionExportPdf" onclick="exportTuitionModalPdf()" class="btn-tuition-action">
                         <i class="fa-solid fa-file-pdf" style="color: #EF4444;"></i> Xuất PDF
