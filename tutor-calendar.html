@@ -3599,14 +3599,14 @@
                     };
                 }
 
-                // Nền sáng: hòa 16% vào nền trắng để tạo nền pastel mịn, viền 45%, chữ đen đậm tương phản tuyệt đối
-                let bgR = Math.round(rgb.r * 0.16 + 255 * 0.84);
-                let bgG = Math.round(rgb.g * 0.16 + 255 * 0.84);
-                let bgB = Math.round(rgb.b * 0.16 + 255 * 0.84);
+                // Nền sáng: hòa 24% vào nền trắng để tạo nền pastel mịn rõ nét, viền 75%, chữ đen đậm tương phản tuyệt đối
+                let bgR = Math.round(rgb.r * 0.24 + 255 * 0.76);
+                let bgG = Math.round(rgb.g * 0.24 + 255 * 0.76);
+                let bgB = Math.round(rgb.b * 0.24 + 255 * 0.76);
 
-                let bdrR = Math.round(rgb.r * 0.45 + 255 * 0.55);
-                let bdrG = Math.round(rgb.g * 0.45 + 255 * 0.55);
-                let bdrB = Math.round(rgb.b * 0.45 + 255 * 0.55);
+                let bdrR = Math.round(rgb.r * 0.75 + 255 * 0.25);
+                let bdrG = Math.round(rgb.g * 0.75 + 255 * 0.25);
+                let bdrB = Math.round(rgb.b * 0.75 + 255 * 0.25);
 
                 return {
                     bg: rgbToHex(bgR, bgG, bgB),
@@ -3695,14 +3695,14 @@
                             chipBg = isDark ? 'rgba(255, 255, 255, 0.06)' : '#F1F5F9';
                             chipBorder = isDark ? 'rgba(255, 255, 255, 0.15)' : '#CBD5E1';
                         } else if (isDark) {
-                            chipBg = 'rgba(' + hexToRgbStr(color) + ', 0.28)';
+                            chipBg = 'rgba(' + hexToRgbStr(color) + ', 0.32)';
                             chipBorder = color;
                         } else {
-                            chipBg = 'rgba(' + hexToRgbStr(color) + ', 0.12)';
-                            chipBorder = 'rgba(' + hexToRgbStr(color) + ', 0.45)';
+                            chipBg = 'rgba(' + hexToRgbStr(color) + ', 0.22)';
+                            chipBorder = 'rgba(' + hexToRgbStr(color) + ', 0.80)';
                         }
                         
-                        let html = '<div class="fc-month-chip-inner" style="background: ' + chipBg + '; border: 1px solid ' + chipBorder + '; border-left: 3.5px solid ' + dotColor + '; ' + textDecor + '">' +
+                        let html = '<div class="fc-month-chip-inner" style="background: ' + chipBg + '; border: 1px solid ' + chipBorder + '; border-left: 3.5px solid ' + dotColor + '; box-shadow: 0 1px 3px rgba(0,0,0,0.06); ' + textDecor + '">' +
                                    '<span class="fc-chip-dot" style="background-color: ' + dotColor + ';"></span>' +
                                    (timeStr ? '<span class="fc-chip-time" style="color: ' + textClr + '; font-weight: 700;">' + timeStr + '</span>' : '') +
                                    '<span class="fc-chip-title" style="color: ' + textClr + '; font-weight: 600;">' + titleStr + '</span>' +
@@ -3793,15 +3793,17 @@
                             var chipTitle = innerChip.querySelector('.fc-chip-title');
                             var chipTime = innerChip.querySelector('.fc-chip-time');
                             if (isDark) {
-                                innerChip.style.setProperty('background', 'rgba(' + hexToRgbStr(evColor) + ', 0.28)', 'important');
+                                innerChip.style.setProperty('background', 'rgba(' + hexToRgbStr(evColor) + ', 0.32)', 'important');
                                 innerChip.style.setProperty('border', '1px solid ' + evColor, 'important');
                                 innerChip.style.setProperty('border-left', '3.5px solid ' + evColor, 'important');
+                                innerChip.style.setProperty('box-shadow', '0 1px 3px rgba(0, 0, 0, 0.25)', 'important');
                                 if (chipTitle) chipTitle.style.setProperty('color', '#FFFFFF', 'important');
                                 if (chipTime) chipTime.style.setProperty('color', '#FFFFFF', 'important');
                             } else {
-                                innerChip.style.setProperty('background', 'rgba(' + hexToRgbStr(evColor) + ', 0.12)', 'important');
-                                innerChip.style.setProperty('border', '1px solid rgba(' + hexToRgbStr(evColor) + ', 0.45)', 'important');
+                                innerChip.style.setProperty('background', 'rgba(' + hexToRgbStr(evColor) + ', 0.22)', 'important');
+                                innerChip.style.setProperty('border', '1px solid rgba(' + hexToRgbStr(evColor) + ', 0.80)', 'important');
                                 innerChip.style.setProperty('border-left', '3.5px solid ' + evColor, 'important');
+                                innerChip.style.setProperty('box-shadow', '0 1px 3px rgba(0, 0, 0, 0.06)', 'important');
                                 if (chipTitle) chipTitle.style.setProperty('color', 'var(--text-primary)', 'important');
                                 if (chipTime) chipTime.style.setProperty('color', 'var(--text-primary)', 'important');
                             }

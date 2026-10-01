@@ -8,7 +8,7 @@
     <title>Hệ thống Tra cứu Học tập</title>
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#3B82F6">
+    <meta name="theme-color" content="#0B0826">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="Gia Sư">
@@ -25,8 +25,6 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Global CSS -->
     <link rel="stylesheet" href="css/style.css?v=3.0.0">
-    <!-- Public Light Theme -->
-    <link rel="stylesheet" href="css/public-theme.css">
 </head>
 <body>
     <div id="resultBox">
@@ -52,15 +50,15 @@
         <!-- Bảng Tóm Tắt Kết Quả -->
         <div class="summary-grid">
             <!-- Thẻ BÀI TẬP -->
-            <a href="homework.html" class="summary-card" style="text-decoration: none; cursor: pointer; border: 1px solid #BFDBFE; background: #FFFFFF; transition: all 0.3s; box-shadow: var(--shadow-card);" onmouseover="this.style.borderColor='#3B82F6'; this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#BFDBFE'; this.style.transform='none'">
+            <a href="homework.html" class="summary-card" style="text-decoration: none; cursor: pointer; border: 1px solid rgba(255, 210, 63, 0.3); background: linear-gradient(135deg, rgba(255,210,63,0.08) 0%, rgba(20,16,68,0.9) 100%); transition: all 0.3s;" onmouseover="this.style.borderColor='#FFD23F'; this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='rgba(255,210,63,0.3)'; this.style.transform='none'">
                 <div class="summary-icon" style="background: linear-gradient(135deg, #FFD23F, #FF8C00); box-shadow: 0 0 20px rgba(255,210,63,0.4);"><i class="fa-solid fa-file-arrow-up"></i></div>
                 <div class="summary-info">
-                    <span class="summary-label" style="color: #2563EB; font-weight: 700;">BÀI TẬP</span>
-                    <span style="font-size: 14px; color: #64748B; font-weight: 600; margin-top: 4px; display: block;">Bấm vào để nộp →</span>
+                    <span class="summary-label" style="color: #FFD23F; font-weight: 700;">BÀI TẬP</span>
+                    <span style="font-size: 14px; color: #E2D1FF; font-weight: 600; margin-top: 4px; display: block;">Bấm vào để nộp →</span>
                 </div>
             </a>
             <div class="summary-card">
-                <div class="summary-icon icon-purple" style="background: linear-gradient(135deg, #3B82F6, #1D4ED8); box-shadow: 0 0 20px rgba(59,130,246,0.3);"><i class="fa-solid fa-graduation-cap"></i></div>
+                <div class="summary-icon icon-purple" style="background: linear-gradient(135deg, #8E4DFF, #5B2EFF); box-shadow: 0 0 20px rgba(142,77,255,0.4);"><i class="fa-solid fa-graduation-cap"></i></div>
                 <div class="summary-info">
                     <span class="summary-label">TB Đầu giờ (tháng)</span>
                     <span class="summary-val" id="valDiemDauGio">-</span>
