@@ -4711,3 +4711,64 @@
         .is-ios-device .toast-container {
             top: max(65px, calc(env(safe-area-inset-top, 0px) + 24px)) !important;
         }
+
+        /* ==========================================================================
+           FIXED VIEWPORT CHO TAB LỊCH DẠY (TRIỆT TIÊU HOÀN TOÀN THANH CUỘN NGOÀI CÙNG)
+           ========================================================================== */
+        html.calendar-tab-active,
+        body.calendar-tab-active {
+            height: 100vh !important;
+            max-height: 100vh !important;
+            overflow: hidden !important;
+        }
+
+        body.calendar-tab-active .tutor-app-layout {
+            height: 100vh !important;
+            max-height: 100vh !important;
+            overflow: hidden !important;
+        }
+
+        body.calendar-tab-active .tutor-main-content {
+            height: 100vh !important;
+            max-height: 100vh !important;
+            overflow: hidden !important;
+            padding: 14px 20px 14px 20px !important;
+            display: flex !important;
+            flex-direction: column !important;
+            box-sizing: border-box !important;
+        }
+
+        body.calendar-tab-active #tutorMarqueeContainer {
+            flex-shrink: 0 !important;
+            margin-bottom: 8px !important;
+        }
+
+        body.calendar-tab-active #tutorSectionCalendar {
+            flex: 1 !important;
+            height: 100% !important;
+            min-height: 0 !important;
+            max-height: 100% !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: hidden !important;
+            margin: 0 !important;
+            padding: 0 !important;
+        }
+
+        body.calendar-tab-active .calendar-embed-wrapper {
+            flex: 1 !important;
+            height: 100% !important;
+            max-height: 100% !important;
+            min-height: 0 !important;
+            overflow: hidden !important;
+            margin: 0 !important;
+        }
+
+        body.calendar-tab-active #tutorCalendarIframe {
+            flex: 1 !important;
+            height: 100% !important;
+            width: 100% !important;
+            min-height: 0 !important;
+            border: none !important;
+            display: block !important;
+        }

@@ -116,6 +116,19 @@
             border-radius: 0 0 16px 16px !important;
         }
 
+        /* Ẩn hoàn toàn thanh cuộn bên phải của FullCalendar - giữ giao diện cố định phẳng đẹp */
+        .fc-scroller,
+        .fc-scroller-liquid-absolute {
+            scrollbar-width: none !important; /* Firefox */
+            -ms-overflow-style: none !important;  /* IE, Edge */
+        }
+        .fc-scroller::-webkit-scrollbar,
+        .fc-scroller-liquid-absolute::-webkit-scrollbar {
+            width: 0 !important;
+            height: 0 !important;
+            display: none !important; /* Chrome, Safari, Opera */
+        }
+
         /* === FULL-SCREEN LAYOUT NHƯ GOOGLE CALENDAR === */
         html, body {
             height: 100%;

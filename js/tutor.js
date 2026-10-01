@@ -3716,6 +3716,18 @@ function switchTutorNavTab(element, tabKey) {
         if (targetBtn) targetBtn.classList.add('active');
     }
 
+    var isCalTab = (tabKey === 'calendar');
+    var layout = document.getElementById('tutorDashboardBox');
+    if (layout) {
+        layout.classList.toggle('calendar-tab-active', isCalTab);
+    }
+    if (document.body) {
+        document.body.classList.toggle('calendar-tab-active', isCalTab);
+    }
+    if (document.documentElement) {
+        document.documentElement.classList.toggle('calendar-tab-active', isCalTab);
+    }
+
     var overviewSec = document.getElementById('tutorSectionOverview');
     var reportsSec = document.getElementById('tutorSectionReports');
     var diarySec = document.getElementById('tutorSectionDiary');
