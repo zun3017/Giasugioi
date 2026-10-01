@@ -859,6 +859,9 @@ function renderStudentRevenueDonut(selM, selY) {
         studentRevenueDonutInstance = null;
     }
 
+    var themeComp = getComputedStyle(document.documentElement);
+    var donutCardBg = (themeComp.getPropertyValue('--bg-card') || '#0B0826').trim();
+
     studentRevenueDonutInstance = new Chart(ctx, {
         type: 'doughnut',
         data: {
@@ -867,7 +870,7 @@ function renderStudentRevenueDonut(selM, selY) {
                 data: donutData,
                 backgroundColor: donutColors,
                 borderWidth: 2,
-                borderColor: '#0B0826',
+                borderColor: donutCardBg,
                 hoverOffset: 4
             }]
         },
@@ -8349,6 +8352,9 @@ function rerenderChartsForTheme() {
       revenueBarChartInstance.data.datasets[0].pointBackgroundColor = chartColor;
     }
     revenueBarChartInstance.update();
+  }
+  if (typeof renderStudentRevenueDonut === 'function') {
+    renderStudentRevenueDonut();
   }
 }
 
