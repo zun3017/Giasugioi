@@ -433,6 +433,11 @@
 
         /* Scrollgrid and table borders */
         .fc-theme-standard .fc-scrollgrid {
+            border: none !important;
+            background: transparent !important;
+        }
+
+        .fc-timegrid .fc-scrollgrid {
             border: 1px solid #E5D9CC !important;
             background: #FFFFFF !important;
             border-radius: 12px;
@@ -441,22 +446,49 @@
 
         .fc-theme-standard td, 
         .fc-theme-standard th {
+            border: none !important;
+        }
+
+        .fc-timegrid td, 
+        .fc-timegrid th {
             border: 1px solid #E5D9CC !important;
         }
 
         /* Table header cells (Thứ 2, 3...) */
+        .fc-col-header {
+            background: transparent !important;
+            border: none !important;
+        }
+
         .fc th,
         .fc-col-header-cell {
+            border: none !important;
+            background: transparent !important;
+            padding: 6px 4px 10px 4px !important;
+            text-align: left !important;
+        }
+
+        .fc-timegrid .fc-col-header-cell {
             border: 1px solid #E5D9CC !important;
             background: #F3EDE4 !important;
             padding: 8px 0 !important;
+            text-align: center !important;
         }
 
         .fc-col-header-cell-cushion {
-            color: #6B4226 !important;
-            font-size: 13px !important;
+            color: #7D6F63 !important;
+            font-size: 11.5px !important;
             font-weight: 700 !important;
+            letter-spacing: 0.5px !important;
+            text-transform: uppercase !important;
             text-decoration: none !important;
+            padding: 0 !important;
+            display: inline-block !important;
+        }
+
+        .fc-timegrid .fc-col-header-cell-cushion {
+            color: #6B4226 !important;
+            font-size: 12.5px !important;
         }
 
         /* TimeGrid styling */
@@ -496,104 +528,196 @@
             border-color: #E5D9CC !important;
         }
 
-        /* DayGrid (Month view & Day cells) */
+        /* DayGrid (Month view: Thẻ Card độc lập bo tròn) */
         .fc-daygrid-day {
-            background: #FFFFFF !important;
+            background: transparent !important;
+            border: none !important;
+            padding: 3.5px !important;
         }
 
+        .fc-daygrid-day-frame {
+            background: #FFFFFF !important;
+            border: 1px solid #ECE3D8 !important;
+            border-radius: 12px !important;
+            min-height: 105px !important;
+            height: 100% !important;
+            box-shadow: 0 1px 3px rgba(45, 31, 14, 0.03) !important;
+            transition: all 0.2s ease !important;
+            position: relative !important;
+            display: flex !important;
+            flex-direction: column !important;
+            overflow: hidden !important;
+        }
+
+        .fc-daygrid-day-frame:hover {
+            border-color: #DCCEC0 !important;
+            box-shadow: 0 3px 10px rgba(45, 31, 14, 0.07) !important;
+        }
+
+        /* Số ngày đặt ở GÓC TRÊN BÊN TRÁI của Card */
         .fc-daygrid-day-top {
             display: flex !important;
-            flex-direction: row-reverse !important;
+            flex-direction: row !important;
+            justify-content: flex-start !important;
             align-items: center !important;
-            justify-content: space-between !important;
-            padding: 2px 4px !important;
+            gap: 5px !important;
+            padding: 6px 8px 2px 8px !important;
+            z-index: 2 !important;
+            position: relative !important;
         }
 
         .fc-daygrid-day-number {
             color: #2D1F0E !important;
-            font-size: 13px !important;
+            font-size: 12.5px !important;
             font-weight: 600 !important;
-            padding: 4px 8px !important;
+            padding: 0 !important;
             text-decoration: none !important;
+            line-height: 1 !important;
         }
 
-        /* Ngày lễ quốc gia Việt Nam trong Month view (Task 10.3) */
+        /* Ngày lễ quốc gia Việt Nam (Task 10.3 + Mockup styling) */
         .fc-vn-holiday-badge {
-            color: #F87171 !important;
+            color: #DC2626 !important;
             font-size: 11px !important;
             font-weight: 700 !important;
-            padding: 1px 4px !important;
-            white-space: nowrap !important;
-            overflow: hidden !important;
-            text-overflow: ellipsis !important;
-            line-height: 1.2 !important;
+            padding: 0 2px !important;
+            line-height: 1 !important;
             letter-spacing: -0.2px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 2px !important;
         }
 
         .fc-day-other .fc-vn-holiday-badge {
             opacity: 0.5 !important;
         }
 
-        /* Ngày ngoài tháng */
+        /* Minh họa nghệ thuật ngày lễ Quốc khánh 1/9, 2/9 & Tết Trung thu */
+        .fc-day-holiday-quockhanh-1 .fc-daygrid-day-frame {
+            background: linear-gradient(180deg, #FFF1F2 0%, #FFE4E6 40%, #FED7AA 100%) !important;
+            border-color: #FECDD3 !important;
+        }
+
+        .fc-day-holiday-quockhanh-1 .fc-daygrid-day-frame::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 52px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 240 60' opacity='0.32'%3E%3Cpath fill='%23E11D48' d='M0,50 L25,50 L25,42 L35,42 L35,50 L55,50 L55,32 L68,32 L68,50 L85,50 L90,24 L102,24 L108,50 L130,50 L136,18 L148,18 L154,50 L175,50 L180,34 L192,34 L198,50 L240,50 L240,60 L0,60 Z'/%3E%3Cpolygon fill='%23DC2626' points='30,32 30,22 42,25'/%3E%3Cline x1='30' y1='22' x2='30' y2='42' stroke='%23DC2626' stroke-width='1.5'/%3E%3C/svg%3E") bottom right no-repeat;
+            background-size: cover;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .fc-day-holiday-quockhanh-2 .fc-daygrid-day-frame {
+            background: linear-gradient(180deg, #FFF1F2 0%, #FFE4E6 40%, #FED7AA 100%) !important;
+            border-color: #FECDD3 !important;
+        }
+
+        .fc-day-holiday-quockhanh-2 .fc-daygrid-day-frame::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 50px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60' opacity='0.3'%3E%3Cpath fill='%23E11D48' d='M40,50 L48,34 L54,34 L54,24 L146,24 L146,34 L152,34 L160,50 Z'/%3E%3Crect x='64' y='32' width='6' height='16' fill='%23FFE4E6'/%3E%3Crect x='78' y='32' width='6' height='16' fill='%23FFE4E6'/%3E%3Crect x='92' y='32' width='6' height='16' fill='%23FFE4E6'/%3E%3Crect x='106' y='32' width='6' height='16' fill='%23FFE4E6'/%3E%3Crect x='120' y='32' width='6' height='16' fill='%23FFE4E6'/%3E%3C/svg%3E") bottom center no-repeat;
+            background-size: contain;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        .fc-day-festive-lantern .fc-daygrid-day-frame {
+            background: linear-gradient(180deg, #FEF3C7 0%, #FED7AA 45%, #FDBA74 100%) !important;
+            border-color: #FCD34D !important;
+        }
+
+        .fc-day-festive-lantern .fc-daygrid-day-frame::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 48px;
+            background: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 200 60' opacity='0.28'%3E%3Ccircle cx='30' cy='22' r='9' fill='%23EA580C'/%3E%3Ccircle cx='100' cy='26' r='8' fill='%23D97706'/%3E%3Ccircle cx='170' cy='20' r='11' fill='%23EA580C'/%3E%3C/svg%3E") bottom center no-repeat;
+            background-size: cover;
+            pointer-events: none;
+            z-index: 0;
+        }
+
+        /* Ngày ngoài tháng: Card làm mờ nhẹ */
         .fc-day-other {
-            background: #F8F3EC !important;
+            background: transparent !important;
+        }
+
+        .fc-day-other .fc-daygrid-day-frame {
+            background: #FAF7F2 !important;
+            border-color: #EFE8E0 !important;
+            box-shadow: none !important;
         }
 
         .fc-day-other .fc-daygrid-day-number {
-            color: #BFA89A !important;
+            color: #C5B8AC !important;
+            font-weight: 500 !important;
         }
 
-        /* Hôm nay (Today highlight) */
-        .fc .fc-day-today,
-        .fc-theme-standard td.fc-day-today {
-            background-color: #FFF0F6 !important;
+        .fc-day-other .fc-daygrid-day-events {
+            opacity: 0.55 !important;
         }
 
+        /* Hôm nay (Today highlight): Viền đỏ Card + Badge tròn đỏ số ngày */
         .fc-daygrid-day.fc-day-today {
-            background-color: #FFF0F6 !important;
+            background: transparent !important;
+        }
+
+        .fc-daygrid-day.fc-day-today .fc-daygrid-day-frame {
+            border: 1.5px solid #E11D48 !important;
+            background: #FFFFFF !important;
+            box-shadow: 0 2px 8px rgba(225, 29, 72, 0.12) !important;
         }
 
         .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
-            color: #C05E8E !important;
-            font-weight: 900 !important;
-            background: #FCE7F0 !important;
+            background: #E11D48 !important;
+            color: #FFFFFF !important;
             border-radius: 50% !important;
-            width: 26px !important;
-            height: 26px !important;
+            width: 20px !important;
+            height: 20px !important;
             display: inline-flex !important;
             align-items: center !important;
             justify-content: center !important;
-            margin: 3px !important;
-        }
-
-        .fc th.fc-day-today {
-            background: #FFF0F6 !important;
-            border-bottom: 2px solid #C05E8E !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            line-height: 1 !important;
+            margin: 0 !important;
         }
 
         .fc th.fc-day-today .fc-col-header-cell-cushion {
-            color: #C05E8E !important;
+            color: #E11D48 !important;
             font-weight: 800 !important;
-            text-shadow: none !important;
         }
 
-        /* +N buổi nữa link và Popover FullCalendar */
+        /* +N buổi nữa link: phong cách chữ xám gọn gàng góc trái */
         .fc .fc-daygrid-more-link {
-            color: #C05E8E !important;
+            color: #7D6F63 !important;
             font-size: 11px !important;
-            font-weight: 700 !important;
-            padding: 2px 6px !important;
+            font-weight: 500 !important;
+            padding: 2px 4px !important;
             border-radius: 4px !important;
-            background: #FFF0F6 !important;
+            background: transparent !important;
+            margin-left: 4px !important;
+            margin-top: 1px !important;
             display: inline-block !important;
-            margin-top: 2px !important;
             text-decoration: none !important;
             cursor: pointer !important;
+            z-index: 2 !important;
+            position: relative !important;
         }
 
         .fc .fc-daygrid-more-link:hover {
-            background: #F8E2EC !important;
-            color: #A04270 !important;
+            color: #2D1F0E !important;
+            background: rgba(45, 31, 14, 0.06) !important;
         }
 
         .fc .fc-popover {
@@ -661,11 +785,62 @@
             box-shadow: 0 4px 12px rgba(192, 94, 142, 0.2) !important;
         }
 
+        /* EVENT CHIPS Ở MONTH VIEW: DẠNG VIÊN THUỐC CAPSULE CÓ CHẤM TRÒN MÀU */
         .fc-daygrid-event {
+            border: none !important;
             border-radius: 6px !important;
-            padding: 2px 5px !important;
-            margin-top: 2px !important;
+            margin: 1.5px 3.5px !important;
+            padding: 0 !important;
+            box-shadow: none !important;
+            background: transparent !important;
             cursor: pointer !important;
+            position: relative !important;
+            z-index: 1 !important;
+        }
+
+        .fc-month-chip-inner {
+            display: flex !important;
+            align-items: center !important;
+            gap: 5px !important;
+            padding: 2.5px 6px !important;
+            border-radius: 6px !important;
+            font-size: 10.5px !important;
+            line-height: 1.3 !important;
+            white-space: nowrap !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            width: 100% !important;
+            box-sizing: border-box !important;
+            transition: transform 0.15s ease, box-shadow 0.15s ease !important;
+        }
+
+        .fc-month-chip-inner:hover {
+            transform: translateY(-1px) !important;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.08) !important;
+        }
+
+        .fc-chip-dot {
+            width: 5px !important;
+            height: 5px !important;
+            border-radius: 50% !important;
+            flex-shrink: 0 !important;
+            display: inline-block !important;
+        }
+
+        .fc-chip-time {
+            font-weight: 700 !important;
+            font-size: 10px !important;
+            flex-shrink: 0 !important;
+            letter-spacing: -0.2px !important;
+        }
+
+        .fc-chip-title {
+            font-weight: 500 !important;
+            font-size: 10.5px !important;
+            overflow: hidden !important;
+            text-overflow: ellipsis !important;
+            white-space: nowrap !important;
+            flex: 1 !important;
         }
 
         .fc-event-main-frame {
@@ -1588,7 +1763,7 @@
                     </button>
                 </div>
 
-                <h2 id="calendarHeaderTitle" class="calendar-month-title">Tháng 10 2026</h2>
+                <h2 id="calendarHeaderTitle" class="calendar-month-title">Tháng 9 2026</h2>
             </div>
 
             <!-- NHÓM BÊN PHẢI: Toggle Filter "Ẩn đã hủy" + Toggle Pills "Tháng / Tuần / Ngày" + Lịch tóm tắt -->
@@ -1899,14 +2074,80 @@
         let tutorDataGlobal = dashDataStr ? JSON.parse(dashDataStr) : null;
         const isDemoMode = !userPhone;
 
-        // Dữ liệu mô phỏng theo cấu trúc sheet Lịch học của bạn.
+        // Dữ liệu mô phỏng theo cấu trúc sheet Lịch học (khớp 100% hình ảnh tham chiếu)
         let tutorScheduleSheetData = [
             {
-                studentName: "Nguyễn Văn A",
-                color: localStorage.getItem('student_color_Nguyễn Văn A') || "#4D9EFF",
-                mon: "08:00 - 10:00 (Sáng - Toán) | 14:00 - 16:00 (Chiều - Lý)",
+                studentName: "GTPX 17",
+                color: localStorage.getItem('student_color_GTPX 17') || "#E11D48",
+                mon: "19:00 - 20:00 (7:00-8:00PM) SKIP 31/08/2026 | 28/09/2026: 19:00 - 20:00 (7:00-8:00PM)",
                 tue: "",
-                wed: "15:00 - 17:00",
+                wed: "19:00 - 20:00 (7:00-8:00PM) SKIP 02/09/2026, 09/09/2026",
+                thu: "",
+                fri: "19:00 - 20:00 (7:00-8:00PM)",
+                sat: "",
+                sun: ""
+            },
+            {
+                studentName: "Pre-Inter A2+",
+                color: localStorage.getItem('student_color_Pre-Inter A2+') || "#0284C7",
+                mon: "31/08/2026: 21:00 - 22:30 | 07/09/2026: 21:00 - 22:30 | 14/09/2026: 20:00 - 21:30 | 21/09/2026: 20:00 - 21:30 | 28/09/2026: 20:00 - 21:30",
+                tue: "",
+                wed: "20:00 - 21:30 SKIP 02/09/2026, 09/09/2026",
+                thu: "03/09/2026: 20:30 - 22:00 | 10/09/2026: 20:30 - 22:00",
+                fri: "",
+                sat: "",
+                sun: ""
+            },
+            {
+                studentName: "GTPX 18",
+                color: localStorage.getItem('student_color_GTPX 18') || "#059669",
+                mon: "20:15 - 21:15 (8:15-9:15_TH) SKIP 31/08/2026",
+                tue: "",
+                wed: "20:15 - 21:15 (8:15-9:15_TH) SKIP 02/09/2026, 09/09/2026",
+                thu: "",
+                fri: "20:15 - 21:15 (8:15-9:15_TH)",
+                sat: "",
+                sun: ""
+            },
+            {
+                studentName: "ARAVA GTPX 15",
+                color: localStorage.getItem('student_color_ARAVA GTPX 15') || "#7C3AED",
+                mon: "",
+                tue: "19:00 - 20:30 (T3-5-7) SKIP 01/09/2026, 22/09/2026, 29/09/2026",
+                wed: "",
+                thu: "19:00 - 20:30 (T3-5-7) SKIP 24/09/2026",
+                fri: "",
+                sat: "19:00 - 20:30 (T3-5-7) SKIP 12/09/2026, 19/09/2026, 26/09/2026",
+                sun: ""
+            },
+            {
+                studentName: "IELTS 5.0-6.0",
+                color: localStorage.getItem('student_color_IELTS 5.0-6.0') || "#D97706",
+                mon: "21/09/2026: 18:45 - 20:00 (Phương)",
+                tue: "15/09/2026: 15:00 - 16:30 (Phương) | 29/09/2026: 15:00 - 16:30 (Phương)",
+                wed: "23/09/2026: 15:00 - 16:30 (Phương)",
+                thu: "10/09/2026: 15:00 - 16:30 (Phương)",
+                fri: "11/09/2026: 14:30 - 16:00 (Phương)",
+                sat: "",
+                sun: ""
+            },
+            {
+                studentName: "ELE 04 - A1",
+                color: localStorage.getItem('student_color_ELE 04 - A1') || "#EA580C",
+                mon: "",
+                tue: "",
+                wed: "",
+                thu: "",
+                fri: "18/09/2026: 20:00 - 21:30 | 25/09/2026: 20:00 - 21:30",
+                sat: "",
+                sun: "20/09/2026: 20:00 - 21:30 | 27/09/2026: 20:00 - 21:30"
+            },
+            {
+                studentName: "Huy-Đạt Tiếng Anh 9",
+                color: localStorage.getItem('student_color_Huy-Đạt Tiếng Anh 9') || "#10B981",
+                mon: "31/08/2026: 09:00 - 10:30",
+                tue: "",
+                wed: "",
                 thu: "",
                 fri: "",
                 sat: "",
@@ -1914,24 +2155,13 @@
             },
             {
                 studentName: "Trần Thị B",
-                color: localStorage.getItem('student_color_Trần Thị B') || "#FF6B9D",
-                mon: "",
-                tue: "17:30 - 19:30",
-                wed: "",
-                thu: "17:30 - 19:30 (Vật lý)",
-                fri: "",
-                sat: "14:00 - 16:00 (Đã hủy) [CANCELLED]",
-                sun: ""
-            },
-            {
-                studentName: "Lê Hoàng C",
-                color: localStorage.getItem('student_color_Lê Hoàng C') || "#4DFFC3",
+                color: localStorage.getItem('student_color_Trần Thị B') || "#9CA3AF",
                 mon: "",
                 tue: "",
                 wed: "",
                 thu: "",
-                fri: "09:00 - 11:00",
-                sat: "",
+                fri: "",
+                sat: "12/09/2026: 14:00 - 16:00 (Đã hủy) [CANCELLED]",
                 sun: ""
             }
         ];
@@ -2100,7 +2330,7 @@
             if (isOneTime || isReschedule) {
                 let dateParts = oneTimeDateStr.split('/');
                 dateStr = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
-                let evDate  = new Date(dateStr);
+                let evDate  = new Date(parseInt(dateParts[2]), parseInt(dateParts[1]) - 1, parseInt(dateParts[0]), 0, 0, 0);
                 let weekEnd = new Date(startOfWeek);
                 weekEnd.setDate(startOfWeek.getDate() + 7);
                 if (evDate < startOfWeek || evDate >= weekEnd) return null;
@@ -2293,21 +2523,6 @@
             };
         }
 
-        if (isDemoMode) {
-            // Thêm dữ liệu lịch học "Một lần - Không lặp" cho học sinh A vào ngày thứ 3 tuần này (ví dụ 21/07/2026) làm mẫu
-            let today = new Date();
-            let currentDayOfWeek = today.getDay();
-            let diffToTue = 2 - currentDayOfWeek; // 2 đại diện cho Thứ 3
-            let sampleTue = new Date(today);
-            sampleTue.setDate(today.getDate() + diffToTue);
-            
-            let sampleTueDateStr = sampleTue.getDate().toString().padStart(2, '0') + "/" + 
-                                   (sampleTue.getMonth() + 1).toString().padStart(2, '0') + "/" + 
-                                   sampleTue.getFullYear();
-            
-            tutorScheduleSheetData[0].tue = sampleTueDateStr + ": 10:00 - 12:00 (Học thử một lần)";
-        }
-
         const dayMap = {
             "mon": 1, "tue": 2, "wed": 3, "thu": 4, "fri": 5, "sat": 6, "sun": 0
         };
@@ -2318,6 +2533,7 @@
 
         function getStartOfWeek(d) {
             let date = new Date(d);
+            date.setHours(0, 0, 0, 0);
             let day = date.getDay();
             let diff = date.getDate() - day + (day === 0 ? -6 : 1);
             return new Date(date.setDate(diff));
@@ -2398,7 +2614,7 @@
                         if (isOneTime || isReschedule) {
                             let dateParts = oneTimeDateStr.split('/');
                             dateStr = dateParts[2] + '-' + dateParts[1] + '-' + dateParts[0];
-                            let evDate  = new Date(dateStr);
+                            let evDate  = new Date(parseInt(dateParts[2]), parseInt(dateParts[1]) - 1, parseInt(dateParts[0]), 0, 0, 0);
                             let weekEnd = new Date(startOfWeek);
                             weekEnd.setDate(startOfWeek.getDate() + 7);
                             if (evDate < startOfWeek || evDate >= weekEnd) return;
@@ -2743,6 +2959,8 @@
 
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: initialViewType,
+                initialDate: isDemoMode ? '2026-09-01' : undefined,
+                now: isDemoMode ? '2026-09-26T08:00:00' : undefined,
                 locale: 'vi',
                 firstDay: 1, // Bắt đầu tuần từ Thứ Hai
                 height: '100%', // Chiếm 100% .calendar-wrapper - chỉ 1 thanh cuộn bên trong
@@ -2758,6 +2976,47 @@
                     minute: '2-digit',
                     hour12: false
                 },
+                dayHeaderContent: function(arg) {
+                    const days = ['CN', 'THỨ 2', 'THỨ 3', 'THỨ 4', 'THỨ 5', 'THỨ 6', 'THỨ 7'];
+                    let dayName = days[arg.date.getDay()];
+                    if (arg.view.type === 'dayGridMonth') {
+                        return dayName;
+                    } else {
+                        let d = arg.date.getDate().toString().padStart(2, '0');
+                        let m = (arg.date.getMonth() + 1).toString().padStart(2, '0');
+                        return dayName + ' ' + d + '/' + m;
+                    }
+                },
+                eventContent: function(arg) {
+                    if (arg.view.type === 'dayGridMonth') {
+                        let props = arg.event.extendedProps || {};
+                        let color = props.eventColor || '#3B82F6';
+                        let timeStr = props.startTime || (arg.timeText || '');
+                        let titleStr = props.studentName || arg.event.title || '';
+                        if (props.notes && !titleStr.includes(props.notes)) {
+                            if (props.notes.includes('7:00') || props.notes.includes('8:15')) {
+                                titleStr += '_ ' + props.notes;
+                            } else {
+                                titleStr += ' ' + props.notes;
+                            }
+                        }
+                        
+                        let isCancelled = props.status === 'cancelled';
+                        let chipBg = isCancelled ? '#F3F4F6' : (color + '18');
+                        let chipBorder = isCancelled ? '#D1D5DB' : (color + '38');
+                        let textColor = isCancelled ? '#9CA3AF' : color;
+                        let textDecor = isCancelled ? 'text-decoration: line-through;' : '';
+                        let dotColor = isCancelled ? '#9CA3AF' : color;
+                        
+                        let html = '<div class="fc-month-chip-inner" style="background: ' + chipBg + '; border: 1px solid ' + chipBorder + '; ' + textDecor + '">' +
+                                   '<span class="fc-chip-dot" style="background-color: ' + dotColor + ';"></span>' +
+                                   (timeStr ? '<span class="fc-chip-time" style="color: ' + textColor + ';">' + timeStr + '</span>' : '') +
+                                   '<span class="fc-chip-title" style="color: #2D1F0E;">' + titleStr + '</span>' +
+                                   '</div>';
+                        return { html: html };
+                    }
+                    return null;
+                },
                 slotMinTime: "00:00:00",
                 slotMaxTime: "24:00:00",
                 slotDuration: '00:30:00',   // Chia ô 30 phút - đúng chuẩn Google Calendar
@@ -2772,14 +3031,15 @@
                 eventDidMount: function(info) {
                     let props = info.event.extendedProps;
                     let evColor = props.eventColor;
-                    if (evColor) {
+
+                    if (info.view.type === 'dayGridMonth') {
+                        info.el.style.setProperty('background', 'transparent', 'important');
+                        info.el.style.setProperty('border', 'none', 'important');
+                        info.el.style.setProperty('box-shadow', 'none', 'important');
+                    } else if (evColor) {
                         info.el.style.setProperty('border-left', '3px solid ' + evColor, 'important');
-                        
-                        // Thay background "#0F0A30" thành evColor+"25" (pastel), color = evColor, border-left: 3px solid evColor
                         info.el.style.setProperty('background', 'linear-gradient(0deg, ' + evColor + '25, ' + evColor + '25), #FFFFFF', 'important');
                         info.el.style.setProperty('border-color', evColor + '40', 'important');
-
-                        // Màu chữ dùng evColor (pastel nhạt nền + chữ màu đậm)
                         let textC = evColor;
                         info.el.style.setProperty('color', textC, 'important');
 
@@ -2798,7 +3058,6 @@
                     // Xử lý hiển thị buổi học đã hủy
                     if (props.status === 'cancelled') {
                         info.el.style.setProperty('opacity', '0.55', 'important');
-                        info.el.style.setProperty('text-decoration', 'line-through', 'important');
                         info.el.classList.add('event-status-cancelled');
                     }
                 },
@@ -2809,12 +3068,23 @@
                     updateMonthBottomBar(dateInfo.view);
                 },
                 dayCellDidMount: function(arg) {
-                    // Task 10.3: Chỉ hiển thị ngày lễ quốc gia ở Month view
                     if (arg.view.type !== 'dayGridMonth') return;
                     let m = arg.date.getMonth() + 1;
                     let d = arg.date.getDate();
                     let key = d + '/' + m;
                     let holidayName = VN_HOLIDAYS[key];
+
+                    // Quốc khánh 1/9, 2/9 & Trung thu 25/9: thêm tranh minh họa
+                    if (d === 1 && m === 9) {
+                        arg.el.classList.add('fc-day-holiday-quockhanh-1');
+                        holidayName = 'Quốc khánh';
+                    } else if (d === 2 && m === 9) {
+                        arg.el.classList.add('fc-day-holiday-quockhanh-2');
+                        holidayName = 'Quốc khánh';
+                    } else if (d === 25 && m === 9) {
+                        arg.el.classList.add('fc-day-festive-lantern');
+                    }
+
                     if (holidayName) {
                         let topEl = arg.el.querySelector('.fc-daygrid-day-top');
                         if (topEl && !topEl.querySelector('.fc-vn-holiday-badge')) {
