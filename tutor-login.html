@@ -56,30 +56,30 @@
                 
                 <!-- SDT Input -->
                 <div class="modal-form-group" style="margin-bottom: 15px; text-align: left;">
-                    <label style="display: block; margin-bottom: 8px; color: #A6ADCE; font-size: 13px; font-weight: 500;">Số điện thoại đăng nhập</label>
+                    <label style="display: block; margin-bottom: 8px; color: #64748B; font-size: 13px; font-weight: 500;">Số điện thoại đăng nhập</label>
                     <div style="position: relative;">
-                        <i class="fa-solid fa-phone" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #8E4DFF;"></i>
-                        <input type="text" id="tutorPhone" placeholder="Nhập số điện thoại gia sư..." style="width: 100%; padding: 14px 16px 14px 45px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: #FFF; font-size: 15px; transition: all 0.3s; box-shadow: none; outline: none;" onfocus="this.style.borderColor='#8E4DFF'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+                        <i class="fa-solid fa-phone" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #3B82F6;"></i>
+                        <input type="text" id="tutorPhone" placeholder="Nhập số điện thoại gia sư..." style="width: 100%; padding: 14px 16px 14px 45px; background: #F8FAFF; border: 1px solid #CBD5E1; border-radius: 12px; color: #1E293B; font-size: 15px; transition: all 0.3s; box-shadow: none; outline: none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#CBD5E1'">
                     </div>
                 </div>
                 
                 <!-- PIN Input -->
                 <div class="modal-form-group" style="margin-bottom: 20px; text-align: left;">
-                    <label style="display: block; margin-bottom: 8px; color: #A6ADCE; font-size: 13px; font-weight: 500;">Mã PIN bảo mật</label>
+                    <label style="display: block; margin-bottom: 8px; color: #64748B; font-size: 13px; font-weight: 500;">Mã PIN bảo mật</label>
                     <div style="position: relative;">
-                        <i class="fa-solid fa-key" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #8E4DFF;"></i>
-                        <input type="password" id="tutorPin" placeholder="Nhập mã PIN gồm 6 số..." maxlength="6" style="width: 100%; padding: 14px 16px 14px 45px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: #FFF; font-size: 15px; transition: all 0.3s; box-shadow: none; outline: none;" onfocus="this.style.borderColor='#8E4DFF'" onblur="this.style.borderColor='rgba(255,255,255,0.08)'">
+                        <i class="fa-solid fa-key" style="position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: #3B82F6;"></i>
+                        <input type="password" id="tutorPin" placeholder="Nhập mã PIN gồm 6 số..." maxlength="6" style="width: 100%; padding: 14px 16px 14px 45px; background: #F8FAFF; border: 1px solid #CBD5E1; border-radius: 12px; color: #1E293B; font-size: 15px; transition: all 0.3s; box-shadow: none; outline: none;" onfocus="this.style.borderColor='#3B82F6'" onblur="this.style.borderColor='#CBD5E1'">
                     </div>
                 </div>
                 
-                <button class="btn-submit" onclick="xuLyTraCuu('tutor')" style="width: 100%; justify-content: center; height: 50px; border-radius: 12px; font-size: 15px; font-weight: bold; background: linear-gradient(135deg, #8E4DFF 0%, #5B21B6 100%); border: none;">
+                <button class="btn-submit" onclick="xuLyTraCuu('tutor')" style="width: 100%; justify-content: center; height: 50px; border-radius: 12px; font-size: 15px; font-weight: bold; background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%); border: none;">
                     Đăng nhập hệ thống <i class="fa-solid fa-right-to-bracket" style="margin-left: 6px;"></i>
                 </button>
                 
                 <!-- Gợi ý đăng nhập demo 1 chạm -->
-                <div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed rgba(255,255,255,0.1); font-size: 12.5px; color: #94A3B8; text-align: left;">
-                    <div style="margin-bottom: 6px; font-weight: 600; color: #CBD5E1;"><i class="fa-solid fa-bolt" style="color:#F59E0B;"></i> Đăng nhập Dùng thử nhanh:</div>
-                    <button type="button" onclick="fillQuickTutor('0123456789', '1234')" style="width: 100%; background: rgba(142,77,255,0.15); border: 1px solid rgba(142,77,255,0.3); color: #C084FC; padding: 10px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
+                <div style="margin-top: 15px; padding-top: 12px; border-top: 1px dashed #DBEAFE; font-size: 12.5px; color: #64748B; text-align: left;">
+                    <div style="margin-bottom: 6px; font-weight: 600; color: #475569;"><i class="fa-solid fa-bolt" style="color:#F59E0B;"></i> Đăng nhập Dùng thử nhanh:</div>
+                    <button type="button" onclick="fillQuickTutor('0123456789', '1234')" style="width: 100%; background: #EFF6FF; border: 1px solid #BFDBFE; color: #2563EB; padding: 10px; border-radius: 10px; font-size: 13px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;">
                         👨‍🏫 Thầy Trần Hoàng Nam (0123456789 - PIN: 1234)
                     </button>
                 </div>
