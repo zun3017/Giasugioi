@@ -217,7 +217,7 @@
                                     tutorPhone: tutor.phone,
                                     tutorName: tutor.name,
                                     tutorPin: tutor.pin || "1234",
-                                    qrCode: "https://i.postimg.cc/66rKbPmb/trinh-duyet.png",
+                                    qrCode: (tutor && tutor.qrCode) || (typeof localStorage !== 'undefined' ? localStorage.getItem('tutor_qr_code') : null) || "https://i.postimg.cc/Zn8NjRbg/ma-qr-chuyen-khoan-ZN.jpg",
                                     students: store.students.map(s => ({
                                         phone: s.phone,
                                         name: s.name,
@@ -332,7 +332,7 @@
                         tutorPhone: tutor.phone,
                         tutorName: tutor.name,
                         tutorPin: tutor.pin || "1234",
-                        qrCode: "https://i.postimg.cc/66rKbPmb/trinh-duyet.png",
+                        qrCode: (tutor && tutor.qrCode) || (typeof localStorage !== 'undefined' ? localStorage.getItem('tutor_qr_code') : null) || "https://i.postimg.cc/Zn8NjRbg/ma-qr-chuyen-khoan-ZN.jpg",
                         students: store.students.map(s => ({
                             phone: s.phone,
                             name: s.name,
@@ -389,6 +389,23 @@
                     }
                     if (typeof saveDemoStore === 'function') saveDemoStore(store);
                     result = { success: true };
+                }
+
+                // 3.2 CẬP NHẬT THÔNG TIN GIA SƯ & MÃ QR THANH TOÁN
+                else if (functionName === 'capNhatThongTinGiaSu' || functionName === 'updateTutorAccount') {
+                    const [oldPhone, name, phone, pin, qrCode] = args;
+                    let tutor = (store.tutors && store.tutors.length > 0) ? (store.tutors.find(t => t.phone === oldPhone || normalizePhone(t.phone) === normalizePhone(oldPhone)) || store.tutors[0]) : null;
+                    if (tutor) {
+                        if (name) tutor.name = name;
+                        if (phone) tutor.phone = phone;
+                        if (pin) tutor.pin = pin;
+                        if (qrCode !== undefined) tutor.qrCode = qrCode;
+                    }
+                    if (qrCode !== undefined && typeof localStorage !== 'undefined') {
+                        try { localStorage.setItem('tutor_qr_code', qrCode); } catch(e){}
+                    }
+                    if (typeof saveDemoStore === 'function') saveDemoStore(store);
+                    result = { success: true, message: "Cập nhật tài khoản gia sư thành công!" };
                 }
 
                 // 4. DANH SÁCH Ý KIẾN PHẢN HỒI CỦA PHỤ HUYNH

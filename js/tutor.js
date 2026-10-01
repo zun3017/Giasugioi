@@ -4452,6 +4452,116 @@ window.initTutorSidebarState = initTutorSidebarState;
 
         // ================= TUTOR MODAL CONTROLLER FUNCTIONS =================
         
+        var currentTutorQrBase64 = "";
+
+        function handleTutorQrFileSelect(input) {
+            if (!input || !input.files || !input.files[0]) return;
+            var file = input.files[0];
+            if (!file.type.startsWith('image/')) {
+                showToast("Vui lòng chọn file hình ảnh (PNG, JPG, JPEG)!", "error");
+                return;
+            }
+            
+            showToast("Đang xử lý và tối ưu ảnh mã QR...", "info");
+            var reader = new FileReader();
+            reader.onload = function(e) {
+                var img = new Image();
+                img.onload = function() {
+                    // Tối ưu nén kích thước ảnh QR: max 600x600 px để cực kỳ nhẹ và sắc nét
+                    var maxWidth = 600;
+                    var maxHeight = 600;
+                    var width = img.width;
+                    var height = img.height;
+                    
+                    if (width > height) {
+                        if (width > maxWidth) {
+                            height = Math.round((height * maxWidth) / width);
+                            width = maxWidth;
+                        }
+                    } else {
+                        if (height > maxHeight) {
+                            width = Math.round((width * maxHeight) / height);
+                            height = maxHeight;
+                        }
+                    }
+                    
+                    var canvas = document.createElement('canvas');
+                    canvas.width = width;
+                    canvas.height = height;
+                    var ctx = canvas.getContext('2d');
+                    ctx.fillStyle = '#FFFFFF';
+                    ctx.fillRect(0, 0, width, height);
+                    ctx.drawImage(img, 0, 0, width, height);
+                    
+                    var dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+                    currentTutorQrBase64 = dataUrl;
+                    
+                    var qrImg = document.getElementById('accQrImg');
+                    var qrText = document.getElementById('accQrText');
+                    var btnRemove = document.getElementById('btnRemoveTutorQr');
+                    var urlInp = document.getElementById('accQrUrlInput');
+                    
+                    if (qrImg) {
+                        qrImg.src = dataUrl;
+                        qrImg.style.display = 'block';
+                    }
+                    if (qrText) qrText.style.display = 'none';
+                    if (btnRemove) btnRemove.style.display = 'inline-flex';
+                    if (urlInp) urlInp.value = '';
+                    
+                    showToast("Đã tải ảnh mã QR lên! Nhấn 'Cập nhật tài khoản' để lưu lại.", "success");
+                };
+                img.onerror = function() {
+                    showToast("Không thể đọc định dạng ảnh, vui lòng thử lại ảnh khác!", "error");
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function handleTutorQrUrlInput(val) {
+            var trimmed = (val || '').trim();
+            currentTutorQrBase64 = trimmed;
+            var qrImg = document.getElementById('accQrImg');
+            var qrText = document.getElementById('accQrText');
+            var btnRemove = document.getElementById('btnRemoveTutorQr');
+            
+            if (trimmed) {
+                if (qrImg) {
+                    qrImg.src = trimmed;
+                    qrImg.style.display = 'block';
+                }
+                if (qrText) qrText.style.display = 'none';
+                if (btnRemove) btnRemove.style.display = 'inline-flex';
+            } else {
+                if (qrImg) {
+                    qrImg.src = '';
+                    qrImg.style.display = 'none';
+                }
+                if (qrText) qrText.style.display = 'block';
+                if (btnRemove) btnRemove.style.display = 'none';
+            }
+        }
+
+        function removeTutorQr() {
+            currentTutorQrBase64 = "";
+            var qrImg = document.getElementById('accQrImg');
+            var qrText = document.getElementById('accQrText');
+            var btnRemove = document.getElementById('btnRemoveTutorQr');
+            var urlInp = document.getElementById('accQrUrlInput');
+            var fileInp = document.getElementById('accQrFileInput');
+            
+            if (qrImg) {
+                qrImg.src = "";
+                qrImg.style.display = "none";
+            }
+            if (qrText) qrText.style.display = "block";
+            if (btnRemove) btnRemove.style.display = "none";
+            if (urlInp) urlInp.value = "";
+            if (fileInp) fileInp.value = "";
+            showToast("Đã gỡ ảnh QR. Nhấn 'Cập nhật tài khoản' để lưu thay đổi.", "info");
+        }
+
         // 1. Cửa sổ Tài khoản (Account)
         function openTutorAccountModal() {
             if(!tutorDataGlobal) return;
@@ -4461,15 +4571,32 @@ window.initTutorSidebarState = initTutorSidebarState;
             document.getElementById('accClassCount').value = tutorDataGlobal.classCount || "0";
             document.getElementById('accUnpaidIncome').value = (tutorDataGlobal.totalUnpaidIncome || 0).toLocaleString('vi-VN') + " VNĐ";
             
+            currentTutorQrBase64 = (tutorDataGlobal && tutorDataGlobal.qrCode) ? tutorDataGlobal.qrCode : (typeof localStorage !== 'undefined' ? (localStorage.getItem('tutor_qr_code') || "") : "");
             var qrImg = document.getElementById('accQrImg');
             var qrText = document.getElementById('accQrText');
-            if (tutorDataGlobal.qrCode) {
-                qrImg.src = tutorDataGlobal.qrCode;
-                qrImg.style.display = "block";
-                qrText.style.display = "none";
+            var btnRemove = document.getElementById('btnRemoveTutorQr');
+            var urlInp = document.getElementById('accQrUrlInput');
+            var fileInp = document.getElementById('accQrFileInput');
+            if (fileInp) fileInp.value = "";
+            
+            if (currentTutorQrBase64) {
+                if (qrImg) {
+                    qrImg.src = currentTutorQrBase64;
+                    qrImg.style.display = "block";
+                }
+                if (qrText) qrText.style.display = "none";
+                if (btnRemove) btnRemove.style.display = "inline-flex";
+                if (urlInp) {
+                    urlInp.value = currentTutorQrBase64.startsWith('http') ? currentTutorQrBase64 : "";
+                }
             } else {
-                qrImg.style.display = "none";
-                qrText.style.display = "block";
+                if (qrImg) {
+                    qrImg.src = "";
+                    qrImg.style.display = "none";
+                }
+                if (qrText) qrText.style.display = "block";
+                if (btnRemove) btnRemove.style.display = "none";
+                if (urlInp) urlInp.value = "";
             }
             
             document.getElementById('tutorAccountModal').style.display = "flex";
@@ -4487,7 +4614,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                 return;
             }
             
-            var confirmMsg = "Bạn có chắc chắn muốn cập nhật thông tin tài khoản?";
+            var confirmMsg = "Bạn có chắc chắn muốn cập nhật thông tin tài khoản và mã QR?";
             if(phone !== tutorDataGlobal.tutorPhone) {
                 confirmMsg += " LƯU Ý: Đổi số điện thoại sẽ đồng bộ hóa lại toàn bộ học sinh và lịch học của bạn. Vui lòng kiểm tra kỹ!";
             }
@@ -4500,6 +4627,8 @@ window.initTutorSidebarState = initTutorSidebarState;
                     btn.innerText = "Đang cập nhật...";
                 }
                 
+                var qrToSave = currentTutorQrBase64;
+                
                 google.script.run
                     .withSuccessHandler(function(res) {
                         if(btn) {
@@ -4509,20 +4638,42 @@ window.initTutorSidebarState = initTutorSidebarState;
                         if(res.error) {
                             showToast("Lỗi: " + res.error, "error");
                         } else {
-                            showToast("Cập nhật tài khoản thành công!", "success");
+                            showToast("Cập nhật tài khoản và mã QR thành công!", "success");
                             
                             // Cập nhật dữ liệu cục bộ ngay lập tức
                             tutorDataGlobal.tutorName = name;
                             tutorDataGlobal.tutorPhone = phone;
                             tutorDataGlobal.tutorPin = pin;
+                            tutorDataGlobal.qrCode = qrToSave;
                             currentTutorPhone = phone;
                             
+                            try {
+                                localStorage.setItem('tutor_qr_code', qrToSave || "");
+                            } catch(e) {}
+                            
                             // Cập nhật ô input đăng nhập ẩn để đồng bộ
-                            document.getElementById('maHocSinh').value = phone;
-                            document.getElementById('maPin').value = pin;
+                            var maHs = document.getElementById('maHocSinh');
+                            if (maHs) maHs.value = phone;
+                            var maPinEl = document.getElementById('maPin');
+                            if (maPinEl) maPinEl.value = pin;
                             
                             // Cập nhật tên hiển thị trên Header
-                            document.getElementById('tutorNameDisplay').innerText = "Xin chào, Gia sư " + name;
+                            var nameDisp = document.getElementById('tutorNameDisplay');
+                            if (nameDisp) nameDisp.innerText = "Xin chào, Gia sư " + name;
+                            
+                            // Cập nhật trên modal hóa đơn học phí nếu đang mở
+                            var invImg = document.getElementById('invQrImg');
+                            var invText = document.getElementById('invQrText');
+                            if (invImg && invText) {
+                                if (qrToSave) {
+                                    invImg.src = qrToSave;
+                                    invImg.style.display = "block";
+                                    invText.innerHTML = '<i class="fa-solid fa-qrcode"></i> Quét VietQR';
+                                } else {
+                                    invImg.style.display = "none";
+                                    invText.innerText = "Chưa có mã QR thanh toán";
+                                }
+                            }
                             
                             closeTutorAccountModal();
                         }
@@ -4534,9 +4685,16 @@ window.initTutorSidebarState = initTutorSidebarState;
                         }
                         showToast("Lỗi kết nối hoặc hệ thống: " + err.toString(), "error");
                     })
-                    .capNhatThongTinGiaSu(tutorDataGlobal.tutorPhone, name, phone, pin);
+                    .capNhatThongTinGiaSu(tutorDataGlobal.tutorPhone, name, phone, pin, qrToSave);
             });
         }
+
+        window.handleTutorQrFileSelect = handleTutorQrFileSelect;
+        window.handleTutorQrUrlInput = handleTutorQrUrlInput;
+        window.removeTutorQr = removeTutorQr;
+        window.openTutorAccountModal = openTutorAccountModal;
+        window.closeTutorAccountModal = closeTutorAccountModal;
+        window.saveTutorAccount = saveTutorAccount;
 
         function toggleBillingTypeLabel(mode) {
             if (mode === 'add') {
