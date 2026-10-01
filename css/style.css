@@ -2185,6 +2185,10 @@
         }
 
         @media (max-width: 768px) {
+            .diary-toolbar {
+                padding: 16px 14px !important;
+                border-radius: 16px !important;
+            }
             .diary-filters {
                 flex-direction: column !important;
                 align-items: stretch !important;
@@ -2193,6 +2197,8 @@
                 margin-left: 0 !important;
                 text-align: center !important;
             }
+        }
+
         /* Students Section Styles */
         .students-toolbar {
             background: rgba(11, 8, 38, 0.95);
@@ -2287,6 +2293,8 @@
 
         @media (max-width: 768px) {
             .students-toolbar {
+                padding: 16px 14px !important;
+                border-radius: 16px !important;
                 flex-direction: column !important;
                 align-items: stretch !important;
             }
@@ -2569,6 +2577,8 @@
 
         @media (max-width: 768px) {
             .tuition-toolbar {
+                padding: 16px 14px !important;
+                border-radius: 16px !important;
                 flex-direction: column !important;
                 align-items: stretch !important;
             }
@@ -2832,6 +2842,10 @@
         }
 
         @media (max-width: 768px) {
+            .report-filter-card {
+                padding: 16px 14px !important;
+                border-radius: 16px !important;
+            }
             .report-filter-controls {
                 flex-direction: column !important;
                 align-items: stretch !important;
@@ -2845,6 +2859,16 @@
             .btn-report-export {
                 flex: 1;
                 justify-content: center;
+            }
+            .report-capture-card {
+                padding: 18px 15px !important;
+            }
+            .report-stats-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .report-card-banner {
+                flex-direction: column !important;
+                align-items: flex-start !important;
             }
         }
 
@@ -3360,11 +3384,12 @@
             height: 100%;
             background: rgba(4, 2, 10, 0.85);
             backdrop-filter: blur(8px);
-            z-index: 1000;
+            z-index: 2000;
             display: none;
             align-items: center;
             justify-content: center;
             padding: 20px;
+            box-sizing: border-box;
         }
         .modal-content {
             background: #0B0826;
@@ -3378,6 +3403,36 @@
             position: relative;
             max-height: 90vh;
             overflow-y: auto;
+            box-sizing: border-box;
+        }
+
+        @media (max-width: 480px) {
+            .modal-overlay {
+                padding: 12px 10px;
+            }
+            .modal-content {
+                padding: 20px 16px !important;
+                border-radius: 16px !important;
+            }
+            .invoice-container {
+                padding: 18px 14px !important;
+                border-radius: 20px !important;
+            }
+            .metrics-grid {
+                grid-template-columns: 1fr !important;
+                gap: 8px !important;
+            }
+            .bottom-action-container {
+                grid-template-columns: 1fr !important;
+                gap: 12px !important;
+            }
+            .qr-card {
+                padding: 12px !important;
+            }
+            .qr-img {
+                width: 140px !important;
+                height: 140px !important;
+            }
         }
         .modal-header {
             display: flex;
