@@ -2217,14 +2217,14 @@
     <div id="previewSubmissionModal" class="modal-overlay" style="z-index: 1050;">
         <div class="modal-card" style="max-width: 920px; width: 95%; height: 86vh; padding: 20px; border-radius: 22px; background: #0D0826; border: 1px solid rgba(142, 77, 255, 0.4); box-shadow: 0 15px 50px rgba(0,0,0,0.9); display: flex; flex-direction: column;">
             <div class="modal-header" style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px;">
-                <h3 style="color: #FFD23F; font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; margin: 0;">
-                    <i class="fa-solid fa-file-lines" style="color: var(--color-primary);"></i> Xem bài làm: <span id="previewStudentNameTitle" style="color: #FFF;"></span>
+                <h3 style="color: var(--text-heading); font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; margin: 0;">
+                    <i class="fa-solid fa-file-lines" style="color: var(--color-primary);"></i> Xem bài làm: <span id="previewStudentNameTitle" style="color: var(--text-primary);"></span>
                 </h3>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <button id="btnPreviewGradeDirect" onclick="openGradeModalFromPreview()" style="background: rgba(249,115,22,0.2); border: 1px solid #F97316; color: #FED7AA; padding: 6px 14px; border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <button id="btnPreviewGradeDirect" onclick="openGradeModalFromPreview()" style="background: var(--nav-active-bg); border: 1px solid var(--border-color); color: var(--text-primary); padding: 6px 14px; border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
                         <i class="fa-solid fa-pen"></i> Chấm điểm ngay
                     </button>
-                    <a id="btnPreviewExternalLink" href="" target="_blank" style="background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); color: #FFF; padding: 6px 12px; border-radius: 10px; font-size: 12px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 5px;">
+                    <a id="btnPreviewExternalLink" href="" target="_blank" style="background: var(--bg-input); border: 1px solid var(--border-card); color: var(--text-primary); padding: 6px 12px; border-radius: 10px; font-size: 12px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 5px;">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở tab mới
                     </a>
                     <button class="btn-close-modal" onclick="closeSubmissionPreviewModal()" style="background: none; border: none; color: var(--text-secondary); font-size: 24px; cursor: pointer; padding: 0 5px; line-height: 1;">&times;</button>
@@ -2251,7 +2251,7 @@
     <div id="tutorGradeModal" class="modal-overlay" style="z-index: 1100;">
         <div class="modal-card" style="max-width: 460px; width: 92%; padding: 25px; border-radius: 20px; background: #0D0826; border: 1px solid rgba(249, 115, 22, 0.4); box-shadow: 0 10px 40px rgba(0,0,0,0.85);">
             <div class="modal-header" style="margin-bottom: 18px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px;">
-                <h3 style="color: #FFD23F; font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; margin: 0;">
+                <h3 style="color: var(--text-heading); font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; margin: 0;">
                     <i class="fa-solid fa-pen-to-square" style="color: #F97316;"></i> Chấm điểm bài làm
                 </h3>
                 <button class="btn-close-modal" onclick="closeGradeModal()" style="background: none; border: none; color: var(--text-secondary); font-size: 24px; cursor: pointer; padding: 0 5px; line-height: 1;">&times;</button>
@@ -2264,16 +2264,16 @@
 
             <div style="margin-bottom: 15px;">
                 <label style="display: block; color: var(--text-secondary); font-size: 12px; font-weight: 700; margin-bottom: 6px;">ĐIỂM SỐ <span style="color:#EF4444;">*</span></label>
-                <input type="text" id="gradeScoreInput" placeholder="Ví dụ: 8.5, 9, 10..." style="background: rgba(255,255,255,0.03); border: 1px solid rgba(249, 115, 22, 0.4); border-radius: 10px; padding: 12px 14px; color: #FFD23F; font-weight: 800; font-size: 16px; width: 100%; outline: none;">
+                <input type="text" id="gradeScoreInput" placeholder="Ví dụ: 8.5, 9, 10..." style="background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 10px; padding: 12px 14px; color: var(--text-primary); font-weight: 800; font-size: 16px; width: 100%; outline: none;">
             </div>
 
             <div style="margin-bottom: 20px;">
                 <label style="display: block; color: var(--text-secondary); font-size: 12px; font-weight: 700; margin-bottom: 6px;">NHẬN XÉT CỦA GIA SƯ</label>
-                <textarea id="gradeCommentInput" rows="3" placeholder="Nhập nhận xét (Bài làm tốt, trình bày sạch, chú ý câu 3...)" style="background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 10px; padding: 10px 14px; color: #FFF; font-size: 13.5px; width: 100%; outline: none; font-family: 'Inter', sans-serif; resize: vertical;"></textarea>
+                <textarea id="gradeCommentInput" rows="3" placeholder="Nhập nhận xét (Bài làm tốt, trình bày sạch, chú ý câu 3...)" style="background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 10px; padding: 10px 14px; color: var(--text-primary); font-size: 13.5px; width: 100%; outline: none; font-family: 'Inter', sans-serif; resize: vertical;"></textarea>
             </div>
 
             <div style="display: flex; gap: 10px;">
-                <button onclick="closeGradeModal()" style="flex: 1; padding: 12px; background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.15); border-radius: 12px; color: #FFF; font-weight: 600; cursor: pointer;">
+                <button onclick="closeGradeModal()" style="flex: 1; padding: 12px; background: var(--bg-input); border: 1px solid var(--border-card); border-radius: 12px; color: var(--text-primary); font-weight: 600; cursor: pointer;">
                     Hủy bỏ
                 </button>
                 <button id="btnSaveSubmissionGrade" onclick="saveTutorGrade()" style="flex: 1.5; padding: 12px; background: linear-gradient(135deg, #F97316 0%, #EA580C 100%); border: none; border-radius: 12px; color: #FFF; font-weight: bold; font-size: 14px; cursor: pointer; box-shadow: 0 4px 15px rgba(249,115,22,0.35); display: flex; align-items: center; justify-content: center; gap: 6px;">

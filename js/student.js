@@ -1,4 +1,4 @@
-var currentChartInstance = null;
+﻿var currentChartInstance = null;
 var currentStudentName = "";
 
 function renderStudentView(ketQua) {
@@ -48,8 +48,8 @@ function renderStudentView(ketQua) {
     var loiChaoEl = document.getElementById('loiChao');
     if (loiChaoEl) {
         loiChaoEl.innerHTML = 
-            "<h3 style='color: #FFD23F; font-size: 20px; font-weight: 800; margin: 0 0 8px 0; text-align: center; font-family: Inter;'>Xin chào, <span style='color: #FFFFFF;'>" + (ketQua.tenHocSinh || 'Học sinh') + "</span> 👋</h3>" +
-            "<p style='color: #A6ADCE; font-size: 13px; text-align: center; margin: 0 0 25px 0; font-family: Inter;'>(" + lopHoc + " • Số điện thoại: " + (studentPhone || ketQua.sdt || "") + ")</p>";
+            "<h3 style='color: var(--text-heading); font-size: 20px; font-weight: 800; margin: 0 0 8px 0; text-align: center; font-family: Inter;'>Xin chào, <span style='color: var(--text-primary);'>" + (ketQua.tenHocSinh || 'Học sinh') + "</span> 👋</h3>" +
+            "<p style='color: var(--text-secondary); font-size: 13px; text-align: center; margin: 0 0 25px 0; font-family: Inter;'>(" + lopHoc + " • Số điện thoại: " + (studentPhone || ketQua.sdt || "") + ")</p>";
     }
     currentStudentName = ketQua.tenHocSinh || "";
     
@@ -432,7 +432,7 @@ function renderStudentView(ketQua) {
         // Cập nhật tiêu đề Lịch sử có kèm tổng số buổi rõ ràng
         var historyHeaderEl = document.querySelector('#resultBox .result-section h4');
         if (historyHeaderEl && historyHeaderEl.innerHTML.includes('Lịch sử')) {
-            historyHeaderEl.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i> Lịch sử Đánh giá Học tập <span style="font-size: 12px; color: #E2D1FF; font-weight: normal; margin-left: 8px;">(Tổng đã học: <b style="color:#10B981;">' + totalPresentAllTime + ' buổi</b> • Nghỉ: <b style="color:#F59E0B;">' + totalAbsentAllTime + ' buổi</b>)</span>';
+            historyHeaderEl.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i> Lịch sử Đánh giá Học tập <span style="font-size: 12px; color: var(--text-secondary); font-weight: normal; margin-left: 8px;">(Tổng đã học: <b style="color:var(--text-primary);">' + totalPresentAllTime + ' buổi</b> • Nghỉ: <b style="color:var(--text-primary);">' + totalAbsentAllTime + ' buổi</b>)</span>';
         }
 
         // Đồng bộ hoàn toàn hàm getStatusBadge với web chính
@@ -440,7 +440,7 @@ function renderStudentView(ketQua) {
             if (isAbsentSession(trangThai)) return '<span class="status-badge badge-nghi">Hủy/Nghỉ</span>';
             var normTt = normalizeStr(trangThai);
             if (normTt.includes('hoc bu') || normTt.includes('da bu')) return '<span class="status-badge badge-hocbu">Học bù</span>';
-            if (normTt.includes('di muon')) return '<span class="status-badge badge-hocbu" style="background:rgba(245,158,11,0.15); border-color:rgba(245,158,11,0.4); color:#F59E0B;">Đi muộn</span>';
+            if (normTt.includes('di muon')) return '<span class="status-badge badge-hocbu" style="background:rgba(245,158,11,0.15); border-color:rgba(245,158,11,0.4); color:var(--text-primary);">Đi muộn</span>';
             return '<span class="status-badge badge-dahoc">Có mặt</span>';
         };
 
@@ -448,7 +448,7 @@ function renderStudentView(ketQua) {
         var getBtvnBadge = function(btvn) {
             var raw = (btvn || "").trim();
             var bt = raw.toLowerCase();
-            if (!raw || raw === "-" || raw === "không có") return '<span class="status-badge" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #A6ADCE;">-</span>';
+            if (!raw || raw === "-" || raw === "không có") return '<span class="status-badge" style="background: var(--bg-input); border: 1px solid var(--border-card); color: var(--text-secondary);">-</span>';
             
             // Kiểm tra phần trăm (ví dụ: "Hoàn thành 90%", "Hoàn thành 75%", "60%")
             var pctMatch = bt.match(/(\d+(\.\d+)?)\s*%/);
@@ -556,7 +556,7 @@ function renderStudentView(ketQua) {
         if (listBt.length > 0) {
             listBt.slice().reverse().forEach(function(bt) {
                 htmlBaiTap += "<div class='bt-item'>";
-                htmlBaiTap += "<div><strong style='color: #FFD23F;'>[" + (bt.mon || "Gia sư") + "]</strong> <span style='color: #FFF; font-weight: 500; font-size: 15px; margin-left: 8px;'>" + (bt.tenBai || bt.title || "Tài liệu học tập") + "</span></div>";
+                htmlBaiTap += "<div><strong style='color: var(--text-heading);'>[" + (bt.mon || "Gia sư") + "]</strong> <span style='color: var(--text-primary); font-weight: 500; font-size: 15px; margin-left: 8px;'>" + (bt.tenBai || bt.title || "Tài liệu học tập") + "</span></div>";
                 if (bt.link || bt.file) {
                     htmlBaiTap += "<a href='" + (bt.link || bt.file) + "' target='_blank' class='btn-download'><i class='fa-solid fa-cloud-arrow-down'></i> Tải Xuống</a>";
                 }

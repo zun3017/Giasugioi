@@ -197,21 +197,17 @@ function renderUpcomingSchedule(scheduleList, selM, selY) {
     });
 
     var studentColorMap = {
-        "Lê Minh Thư": { bg: "rgba(142, 77, 255, 0.15)", border: "#8E4DFF", text: "#C4B5FD" },
-        "Nguyễn Hoàng Nam": { bg: "rgba(16, 185, 129, 0.15)", border: "#10B981", text: "#6EE7B7" },
-        "Phạm Hải Đăng": { bg: "rgba(245, 158, 11, 0.15)", border: "#F59E0B", text: "#FCD34D" }
+        "Lê Minh Thư": { bg: "var(--nav-active-bg)", border: "var(--border-color)", text: "var(--text-primary)" },
+        "Nguyễn Hoàng Nam": { bg: "var(--nav-active-bg)", border: "var(--border-color)", text: "var(--text-primary)" },
+        "Phạm Hải Đăng": { bg: "var(--nav-active-bg)", border: "var(--border-color)", text: "var(--text-primary)" }
     };
     function getStudentStyle(name) {
         if (studentColorMap[name]) return studentColorMap[name];
-        var palette = [
-            { bg: "rgba(142, 77, 255, 0.15)", border: "#8E4DFF", text: "#C4B5FD" },
-            { bg: "rgba(16, 185, 129, 0.15)", border: "#10B981", text: "#6EE7B7" },
-            { bg: "rgba(245, 158, 11, 0.15)", border: "#F59E0B", text: "#FCD34D" },
-            { bg: "rgba(6, 182, 212, 0.15)", border: "#06B6D4", text: "#67E8F9" }
-        ];
-        var hash = 0;
-        for (var i = 0; i < name.length; i++) hash += name.charCodeAt(i);
-        return palette[hash % palette.length];
+        return {
+            bg: "var(--nav-active-bg)",
+            border: "var(--border-color)",
+            text: "var(--text-primary)"
+        };
     }
 
     if (isCurrentMonth) {
@@ -1308,7 +1304,7 @@ function renderTutorStudentsGrid() {
                     '<div class="card-metric-lbl">Buổi tháng này</div>' +
                 '</div>' +
                 '<div class="card-metric-box">' +
-                    '<div class="card-metric-val" style="color: #6EE7B7;">' + hwRate + '</div>' +
+                    '<div class="card-metric-val" style="color: var(--text-primary);">' + hwRate + '</div>' +
                     '<div class="card-metric-lbl">Nộp BTVN</div>' +
                 '</div>' +
                 '<div class="card-metric-box">' +
@@ -1537,13 +1533,13 @@ function renderTutorTuitionSection() {
                 '<div style="display: flex; align-items: center; gap: 10px;">' +
                     '<span style="background:' + stStyle.bg + '; border:1px solid ' + stStyle.border + '; color:' + stStyle.text + '; width: 32px; height: 32px; border-radius: 50%; font-size: 13px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">' + getStudentInitial(sName) + '</span>' +
                     '<div>' +
-                        '<div style="font-weight: 700; color: #FFF; font-size: 14px;">' + sName + '</div>' +
+                        '<div style="font-weight: 700; color: var(--text-primary); font-size: 14px;">' + sName + '</div>' +
                         '<div style="font-size: 11.5px; color: var(--text-secondary);">' + (st.subject || "Gia sư") + (st.classLevel ? ' • ' + st.classLevel : '') + '</div>' +
                     '</div>' +
                 '</div>' +
             '</td>' +
-            '<td style="padding: 12px 10px; text-align: center;"><span style="background: var(--nav-active-bg); color: var(--color-primary-light); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 12px; font-size: 12.5px; font-weight: 700;">' + sessionCount + ' buổi</span></td>' +
-            '<td style="padding: 12px 10px; text-align: right; color: #E2E8F0; font-size: 13px; font-weight: 600;">' + unitFeeStr + '</td>' +
+            '<td style="padding: 12px 10px; text-align: center;"><span style="background: var(--nav-active-bg); color: var(--text-heading); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 12px; font-size: 12.5px; font-weight: 700;">' + sessionCount + ' buổi</span></td>' +
+            '<td style="padding: 12px 10px; text-align: right; color: var(--text-secondary); font-size: 13px; font-weight: 600;">' + unitFeeStr + '</td>' +
             '<td style="padding: 12px 14px; text-align: right; color: var(--color-primary); font-size: 15px; font-weight: 800; font-family: \'Space Grotesk\', sans-serif;">' + studentTotalFormatted + '</td>' +
             '<td style="padding: 12px 10px; text-align: center;">' + statusBtnHtml + '</td>' +
             '<td style="padding: 12px 14px; text-align: center;">' +
@@ -1552,18 +1548,18 @@ function renderTutorTuitionSection() {
         '</tr>';
 
         // Mobile Card
-        mobileHtml += '<div style="background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.08); border-radius: 16px; padding: 16px; margin-bottom: 12px;">' +
+        mobileHtml += '<div style="background: var(--glass-inner, rgba(255, 255, 255, 0.35)); border: 1px solid var(--border-card); border-radius: 16px; padding: 16px; margin-bottom: 12px;">' +
             '<div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">' +
                 '<div style="display: flex; align-items: center; gap: 8px;">' +
                     '<span style="background:' + stStyle.bg + '; border:1px solid ' + stStyle.border + '; color:' + stStyle.text + '; width: 30px; height: 30px; border-radius: 50%; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center;">' + getStudentInitial(sName) + '</span>' +
                     '<div>' +
-                        '<div style="font-weight: 700; color: #FFF; font-size: 14.5px;">' + sName + '</div>' +
+                        '<div style="font-weight: 700; color: var(--text-primary); font-size: 14.5px;">' + sName + '</div>' +
                         '<div style="font-size: 11px; color: var(--text-secondary);">' + (st.subject || "Gia sư") + '</div>' +
                     '</div>' +
                 '</div>' +
                 statusBtnHtml +
             '</div>' +
-            '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: rgba(0,0,0,0.25); border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; font-size: 12px;">' +
+            '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: var(--bg-input); border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; font-size: 12px;">' +
                 '<div><span style="color:var(--text-secondary);">Số buổi:</span> <b style="color:var(--text-primary);">' + sessionCount + ' buổi</b></div>' +
                 '<div><span style="color:var(--text-secondary);">Đơn giá:</span> <b style="color:var(--text-primary);">' + unitFeeStr + '</b></div>' +
                 '<div style="grid-column: 1 / -1; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 6px; display: flex; justify-content: space-between; align-items: center;">' +
@@ -3507,7 +3503,7 @@ function previewTutorReport() {
             html += '<div class="report-session-item">' +
                 '<div class="report-session-top">' +
                     '<div style="display: flex; align-items: center; gap: 8px;">' +
-                        '<span class="report-session-date"><i class="fa-regular fa-calendar-check" style="color: #6EE7B7;"></i> ' + dateWithDay + '</span>' +
+                        '<span class="report-session-date"><i class="fa-regular fa-calendar-check" style="color: var(--color-primary);"></i> ' + dateWithDay + '</span>' +
                         '<span style="background:' + stStyle.bg + '; border:1px solid ' + stStyle.border + '; color:' + stStyle.text + '; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700;">' + it.studentName + '</span>' +
                         '<span style="font-size: 11.5px; color: var(--text-secondary);">' + (log.mon || it.studentSubject) + '</span>' +
                     '</div>' +
@@ -6086,12 +6082,12 @@ window.initTutorSidebarState = initTutorSidebarState;
                     var tt = (trangThai || "").trim().toLowerCase();
                     if (tt === "đã học" || tt === "có mặt" || tt === "có") return '<span class="status-badge badge-dahoc">Có mặt</span>';
                     if (tt === "học bù") return '<span class="status-badge badge-hocbu">Học bù</span>';
-                    if (tt === "đi muộn") return '<span class="status-badge badge-hocbu" style="background:rgba(245,158,11,0.15); border-color:rgba(245,158,11,0.4); color:#F59E0B;">Đi muộn</span>';
+                    if (tt === "đi muộn") return '<span class="status-badge badge-hocbu" style="background:rgba(245,158,11,0.15); border-color:rgba(245,158,11,0.4); color:var(--text-primary);">Đi muộn</span>';
                     if (tt.indexOf("hủy") !== -1 || tt.indexOf("nghỉ") !== -1 || tt === "vắng" || tt === "vắng mặt" || tt === "cả lớp nghỉ") {
                         var label = (tt === "cả lớp nghỉ") ? "Cả lớp nghỉ" : (tt.indexOf("hủy") !== -1 ? "Hủy/Nghỉ" : "Vắng");
                         return '<span class="status-badge badge-nghi">' + label + '</span>';
                     }
-                    return '<span class="status-badge" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #FFF;">' + (trangThai || 'Có mặt') + '</span>';
+                    return '<span class="status-badge" style="background: var(--bg-input); border: 1px solid var(--border-card); color: var(--text-primary);">' + (trangThai || 'Có mặt') + '</span>';
                 };
                 var getBtvnBadge = function(btvn) {
                     var raw = (btvn || "").trim();
@@ -7205,7 +7201,7 @@ function renderAssignedHwList(list, showAll) {
         tableBody.innerHTML += 
             '<tr>' +
                 '<td style="color:var(--text-secondary);">' + item.releaseDate + '</td>' +
-                '<td style="color:#FFF; font-weight:500;">' + item.title + '</td>' +
+                '<td style="color:var(--text-primary); font-weight:500;">' + item.title + '</td>' +
                 '<td>' + attachmentsHtml + '</td>' +
                 '<td style="text-align: center; vertical-align: middle;">' + actionsHtml + '</td>' +
             '</tr>';
@@ -7464,7 +7460,7 @@ function renderTutorHwTrashList(list) {
             
         tableBody.innerHTML += 
             '<tr>' +
-                '<td style="color:#FFF; font-weight:500;">' + item.title + '</td>' +
+                '<td style="color:var(--text-primary); font-weight:500;">' + item.title + '</td>' +
                 '<td style="color:var(--text-secondary); font-size:12px;">' + item.deletedTime + '</td>' +
                 '<td>' + actionsHtml + '</td>' +
             '</tr>';
@@ -7953,7 +7949,7 @@ function renderStudentSubmissionsList() {
             : '<span style="color:var(--text-secondary);">Không có file</span>';
         
         var dlText = isFolder ? '<i class="fa-solid fa-folder-arrow-down"></i> Tải thư mục' : (isZip ? '<i class="fa-solid fa-file-zipper"></i> Tải ZIP' : '<i class="fa-solid fa-download"></i> Tải');
-        var downloadBtn = item.fileUrl ? '<button onclick="downloadSubmissionFileByIndex(' + idx + ')" class="action-btn-hw" style="color:#10B981; border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.1); padding: 5px 14px; cursor: pointer; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; font-weight:600;"><i class="fa-solid fa-download"></i> Tải</button>' : '<span style="color:var(--text-secondary);">N/A</span>';
+        var downloadBtn = item.fileUrl ? '<button onclick="downloadSubmissionFileByIndex(' + idx + ')" class="action-btn-hw" style="color:var(--text-primary); border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.1); padding: 5px 14px; cursor: pointer; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; font-weight:600;"><i class="fa-solid fa-download"></i> Tải</button>' : '<span style="color:var(--text-secondary);">N/A</span>';
         
         // Grade Button / Badge
         var rawScore = (item.score !== undefined && item.score !== null) ? String(item.score).trim() : "";
@@ -7966,7 +7962,7 @@ function renderStudentSubmissionsList() {
             gradeHtml += '<span style="padding:4px 10px; background:var(--nav-active-bg); border:1px solid var(--border-color); border-radius:8px; color:var(--color-primary); font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-star"></i> Điểm: ' + scoreVal + '</span>'
                 + ' <button onclick="openGradeModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\',\'' + scoreVal + '\',\'' + commentVal.replace(/'/g, "\\'") + '\')" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; font-size:11px; margin-left:4px;" title="Sửa điểm"><i class="fa-solid fa-pen"></i></button>';
         } else {
-            gradeHtml += '<button onclick="openGradeModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\')" style="padding:6px 14px; background:rgba(249,115,22,0.15); border:1px solid #F97316; border-radius:8px; color:#FED7AA; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-pen"></i> Chấm điểm</button>';
+            gradeHtml += '<button onclick="openGradeModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\')" style="padding:6px 14px; background:var(--nav-active-bg); border:1px solid var(--border-color); border-radius:8px; color:var(--text-primary); font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-pen"></i> Chấm điểm</button>';
         }
         gradeHtml += '</div>';
 
@@ -7976,7 +7972,7 @@ function renderStudentSubmissionsList() {
             mobileGradeHtml += '<span style="padding:3px 8px; background:var(--nav-active-bg); border:1px solid var(--border-color); border-radius:6px; color:var(--color-primary); font-size:11.5px; font-weight:700;"><i class="fa-solid fa-star"></i> Điểm: ' + scoreVal + '</span>'
                 + ' <button onclick="openGradeModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\',\'' + scoreVal + '\',\'' + commentVal.replace(/'/g, "\\'") + '\')" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; font-size:11px; margin-left:4px;" title="Sửa điểm"><i class="fa-solid fa-pen"></i></button>';
         } else {
-            mobileGradeHtml += '<button onclick="openGradeModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\')" style="padding:4px 10px; background:rgba(249,115,22,0.15); border:1px solid #F97316; border-radius:6px; color:#FED7AA; font-size:12px; font-weight:600; cursor:pointer;"><i class="fa-solid fa-pen"></i> Chấm điểm</button>';
+            mobileGradeHtml += '<button onclick="openGradeModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\')" style="padding:4px 10px; background:var(--nav-active-bg); border:1px solid var(--border-color); border-radius:6px; color:var(--text-primary); font-size:12px; font-weight:600; cursor:pointer;"><i class="fa-solid fa-pen"></i> Chấm điểm</button>';
         }
         mobileGradeHtml += '</div>';
         
@@ -7984,7 +7980,7 @@ function renderStudentSubmissionsList() {
         tableBody.innerHTML += 
             '<tr>' +
                 '<td style="color:var(--text-secondary);">' + item.timestamp + '</td>' +
-                '<td style="color:#FFF; font-weight:500;">' + item.lessonName + '</td>' +
+                '<td style="color:var(--text-primary); font-weight:500;">' + item.lessonName + '</td>' +
                 '<td>' + viewBtn + '</td>' +
                 '<td style="text-align: center;">' + gradeHtml + '</td>' +
                 '<td style="text-align: center;">' + downloadBtn + '</td>' +
@@ -8112,7 +8108,7 @@ function loadTutorFeedbacks() {
         if (response && response.success && response.feedbacks) {
             var feedbacks = response.feedbacks;
             if (feedbacks.length === 0) {
-                container.innerHTML = "<div style='text-align: center; color: rgba(255,255,255,0.3); font-style: italic; padding: 25px;'><i class='fa-regular fa-comment-slash' style='font-size: 20px; display: block; margin-bottom: 8px;'></i>Chưa có ý kiến phản hồi nào trong 10 ngày gần đây.</div>";
+                container.innerHTML = "<div style='text-align: center; color: var(--text-muted); font-style: italic; padding: 25px;'><i class='fa-regular fa-comment-slash' style='font-size: 20px; display: block; margin-bottom: 8px;'></i>Chưa có ý kiến phản hồi nào trong 10 ngày gần đây.</div>";
                 return;
             }
             
