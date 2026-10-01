@@ -4599,7 +4599,13 @@ window.initTutorSidebarState = initTutorSidebarState;
             document.getElementById('accClassCount').value = tutorDataGlobal.classCount || "0";
             document.getElementById('accUnpaidIncome').value = (tutorDataGlobal.totalUnpaidIncome || 0).toLocaleString('vi-VN') + " VNĐ";
             
-            currentTutorQrBase64 = (tutorDataGlobal && tutorDataGlobal.qrCode) ? tutorDataGlobal.qrCode : (typeof localStorage !== 'undefined' ? (localStorage.getItem('tutor_qr_code') || "") : "");
+            var initialQr = (tutorDataGlobal && tutorDataGlobal.qrCode) ? tutorDataGlobal.qrCode : (typeof localStorage !== 'undefined' ? (localStorage.getItem('tutor_qr_code') || "") : "");
+            if (initialQr === "https://i.postimg.cc/Zn8NjRbg/ma-qr-chuyen-khoan-ZN.jpg") {
+                initialQr = "https://i.postimg.cc/66rKbPmb/trinh-duyet.png";
+                try { localStorage.setItem('tutor_qr_code', initialQr); } catch(e){}
+                if (tutorDataGlobal) tutorDataGlobal.qrCode = initialQr;
+            }
+            currentTutorQrBase64 = initialQr || "https://i.postimg.cc/66rKbPmb/trinh-duyet.png";
             var qrImg = document.getElementById('accQrImg');
             var qrText = document.getElementById('accQrText');
             var btnRemove = document.getElementById('btnRemoveTutorQr');

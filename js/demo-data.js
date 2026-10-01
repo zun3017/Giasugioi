@@ -31,7 +31,7 @@ function generateInitialGiaSuDemoData() {
                 name: "Thầy Trần Hoàng Nam",
                 subject: "Toán & Vật Lý",
                 avatar: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=500&auto=format&fit=crop&q=80",
-                qrCode: "https://i.postimg.cc/Zn8NjRbg/ma-qr-chuyen-khoan-ZN.jpg",
+                qrCode: "https://i.postimg.cc/66rKbPmb/trinh-duyet.png",
                 totalStudents: 3,
                 totalEarnings: 6000000,
                 activeClasses: ["Toán 9 Ôn Vào 10", "Toán 12 & Vật Lý 12", "Vật Lý 11 Nâng Cao"]

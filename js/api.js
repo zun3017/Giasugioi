@@ -217,7 +217,7 @@
                                     tutorPhone: tutor.phone,
                                     tutorName: tutor.name,
                                     tutorPin: tutor.pin || "1234",
-                                    qrCode: (tutor && tutor.qrCode) || (typeof localStorage !== 'undefined' ? localStorage.getItem('tutor_qr_code') : null) || "https://i.postimg.cc/Zn8NjRbg/ma-qr-chuyen-khoan-ZN.jpg",
+                                    qrCode: (tutor && tutor.qrCode && tutor.qrCode !== "https://i.postimg.cc/Zn8NjRbg/ma-qr-chuyen-khoan-ZN.jpg") ? tutor.qrCode : ((typeof localStorage !== 'undefined' && localStorage.getItem('tutor_qr_code') && localStorage.getItem('tutor_qr_code') !== "https://i.postimg.cc/Zn8NjRbg/ma-qr-chuyen-khoan-ZN.jpg") ? localStorage.getItem('tutor_qr_code') : "https://i.postimg.cc/66rKbPmb/trinh-duyet.png"),
                                     students: store.students.map(s => ({
                                         phone: s.phone,
                                         name: s.name,
@@ -332,7 +332,7 @@
                         tutorPhone: tutor.phone,
                         tutorName: tutor.name,
                         tutorPin: tutor.pin || "1234",
-                        qrCode: (tutor && tutor.qrCode) || (typeof localStorage !== 'undefined' ? localStorage.getItem('tutor_qr_code') : null) || "https://i.postimg.cc/Zn8NjRbg/ma-qr-chuyen-khoan-ZN.jpg",
+                        qrCode: (tutor && tutor.qrCode && tutor.qrCode !== "https://i.postimg.cc/Zn8NjRbg/ma-qr-chuyen-khoan-ZN.jpg") ? tutor.qrCode : ((typeof localStorage !== 'undefined' && localStorage.getItem('tutor_qr_code') && localStorage.getItem('tutor_qr_code') !== "https://i.postimg.cc/Zn8NjRbg/ma-qr-chuyen-khoan-ZN.jpg") ? localStorage.getItem('tutor_qr_code') : "https://i.postimg.cc/66rKbPmb/trinh-duyet.png"),
                         students: store.students.map(s => ({
                             phone: s.phone,
                             name: s.name,

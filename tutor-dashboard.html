@@ -2340,7 +2340,7 @@
                 tutorName: t.name,
                 tutorPhone: t.phone,
                 tutorPin: t.pin,
-                qrCode: (t && t.qrCode) || localStorage.getItem('tutor_qr_code') || "https://i.postimg.cc/Zn8NjRbg/ma-qr-chuyen-khoan-ZN.jpg",
+                qrCode: (t && t.qrCode && t.qrCode !== "https://i.postimg.cc/Zn8NjRbg/ma-qr-chuyen-khoan-ZN.jpg") ? t.qrCode : ((localStorage.getItem('tutor_qr_code') && localStorage.getItem('tutor_qr_code') !== "https://i.postimg.cc/Zn8NjRbg/ma-qr-chuyen-khoan-ZN.jpg") ? localStorage.getItem('tutor_qr_code') : "https://i.postimg.cc/66rKbPmb/trinh-duyet.png"),
                 students: store.students.map(s => Object.assign({}, s, {
                     phone: s.phone,
                     name: s.name,
