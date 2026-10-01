@@ -2022,6 +2022,179 @@
             }
         }
 
+        /* Diary Section Styles */
+        .diary-toolbar {
+            background: rgba(11, 8, 38, 0.95);
+            border: 1px solid rgba(142, 77, 255, 0.3);
+            border-radius: 20px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+        }
+
+        .diary-filters {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-top: 16px;
+            flex-wrap: wrap;
+        }
+
+        .diary-filter-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 8px 14px;
+        }
+
+        .diary-filter-item label {
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #A6ADCE;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .diary-filter-item select {
+            background: transparent;
+            border: none;
+            color: #FFD23F;
+            font-weight: 700;
+            font-size: 13.5px;
+            outline: none;
+            cursor: pointer;
+        }
+
+        .diary-filter-item select option {
+            background: #0B0826;
+            color: #FFF;
+        }
+
+        .diary-count-pill {
+            margin-left: auto;
+            background: rgba(142, 77, 255, 0.15);
+            border: 1px solid rgba(142, 77, 255, 0.4);
+            color: #C4B5FD;
+            font-weight: 700;
+            font-size: 12.5px;
+            padding: 6px 16px;
+            border-radius: 20px;
+        }
+
+        /* Comment Box & Inline Edit */
+        .diary-comment-box {
+            position: relative;
+            font-size: 13px;
+            line-height: 1.5;
+            color: #E2E8F0;
+        }
+
+        .diary-comment-text {
+            word-break: break-word;
+        }
+
+        .btn-comment-toggle {
+            background: none;
+            border: none;
+            color: #8E4DFF;
+            font-size: 11.5px;
+            font-weight: 700;
+            cursor: pointer;
+            padding: 2px 4px;
+            margin-left: 4px;
+            text-decoration: underline;
+        }
+
+        .btn-comment-edit {
+            background: rgba(142, 77, 255, 0.12);
+            border: 1px solid rgba(142, 77, 255, 0.25);
+            color: #C4B5FD;
+            border-radius: 6px;
+            padding: 3px 8px;
+            font-size: 11px;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            margin-top: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-comment-edit:hover {
+            background: rgba(142, 77, 255, 0.25);
+            color: #FFF;
+        }
+
+        .diary-inline-editor {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            margin-top: 6px;
+        }
+
+        .diary-inline-editor textarea {
+            width: 100%;
+            min-height: 65px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid #8E4DFF;
+            border-radius: 8px;
+            padding: 8px 10px;
+            color: #FFF;
+            font-size: 12.5px;
+            font-family: inherit;
+            resize: vertical;
+            outline: none;
+            box-sizing: border-box;
+        }
+
+        .diary-inline-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .btn-inline-save {
+            background: linear-gradient(135deg, #10B981 0%, #059669 100%);
+            border: none;
+            color: #FFF;
+            border-radius: 6px;
+            padding: 4px 12px;
+            font-size: 11.5px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .btn-inline-cancel {
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #A6ADCE;
+            border-radius: 6px;
+            padding: 4px 10px;
+            font-size: 11.5px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        @media (max-width: 768px) {
+            .diary-filters {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            .diary-count-pill {
+                margin-left: 0 !important;
+                text-align: center !important;
+            }
+        }
+
         /* Schedule Table */
         .schedule-section {
             background: rgba(11, 8, 38, 0.95);

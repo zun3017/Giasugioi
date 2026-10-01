@@ -541,6 +541,67 @@
         </div>
         </div> <!-- End #tutorSectionOverview -->
 
+        <!-- SECTION NHẬT KÝ BUỔI HỌC -->
+        <div id="tutorSectionDiary" class="tutor-section" style="display: none;">
+            <div class="diary-toolbar">
+                <div class="diary-toolbar-title">
+                    <h3 style="color: #FFF; font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-book-open" style="color: #8E4DFF;"></i>
+                        <span>Nhật ký buổi học & Nhận xét chi tiết</span>
+                    </h3>
+                    <p style="color: #A6ADCE; font-size: 13px; margin: 4px 0 0 0;">Theo dõi chi tiết tiến độ bài học, chuyên cần và nhận xét cho từng học sinh</p>
+                </div>
+
+                <div class="diary-filters">
+                    <!-- Dropdown Học sinh -->
+                    <div class="diary-filter-item">
+                        <label><i class="fa-solid fa-user-graduate"></i> Học sinh:</label>
+                        <select id="diaryStudentFilter" onchange="filterTutorDiary()">
+                            <option value="all">Tất cả học sinh</option>
+                        </select>
+                    </div>
+
+                    <!-- Dropdown Tháng -->
+                    <div class="diary-filter-item">
+                        <label><i class="fa-solid fa-calendar-days"></i> Tháng:</label>
+                        <select id="diaryMonthFilter" onchange="filterTutorDiary()">
+                            <option value="all">Tất cả các tháng</option>
+                        </select>
+                    </div>
+
+                    <!-- Badge tổng số buổi -->
+                    <div class="diary-count-pill" id="diaryTotalSessionsBadge">
+                        0 buổi học
+                    </div>
+                </div>
+            </div>
+
+            <!-- Bảng danh sách buổi học (Desktop) -->
+            <div class="table-wrapper desktop-table-view" style="margin-top: 15px; border-radius: 16px;">
+                <table id="diaryTable" style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr>
+                            <th style="width: 130px; text-align: left; padding: 12px 14px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Ngày dạy</th>
+                            <th style="width: 110px; text-align: center; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Giờ dạy</th>
+                            <th style="width: 140px; text-align: left; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Học sinh</th>
+                            <th style="width: 110px; text-align: left; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Môn</th>
+                            <th style="min-width: 160px; text-align: left; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Nội dung bài học</th>
+                            <th style="width: 130px; text-align: center; padding: 12px 10px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Đánh giá BTVN</th>
+                            <th style="min-width: 240px; text-align: left; padding: 12px 14px; background: rgba(91, 46, 255, 0.15); color: #FFF; font-weight: 700;">Nhận xét gia sư</th>
+                        </tr>
+                    </thead>
+                    <tbody id="diaryTableBody">
+                        <tr><td colspan="7" style="text-align: center; color: rgba(255,255,255,0.3); padding: 25px;">Đang tải nhật ký...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <!-- Mobile View (Card List) -->
+            <div class="mobile-cards-view" id="diaryMobileList" style="margin-top: 15px;">
+                <div style="text-align: center; color: rgba(255,255,255,0.3); padding: 20px;">Đang tải nhật ký...</div>
+            </div>
+        </div>
+
         <div class="student-buttons-container" id="tutorStudentsList">
             <!-- Nút chọn học sinh sẽ render ở đây -->
         </div>
