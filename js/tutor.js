@@ -216,7 +216,7 @@ function renderUpcomingSchedule(scheduleList, selM, selY) {
 
     if (isCurrentMonth) {
         if (mainTitleEl) mainTitleEl.innerText = "Lịch dạy sắp tới";
-        if (subtextEl) subtextEl.innerHTML = '<i class="fa-solid fa-bolt" style="color: #8E4DFF;"></i> Hôm nay & Ngày mai';
+        if (subtextEl) subtextEl.innerHTML = '<i class="fa-solid fa-bolt" style="color: var(--color-primary);"></i> Hôm nay & Ngày mai';
 
         var dayKeys = ['sun', 'mon', 'tue', 'wed', 'thu', 'fri', 'sat'];
         var today = new Date();
@@ -243,7 +243,7 @@ function renderUpcomingSchedule(scheduleList, selM, selY) {
             todayTitleEl.innerHTML = '<i class="fa-solid fa-sun" style="color: #FFD23F; margin-right: 6px;"></i> Hôm nay — ' + todayDateFormatted;
         }
         if (tomorrowTitleEl) {
-            tomorrowTitleEl.innerHTML = '<i class="fa-solid fa-calendar-day" style="color: #8E4DFF; margin-right: 6px;"></i> Ngày mai — ' + tomorrowDateFormatted;
+            tomorrowTitleEl.innerHTML = '<i class="fa-solid fa-calendar-day" style="color: var(--color-primary); margin-right: 6px;"></i> Ngày mai — ' + tomorrowDateFormatted;
         }
 
         function buildItems(dayKey) {
@@ -281,7 +281,7 @@ function renderUpcomingSchedule(scheduleList, selM, selY) {
                 html += '<div class="upcoming-session-card">' +
                     '<div class="upcoming-session-info">' +
                         '<span class="upcoming-student-tag" style="background: ' + st.bg + '; border-color: ' + customBorder + '; color: ' + st.text + ';"><i class="fa-solid fa-user-graduate"></i> ' + it.studentName + '</span>' +
-                        '<span class="upcoming-subject-badge"><i class="fa-solid fa-book-bookmark" style="color: #8E4DFF;"></i> ' + it.subject + '</span>' +
+                        '<span class="upcoming-subject-badge"><i class="fa-solid fa-book-bookmark" style="color: var(--color-primary);"></i> ' + it.subject + '</span>' +
                     '</div>' +
                     '<span class="upcoming-time-badge"><i class="fa-regular fa-clock"></i> ' + it.time + '</span>' +
                 '</div>';
@@ -300,7 +300,7 @@ function renderUpcomingSchedule(scheduleList, selM, selY) {
                 html += '<div class="upcoming-session-card">' +
                     '<div class="upcoming-session-info">' +
                         '<span class="upcoming-student-tag" style="background: ' + st.bg + '; border-color: ' + customBorder + '; color: ' + st.text + ';"><i class="fa-solid fa-user-graduate"></i> ' + it.studentName + '</span>' +
-                        '<span class="upcoming-subject-badge"><i class="fa-solid fa-book-bookmark" style="color: #8E4DFF;"></i> ' + it.subject + '</span>' +
+                        '<span class="upcoming-subject-badge"><i class="fa-solid fa-book-bookmark" style="color: var(--color-primary);"></i> ' + it.subject + '</span>' +
                     '</div>' +
                     '<span class="upcoming-time-badge"><i class="fa-regular fa-clock"></i> ' + it.time + '</span>' +
                 '</div>';
@@ -310,7 +310,7 @@ function renderUpcomingSchedule(scheduleList, selM, selY) {
     } else {
         // Viewing past month: show sessions conducted in that month from student logs
         if (mainTitleEl) mainTitleEl.innerText = "Lịch dạy Tháng " + selM + "/" + selY;
-        if (subtextEl) subtextEl.innerHTML = '<i class="fa-solid fa-history" style="color: #8E4DFF;"></i> Dữ liệu lịch sử Tháng ' + selM + '/' + selY;
+        if (subtextEl) subtextEl.innerHTML = '<i class="fa-solid fa-history" style="color: var(--color-primary);"></i> Dữ liệu lịch sử Tháng ' + selM + '/' + selY;
 
         var monthLogs = [];
         students.forEach(function(st) {
@@ -344,7 +344,7 @@ function renderUpcomingSchedule(scheduleList, selM, selY) {
             todayTitleEl.innerHTML = '<i class="fa-solid fa-calendar-check" style="color: #FFD23F; margin-right: 6px;"></i> Buổi dạy đầu tháng (' + firstHalf.length + ')';
         }
         if (tomorrowTitleEl) {
-            tomorrowTitleEl.innerHTML = '<i class="fa-solid fa-calendar-check" style="color: #8E4DFF; margin-right: 6px;"></i> Buổi dạy cuối tháng (' + secondHalf.length + ')';
+            tomorrowTitleEl.innerHTML = '<i class="fa-solid fa-calendar-check" style="color: var(--color-primary); margin-right: 6px;"></i> Buổi dạy cuối tháng (' + secondHalf.length + ')';
         }
         if (todayCountBadge) todayCountBadge.innerText = firstHalf.length + " buổi";
         if (tomorrowCountBadge) tomorrowCountBadge.innerText = secondHalf.length + " buổi";
@@ -359,7 +359,7 @@ function renderUpcomingSchedule(scheduleList, selM, selY) {
                     html += '<div class="upcoming-session-card">' +
                         '<div class="upcoming-session-info">' +
                             '<span class="upcoming-student-tag" style="background: ' + st.bg + '; border-color: ' + st.border + '; color: ' + st.text + ';"><i class="fa-solid fa-user-graduate"></i> ' + it.studentName + '</span>' +
-                            '<span class="upcoming-subject-badge" title="' + it.topic + '"><i class="fa-solid fa-book-bookmark" style="color: #8E4DFF;"></i> ' + (it.topic ? (it.topic.length > 25 ? it.topic.substring(0, 25) + '...' : it.topic) : it.subject) + '</span>' +
+                            '<span class="upcoming-subject-badge" title="' + it.topic + '"><i class="fa-solid fa-book-bookmark" style="color: var(--color-primary);"></i> ' + (it.topic ? (it.topic.length > 25 ? it.topic.substring(0, 25) + '...' : it.topic) : it.subject) + '</span>' +
                         '</div>' +
                         '<span class="upcoming-time-badge"><i class="fa-regular fa-calendar"></i> ' + it.date + '</span>' +
                     '</div>';
@@ -914,7 +914,7 @@ window.renderOverviewCharts = renderOverviewCharts;
 function getDiaryBtvnBadge(btvn) {
     var raw = (btvn || "").trim();
     var bt = raw.toLowerCase();
-    if (!raw || raw === "-" || raw === "không có") return '<span class="status-badge" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #A6ADCE;">-</span>';
+    if (!raw || raw === "-" || raw === "không có") return '<span class="status-badge" style="background: var(--bg-input); border: 1px solid var(--border-card); color: var(--text-secondary);">-</span>';
     
     var pctMatch = bt.match(/(\d+(\.\d+)?)\s*%/);
     if (pctMatch) {
@@ -1225,7 +1225,7 @@ function renderTutorStudentsGrid() {
 
     if (!students || students.length === 0) {
         grid.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: rgba(255,255,255,0.4); padding: 40px; font-style: italic; background: rgba(11,8,38,0.6); border: 1px dashed rgba(142,77,255,0.3); border-radius: 16px;">' +
-            '<i class="fa-solid fa-user-graduate" style="font-size: 32px; color: #8E4DFF; margin-bottom: 10px; display: block;"></i>' +
+            '<i class="fa-solid fa-user-graduate" style="font-size: 32px; color: var(--color-primary); margin-bottom: 10px; display: block;"></i>' +
             'Chưa có học sinh nào. Bấm <b>"Thêm học sinh"</b> để tạo hồ sơ mới.</div>';
         return;
     }
@@ -1288,7 +1288,7 @@ function renderTutorStudentsGrid() {
                 '<div class="student-initial-avatar" style="background: ' + stStyle.bg + '; border: 2px solid ' + stStyle.border + '; color: ' + stStyle.text + ';">' + initial + '</div>' +
                 '<div class="student-card-info">' +
                     '<div class="student-card-name" title="' + st.name + '">' + st.name + '</div>' +
-                    '<div class="student-card-sub"><i class="fa-solid fa-graduation-cap" style="color: #8E4DFF;"></i> ' + (st.subject || "Gia sư") + (st.classLevel ? ' • ' + st.classLevel : '') + '</div>' +
+                    '<div class="student-card-sub"><i class="fa-solid fa-graduation-cap" style="color: var(--color-primary);"></i> ' + (st.subject || "Gia sư") + (st.classLevel ? ' • ' + st.classLevel : '') + '</div>' +
                 '</div>' +
             '</div>' +
             '<div class="student-card-schedule" title="' + schedSummary + '">' +
@@ -1531,11 +1531,11 @@ function renderTutorTuitionSection() {
                     '<span style="background:' + stStyle.bg + '; border:1px solid ' + stStyle.border + '; color:' + stStyle.text + '; width: 32px; height: 32px; border-radius: 50%; font-size: 13px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center; flex-shrink: 0;">' + getStudentInitial(sName) + '</span>' +
                     '<div>' +
                         '<div style="font-weight: 700; color: #FFF; font-size: 14px;">' + sName + '</div>' +
-                        '<div style="font-size: 11.5px; color: #A6ADCE;">' + (st.subject || "Gia sư") + (st.classLevel ? ' • ' + st.classLevel : '') + '</div>' +
+                        '<div style="font-size: 11.5px; color: var(--text-secondary);">' + (st.subject || "Gia sư") + (st.classLevel ? ' • ' + st.classLevel : '') + '</div>' +
                     '</div>' +
                 '</div>' +
             '</td>' +
-            '<td style="padding: 12px 10px; text-align: center;"><span style="background: rgba(142, 77, 255, 0.12); color: #C4B5FD; border: 1px solid rgba(142, 77, 255, 0.25); padding: 4px 10px; border-radius: 12px; font-size: 12.5px; font-weight: 700;">' + sessionCount + ' buổi</span></td>' +
+            '<td style="padding: 12px 10px; text-align: center;"><span style="background: var(--nav-active-bg); color: var(--color-primary-light); border: 1px solid var(--border-color); padding: 4px 10px; border-radius: 12px; font-size: 12.5px; font-weight: 700;">' + sessionCount + ' buổi</span></td>' +
             '<td style="padding: 12px 10px; text-align: right; color: #E2E8F0; font-size: 13px; font-weight: 600;">' + unitFeeStr + '</td>' +
             '<td style="padding: 12px 14px; text-align: right; color: #FFD23F; font-size: 15px; font-weight: 800; font-family: \'Space Grotesk\', sans-serif;">' + studentTotalFormatted + '</td>' +
             '<td style="padding: 12px 10px; text-align: center;">' + statusBtnHtml + '</td>' +
@@ -1551,16 +1551,16 @@ function renderTutorTuitionSection() {
                     '<span style="background:' + stStyle.bg + '; border:1px solid ' + stStyle.border + '; color:' + stStyle.text + '; width: 30px; height: 30px; border-radius: 50%; font-size: 12px; font-weight: 800; display: inline-flex; align-items: center; justify-content: center;">' + getStudentInitial(sName) + '</span>' +
                     '<div>' +
                         '<div style="font-weight: 700; color: #FFF; font-size: 14.5px;">' + sName + '</div>' +
-                        '<div style="font-size: 11px; color: #A6ADCE;">' + (st.subject || "Gia sư") + '</div>' +
+                        '<div style="font-size: 11px; color: var(--text-secondary);">' + (st.subject || "Gia sư") + '</div>' +
                     '</div>' +
                 '</div>' +
                 statusBtnHtml +
             '</div>' +
             '<div style="display: grid; grid-template-columns: 1fr 1fr; gap: 8px; background: rgba(0,0,0,0.25); border-radius: 10px; padding: 10px 12px; margin-bottom: 12px; font-size: 12px;">' +
-                '<div><span style="color:#A6ADCE;">Số buổi:</span> <b style="color:#FFF;">' + sessionCount + ' buổi</b></div>' +
-                '<div><span style="color:#A6ADCE;">Đơn giá:</span> <b style="color:#FFF;">' + unitFeeStr + '</b></div>' +
+                '<div><span style="color:var(--text-secondary);">Số buổi:</span> <b style="color:var(--text-primary);">' + sessionCount + ' buổi</b></div>' +
+                '<div><span style="color:var(--text-secondary);">Đơn giá:</span> <b style="color:var(--text-primary);">' + unitFeeStr + '</b></div>' +
                 '<div style="grid-column: 1 / -1; border-top: 1px dashed rgba(255,255,255,0.1); padding-top: 6px; display: flex; justify-content: space-between; align-items: center;">' +
-                    '<span style="color:#A6ADCE; font-weight:600;">Tổng học phí:</span>' +
+                    '<span style="color:var(--text-secondary); font-weight:600;">Tổng học phí:</span>' +
                     '<span style="color:#FFD23F; font-size: 16px; font-weight:800; font-family: \'Space Grotesk\', sans-serif;">' + studentTotalFormatted + '</span>' +
                 '</div>' +
             '</div>' +
@@ -3415,9 +3415,9 @@ function previewTutorReport() {
 
         if (flatSessions.length === 0) {
             container.innerHTML = '<div style="background: rgba(11,8,38,0.8); border: 1px dashed rgba(142,77,255,0.3); border-radius: 20px; padding: 40px; text-align: center; max-width: 600px; width: 100%;">' +
-                '<i class="fa-solid fa-file-circle-xmark" style="font-size: 38px; color: #8E4DFF; margin-bottom: 12px; display: block;"></i>' +
+                '<i class="fa-solid fa-file-circle-xmark" style="font-size: 38px; color: var(--color-primary); margin-bottom: 12px; display: block;"></i>' +
                 '<h4 style="color: #FFF; font-size: 16px; margin: 0 0 6px 0;">Không tìm thấy buổi học nào</h4>' +
-                '<p style="color: #A6ADCE; font-size: 13px; margin: 0;">Vui lòng điều chỉnh lại khoảng thời gian "Từ ngày" - "Đến ngày" hoặc chọn học sinh khác.</p>' +
+                '<p style="color: var(--text-secondary); font-size: 13px; margin: 0;">Vui lòng điều chỉnh lại khoảng thời gian "Từ ngày" - "Đến ngày" hoặc chọn học sinh khác.</p>' +
             '</div>';
             if (exportBtn) exportBtn.style.display = 'none';
             if (exportPdfBtn) exportPdfBtn.style.display = 'none';
@@ -3456,7 +3456,7 @@ function previewTutorReport() {
             '<!-- Header / Branding -->' +
             '<div class="report-card-banner">' +
                 '<div>' +
-                    '<div class="report-brand-title"><i class="fa-solid fa-graduation-cap" style="margin-right: 8px; color: #8E4DFF;"></i> BÁO CÁO TIẾN ĐỘ HỌC TẬP</div>' +
+                    '<div class="report-brand-title"><i class="fa-solid fa-graduation-cap" style="margin-right: 8px; color: var(--color-primary);"></i> BÁO CÁO TIẾN ĐỘ HỌC TẬP</div>' +
                     '<div class="report-brand-sub">Gia sư phụ trách: <b>' + tutorName + '</b> • Hệ thống quản lý học sinh 1-1</div>' +
                 '</div>' +
                 '<div class="report-meta-pills">' +
@@ -3502,7 +3502,7 @@ function previewTutorReport() {
                     '<div style="display: flex; align-items: center; gap: 8px;">' +
                         '<span class="report-session-date"><i class="fa-regular fa-calendar-check" style="color: #6EE7B7;"></i> ' + dateWithDay + '</span>' +
                         '<span style="background:' + stStyle.bg + '; border:1px solid ' + stStyle.border + '; color:' + stStyle.text + '; padding: 2px 8px; border-radius: 10px; font-size: 11px; font-weight: 700;">' + it.studentName + '</span>' +
-                        '<span style="font-size: 11.5px; color: #A6ADCE;">' + (log.mon || it.studentSubject) + '</span>' +
+                        '<span style="font-size: 11.5px; color: var(--text-secondary);">' + (log.mon || it.studentSubject) + '</span>' +
                     '</div>' +
                     '<div>' + btvnBadge + '</div>' +
                 '</div>' +
@@ -3514,7 +3514,7 @@ function previewTutorReport() {
         html += '</div>' +
             '<!-- Footer -->' +
             '<div class="report-card-footer">' +
-                '<div><i class="fa-solid fa-heart" style="color: #8E4DFF;"></i> Chúc các em luôn học tập tốt và bứt phá điểm số!</div>' +
+                '<div><i class="fa-solid fa-heart" style="color: var(--color-primary);"></i> Chúc các em luôn học tập tốt và bứt phá điểm số!</div>' +
                 '<div>Thời gian xuất: ' + new Date().toLocaleString('vi-VN') + '</div>' +
             '</div>' +
         '</div>';
@@ -3525,7 +3525,7 @@ function previewTutorReport() {
         container.innerHTML = '<div style="background: rgba(11,8,38,0.8); border: 1px dashed rgba(239,68,68,0.4); border-radius: 20px; padding: 40px; text-align: center; max-width: 600px; width: 100%;">' +
             '<i class="fa-solid fa-triangle-exclamation" style="font-size: 38px; color: #EF4444; margin-bottom: 12px; display: block;"></i>' +
             '<h4 style="color: #FFF; font-size: 16px; margin: 0 0 6px 0;">Đã xảy ra lỗi khi tạo báo cáo</h4>' +
-            '<p style="color: #A6ADCE; font-size: 13px; margin: 0;">Vui lòng thử lại hoặc chọn học sinh khác.</p>' +
+            '<p style="color: var(--text-secondary); font-size: 13px; margin: 0;">Vui lòng thử lại hoặc chọn học sinh khác.</p>' +
         '</div>';
         if (exportBtn) exportBtn.style.display = 'none';
         if (exportPdfBtn) exportPdfBtn.style.display = 'none';
@@ -3925,7 +3925,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                         
                         // Edit button at the bottom of accordion body
                         mobileHtml += "    <div style='margin-top: 10px; text-align: right;'>";
-                        mobileHtml += "      <button onclick='openEditScheduleModal(\"" + st.name.replace(/'/g, "\\'").replace(/"/g, '&quot;') + "\", \"" + (s.mon||"") + "\", \"" + (s.tue||"") + "\", \"" + (s.wed||"") + "\", \"" + (s.thu||"") + "\", \"" + (s.fri||"") + "\", \"" + (s.sat||"") + "\", \"" + (s.sun||"") + "\")' class='action-btn-hw' style='border-color:#8E4DFF; color:#8E4DFF; cursor:pointer;'><i class='fa-solid fa-pen-to-square'></i> Sửa lịch học</button>";
+                        mobileHtml += "      <button onclick='openEditScheduleModal(\"" + st.name.replace(/'/g, "\\'").replace(/"/g, '&quot;') + "\", \"" + (s.mon||"") + "\", \"" + (s.tue||"") + "\", \"" + (s.wed||"") + "\", \"" + (s.thu||"") + "\", \"" + (s.fri||"") + "\", \"" + (s.sat||"") + "\", \"" + (s.sun||"") + "\")' class='action-btn-hw' style='border-color:var(--color-primary); color:var(--color-primary); cursor:pointer;'><i class='fa-solid fa-pen-to-square'></i> Sửa lịch học</button>";
                         mobileHtml += "    </div>";
                         
                         mobileHtml += "  </div>";
@@ -3947,7 +3947,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                 btnContainer.innerHTML += "<button class='student-btn' id='btn-st-" + idx + "' onclick='selectTutorStudent(" + idx + ")'>" + st.name + "</button>";
             });
             // Nút thêm học sinh mới
-            btnContainer.innerHTML += "<button class='student-btn' onclick='openAddStudentModal()' style='background: rgba(142, 77, 255, 0.1); border: 1px dashed #8E4DFF; color: #8E4DFF;'><i class='fa-solid fa-plus'></i> Thêm học sinh</button>";
+            btnContainer.innerHTML += "<button class='student-btn' onclick='openAddStudentModal()' style='background: var(--nav-active-bg); border: 1px dashed var(--color-primary); color: var(--color-primary);'><i class='fa-solid fa-plus'></i> Thêm học sinh</button>";
             // Nút Thùng rác (Chỉ hiển thị icon)
             btnContainer.innerHTML += "<button class='student-btn' onclick='openTrashModal()' style='background: rgba(239, 68, 68, 0.1); border: 1px dashed #EF4444; color: #EF4444; width: 45px; display: inline-flex; align-items: center; justify-content: center; margin-left: 5px;' title='Thùng rác học sinh'><i class='fa-solid fa-trash-can'></i></button>";
             
@@ -4481,7 +4481,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                 if (masterSelectAll) masterSelectAll.checked = false;
                 
                 if (unpaidLogs.length === 0) {
-                    container.innerHTML = '<div style="color: #A6ADCE; font-size: 13px; text-align: center; padding: 15px;"><i class="fa-solid fa-circle-check" style="color:#10B981;"></i> Tất cả buổi học đã đóng học phí!</div>';
+                    container.innerHTML = '<div style="color: var(--text-secondary); font-size: 13px; text-align: center; padding: 15px;"><i class="fa-solid fa-circle-check" style="color:#10B981;"></i> Tất cả buổi học đã đóng học phí!</div>';
                     var btn = document.getElementById('btnMarkPaid');
                     if (btn) btn.disabled = true;
                 } else {
@@ -4495,7 +4495,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                         div.style.borderRadius = "8px";
                         div.style.border = "1px solid rgba(255,255,255,0.05)";
                         
-                        div.innerHTML = '<input type="checkbox" class="unpaid-chk" value="' + log.rowIndex + '" style="cursor:pointer; width:16px; height:16px; accent-color:#8E4DFF;">' +
+                        div.innerHTML = '<input type="checkbox" class="unpaid-chk" value="' + log.rowIndex + '" style="cursor:pointer; width:16px; height:16px; accent-color:var(--color-primary);">' +
                                         '<span style="color: #FFF; font-size: 13px;">' +
                                           '<b>Tuần ' + (log.tuan || "-") + '</b> (' + (log.ngay || "") + ') - ' + (log.mon || "") + ' - <span class="badge" style="background:rgba(245,158,11,0.1); color:#F59E0B; padding:2px 6px;">' + (log.trangThai || "Đã học") + '</span>' +
                                         '</span>';
@@ -5098,7 +5098,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                     });
                     
                     mobileHtml += "    <div style='margin-top: 10px; text-align: right;'>";
-                    mobileHtml += "      <button onclick='openEditScheduleModal(\"" + st.name.replace(/'/g, "\\'").replace(/"/g, '&quot;') + "\", \"" + (s.mon||"") + "\", \"" + (s.tue||"") + "\", \"" + (s.wed||"") + "\", \"" + (s.thu||"") + "\", \"" + (s.fri||"") + "\", \"" + (s.sat||"") + "\", \"" + (s.sun||"") + "\")' class='action-btn-hw' style='border-color:#8E4DFF; color:#8E4DFF; cursor:pointer;'><i class='fa-solid fa-pen-to-square'></i> Sửa lịch học</button>";
+                    mobileHtml += "      <button onclick='openEditScheduleModal(\"" + st.name.replace(/'/g, "\\'").replace(/"/g, '&quot;') + "\", \"" + (s.mon||"") + "\", \"" + (s.tue||"") + "\", \"" + (s.wed||"") + "\", \"" + (s.thu||"") + "\", \"" + (s.fri||"") + "\", \"" + (s.sat||"") + "\", \"" + (s.sun||"") + "\")' class='action-btn-hw' style='border-color:var(--color-primary); color:var(--color-primary); cursor:pointer;'><i class='fa-solid fa-pen-to-square'></i> Sửa lịch học</button>";
                     mobileHtml += "    </div>";
                     mobileHtml += "  </div>";
                     mobileHtml += "</div>";
@@ -5679,7 +5679,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                 toast.style.borderColor = '#FF8080';
                 toast.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> ' + message;
             } else {
-                toast.style.background = '#8E4DFF';
+                toast.style.background = 'var(--color-primary)';
                 toast.style.borderColor = '#A870FF';
                 toast.innerHTML = '<i class="fa-solid fa-circle-info"></i> ' + message;
             }
@@ -6089,7 +6089,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                 var getBtvnBadge = function(btvn) {
                     var raw = (btvn || "").trim();
                     var bt = raw.toLowerCase();
-                    if (!raw || raw === "-" || raw === "không có") return '<span class="status-badge" style="background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.15); color: #A6ADCE;">-</span>';
+                    if (!raw || raw === "-" || raw === "không có") return '<span class="status-badge" style="background: var(--bg-input); border: 1px solid var(--border-card); color: var(--text-secondary);">-</span>';
                     
                     // Kiểm tra phần trăm (ví dụ: "Hoàn thành 90%", "Hoàn thành 75%", "60%")
                     var pctMatch = bt.match(/(\d+(\.\d+)?)\s*%/);
@@ -6170,7 +6170,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                     htmlMobile += "    <div class='accordion-body-row'><span class='accordion-body-label'>Kiểm tra đầu giờ</span><span class='accordion-body-val'>" + (item.diemDauGio || item.diemDG || "") + "</span></div>";
                     htmlMobile += "    <div class='accordion-body-row'><span class='accordion-body-label'>Kiểm tra định kì</span><span class='accordion-body-val'>" + (item.diemDinhKi || item.diemDK || "") + "</span></div>";
                     htmlMobile += "    <div class='accordion-body-row' style='justify-content: space-between; gap: 10px; border-top: 1px dashed rgba(255,255,255,0.05); padding-top: 10px; margin-top: 5px; width: 100%;'>";
-                    htmlMobile += "      <button onclick='duplicateLesson(\"" + item.rowIndex + "\")' class='modal-btn modal-btn-primary' style='flex: 1; border-radius: 20px; font-size: 12px; background: linear-gradient(135deg, #8E4DFF 0%, #5B21B6 100%); border: none; color: #FFF; font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;'><i class='fa-solid fa-copy'></i> Nhân bản</button>";
+                    htmlMobile += "      <button onclick='duplicateLesson(\"" + item.rowIndex + "\")' class='modal-btn modal-btn-primary' style='flex: 1; border-radius: 20px; font-size: 12px; background: var(--btn-bg); border: none; color: var(--btn-text); font-weight: bold; cursor: pointer; display: inline-flex; align-items: center; justify-content: center; gap: 6px;'><i class='fa-solid fa-copy'></i> Nhân bản</button>";
                     htmlMobile += "      <button onclick='openEditLessonModal(\"" + item.rowIndex + "\")' class='modal-btn modal-btn-secondary' style='flex: 1; border-radius: 20px; font-size: 12px; display: inline-flex; align-items: center; justify-content: center; gap: 6px;'><i class='fa-solid fa-pen-to-square'></i> Sửa</button>";
                     htmlMobile += "    </div>";
                     htmlMobile += "  </div>";
@@ -6192,7 +6192,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                 container.innerHTML = totalHtml;
                 syncCheckboxAndCheckAll(); // Cập nhật trạng thái của nút chọn tất cả
             } else {
-                container.innerHTML = "<p style='color: #A6ADCE; text-align: center; padding: 20px;'>Học sinh này chưa có dữ liệu nhật ký học tập nào.</p>";
+                container.innerHTML = "<p style='color: var(--text-secondary); text-align: center; padding: 20px;'>Học sinh này chưa có dữ liệu nhật ký học tập nào.</p>";
             }
         }
 
@@ -6539,7 +6539,7 @@ window.initTutorSidebarState = initTutorSidebarState;
             container.innerHTML = "";
 
             if (!tutorDataGlobal || !tutorDataGlobal.deletedStudents || tutorDataGlobal.deletedStudents.length === 0) {
-                container.innerHTML = "<div style='text-align: center; color: #A6ADCE; font-size: 13px; padding: 20px;'>Thùng rác trống.</div>";
+                container.innerHTML = "<div style='text-align: center; color: var(--text-secondary); font-size: 13px; padding: 20px;'>Thùng rác trống.</div>";
                 return;
             }
 
@@ -6556,7 +6556,7 @@ window.initTutorSidebarState = initTutorSidebarState;
 
                 var info = document.createElement('div');
                 info.innerHTML = "<div style='color: #FFF; font-weight: bold; font-size: 14px;'>" + st.name + "</div>" +
-                                 "<div style='color: #A6ADCE; font-size: 12px; margin-top: 3px;'>SĐT: " + st.phone + "</div>" +
+                                 "<div style='color: var(--text-secondary); font-size: 12px; margin-top: 3px;'>SĐT: " + st.phone + "</div>" +
                                  "<div style='color: #EF4444; font-size: 11px; margin-top: 3px;'>Đã xóa lúc: " + st.deletedDate + "</div>";
 
                 var btnRestore = document.createElement('button');
@@ -6854,24 +6854,24 @@ function switchTutorHwSubTab(subTab) {
         form.style.display = 'block';
         list.style.display = 'none';
         
-        btnUpload.style.background = 'linear-gradient(135deg, #8E4DFF 0%, #5B21B6 100%)';
-        btnUpload.style.color = '#FFF';
+        btnUpload.style.background = 'var(--btn-bg)';
+        btnUpload.style.color = 'var(--btn-text)';
         
-        btnViewList.style.background = 'rgba(255, 255, 255, 0.05)';
-        btnViewList.style.color = '#A6ADCE';
-        btnViewList.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+        btnViewList.style.background = 'var(--bg-input)';
+        btnViewList.style.color = 'var(--text-secondary)';
+        btnViewList.style.border = '1px solid var(--border-card)';
         
         openAssignHwForm();
     } else {
         form.style.display = 'none';
         list.style.display = 'block';
         
-        btnUpload.style.background = 'rgba(255, 255, 255, 0.05)';
-        btnUpload.style.color = '#A6ADCE';
-        btnUpload.style.border = '1px solid rgba(255, 255, 255, 0.1)';
+        btnUpload.style.background = 'var(--bg-input)';
+        btnUpload.style.color = 'var(--text-secondary)';
+        btnUpload.style.border = '1px solid var(--border-card)';
         
-        btnViewList.style.background = 'linear-gradient(135deg, #8E4DFF 0%, #5B21B6 100%)';
-        btnViewList.style.color = '#FFF';
+        btnViewList.style.background = 'var(--btn-bg)';
+        btnViewList.style.color = 'var(--btn-text)';
         btnViewList.style.border = 'none';
         
         loadTutorAssignedHomework();
@@ -7112,7 +7112,7 @@ function loadTutorAssignedHomework() {
     if (!currentTutorStudent) return;
     
     var tableBody = document.getElementById('assignedHwTableBody');
-    tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#A6ADCE; padding: 15px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-secondary); padding: 15px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải dữ liệu...</td></tr>';
     
     var tutorPhoneToGet = (tutorDataGlobal && tutorDataGlobal.tutorPhone) ? tutorDataGlobal.tutorPhone : "0123456789";
     google.script.run
@@ -7152,9 +7152,9 @@ function renderAssignedHwList(list, showAll) {
     if (!tableBody) return;
     
     if (!list || list.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#A6ADCE; padding: 20px;"><i class="fa-solid fa-circle-info"></i> Chưa giao bài tập nào cho học sinh này!</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-secondary); padding: 20px;"><i class="fa-solid fa-circle-info"></i> Chưa giao bài tập nào cho học sinh này!</td></tr>';
         if (mobileContainer) {
-            mobileContainer.innerHTML = '<div style="text-align:center; color:#A6ADCE; padding: 20px; font-size: 13px;"><i class="fa-solid fa-circle-info"></i> Chưa giao bài tập nào cho học sinh này!</div>';
+            mobileContainer.innerHTML = '<div style="text-align:center; color:var(--text-secondary); padding: 20px; font-size: 13px;"><i class="fa-solid fa-circle-info"></i> Chưa giao bài tập nào cho học sinh này!</div>';
         }
         return;
     }
@@ -7175,18 +7175,18 @@ function renderAssignedHwList(list, showAll) {
     var mobileHtml = "";
     
     visibleList.forEach(function(item, idx) {
-        var fileLinkHtml = item.fileUrl ? '<a href="' + item.fileUrl + '" target="_blank" style="color:#8E4DFF; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-file-pdf"></i> Xem file</a>' : '';
+        var fileLinkHtml = item.fileUrl ? '<a href="' + item.fileUrl + '" target="_blank" style="color:var(--color-primary); font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-file-pdf"></i> Xem file</a>' : '';
         var extLinkHtml = item.externalLink ? '<a href="' + item.externalLink + '" target="_blank" style="color:#10B981; font-weight:600; text-decoration:none; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-link"></i> Mở link</a>' : '';
         
         var attachments = [];
         if (fileLinkHtml) attachments.push(fileLinkHtml);
         if (extLinkHtml) attachments.push(extLinkHtml);
-        var attachmentsHtml = attachments.join('<br>') || '<span style="color:#A6ADCE;">Không có</span>';
+        var attachmentsHtml = attachments.join('<br>') || '<span style="color:var(--text-secondary);">Không có</span>';
         
         var attachmentsMobile = [];
         if (fileLinkHtml) attachmentsMobile.push(fileLinkHtml);
         if (extLinkHtml) attachmentsMobile.push(extLinkHtml);
-        var attachmentsMobileHtml = '<div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end;">' + (attachmentsMobile.join('') || '<span style="color:#A6ADCE;">Không có</span>') + '</div>';
+        var attachmentsMobileHtml = '<div style="display:flex; flex-direction:column; gap:4px; align-items:flex-end;">' + (attachmentsMobile.join('') || '<span style="color:var(--text-secondary);">Không có</span>') + '</div>';
 
         var actionsHtml = 
             '<div style="display:flex; gap:8px; justify-content:center; align-items:center;">' +
@@ -7197,7 +7197,7 @@ function renderAssignedHwList(list, showAll) {
         // Desktop Row
         tableBody.innerHTML += 
             '<tr>' +
-                '<td style="color:#A6ADCE;">' + item.releaseDate + '</td>' +
+                '<td style="color:var(--text-secondary);">' + item.releaseDate + '</td>' +
                 '<td style="color:#FFF; font-weight:500;">' + item.title + '</td>' +
                 '<td>' + attachmentsHtml + '</td>' +
                 '<td style="text-align: center; vertical-align: middle;">' + actionsHtml + '</td>' +
@@ -7232,11 +7232,11 @@ function renderAssignedHwList(list, showAll) {
         var remaining = totalCount - ASSIGNED_HW_LIMIT;
         if (!showAll) {
             tableBody.innerHTML += '<tr><td colspan="4" style="text-align:center; padding:10px;">'
-                + '<button onclick="renderAssignedHwList(assignedHwListGlobal, true)" style="background:none; border:1px solid #4B5563; color:#8E4DFF; padding:6px 20px; border-radius:8px; cursor:pointer; font-size:13px;">'
+                + '<button onclick="renderAssignedHwList(assignedHwListGlobal, true)" style="background:none; border:1px solid #4B5563; color:var(--color-primary); padding:6px 20px; border-radius:8px; cursor:pointer; font-size:13px;">'
                 + '<i class="fa-solid fa-chevron-down" style="margin-right:5px;"></i>Xem thêm ' + remaining + ' bài cũ hơn'
                 + '</button></td></tr>';
             mobileHtml += '<div style="text-align:center; padding:10px;">'
-                + '<button onclick="renderAssignedHwList(assignedHwListGlobal, true)" style="background:none; border:1px solid #4B5563; color:#8E4DFF; padding:6px 20px; border-radius:8px; cursor:pointer; font-size:13px; width:100%;">'
+                + '<button onclick="renderAssignedHwList(assignedHwListGlobal, true)" style="background:none; border:1px solid #4B5563; color:var(--color-primary); padding:6px 20px; border-radius:8px; cursor:pointer; font-size:13px; width:100%;">'
                 + '<i class="fa-solid fa-chevron-down" style="margin-right:5px;"></i>Xem thêm ' + remaining + ' bài cũ hơn'
                 + '</button></div>';
         } else {
@@ -7446,7 +7446,7 @@ function renderTutorHwTrashList(list) {
     if (!tableBody) return;
     
     if (list.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:#A6ADCE; padding: 15px;">Thùng rác trống!</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="3" style="text-align:center; color:var(--text-secondary); padding: 15px;">Thùng rác trống!</td></tr>';
         return;
     }
     
@@ -7458,7 +7458,7 @@ function renderTutorHwTrashList(list) {
         tableBody.innerHTML += 
             '<tr>' +
                 '<td style="color:#FFF; font-weight:500;">' + item.title + '</td>' +
-                '<td style="color:#A6ADCE; font-size:12px;">' + item.deletedTime + '</td>' +
+                '<td style="color:var(--text-secondary); font-size:12px;">' + item.deletedTime + '</td>' +
                 '<td>' + actionsHtml + '</td>' +
             '</tr>';
     });
@@ -7486,12 +7486,12 @@ function loadStudentSubmissions() {
     if (!currentTutorStudent) return;
     
     var tableBody = document.getElementById('studentSubmissionsTableBody');
-    tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#A6ADCE; padding: 15px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải danh sách bài nộp...</td></tr>';
+    tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-secondary); padding: 15px;"><i class="fa-solid fa-spinner fa-spin"></i> Đang tải danh sách bài nộp...</td></tr>';
     document.getElementById('submissionViewMoreBtnContainer').style.display = 'none';
     
     var ma = currentTutorStudent.maBaiTap || "";
     if (ma === "") {
-        tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:#A6ADCE; padding: 15px;">Học sinh chưa có Mã bài tập nên không thể kiểm tra bài nộp!</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="4" style="text-align:center; color:var(--text-secondary); padding: 15px;">Học sinh chưa có Mã bài tập nên không thể kiểm tra bài nộp!</td></tr>';
         return;
     }
     
@@ -7679,7 +7679,7 @@ function openSubmissionPreviewModal(subId, studentName, fileUrl) {
                                 html += '<div style="border-radius:8px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:15px;">' +
                                     '<i class="fa-solid fa-file-lines" style="font-size:40px; color:#A5B4FC; margin-bottom:10px;"></i>' +
                                     '<div style="color:#FFF; font-size:12px; text-align:center; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; width:100%; margin-bottom:10px;">' + fName + '</div>' +
-                                    '<a href="' + fUrl + '" target="_blank" style="background:#8E4DFF; color:#FFF; padding:5px 10px; border-radius:5px; text-decoration:none; font-size:11px;">Mở File</a>' +
+                                    '<a href="' + fUrl + '" target="_blank" style="background:var(--color-primary); color:var(--btn-text); padding:5px 10px; border-radius:5px; text-decoration:none; font-size:11px;">Mở File</a>' +
                                     '</div>';
                             }
                         });
@@ -7700,7 +7700,7 @@ function openSubmissionPreviewModal(subId, studentName, fileUrl) {
                 if (spinner) spinner.style.display = 'none';
                 gallery.innerHTML = '<div style="grid-column: 1 / -1; text-align:center; cursor:pointer; padding: 15px;" onclick="openLightbox(\'' + fileUrl.replace(/'/g, "\\'") + '\')">' +
                     '<img src="' + fileUrl + '" style="max-width:100%; max-height:65vh; object-fit:contain; border-radius:8px; box-shadow:0 5px 20px rgba(0,0,0,0.5);">' +
-                    '<div style="color:#A6ADCE; font-size:12px; margin-top:8px;"><i class="fa-solid fa-magnifying-glass-plus"></i> Nhấp vào ảnh để phóng to toàn màn hình</div>' +
+                    '<div style="color:var(--text-secondary); font-size:12px; margin-top:8px;"><i class="fa-solid fa-magnifying-glass-plus"></i> Nhấp vào ảnh để phóng to toàn màn hình</div>' +
                     '</div>';
             }
             return;
@@ -7721,7 +7721,7 @@ function openSubmissionPreviewModal(subId, studentName, fileUrl) {
                     .withSuccessHandler(function(files) {
                         if (spinner) spinner.style.display = 'none';
                         if (!files || files.length === 0) {
-                            if (gallery) gallery.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #A6ADCE; padding: 40px;">Không tìm thấy file ảnh trong bài nộp hoặc chưa cấp quyền. <br><a href="' + fileUrl + '" target="_blank" style="color:#FFD23F; text-decoration:none; margin-top:8px; display:inline-block;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Mở trực tiếp trên Google Drive →</a></div>';
+                            if (gallery) gallery.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary); padding: 40px;">Không tìm thấy file ảnh trong bài nộp hoặc chưa cấp quyền. <br><a href="' + fileUrl + '" target="_blank" style="color:#FFD23F; text-decoration:none; margin-top:8px; display:inline-block;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Mở trực tiếp trên Google Drive →</a></div>';
                             return;
                         }
                         var html = '';
@@ -7735,7 +7735,7 @@ function openSubmissionPreviewModal(subId, studentName, fileUrl) {
                                 html += '<div style="border-radius:8px; overflow:hidden; border:1px solid rgba(255,255,255,0.1); background:rgba(255,255,255,0.05); display:flex; flex-direction:column; align-items:center; justify-content:center; padding:15px;">' +
                                     '<i class="fa-solid fa-file-lines" style="font-size:40px; color:#A5B4FC; margin-bottom:10px;"></i>' +
                                     '<div style="color:#FFF; font-size:12px; text-align:center; text-overflow:ellipsis; overflow:hidden; white-space:nowrap; width:100%; margin-bottom:10px;">' + f.name + '</div>' +
-                                    '<a href="' + f.url + '" target="_blank" style="background:#8E4DFF; color:#FFF; padding:5px 10px; border-radius:5px; text-decoration:none; font-size:11px;">Mở File</a>' +
+                                    '<a href="' + f.url + '" target="_blank" style="background:var(--color-primary); color:var(--btn-text); padding:5px 10px; border-radius:5px; text-decoration:none; font-size:11px;">Mở File</a>' +
                                     '</div>';
                             }
                         });
@@ -7748,7 +7748,7 @@ function openSubmissionPreviewModal(subId, studentName, fileUrl) {
                     .getDriveFolderImages(fileUrl);
             } else {
                 if (spinner) spinner.style.display = 'none';
-                if (gallery) gallery.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: #A6ADCE; padding: 40px;"><p>Bài nộp dạng thư mục / tệp nén của học sinh</p><a href="' + fileUrl + '" target="_blank" style="color:#FFD23F; font-weight:bold; text-decoration:none; display:inline-block; margin-top:10px; padding:8px 16px; background:rgba(255,210,63,0.15); border:1px solid #FFD23F; border-radius:8px;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Mở trên Google Drive</a></div>';
+                if (gallery) gallery.innerHTML = '<div style="grid-column: 1 / -1; text-align: center; color: var(--text-secondary); padding: 40px;"><p>Bài nộp dạng thư mục / tệp nén của học sinh</p><a href="' + fileUrl + '" target="_blank" style="color:#FFD23F; font-weight:bold; text-decoration:none; display:inline-block; margin-top:10px; padding:8px 16px; background:rgba(255,210,63,0.15); border:1px solid #FFD23F; border-radius:8px;"><i class="fa-solid fa-arrow-up-right-from-square"></i> Mở trên Google Drive</a></div>';
             }
             return;
         }
@@ -7876,7 +7876,7 @@ function saveTutorGrade() {
     var mobileGradeWrap = document.getElementById('mobile-grade-wrapper-' + activeGradingSubId);
     
     var gradedHtml = '<span style="padding:4px 10px; background:rgba(255,210,63,0.15); border:1px solid #FFD23F; border-radius:8px; color:#FFD23F; font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-star"></i> Điểm: ' + score + '</span>'
-        + ' <button onclick="openGradeModal(\'' + activeGradingSubId + '\',\'' + (stName || '').replace(/'/g, "\\'") + '\',\'' + score + '\',\'' + (comment || '').replace(/'/g, "\\'") + '\')" style="background:none; border:none; color:#A6ADCE; cursor:pointer; font-size:11px; margin-left:4px;" title="Sửa điểm"><i class="fa-solid fa-pen"></i></button>';
+        + ' <button onclick="openGradeModal(\'' + activeGradingSubId + '\',\'' + (stName || '').replace(/'/g, "\\'") + '\',\'' + score + '\',\'' + (comment || '').replace(/'/g, "\\'") + '\')" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; font-size:11px; margin-left:4px;" title="Sửa điểm"><i class="fa-solid fa-pen"></i></button>';
 
     if (gradeWrap) gradeWrap.innerHTML = gradedHtml;
     if (mobileGradeWrap) mobileGradeWrap.innerHTML = gradedHtml;
@@ -7917,9 +7917,9 @@ function renderStudentSubmissionsList() {
     if (!tableBody) return;
     
     if (studentSubmissionsGlobal.length === 0) {
-        tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:#A6ADCE; padding: 20px;"><i class="fa-solid fa-circle-info"></i> Học sinh này chưa nộp bài tập nào!</td></tr>';
+        tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; color:var(--text-secondary); padding: 20px;"><i class="fa-solid fa-circle-info"></i> Học sinh này chưa nộp bài tập nào!</td></tr>';
         if (mobileContainer) {
-            mobileContainer.innerHTML = '<div style="text-align:center; color:#A6ADCE; padding: 20px; font-size: 13px;"><i class="fa-solid fa-circle-info"></i> Học sinh này chưa nộp bài tập nào!</div>';
+            mobileContainer.innerHTML = '<div style="text-align:center; color:var(--text-secondary); padding: 20px; font-size: 13px;"><i class="fa-solid fa-circle-info"></i> Học sinh này chưa nộp bài tập nào!</div>';
         }
         document.getElementById('submissionViewMoreBtnContainer').style.display = 'none';
         return;
@@ -7943,10 +7943,10 @@ function renderStudentSubmissionsList() {
         
         var viewBtn = item.fileUrl ? 
             '<button onclick="openSubmissionPreviewModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\',\'' + item.fileUrl.replace(/'/g, "\\'") + '\')" style="padding:6px 14px; background:rgba(99,102,241,0.15); border:1px solid #6366F1; border-radius:8px; color:#A5B4FC; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-file-lines"></i> Xem bài</button>' 
-            : '<span style="color:#A6ADCE;">Không có file</span>';
+            : '<span style="color:var(--text-secondary);">Không có file</span>';
         
         var dlText = isFolder ? '<i class="fa-solid fa-folder-arrow-down"></i> Tải thư mục' : (isZip ? '<i class="fa-solid fa-file-zipper"></i> Tải ZIP' : '<i class="fa-solid fa-download"></i> Tải');
-        var downloadBtn = item.fileUrl ? '<button onclick="downloadSubmissionFileByIndex(' + idx + ')" class="action-btn-hw" style="color:#10B981; border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.1); padding: 5px 14px; cursor: pointer; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; font-weight:600;"><i class="fa-solid fa-download"></i> Tải</button>' : '<span style="color:#A6ADCE;">N/A</span>';
+        var downloadBtn = item.fileUrl ? '<button onclick="downloadSubmissionFileByIndex(' + idx + ')" class="action-btn-hw" style="color:#10B981; border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.1); padding: 5px 14px; cursor: pointer; border-radius: 8px; display: inline-flex; align-items: center; gap: 6px; font-weight:600;"><i class="fa-solid fa-download"></i> Tải</button>' : '<span style="color:var(--text-secondary);">N/A</span>';
         
         // Grade Button / Badge
         var rawScore = (item.score !== undefined && item.score !== null) ? String(item.score).trim() : "";
@@ -7957,7 +7957,7 @@ function renderStudentSubmissionsList() {
         var gradeHtml = '<div id="grade-wrapper-' + subId + '" style="display:inline-flex; align-items:center; justify-content:center;">';
         if (scoreVal) {
             gradeHtml += '<span style="padding:4px 10px; background:rgba(255,210,63,0.15); border:1px solid #FFD23F; border-radius:8px; color:#FFD23F; font-size:12px; font-weight:700; display:inline-flex; align-items:center; gap:4px;"><i class="fa-solid fa-star"></i> Điểm: ' + scoreVal + '</span>'
-                + ' <button onclick="openGradeModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\',\'' + scoreVal + '\',\'' + commentVal.replace(/'/g, "\\'") + '\')" style="background:none; border:none; color:#A6ADCE; cursor:pointer; font-size:11px; margin-left:4px;" title="Sửa điểm"><i class="fa-solid fa-pen"></i></button>';
+                + ' <button onclick="openGradeModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\',\'' + scoreVal + '\',\'' + commentVal.replace(/'/g, "\\'") + '\')" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; font-size:11px; margin-left:4px;" title="Sửa điểm"><i class="fa-solid fa-pen"></i></button>';
         } else {
             gradeHtml += '<button onclick="openGradeModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\')" style="padding:6px 14px; background:rgba(249,115,22,0.15); border:1px solid #F97316; border-radius:8px; color:#FED7AA; font-size:13px; font-weight:600; cursor:pointer; display:inline-flex; align-items:center; gap:6px;"><i class="fa-solid fa-pen"></i> Chấm điểm</button>';
         }
@@ -7967,7 +7967,7 @@ function renderStudentSubmissionsList() {
         var mobileGradeHtml = '<div id="mobile-grade-wrapper-' + subId + '" style="display:inline-flex; align-items:center;">';
         if (scoreVal) {
             mobileGradeHtml += '<span style="padding:3px 8px; background:rgba(255,210,63,0.15); border:1px solid #FFD23F; border-radius:6px; color:#FFD23F; font-size:11.5px; font-weight:700;"><i class="fa-solid fa-star"></i> Điểm: ' + scoreVal + '</span>'
-                + ' <button onclick="openGradeModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\',\'' + scoreVal + '\',\'' + commentVal.replace(/'/g, "\\'") + '\')" style="background:none; border:none; color:#A6ADCE; cursor:pointer; font-size:11px; margin-left:4px;" title="Sửa điểm"><i class="fa-solid fa-pen"></i></button>';
+                + ' <button onclick="openGradeModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\',\'' + scoreVal + '\',\'' + commentVal.replace(/'/g, "\\'") + '\')" style="background:none; border:none; color:var(--text-secondary); cursor:pointer; font-size:11px; margin-left:4px;" title="Sửa điểm"><i class="fa-solid fa-pen"></i></button>';
         } else {
             mobileGradeHtml += '<button onclick="openGradeModal(\'' + subId + '\',\'' + (studentName || item.studentName || '').replace(/'/g, "\\'") + '\')" style="padding:4px 10px; background:rgba(249,115,22,0.15); border:1px solid #F97316; border-radius:6px; color:#FED7AA; font-size:12px; font-weight:600; cursor:pointer;"><i class="fa-solid fa-pen"></i> Chấm điểm</button>';
         }
@@ -7976,7 +7976,7 @@ function renderStudentSubmissionsList() {
         // Desktop Row
         tableBody.innerHTML += 
             '<tr>' +
-                '<td style="color:#A6ADCE;">' + item.timestamp + '</td>' +
+                '<td style="color:var(--text-secondary);">' + item.timestamp + '</td>' +
                 '<td style="color:#FFF; font-weight:500;">' + item.lessonName + '</td>' +
                 '<td>' + viewBtn + '</td>' +
                 '<td style="text-align: center;">' + gradeHtml + '</td>' +
