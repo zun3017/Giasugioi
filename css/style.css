@@ -1,5 +1,51 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
+/* ============================================================================
+ * DEFAULT THEME VARIABLES: Space Cosmic Dark Theme 4.0 (:root)
+ * Áp dụng cố định cho toàn bộ các trang công cộng bên ngoài:
+ * index.html, student-login.html, student-dashboard.html, tutor-login.html, homework.html
+ * Phân hệ Gia sư (tutor-dashboard / tutor-calendar) ghi đè qua css/themes.css
+ * ============================================================================ */
+:root {
+  --color-primary: #8E4DFF;
+  --color-primary-light: #C084FC;
+  --color-primary-dark: #6B21A8;
+  --color-primary-rgb: 142, 77, 255;
+  --color-accent-kpi: #FFD23F;
+  --highlight-color: #FFD23F;
+  --kpi-number-color: #FFD23F;
+  --chart-bar: #8E4DFF;
+  --chart-bar-rgb: 142, 77, 255;
+  --btn-bg: linear-gradient(135deg, #8E4DFF, #5B21B6);
+  --btn-text: #FFFFFF;
+  --nav-active-bg: rgba(142, 77, 255, 0.2);
+  --nav-active-text: #E2D1FF;
+  --nav-active-border: rgba(142, 77, 255, 0.6);
+  --nav-hover-bg: rgba(142, 77, 255, 0.1);
+  --nav-btn-text: #E2E8F0;
+  --header-bg: rgba(3, 8, 29, 0.85);
+  --header-border: rgba(255, 255, 255, 0.08);
+  --bg-page: #0B0826;
+  --bg-page-gradient: radial-gradient(circle at 15% 30%, rgba(91, 46, 255, 0.15) 0%, transparent 40%),
+                      radial-gradient(circle at 85% 20%, rgba(142, 77, 255, 0.15) 0%, transparent 40%),
+                      radial-gradient(circle at 50% 80%, rgba(11, 18, 78, 0.6) 0%, transparent 60%);
+  --bg-sidebar: rgba(14, 11, 46, 0.95);
+  --bg-card: rgba(18, 14, 58, 0.85);
+  --bg-card-alt: rgba(24, 18, 72, 0.7);
+  --bg-input: #04020A;
+  --border-color: rgba(142, 77, 255, 0.3);
+  --border-card: rgba(142, 77, 255, 0.2);
+  --sidebar-border: rgba(142, 77, 255, 0.2);
+  --text-heading: #FFFFFF;
+  --text-primary: #FFFFFF;
+  --text-secondary: #B2B8D9;
+  --text-muted: #7E85A6;
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.5);
+  --shadow-primary: 0 4px 20px rgba(142, 77, 255, 0.35);
+  --scrollbar-thumb: rgba(142, 77, 255, 0.4);
+  --is-dark-theme: 1;
+}
+
         /* ================= RESET & CƠ BẢN ================= */
         * {
             margin: 0;
@@ -126,8 +172,8 @@
             box-shadow: var(--shadow-primary);
         }
         
-        .header-text h1 { font-size: 18px; font-weight: 700; color: var(--text-primary, #1E293B); margin-bottom: -2px; letter-spacing: -0.5px;}
-        .header-text p { font-size: 11px; color: var(--text-secondary); font-weight: 500;}
+        .header-text h1 { font-size: 18px; font-weight: 700; color: var(--text-heading, #FFFFFF); margin-bottom: -2px; letter-spacing: -0.5px;}
+        .header-text p { font-size: 11px; color: var(--text-secondary, #B2B8D9); font-weight: 500;}
 
         /* Intro Card on Home */
         .intro-card {
