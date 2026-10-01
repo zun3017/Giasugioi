@@ -3863,17 +3863,11 @@ window.initTutorSidebarState = initTutorSidebarState;
                 renderOverviewCharts(tutorOverviewMonth, tutorOverviewYear);
             }
             
-            // Hiển thị thông báo chạy chữ từ Admin
+            // Đã xóa thanh thông báo chạy chữ theo yêu cầu người dùng
             var marqueeContainer = document.getElementById('tutorMarqueeContainer');
-            var marqueeWrapper = document.getElementById('tutorMarqueeWrapper');
-            if (marqueeContainer && marqueeWrapper) {
-                if (data.marqueeAnnouncement && data.marqueeAnnouncement.trim() !== "") {
-                    marqueeWrapper.innerHTML = '<div class="smooth-marquee-content"><i class="fa-solid fa-circle-exclamation" style="margin-right: 8px;"></i>' + data.marqueeAnnouncement + '</div>';
-                    marqueeContainer.style.display = "block";
-                } else {
-                    marqueeWrapper.innerHTML = "";
-                    marqueeContainer.style.display = "none";
-                }
+            if (marqueeContainer) {
+                marqueeContainer.style.display = "none";
+                marqueeContainer.remove();
             }
             // Load Schedule
             google.script.run.withSuccessHandler(function(schedule) {

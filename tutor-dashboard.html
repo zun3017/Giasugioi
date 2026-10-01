@@ -474,10 +474,6 @@
 
         <!-- Main Content Area -->
         <main class="tutor-main-content" id="tutorMainContent">
-        <!-- Dòng chữ chạy thông báo từ Admin -->
-        <div id="tutorMarqueeContainer" class="smooth-marquee-container">
-            <div class="smooth-marquee-wrapper" id="tutorMarqueeWrapper"></div>
-        </div>
         <div class="tutor-header" style="display: none;">
             <div>
                 <h2 id="tutorNameDisplay">Xin chào, Gia sư</h2>
@@ -2365,7 +2361,7 @@
                 deletedStudents: [],
                 totalUnpaidIncome: 0,
                 classCount: store.students.length,
-                marqueeAnnouncement: "Chào mừng Thầy Trần Hoàng Nam đến với Bảng Quản Lý Gia Sư 4.0!"
+                marqueeAnnouncement: ""
             };
             sessionStorage.setItem('dashboardData', JSON.stringify(data));
             sessionStorage.setItem('userRole', 'tutor');

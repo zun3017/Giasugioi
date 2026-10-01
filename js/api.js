@@ -229,7 +229,7 @@
                                     deletedStudents: [],
                                     totalUnpaidIncome: 0,
                                     classCount: store.students.length,
-                                    marqueeAnnouncement: "Chào mừng " + tutor.name + " đến với Bảng Quản Lý Gia Sư 4.0!"
+                                    marqueeAnnouncement: ""
                                 }
                             };
                         }
@@ -345,7 +345,7 @@
                         deletedStudents: [],
                         totalUnpaidIncome: 0,
                         classCount: store.students.length,
-                        marqueeAnnouncement: "Chào mừng " + tutor.name + " đến với Bảng Quản Lý Gia Sư 4.0!"
+                        marqueeAnnouncement: ""
                     };
                 }
 

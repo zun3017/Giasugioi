@@ -4738,11 +4738,6 @@
             box-sizing: border-box !important;
         }
 
-        body.calendar-tab-active #tutorMarqueeContainer {
-            flex-shrink: 0 !important;
-            margin-bottom: 8px !important;
-        }
-
         body.calendar-tab-active #tutorSectionCalendar {
             flex: 1 !important;
             height: 100% !important;
