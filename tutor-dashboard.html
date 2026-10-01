@@ -600,13 +600,40 @@
             <div class="mobile-cards-view" id="diaryMobileList" style="margin-top: 15px;">
                 <div style="text-align: center; color: rgba(255,255,255,0.3); padding: 20px;">Đang tải nhật ký...</div>
             </div>
-        </div>
+        </div> <!-- End #tutorSectionDiary -->
 
-        <div class="student-buttons-container" id="tutorStudentsList">
-            <!-- Nút chọn học sinh sẽ render ở đây -->
-        </div>
+        <!-- SECTION HỌC SINH -->
+        <div id="tutorSectionStudents" class="tutor-section" style="display: none;">
+            <!-- Header Toolbar: Thêm học sinh + Thùng rác -->
+            <div class="students-toolbar">
+                <div class="students-toolbar-title">
+                    <h3 style="color: #FFF; font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px;">
+                        <i class="fa-solid fa-user-graduate" style="color: #8E4DFF;"></i>
+                        <span>Danh sách học sinh</span>
+                    </h3>
+                    <p style="color: #A6ADCE; font-size: 13px; margin: 4px 0 0 0;">Theo dõi tiến độ, lịch cố định, tỷ lệ chuyên cần và quản lý từng học sinh</p>
+                </div>
+                <div class="students-toolbar-actions">
+                    <button type="button" class="btn-student-action btn-add-student" onclick="openAddStudentModal()">
+                        <i class="fa-solid fa-user-plus"></i>
+                        <span>Thêm học sinh</span>
+                    </button>
+                    <button type="button" class="btn-student-action btn-trash-student" onclick="openTrashModal()" title="Thùng rác học sinh">
+                        <i class="fa-solid fa-trash-can"></i>
+                    </button>
+                </div>
+            </div>
 
-        <div id="tutorStudentDetail">
+            <!-- Grid Thẻ học sinh (2-3 cột desktop, 1 cột mobile) -->
+            <div class="students-cards-grid" id="tutorStudentsGrid">
+                <!-- Rendered dynamically via renderTutorStudentsGrid() -->
+            </div>
+
+            <div class="student-buttons-container" id="tutorStudentsList" style="display: none;">
+                <!-- Nút chọn học sinh sẽ render ở đây (legacy) -->
+            </div>
+
+            <div id="tutorStudentDetail">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                 <h3 style="color: #FFF; margin: 0; display: flex; align-items: center; gap: 10px; font-size: 18px;">
                     Học sinh: <span id="selectedStudentNameHeader" style="color: #FFD23F; font-weight: 800;">...</span>
@@ -929,8 +956,8 @@
                 <div class="export-btn-container" style="margin-top: 20px; text-align: center; margin-bottom: 20px;">
                     <button class="btn-export" onclick="exportInvoice()"><i class="fa-solid fa-camera"></i> Lưu Ảnh Hóa Đơn</button>
                 </div>
-            </div>
-        </div>
+        </div> <!-- End #tutorStudentDetail -->
+        </div> <!-- End #tutorSectionStudents -->
         </main>
     </div>
                 <!-- ================= TUTOR MODALS ================= -->

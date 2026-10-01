@@ -2193,6 +2193,298 @@
                 margin-left: 0 !important;
                 text-align: center !important;
             }
+        /* Students Section Styles */
+        .students-toolbar {
+            background: rgba(11, 8, 38, 0.95);
+            border: 1px solid rgba(142, 77, 255, 0.3);
+            border-radius: 20px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            backdrop-filter: blur(25px);
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .students-toolbar-title h3 {
+            color: #FFF;
+            font-size: 18px;
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .students-toolbar-title p {
+            color: #A6ADCE;
+            font-size: 13px;
+            margin: 4px 0 0 0;
+        }
+
+        .students-toolbar-actions {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .btn-student-action {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.25s ease;
+        }
+
+        .btn-add-student {
+            background: linear-gradient(135deg, #8E4DFF 0%, #5B21B6 100%);
+            border: none;
+            color: #FFF;
+            font-weight: 700;
+            font-size: 13px;
+            padding: 9px 18px;
+            box-shadow: 0 4px 15px rgba(142, 77, 255, 0.25);
+        }
+
+        .btn-add-student:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(142, 77, 255, 0.4);
+            filter: brightness(1.1);
+        }
+
+        .btn-trash-student {
+            background: rgba(239, 68, 68, 0.1);
+            border: 1px dashed rgba(239, 68, 68, 0.5);
+            color: #EF4444;
+            padding: 9px 14px;
+            font-size: 14px;
+        }
+
+        .btn-trash-student:hover {
+            background: rgba(239, 68, 68, 0.2);
+            border-color: #EF4444;
+            transform: translateY(-2px);
+        }
+
+        /* Students Cards Grid */
+        .students-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 18px;
+            margin-bottom: 24px;
+        }
+
+        @media (max-width: 1024px) {
+            .students-cards-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        @media (max-width: 768px) {
+            .students-toolbar {
+                flex-direction: column !important;
+                align-items: stretch !important;
+            }
+            .students-toolbar-actions {
+                justify-content: flex-start;
+            }
+            .students-cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        .student-profile-card {
+            background: rgba(11, 8, 38, 0.85);
+            border: 1px solid rgba(142, 77, 255, 0.22);
+            border-radius: 18px;
+            padding: 18px 20px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            gap: 14px;
+            cursor: pointer;
+            position: relative;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            backdrop-filter: blur(15px);
+        }
+
+        .student-profile-card:hover {
+            border-color: #8E4DFF;
+            transform: translateY(-3px);
+            box-shadow: 0 8px 25px rgba(142, 77, 255, 0.2);
+        }
+
+        .student-profile-card.active {
+            border-color: #FFD23F;
+            box-shadow: 0 0 0 2px rgba(255, 210, 63, 0.35), 0 8px 25px rgba(0, 0, 0, 0.4);
+            background: rgba(20, 14, 55, 0.95);
+        }
+
+        .student-profile-card.active::after {
+            content: 'Đang xem';
+            position: absolute;
+            top: 10px;
+            right: 12px;
+            background: rgba(255, 210, 63, 0.2);
+            border: 1px solid #FFD23F;
+            color: #FFD23F;
+            font-size: 10.5px;
+            font-weight: 700;
+            padding: 2px 8px;
+            border-radius: 10px;
+        }
+
+        .student-card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .student-initial-avatar {
+            width: 44px;
+            height: 44px;
+            border-radius: 50%;
+            font-size: 17px;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .student-card-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .student-card-name {
+            font-size: 15.5px;
+            font-weight: 700;
+            color: #FFF;
+            line-height: 1.25;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .student-card-sub {
+            font-size: 12px;
+            color: #A6ADCE;
+            margin-top: 3px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .student-card-schedule {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.07);
+            border-radius: 10px;
+            padding: 7px 12px;
+            font-size: 12px;
+            color: #E2E8F0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .student-card-schedule i {
+            color: #6EE7B7;
+            font-size: 12px;
+            flex-shrink: 0;
+        }
+
+        .student-card-schedule span {
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .student-card-metrics {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 8px;
+            text-align: center;
+        }
+
+        .card-metric-box {
+            background: rgba(255, 255, 255, 0.04);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 6px 3px;
+        }
+
+        .card-metric-val {
+            font-size: 14.5px;
+            font-weight: 800;
+            line-height: 1.2;
+            color: #FFF;
+        }
+
+        .card-metric-lbl {
+            font-size: 10px;
+            font-weight: 600;
+            color: #A6ADCE;
+            margin-top: 2px;
+        }
+
+        .student-card-actions {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            margin-top: 2px;
+        }
+
+        .btn-card-detail {
+            flex: 1;
+            background: rgba(142, 77, 255, 0.15);
+            border: 1px solid rgba(142, 77, 255, 0.35);
+            color: #C4B5FD;
+            font-size: 12px;
+            font-weight: 700;
+            padding: 7px 10px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-card-detail:hover {
+            background: rgba(142, 77, 255, 0.28);
+            color: #FFF;
+        }
+
+        .btn-card-diary {
+            background: rgba(255, 255, 255, 0.06);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            color: #FFF;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 7px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .btn-card-diary:hover {
+            background: rgba(255, 255, 255, 0.12);
+            border-color: rgba(255, 255, 255, 0.3);
         }
 
         /* Schedule Table */
