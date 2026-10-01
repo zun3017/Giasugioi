@@ -1710,7 +1710,8 @@
 
             .tutor-app-layout.sidebar-collapsed .sidebar-user-info,
             .tutor-app-layout.sidebar-collapsed .sidebar-nav-item span,
-            .tutor-app-layout.sidebar-collapsed .sidebar-footer-btn span {
+            .tutor-app-layout.sidebar-collapsed .sidebar-footer-btn span,
+            .tutor-app-layout.sidebar-collapsed .sidebar-theme-btn span {
                 display: none !important;
             }
 
@@ -1739,21 +1740,25 @@
                 margin: 0;
             }
 
-            .tutor-app-layout.sidebar-collapsed .sidebar-footer-btn {
+            .tutor-app-layout.sidebar-collapsed .sidebar-footer-btn,
+            .tutor-app-layout.sidebar-collapsed .sidebar-theme-btn {
                 justify-content: center !important;
                 padding: 10px 0 !important;
                 position: relative;
                 gap: 0 !important;
             }
 
-            .tutor-app-layout.sidebar-collapsed .sidebar-footer-btn i {
+            .tutor-app-layout.sidebar-collapsed .sidebar-footer-btn i,
+            .tutor-app-layout.sidebar-collapsed .sidebar-theme-btn i {
                 font-size: 16px;
                 margin: 0;
+                width: auto;
             }
 
             /* Tooltips on hover when collapsed */
             .tutor-app-layout.sidebar-collapsed .sidebar-nav-item::after,
-            .tutor-app-layout.sidebar-collapsed .sidebar-footer-btn::after {
+            .tutor-app-layout.sidebar-collapsed .sidebar-footer-btn::after,
+            .tutor-app-layout.sidebar-collapsed .sidebar-theme-btn::after {
                 content: attr(data-title);
                 position: absolute;
                 left: calc(100% + 12px);
@@ -1775,7 +1780,8 @@
             }
 
             .tutor-app-layout.sidebar-collapsed .sidebar-nav-item:hover::after,
-            .tutor-app-layout.sidebar-collapsed .sidebar-footer-btn:hover::after {
+            .tutor-app-layout.sidebar-collapsed .sidebar-footer-btn:hover::after,
+            .tutor-app-layout.sidebar-collapsed .sidebar-theme-btn:hover::after {
                 opacity: 1;
                 transform: translateY(-50%) translateX(2px);
             }
