@@ -358,7 +358,7 @@ window.renderUpcomingSchedule = renderUpcomingSchedule;
    ========================================================================== */
 var revenueBarChartInstance = null;
 
-function renderRevenueBarChart() {
+function renderRevenueBarChart(selM, selY) {
     var canvasEl = document.getElementById('revenueBarChartCanvas');
     if (!canvasEl) return;
     if (typeof Chart === 'undefined') return;
@@ -367,13 +367,30 @@ function renderRevenueBarChart() {
     var period = periodSelect ? parseInt(periodSelect.value, 10) : 12;
     if (isNaN(period) || period <= 0) period = 12;
 
+    var typeSelect = document.getElementById('revenueTypeFilter');
+    var chartType = typeSelect ? typeSelect.value : 'bar';
+
     var yearSelect = document.getElementById('revenueYearFilter');
+    // If selY passed (e.g. from top month navigator), sync year select if available
+    if (selY && yearSelect) {
+        var strY = String(selY);
+        for (var i = 0; i < yearSelect.options.length; i++) {
+            if (yearSelect.options[i].value === strY) {
+                yearSelect.value = strY;
+                break;
+            }
+        }
+    }
     var year = yearSelect ? parseInt(yearSelect.value, 10) : 2026;
     if (isNaN(year)) year = 2026;
 
     var chartTitleEl = document.getElementById('revenueChartTitle');
     if (chartTitleEl) {
-        chartTitleEl.innerText = "Doanh thu " + period + " tháng";
+        if (year === 2026) {
+            chartTitleEl.innerText = "Doanh thu " + period + " tháng";
+        } else {
+            chartTitleEl.innerText = "Doanh thu " + period + " tháng (" + year + ")";
+        }
     }
 
     // Exact reference data from Image 2 for Year 2026
@@ -388,7 +405,7 @@ function renderRevenueBarChart() {
         8: 32400000,  // 32,4tr
         9: 36500000,  // 36,5tr
         10: 51700000, // 51,7tr
-        11: 52150000, // 52,3tr
+        11: 52150000, // 52,3tr (displays as 52,3tr; sums to 180.250.000 đ)
         12: 7500000   // 7,5tr -> Total = 180.250.000 đ
     };
 
@@ -407,7 +424,22 @@ function renderRevenueBarChart() {
         12: 36500000
     };
 
-    var currentBaseline = (year === 2026) ? baseline2026 : baseline2025;
+    var baseline2024 = {
+        1: 8500000,
+        2: 9000000,
+        3: 10500000,
+        4: 11000000,
+        5: 12500000,
+        6: 13000000,
+        7: 14500000,
+        8: 16000000,
+        9: 17500000,
+        10: 19000000,
+        11: 20500000,
+        12: 22000000
+    };
+
+    var currentBaseline = (year === 2026) ? baseline2026 : ((year === 2025) ? baseline2025 : baseline2024);
 
     var labels = [];
     var dataValues = [];
@@ -446,12 +478,14 @@ function renderRevenueBarChart() {
         revenueBarChartInstance = null;
     }
 
-    // Top data labels plugin matching Image 2
+    var isLine = (chartType === 'line');
+
+    // Top data labels plugin matching Image 2 for both Bar and Line charts
     var topLabelsPlugin = {
         id: 'topDataLabels',
         afterDatasetsDraw: function(chart) {
             var c = chart.ctx;
-            var meta = chart.getDatasetMeta(1);
+            var meta = chart.getDatasetMeta(isLine ? 0 : 1);
             if (!meta || !meta.data) return;
 
             c.save();
@@ -460,12 +494,15 @@ function renderRevenueBarChart() {
             c.textBaseline = 'bottom';
             c.fillStyle = '#94A3B8';
 
-            var trackMeta = chart.getDatasetMeta(0);
-            var labelY = (trackMeta && trackMeta.data && trackMeta.data[0]) 
-                ? Math.max(trackMeta.data[0].y - 4, 14) 
-                : 16;
+            var labelY = 16;
+            if (!isLine) {
+                var trackMeta = chart.getDatasetMeta(0);
+                labelY = (trackMeta && trackMeta.data && trackMeta.data[0]) 
+                    ? Math.max(trackMeta.data[0].y - 4, 14) 
+                    : 16;
+            }
 
-            meta.data.forEach(function(bar, idx) {
+            meta.data.forEach(function(item, idx) {
                 var v = dataValues[idx] || 0;
                 var text = "";
                 if (v === 0) {
@@ -475,43 +512,71 @@ function renderRevenueBarChart() {
                 } else {
                     text = (v / 1000).toFixed(0) + 'k';
                 }
-                c.fillText(text, bar.x, labelY);
+                var yPos = isLine ? (item.y - 8) : labelY;
+                c.fillText(text, item.x, yPos);
             });
             c.restore();
         }
     };
 
+    var barPct = (period === 12) ? 0.76 : (period === 6 ? 0.50 : 0.32);
+    var catPct = (period === 12) ? 0.88 : (period === 6 ? 0.72 : 0.50);
+
+    var datasets = [];
+    if (isLine) {
+        var lineGrad = ctx.createLinearGradient(0, 0, 0, 220);
+        lineGrad.addColorStop(0, 'rgba(74, 114, 232, 0.40)');
+        lineGrad.addColorStop(1, 'rgba(74, 114, 232, 0.02)');
+
+        datasets = [{
+            label: 'Doanh thu',
+            data: dataValues,
+            borderColor: '#4A72E8',
+            borderWidth: 3,
+            backgroundColor: lineGrad,
+            fill: true,
+            tension: 0.35,
+            pointBackgroundColor: '#4A72E8',
+            pointBorderColor: '#FFFFFF',
+            pointBorderWidth: 2,
+            pointRadius: 4.5,
+            pointHoverRadius: 7
+        }];
+    } else {
+        datasets = [
+            {
+                label: 'Track',
+                data: trackData,
+                backgroundColor: 'rgba(74, 114, 232, 0.16)',
+                hoverBackgroundColor: 'rgba(74, 114, 232, 0.16)',
+                borderRadius: 8,
+                borderSkipped: false,
+                barPercentage: barPct,
+                categoryPercentage: catPct,
+                grouped: false,
+                order: 2
+            },
+            {
+                label: 'Doanh thu',
+                data: dataValues,
+                backgroundColor: '#4A72E8',
+                hoverBackgroundColor: '#3B60D4',
+                borderRadius: 8,
+                borderSkipped: false,
+                barPercentage: barPct,
+                categoryPercentage: catPct,
+                grouped: false,
+                order: 1
+            }
+        ];
+    }
+
     revenueBarChartInstance = new Chart(ctx, {
-        type: 'bar',
+        type: isLine ? 'line' : 'bar',
         plugins: [topLabelsPlugin],
         data: {
             labels: labels,
-            datasets: [
-                {
-                    label: 'Track',
-                    data: trackData,
-                    backgroundColor: 'rgba(74, 114, 232, 0.16)',
-                    hoverBackgroundColor: 'rgba(74, 114, 232, 0.16)',
-                    borderRadius: 8,
-                    borderSkipped: false,
-                    barPercentage: 0.76,
-                    categoryPercentage: 0.88,
-                    grouped: false,
-                    order: 2
-                },
-                {
-                    label: 'Doanh thu',
-                    data: dataValues,
-                    backgroundColor: '#4A72E8',
-                    hoverBackgroundColor: '#3B60D4',
-                    borderRadius: 8,
-                    borderSkipped: false,
-                    barPercentage: 0.76,
-                    categoryPercentage: 0.88,
-                    grouped: false,
-                    order: 1
-                }
-            ]
+            datasets: datasets
         },
         options: {
             responsive: true,
@@ -531,6 +596,7 @@ function renderRevenueBarChart() {
                     padding: 10,
                     displayColors: false,
                     filter: function(tooltipItem) {
+                        if (isLine) return true;
                         return tooltipItem.datasetIndex === 1;
                     },
                     callbacks: {
@@ -563,6 +629,8 @@ function renderRevenueBarChart() {
         }
     });
 }
+window.renderRevenueBarChart = renderRevenueBarChart;
+window.updateRevenueBarChart = renderRevenueBarChart;
 var studentRevenueDonutInstance = null;
 
 function renderStudentRevenueDonut(selM, selY) {
