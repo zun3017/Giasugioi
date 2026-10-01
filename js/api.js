@@ -420,44 +420,50 @@
 
                 // 5. THỜI KHÓA BIỂU & LỊCH DẠY GIA SƯ
                 else if (functionName === 'getTutorSchedule') {
-                    result = [
-                        {
-                            rowIndex: 1,
-                            studentName: "Lê Minh Thư",
-                            color: "#8E4DFF",
-                            mon: "18:00 - 19:30",
-                            tue: "",
-                            wed: "",
-                            thu: "",
-                            fri: "",
-                            sat: "",
-                            sun: "08:30 - 10:00"
-                        },
-                        {
-                            rowIndex: 2,
-                            studentName: "Nguyễn Hoàng Nam",
-                            color: "#10B981",
-                            mon: "",
-                            tue: "",
-                            wed: "19:30 - 21:00",
-                            thu: "",
-                            fri: "",
-                            sat: "18:00 - 19:30",
-                            sun: ""
-                        },
-                        {
-                            rowIndex: 3,
-                            studentName: "Phạm Hải Đăng",
-                            color: "#F59E0B",
-                            mon: "",
-                            tue: "18:00 - 19:30",
-                            wed: "",
-                            thu: "",
-                            fri: "18:00 - 19:30",
-                            sat: "",
-                            sun: ""
-                        }
-                    ];
+                    if (store.tutorSchedule && Array.isArray(store.tutorSchedule) && store.tutorSchedule.length > 0) {
+                        result = store.tutorSchedule;
+                    } else {
+                        result = [
+                            {
+                                rowIndex: 1,
+                                studentName: "Lê Minh Thư",
+                                color: "#8E4DFF",
+                                mon: "18:00 - 19:30",
+                                tue: "",
+                                wed: "",
+                                thu: "",
+                                fri: "",
+                                sat: "",
+                                sun: "08:30 - 10:00"
+                            },
+                            {
+                                rowIndex: 2,
+                                studentName: "Nguyễn Hoàng Nam",
+                                color: "#10B981",
+                                mon: "",
+                                tue: "",
+                                wed: "19:30 - 21:00",
+                                thu: "",
+                                fri: "",
+                                sat: "18:00 - 19:30",
+                                sun: ""
+                            },
+                            {
+                                rowIndex: 3,
+                                studentName: "Phạm Hải Đăng",
+                                color: "#F59E0B",
+                                mon: "",
+                                tue: "18:00 - 19:30",
+                                wed: "",
+                                thu: "",
+                                fri: "18:00 - 19:30",
+                                sat: "",
+                                sun: ""
+                            }
+                        ];
+                        store.tutorSchedule = result;
+                        saveDemoStore(store);
+                    }
                 }
 
                 // 6. QUẢN LÝ BÀI TẬP ĐÃ GIAO CHO HỌC SINH
@@ -1027,6 +1033,34 @@
                     result = { success: true, thongBao: "Cập nhật đánh giá buổi học thành công!" };
                 }
                 else if (functionName === 'saveScheduleToBackend') {
+                    const studentName = String(args[1] || "").trim();
+                    const mon = String(args[2] || "").trim();
+                    const tue = String(args[3] || "").trim();
+                    const wed = String(args[4] || "").trim();
+                    const thu = String(args[5] || "").trim();
+                    const fri = String(args[6] || "").trim();
+                    const sat = String(args[7] || "").trim();
+                    const sun = String(args[8] || "").trim();
+                    
+                    if (!store.tutorSchedule || !Array.isArray(store.tutorSchedule)) {
+                        store.tutorSchedule = [
+                            { rowIndex: 1, studentName: "Lê Minh Thư", color: "#8E4DFF", mon: "18:00 - 19:30", tue: "", wed: "", thu: "", fri: "", sat: "", sun: "08:30 - 10:00" },
+                            { rowIndex: 2, studentName: "Nguyễn Hoàng Nam", color: "#10B981", mon: "", tue: "", wed: "19:30 - 21:00", thu: "", fri: "", sat: "18:00 - 19:30", sun: "" },
+                            { rowIndex: 3, studentName: "Phạm Hải Đăng", color: "#F59E0B", mon: "", tue: "18:00 - 19:30", wed: "", thu: "", fri: "18:00 - 19:30", sat: "", sun: "" }
+                        ];
+                    }
+                    let item = store.tutorSchedule.find(s => s.studentName.trim() === studentName);
+                    if (item) {
+                        item.mon = mon; item.tue = tue; item.wed = wed; item.thu = thu; item.fri = fri; item.sat = sat; item.sun = sun;
+                    } else {
+                        store.tutorSchedule.push({
+                            rowIndex: store.tutorSchedule.length + 1,
+                            studentName: studentName,
+                            color: "#8E4DFF",
+                            mon: mon, tue: tue, wed: wed, thu: thu, fri: fri, sat: sat, sun: sun
+                        });
+                    }
+                    saveDemoStore(store);
                     result = { success: true, thongBao: "Đã lưu lịch dạy thành công!" };
                 }
                 else if (functionName === 'updateAnnouncement') {
