@@ -2267,11 +2267,6 @@
                     <i class="fa-solid fa-table-list"></i>
                     <span class="cal-sheet-btn-text">Lịch tóm tắt</span>
                 </button>
-
-                <!-- Nút chọn giao diện Theme -->
-                <button type="button" class="cal-sheet-toggle-btn" onclick="openThemeSwitcher()" title="Chọn giao diện" style="padding: 0 10px; font-size: 15px;">
-                    <span>🎨</span>
-                </button>
             </div>
         </div>
     </div>
@@ -2567,200 +2562,130 @@
         let tutorDataGlobal = dashDataStr ? JSON.parse(dashDataStr) : null;
         const isDemoMode = !userPhone;
 
-        // Dữ liệu mô phỏng theo cấu trúc sheet Lịch học (khớp 100% hình ảnh tham chiếu Image 2 + demo)
+        const PRESET_COLORS = [
+            '#8E4DFF', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6366F1',
+            '#D4E7B5', '#DFD6F2', '#F9D5CA', '#BDD7EE', '#FDE8B3', '#6D675E',
+            '#4D9EFF', '#00D2FC', '#4DFFC3', '#4CAF50', '#AEEA00', '#FFD23F'
+        ];
+
+        const STUDENT_DEFAULT_COLORS = {
+            "Lê Minh Thư": "#8E4DFF",
+            "Nguyễn Hoàng Nam": "#10B981",
+            "Phạm Hải Đăng": "#F59E0B"
+        };
+
+        // Dữ liệu thời khóa biểu chuẩn của hệ thống Gia Sư (3 học sinh thực tế)
         let tutorScheduleSheetData = [
             {
-                studentName: "Toán 8",
-                subject: "Toán 8",
-                color: localStorage.getItem('student_color_Toán 8') || "#D4E7B5",
-                fee: 750000,
-                mon: "07:30 - 09:30",
+                studentName: "Lê Minh Thư",
+                subject: "Toán & Vật Lý",
+                color: localStorage.getItem('student_color_Lê Minh Thư') || "#8E4DFF",
+                fee: 200000,
+                mon: "18:00 - 19:30",
                 tue: "",
-                wed: "07:30 - 09:30",
-                thu: "",
-                fri: "07:30 - 09:30",
-                sat: "",
-                sun: ""
-            },
-            {
-                studentName: "Toán 9 NC",
-                subject: "Toán 9 NC",
-                color: localStorage.getItem('student_color_Toán 9 NC') || "#DFD6F2",
-                fee: 500000,
-                mon: "09:30 - 11:30",
-                tue: "",
-                wed: "09:30 - 11:30",
-                thu: "",
-                fri: "09:30 - 11:30",
-                sat: "",
-                sun: ""
-            },
-            {
-                studentName: "Toán 9 CB",
-                subject: "Toán 9 CB",
-                color: localStorage.getItem('student_color_Toán 9 CB') || "#F9D5CA",
-                fee: 800000,
-                mon: "14:00 - 16:00",
-                tue: "",
-                wed: "14:00 - 16:00",
-                thu: "",
-                fri: "14:00 - 16:00",
-                sat: "",
-                sun: ""
-            },
-            {
-                studentName: "Toán 10",
-                subject: "Toán 10",
-                color: localStorage.getItem('student_color_Toán 10') || "#BDD7EE",
-                fee: 1000000,
-                mon: "16:00 - 18:00",
-                tue: "",
-                wed: "16:00 - 18:00",
-                thu: "",
-                fri: "16:00 - 18:00",
-                sat: "",
-                sun: ""
-            },
-            {
-                studentName: "Toán 11",
-                subject: "Toán 11",
-                color: localStorage.getItem('student_color_Toán 11') || "#FDE8B3",
-                fee: 500000,
-                mon: "",
-                tue: "14:00 - 16:00",
                 wed: "",
-                thu: "14:00 - 16:00",
-                fri: "",
-                sat: "07:30 - 09:30",
-                sun: ""
-            },
-            {
-                studentName: "Toán 12",
-                subject: "Toán 12",
-                color: localStorage.getItem('student_color_Toán 12') || "#6D675E",
-                fee: 500000,
-                mon: "",
-                tue: "16:00 - 18:00",
-                wed: "",
-                thu: "16:00 - 18:00",
-                fri: "",
-                sat: "09:30 - 11:30",
-                sun: ""
-            },
-            {
-                studentName: "GTPX 17",
-                subject: "GTPX 17",
-                color: localStorage.getItem('student_color_GTPX 17') || "#E11D48",
-                fee: 750000,
-                mon: "19:00 - 20:00 (7:00-8:00PM) SKIP 31/08/2026 | 28/09/2026: 19:00 - 20:00 (7:00-8:00PM)",
-                tue: "",
-                wed: "19:00 - 20:00 (7:00-8:00PM) SKIP 02/09/2026, 09/09/2026",
                 thu: "",
-                fri: "19:00 - 20:00 (7:00-8:00PM)",
-                sat: "",
-                sun: ""
-            },
-            {
-                studentName: "Pre-Inter A2+",
-                subject: "Pre-Inter A2+",
-                color: localStorage.getItem('student_color_Pre-Inter A2+') || "#0284C7",
-                fee: 500000,
-                mon: "31/08/2026: 21:00 - 22:30 | 07/09/2026: 21:00 - 22:30 | 14/09/2026: 20:00 - 21:30 | 21/09/2026: 20:00 - 21:30 | 28/09/2026: 20:00 - 21:30",
-                tue: "",
-                wed: "20:00 - 21:30 SKIP 02/09/2026, 09/09/2026",
-                thu: "03/09/2026: 20:30 - 22:00 | 10/09/2026: 20:30 - 22:00",
                 fri: "",
                 sat: "",
-                sun: ""
+                sun: "08:30 - 10:00"
             },
             {
-                studentName: "GTPX 18",
-                subject: "GTPX 18",
-                color: localStorage.getItem('student_color_GTPX 18') || "#059669",
-                fee: 800000,
-                mon: "20:15 - 21:15 (8:15-9:15_TH) SKIP 31/08/2026",
-                tue: "",
-                wed: "20:15 - 21:15 (8:15-9:15_TH) SKIP 02/09/2026, 09/09/2026",
-                thu: "",
-                fri: "20:15 - 21:15 (8:15-9:15_TH)",
-                sat: "",
-                sun: ""
-            },
-            {
-                studentName: "ARAVA GTPX 15",
-                subject: "ARAVA GTPX 15",
-                color: localStorage.getItem('student_color_ARAVA GTPX 15') || "#7C3AED",
-                fee: 1000000,
-                mon: "",
-                tue: "19:00 - 20:30 (T3-5-7) SKIP 01/09/2026, 22/09/2026, 29/09/2026",
-                wed: "",
-                thu: "19:00 - 20:30 (T3-5-7) SKIP 24/09/2026",
-                fri: "",
-                sat: "19:00 - 20:30 (T3-5-7) SKIP 12/09/2026, 19/09/2026, 26/09/2026",
-                sun: ""
-            },
-            {
-                studentName: "IELTS 5.0-6.0",
-                subject: "IELTS 5.0-6.0",
-                color: localStorage.getItem('student_color_IELTS 5.0-6.0') || "#D97706",
-                fee: 500000,
-                mon: "21/09/2026: 18:45 - 20:00 (Phương)",
-                tue: "15/09/2026: 15:00 - 16:30 (Phương) | 29/09/2026: 15:00 - 16:30 (Phương)",
-                wed: "23/09/2026: 15:00 - 16:30 (Phương)",
-                thu: "10/09/2026: 15:00 - 16:30 (Phương)",
-                fri: "11/09/2026: 14:30 - 16:00 (Phương)",
-                sat: "",
-                sun: ""
-            },
-            {
-                studentName: "ELE 04 - A1",
-                subject: "ELE 04 - A1",
-                color: localStorage.getItem('student_color_ELE 04 - A1') || "#EA580C",
-                fee: 500000,
+                studentName: "Nguyễn Hoàng Nam",
+                subject: "Toán 9",
+                color: localStorage.getItem('student_color_Nguyễn Hoàng Nam') || "#10B981",
+                fee: 200000,
                 mon: "",
                 tue: "",
-                wed: "",
-                thu: "",
-                fri: "18/09/2026: 20:00 - 21:30 | 25/09/2026: 20:00 - 21:30",
-                sat: "",
-                sun: "20/09/2026: 20:00 - 21:30 | 27/09/2026: 20:00 - 21:30"
-            },
-            {
-                studentName: "Huy-Đạt Tiếng Anh 9",
-                subject: "Huy-Đạt Tiếng Anh 9",
-                color: localStorage.getItem('student_color_Huy-Đạt Tiếng Anh 9') || "#10B981",
-                fee: 600000,
-                mon: "31/08/2026: 09:00 - 10:30",
-                tue: "",
-                wed: "",
+                wed: "19:30 - 21:00",
                 thu: "",
                 fri: "",
-                sat: "",
+                sat: "18:00 - 19:30",
                 sun: ""
             },
             {
-                studentName: "Trần Thị B",
-                subject: "Trần Thị B",
-                color: localStorage.getItem('student_color_Trần Thị B') || "#9CA3AF",
-                fee: 500000,
+                studentName: "Phạm Hải Đăng",
+                subject: "Vật Lý 11",
+                color: localStorage.getItem('student_color_Phạm Hải Đăng') || "#F59E0B",
+                fee: 200000,
                 mon: "",
-                tue: "",
+                tue: "18:00 - 19:30",
                 wed: "",
                 thu: "",
-                fri: "",
-                sat: "12/09/2026: 14:00 - 16:00 (Đã hủy) [CANCELLED]",
+                fri: "18:00 - 19:30",
+                sat: "",
                 sun: ""
             }
         ];
 
-        // Nếu ở chế độ thật, sẽ fetch lịch từ Sheets thông qua Apps Script
+        // Hàm nạp thời khóa biểu từ Store demo hoặc Backend Sheets
         function loadTutorScheduleFromBackend(onSuccess) {
+            var store = (typeof getGiaSuDemoStore === 'function') ? getGiaSuDemoStore() : null;
+            if (!store && window.parent && typeof window.parent.getGiaSuDemoStore === 'function') {
+                try { store = window.parent.getGiaSuDemoStore(); } catch(e) {}
+            }
+            if (!tutorDataGlobal && store && store.students) {
+                tutorDataGlobal = { students: store.students };
+            } else if (!tutorDataGlobal && window.parent && window.parent.tutorDataGlobal) {
+                tutorDataGlobal = window.parent.tutorDataGlobal;
+            }
+
             if (isDemoMode) {
+                var sched = (store && store.tutorSchedule && store.tutorSchedule.length > 0) ? store.tutorSchedule : null;
+                if (!sched && window.parent && window.parent.getGiaSuDemoStore) {
+                    try {
+                        var pStore = window.parent.getGiaSuDemoStore();
+                        if (pStore && pStore.tutorSchedule && pStore.tutorSchedule.length > 0) sched = pStore.tutorSchedule;
+                    } catch(e) {}
+                }
+
+                if (sched && sched.length > 0) {
+                    var schedMap = {};
+                    sched.forEach(function(s) {
+                        if (s && s.studentName) {
+                            schedMap[s.studentName.trim()] = s;
+                        }
+                    });
+
+                    var stList = (tutorDataGlobal && tutorDataGlobal.students && tutorDataGlobal.students.length > 0)
+                        ? tutorDataGlobal.students
+                        : (store && store.students && store.students.length > 0 ? store.students : [
+                            { name: "Lê Minh Thư", subject: "Toán & Vật Lý", tuition: 200000 },
+                            { name: "Nguyễn Hoàng Nam", subject: "Toán 9", tuition: 200000 },
+                            { name: "Phạm Hải Đăng", subject: "Vật Lý 11", tuition: 200000 }
+                        ]);
+
+                    tutorScheduleSheetData = [];
+                    stList.forEach(function(st, idx) {
+                        var s = schedMap[st.name.trim()] || { mon: "", tue: "", wed: "", thu: "", fri: "", sat: "", sun: "" };
+                        let defaultCol = s.color || STUDENT_DEFAULT_COLORS[st.name.trim()] || PRESET_COLORS[idx % PRESET_COLORS.length];
+                        let savedColor = localStorage.getItem('student_color_' + st.name.trim()) || defaultCol;
+                        let tuitionVal = st.tuition || (st.fee ? parseInt(String(st.fee).replace(/\D/g, '')) : 200000) || 200000;
+                        let subjName = (st.subject ? st.subject : '') + (st.classLevel ? (' ' + st.classLevel) : '');
+                        if (!subjName.trim()) subjName = st.name.trim();
+
+                        tutorScheduleSheetData.push({
+                            studentName: st.name.trim(),
+                            subject: subjName.trim(),
+                            color: savedColor,
+                            fee: tuitionVal,
+                            mon: s.mon || '',
+                            tue: s.tue || '',
+                            wed: s.wed || '',
+                            thu: s.thu || '',
+                            fri: s.fri || '',
+                            sat: s.sat || '',
+                            sun: s.sun || ''
+                        });
+                    });
+                }
+
+                loadStudentOptions();
+                renderSheetTable();
                 if (onSuccess) onSuccess();
                 return;
             }
-            
-            // Gọi backend getTutorSchedule
+
+            // Gọi backend getTutorSchedule cho tài khoản thật
             google.script.run
                 .withSuccessHandler(function(schedule) {
                     var schedMap = {};
@@ -2772,16 +2697,13 @@
                         });
                     }
                     
-                    // Xây dựng lại mảng tutorScheduleSheetData khớp cấu trúc demo
                     tutorScheduleSheetData = [];
                     if(tutorDataGlobal && tutorDataGlobal.students) {
                         tutorDataGlobal.students.forEach(function(st, idx) {
                             var s = schedMap[st.name.trim()] || { mon: "", tue: "", wed: "", thu: "", fri: "", sat: "", sun: "" };
-                            
-                            // Đọc màu lưu trong localStorage, hoặc gán màu mặc định tuần tự từ danh sách bảng màu
-                            let savedColor = localStorage.getItem('student_color_' + st.name.trim()) || PRESET_COLORS[idx % PRESET_COLORS.length];
-                            
-                            let tuitionVal = st.tuition || (st.fee ? parseInt(st.fee.replace(/\D/g, '')) : 500000) || 500000;
+                            let defaultCol = s.color || STUDENT_DEFAULT_COLORS[st.name.trim()] || PRESET_COLORS[idx % PRESET_COLORS.length];
+                            let savedColor = localStorage.getItem('student_color_' + st.name.trim()) || defaultCol;
+                            let tuitionVal = st.tuition || (st.fee ? parseInt(String(st.fee).replace(/\D/g, '')) : 200000) || 200000;
                             let subjName = (st.subject ? st.subject : '') + (st.classLevel ? (' ' + st.classLevel) : '');
                             if (!subjName.trim()) subjName = st.name.trim();
 
@@ -2801,10 +2723,8 @@
                         });
                     }
                     
-                    // Nạp lại dropdown và bảng Sheets giả lập
                     loadStudentOptions();
                     renderSheetTable();
-                    
                     if (onSuccess) onSuccess();
                 })
                 .withFailureHandler(function(err) {
@@ -2814,9 +2734,28 @@
                 .getTutorSchedule(userPhone);
         }
 
-        // Đồng bộ dữ liệu sửa đổi lên Google Sheets
+        // Đồng bộ dữ liệu sửa đổi lên Store demo hoặc Google Sheets
         function saveScheduleToBackend(studentName, onDone) {
             if (isDemoMode) {
+                try {
+                    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
+                    if (!store && window.parent && typeof window.parent.getGiaSuDemoStore === 'function') {
+                        store = window.parent.getGiaSuDemoStore();
+                    }
+                    if (store && store.tutorSchedule) {
+                        let row = tutorScheduleSheetData.find(r => r.studentName === studentName);
+                        if (row) {
+                            let item = store.tutorSchedule.find(s => s.studentName === studentName);
+                            if (item) {
+                                allDayKeys.forEach(k => item[k] = row[k] || '');
+                            } else {
+                                store.tutorSchedule.push(Object.assign({}, row));
+                            }
+                            if (typeof saveDemoStore === 'function') saveDemoStore(store);
+                            if (window.parent && typeof window.parent.saveDemoStore === 'function') window.parent.saveDemoStore(store);
+                        }
+                    }
+                } catch(e) {}
                 if (onDone) onDone(true);
                 return;
             }
@@ -4674,12 +4613,14 @@
             }
         }
 
-        // --- CHƯƠNG TRÌNH CUSTOM MÀU SẮC CHO HỌC SINH/BUỔI HỌC ---
-        const PRESET_COLORS = [
-            '#D4E7B5', '#DFD6F2', '#F9D5CA', '#BDD7EE', '#FDE8B3', '#6D675E',
-            '#8E4DFF', '#4D9EFF', '#00D2FC', '#4DFFC3', '#4CAF50', '#AEEA00', 
-            '#FFD23F', '#FF9100', '#FF6B9D', '#FF4D4D', '#90A4AE', '#D1C4E9'
-        ];
+        // PRESET_COLORS đã được khai báo ở đầu script, giữ fallback nếu chưa có
+        if (typeof PRESET_COLORS === 'undefined') {
+            window.PRESET_COLORS = [
+                '#8E4DFF', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6366F1',
+                '#D4E7B5', '#DFD6F2', '#F9D5CA', '#BDD7EE', '#FDE8B3', '#6D675E',
+                '#4D9EFF', '#00D2FC', '#4DFFC3', '#4CAF50', '#AEEA00', '#FFD23F'
+            ];
+        }
 
         function initColorPickerSwatches() {
             let container = document.getElementById("colorSwatches");
