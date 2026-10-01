@@ -273,6 +273,67 @@
             background: #DFD2C3;
         }
 
+        /* --- BOTTOM BAR: STUDENT LEGEND & STATUS BAR (TASK 10.4) --- */
+        .calendar-bottom-bar {
+            flex-shrink: 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #F3EDE4;
+            border-top: 1px solid #E5D9CC;
+            padding: 8px 20px;
+            gap: 16px;
+            z-index: 10;
+        }
+
+        .cal-legend-list {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            overflow-x: auto;
+            scrollbar-width: none;
+            white-space: nowrap;
+            flex: 1;
+        }
+        .cal-legend-list::-webkit-scrollbar {
+            display: none;
+        }
+
+        .cal-legend-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            font-size: 12.5px;
+            font-weight: 600;
+            color: #2D1F0E;
+            cursor: default;
+            user-select: none;
+        }
+
+        .cal-legend-dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            display: inline-block;
+            flex-shrink: 0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+        }
+
+        .cal-status-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 12.5px;
+            font-weight: 700;
+            color: #6B4226;
+            white-space: nowrap;
+            flex-shrink: 0;
+            background: #E8DDD0;
+            padding: 5px 14px;
+            border-radius: 20px;
+            border: 1px solid #E5D9CC;
+        }
+
         /* --- GOOGLE CALENDAR CUSTOM STYLING (LIGHT CREAM/BEIGE) --- */
         #calendar {
             background: transparent;
@@ -1376,6 +1437,23 @@
                 font-size: 11.5px !important;
                 height: 24px !important;
             }
+            .calendar-bottom-bar {
+                padding: 7px 12px !important;
+                flex-direction: column !important;
+                align-items: stretch !important;
+                gap: 6px !important;
+            }
+            .cal-legend-list {
+                gap: 12px !important;
+            }
+            .cal-legend-item {
+                font-size: 11.5px !important;
+            }
+            .cal-status-bar {
+                font-size: 11.5px !important;
+                justify-content: center !important;
+                padding: 4px 10px !important;
+            }
             .calendar-wrapper { padding: 0 4px 4px 4px !important; }
             
             .fab-add { display: flex; }
@@ -1540,6 +1618,15 @@
     <!-- VÙNG LỊCH CHIẾM TOÀN BỘ PHẦN CÒN LẠI -->
     <div class="calendar-wrapper">
         <div id="calendar"></div>
+    </div>
+
+    <!-- THANH BOTTOM: LEGEND THEO HỌC SINH + STATUS BAR (TASK 10.4) -->
+    <div class="calendar-bottom-bar" id="calendarBottomBar">
+        <div class="cal-legend-list" id="calStudentLegendList"></div>
+        <div class="cal-status-bar" id="calMonthStatusBar">
+            <i class="fa-solid fa-chart-pie" style="color: #C05E8E;"></i>
+            <span id="calStatusText">0 buổi trong tháng · 0 học sinh</span>
+        </div>
     </div>
 
     <!-- BẢNG SHEETS SIMULATOR - PANEL NỔI LÊN TỪ DƯỚI -->
@@ -2112,6 +2199,9 @@
             }
 
             renderSheetTable();
+            if (typeof updateMonthStatusBar === 'function' && calendar && calendar.view && calendar.view.type === 'dayGridMonth') {
+                updateMonthStatusBar(calendar.view);
+            }
             if (andThen) andThen();
 
             // --- Debounce sync lên Sheets ---
@@ -2508,6 +2598,11 @@
             }
             if (calendar) {
                 calendar.refetchEvents();
+                if (calendar.view && calendar.view.type === 'dayGridMonth') {
+                    setTimeout(function() {
+                        updateMonthStatusBar(calendar.view);
+                    }, 50);
+                }
             }
         }
 
@@ -2556,6 +2651,64 @@
             '1/5': 'Quốc tế Lao động',
             '2/9': 'Quốc khánh'
         };
+
+        // ==========================================
+        // THANH ĐÁY LỊCH: LEGEND HỌC SINH & STATUS BAR (TASK 10.4)
+        // ==========================================
+        function renderStudentLegend() {
+            let legendContainer = document.getElementById('calStudentLegendList');
+            if (!legendContainer) return;
+            legendContainer.innerHTML = '';
+            tutorScheduleSheetData.forEach(row => {
+                let studentColor = row.color || '#C05E8E';
+                let item = document.createElement('div');
+                item.className = 'cal-legend-item';
+                item.innerHTML = `<span class="cal-legend-dot" style="background: ${studentColor};"></span>
+                                  <span class="cal-legend-name">${row.studentName}</span>`;
+                legendContainer.appendChild(item);
+            });
+        }
+
+        function updateMonthStatusBar(view) {
+            let statusEl = document.getElementById('calStatusText');
+            if (!statusEl || !view) return;
+            let rangeInfo = { start: view.activeStart, end: view.activeEnd };
+            let events = getEventsForCalendarRange(rangeInfo, 'dayGridMonth');
+            let targetMonth = view.currentStart.getMonth();
+            let targetYear = view.currentStart.getFullYear();
+            
+            // Đếm các ca học thuộc tháng đang xem
+            let monthEvents = events.filter(ev => {
+                let d = new Date(ev.start);
+                return d.getMonth() === targetMonth && d.getFullYear() === targetYear;
+            });
+
+            let sessionCount = monthEvents.length;
+            let studentSet = new Set();
+            monthEvents.forEach(ev => {
+                if (ev.extendedProps && ev.extendedProps.studentName) {
+                    studentSet.add(ev.extendedProps.studentName);
+                }
+            });
+            let studentCount = studentSet.size;
+
+            statusEl.innerText = sessionCount + ' buổi trong tháng · ' + studentCount + ' học sinh';
+        }
+
+        function updateMonthBottomBar(view) {
+            let bar = document.getElementById('calendarBottomBar');
+            if (!bar || !view) return;
+            if (view.type === 'dayGridMonth') {
+                bar.style.display = 'flex';
+                renderStudentLegend();
+                updateMonthStatusBar(view);
+            } else {
+                bar.style.display = 'none';
+            }
+            if (calendar) {
+                calendar.updateSize();
+            }
+        }
 
         // Khởi tạo lịch
         document.addEventListener('DOMContentLoaded', function() {
@@ -2653,6 +2806,7 @@
                 datesSet: function(dateInfo) {
                     updateCalendarHeaderTitle(dateInfo.view);
                     updateActiveViewPills(dateInfo.view.type);
+                    updateMonthBottomBar(dateInfo.view);
                 },
                 dayCellDidMount: function(arg) {
                     // Task 10.3: Chỉ hiển thị ngày lễ quốc gia ở Month view
