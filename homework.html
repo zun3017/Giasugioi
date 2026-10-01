@@ -1882,6 +1882,16 @@
                 check();
             }
         }
+
+        window.addEventListener('DOMContentLoaded', function() {
+            try {
+                var urlParams = new URLSearchParams(window.location.search);
+                var queryCode = urlParams.get('code') || urlParams.get('ma') || urlParams.get('maBaiTap') || urlParams.get('maHocSinh');
+                if (queryCode) {
+                    fillQuickHw(queryCode);
+                }
+            } catch(e) {}
+        });
     </script>
     <!-- PWA Install Script -->
     <script src="js/pwa-install.js"></script>
