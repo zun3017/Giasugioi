@@ -1,0 +1,37 @@
+/* ============================================================================
+ * css/public-theme.css — Light White-Blue Theme (Public Pages)
+ * Áp dụng cho: index.html, student-login.html, tutor-login.html,
+ *             homework.html, student-dashboard.html
+ * ============================================================================ */
+
+:root {
+  --bg-page:              #F0F7FF;
+  --bg-page-gradient:     linear-gradient(160deg, #F0F7FF 0%, #E0EFFF 50%, #F5F8FF 100%);
+  --header-bg:            rgba(255, 255, 255, 0.95);
+  --header-border:        #DBEAFE;
+  --bg-card:              #FFFFFF;
+  --bg-card-alt:          #F8FAFF;
+  --bg-input:             #F8FAFF;
+  --bg-overlay:           rgba(15, 23, 42, 0.5);
+  --border-color:         #DBEAFE;
+  --border-card:          #E2E8F0;
+  --text-primary:         #1E293B;
+  --text-secondary:       #64748B;
+  --text-muted:           #94A3B8;
+  --nav-btn-text:         #475569;
+  --color-primary:        #3B82F6;
+  --color-primary-dark:   #1D4ED8;
+  --color-primary-light:  #93C5FD;
+  --color-primary-rgb:    59, 130, 246;
+  --color-accent-kpi:     #2563EB;
+  --highlight-color:      #2563EB;
+  --nav-active-bg:        #EFF6FF;
+  --nav-active-text:      #2563EB;
+  --nav-active-border:    #BFDBFE;
+  --nav-hover-bg:         rgba(59, 130, 246, 0.06);
+  --btn-bg:               linear-gradient(135deg, #3B82F6, #1D4ED8);
+  --btn-text:             #FFFFFF;
+  --shadow-card:          0 4px 20px rgba(59, 130, 246, 0.08);
+  --shadow-primary:       0 6px 20px rgba(59, 130, 246, 0.25);
+  --scrollbar-thumb:      #93C5FD;
+}
