@@ -1733,7 +1733,7 @@
         }
         
         .tutor-header {
-            display: flex;
+            display: none !important;
             justify-content: space-between;
             align-items: center;
             background: rgba(11, 8, 38, 0.95);
