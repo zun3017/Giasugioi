@@ -350,7 +350,63 @@
     </style>
 </head>
 <body>
-    <div id="tutorDashboardBox">
+    <div id="tutorDashboardBox" class="tutor-app-layout">
+        <!-- Sidebar Navigation -->
+        <aside class="tutor-sidebar" id="tutorSidebar">
+            <!-- Brand / Tutor Profile Header -->
+            <div class="tutor-sidebar-brand">
+                <div class="sidebar-avatar">
+                    <i class="fa-solid fa-chalkboard-user"></i>
+                </div>
+                <div class="sidebar-user-info">
+                    <div class="sidebar-user-title">Gia Sư 4.0</div>
+                    <div class="sidebar-user-name" id="sidebarTutorName">Gia sư</div>
+                </div>
+            </div>
+
+            <!-- Navigation Menu (6 items) -->
+            <nav class="tutor-sidebar-nav">
+                <button type="button" class="sidebar-nav-item active" data-tab="overview" onclick="switchTutorNavTab(this, 'overview')">
+                    <i class="fa-solid fa-gauge"></i>
+                    <span>Tổng quan</span>
+                </button>
+                <button type="button" class="sidebar-nav-item" data-tab="reports" onclick="switchTutorNavTab(this, 'reports')">
+                    <i class="fa-solid fa-file-image"></i>
+                    <span>Báo cáo</span>
+                </button>
+                <button type="button" class="sidebar-nav-item" data-tab="diary" onclick="switchTutorNavTab(this, 'diary')">
+                    <i class="fa-solid fa-book-open"></i>
+                    <span>Nhật ký buổi học</span>
+                </button>
+                <a href="tutor-calendar.html" class="sidebar-nav-item" data-tab="calendar">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>Lịch dạy</span>
+                </a>
+                <button type="button" class="sidebar-nav-item" data-tab="students" onclick="switchTutorNavTab(this, 'students')">
+                    <i class="fa-solid fa-user-graduate"></i>
+                    <span>Học sinh</span>
+                </button>
+                <button type="button" class="sidebar-nav-item" data-tab="tuition" onclick="switchTutorNavTab(this, 'tuition')">
+                    <i class="fa-solid fa-money-bill-wave"></i>
+                    <span>Học phí</span>
+                </button>
+            </nav>
+
+            <!-- Footer Action (Logout & Account) -->
+            <div class="tutor-sidebar-footer">
+                <button type="button" class="sidebar-footer-btn" onclick="openTutorAccountModal()" title="Cài đặt tài khoản">
+                    <i class="fa-solid fa-user-gear"></i>
+                    <span>Tài khoản</span>
+                </button>
+                <button type="button" class="sidebar-footer-btn logout" onclick="quayLai()" title="Đăng xuất">
+                    <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    <span>Đăng xuất</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="tutor-main-content" id="tutorMainContent">
         <!-- Dòng chữ chạy thông báo từ Admin -->
         <div id="tutorMarqueeContainer" class="smooth-marquee-container">
             <div class="smooth-marquee-wrapper" id="tutorMarqueeWrapper"></div>
@@ -366,7 +422,49 @@
             </div>
         </div>
 
-        <div class="schedule-section">
+        <!-- SECTION TỔNG QUAN -->
+        <div id="tutorSectionOverview" class="tutor-section" style="display: block;">
+            <!-- 4 KPI Cards -->
+            <div class="tutor-kpi-grid" id="tutorKpiGrid">
+                <!-- Card 1: Số học sinh đang dạy -->
+                <div class="tutor-kpi-card">
+                    <div class="kpi-card-top">
+                        <span class="kpi-label">Học sinh đang dạy</span>
+                        <div class="kpi-icon icon-purple"><i class="fa-solid fa-user-graduate"></i></div>
+                    </div>
+                    <div class="kpi-value text-purple" id="kpiStudentCount">0</div>
+                    <div class="kpi-subtext"><i class="fa-solid fa-arrow-trend-up"></i> Đang theo học</div>
+                </div>
+                <!-- Card 2: Tổng buổi đã dạy tháng này -->
+                <div class="tutor-kpi-card">
+                    <div class="kpi-card-top">
+                        <span class="kpi-label">Buổi dạy tháng này</span>
+                        <div class="kpi-icon icon-green"><i class="fa-solid fa-calendar-check"></i></div>
+                    </div>
+                    <div class="kpi-value text-green" id="kpiSessionCount">0</div>
+                    <div class="kpi-subtext"><i class="fa-solid fa-circle-check"></i> Đã hoàn thành</div>
+                </div>
+                <!-- Card 3: Tổng giờ tích lũy -->
+                <div class="tutor-kpi-card">
+                    <div class="kpi-card-top">
+                        <span class="kpi-label">Tổng giờ tích lũy</span>
+                        <div class="kpi-icon icon-cyan"><i class="fa-solid fa-clock"></i></div>
+                    </div>
+                    <div class="kpi-value text-cyan" id="kpiTotalHours">0h</div>
+                    <div class="kpi-subtext"><i class="fa-solid fa-hourglass-half"></i> Thời lượng dạy</div>
+                </div>
+                <!-- Card 4: Học phí tháng này -->
+                <div class="tutor-kpi-card">
+                    <div class="kpi-card-top">
+                        <span class="kpi-label">Học phí tháng này</span>
+                        <div class="kpi-icon icon-amber"><i class="fa-solid fa-money-bill-wave"></i></div>
+                    </div>
+                    <div class="kpi-value text-amber" id="kpiTuitionTotal">0đ</div>
+                    <div class="kpi-subtext"><i class="fa-solid fa-coins"></i> Tổng học phí</div>
+                </div>
+            </div>
+
+            <div class="schedule-section">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                 <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;"><i class="fa-regular fa-calendar-alt" style="color: #8E4DFF;"></i> Thời khóa biểu tổng hợp</h3>
                 <a href="tutor-calendar.html" class="modal-btn modal-btn-primary" style="width: auto; padding: 8px 18px; background: linear-gradient(135deg, #8E4DFF 0%, #5B21B6 100%); font-weight: bold; border-radius: 20px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 15px rgba(142,77,255,0.25); text-decoration: none; font-size: 13px; font-family: 'Inter', sans-serif;">
@@ -408,6 +506,7 @@
                 <div style="text-align: center; color: rgba(255,255,255,0.3); font-style: italic; padding: 20px;">Đang tải ý kiến...</div>
             </div>
         </div>
+        </div> <!-- End #tutorSectionOverview -->
 
         <div class="student-buttons-container" id="tutorStudentsList">
             <!-- Nút chọn học sinh sẽ render ở đây -->
@@ -738,6 +837,7 @@
                 </div>
             </div>
         </div>
+        </main>
     </div>
                 <!-- ================= TUTOR MODALS ================= -->
     <!-- 1. Modal Quản lý Tài khoản (Account Modal) -->

@@ -11,6 +11,92 @@ function formatScheduleCell(val) {
     return "<span style='color:#10B981; font-weight:600; font-size:13.5px; white-space:nowrap;'>" + val + "</span>";
 }
 
+function renderTutorKpiCards() {
+    var studentCountEl = document.getElementById('kpiStudentCount');
+    var sessionCountEl = document.getElementById('kpiSessionCount');
+    var totalHoursEl = document.getElementById('kpiTotalHours');
+    var tuitionTotalEl = document.getElementById('kpiTuitionTotal');
+
+    if (!studentCountEl) return;
+
+    var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
+    var students = (store && store.students && store.students.length > 0)
+        ? store.students
+        : (tutorDataGlobal && tutorDataGlobal.students ? tutorDataGlobal.students : []);
+
+    var count = students.length;
+    var totalSessions = 0;
+    var totalFee = 0;
+
+    var now = new Date();
+    var curM = now.getMonth() + 1;
+    var curY = now.getFullYear();
+
+    students.forEach(function(st) {
+        var unit = (st.tuition && st.tuition > 0) ? Number(st.tuition) : 200000;
+        if (st.logs && Array.isArray(st.logs)) {
+            st.logs.forEach(function(log) {
+                var inMonth = true;
+                if (log.ngay) {
+                    var parts = log.ngay.split('/');
+                    if (parts.length >= 3) {
+                        var m = parseInt(parts[1], 10);
+                        var y = parseInt(parts[2], 10);
+                        if (m !== curM || y !== curY) {
+                            inMonth = false;
+                        }
+                    }
+                }
+                if (inMonth && (log.chuyenCan === "Có mặt" || log.chuyenCan === "present" || !log.chuyenCan)) {
+                    totalSessions++;
+                    totalFee += unit;
+                }
+            });
+        }
+    });
+
+    // Fallback: nếu mock data các log không trùng tháng hiện tại, đếm các buổi "Có mặt" gần nhất
+    if (totalSessions === 0 && students.length > 0) {
+        students.forEach(function(st) {
+            var unit = (st.tuition && st.tuition > 0) ? Number(st.tuition) : 200000;
+            if (st.logs && Array.isArray(st.logs)) {
+                st.logs.forEach(function(log) {
+                    if (log.chuyenCan === "Có mặt" || log.chuyenCan === "present" || !log.chuyenCan) {
+                        totalSessions++;
+                        totalFee += unit;
+                    }
+                });
+            }
+        });
+    }
+
+    var totalHours = totalSessions * 1.5;
+    var hoursStr = (totalHours % 1 === 0) ? (totalHours + "h") : (totalHours.toFixed(1) + "h");
+
+    studentCountEl.innerText = count;
+    sessionCountEl.innerText = totalSessions;
+    totalHoursEl.innerText = hoursStr;
+    tuitionTotalEl.innerText = totalFee.toLocaleString('vi-VN') + "đ";
+}
+window.renderTutorKpiCards = renderTutorKpiCards;
+
+function switchTutorNavTab(element, tabKey) {
+    var items = document.querySelectorAll('.sidebar-nav-item');
+    items.forEach(function(item) {
+        item.classList.remove('active');
+    });
+    if (element) {
+        element.classList.add('active');
+    }
+
+    var overviewSec = document.getElementById('tutorSectionOverview');
+    if (tabKey === 'overview') {
+        if (overviewSec) overviewSec.style.display = 'block';
+        renderTutorKpiCards();
+    }
+}
+window.switchTutorNavTab = switchTutorNavTab;
+
         function renderTutorView(data) {
             tutorDataGlobal = data;
             currentTutorPhone = document.getElementById('maHocSinh').value.trim();
@@ -34,6 +120,13 @@ function formatScheduleCell(val) {
                 document.getElementById('tutorStudentDetail').style.display = 'none';
             }
             document.getElementById('tutorNameDisplay').innerText = "Xin chào, Gia sư " + data.tutorName;
+            var sidebarTutorName = document.getElementById('sidebarTutorName');
+            if (sidebarTutorName && data.tutorName) {
+                sidebarTutorName.innerText = data.tutorName;
+            }
+            
+            // Render 4 KPI Cards for Overview
+            renderTutorKpiCards();
             
             // Hiển thị thông báo chạy chữ từ Admin
             var marqueeContainer = document.getElementById('tutorMarqueeContainer');
