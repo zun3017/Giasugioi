@@ -1699,6 +1699,8 @@ window.tuitionInvoiceModalState = {
     restoredFromDraft: false
 };
 
+window.tuitionInvoiceHasUnsavedChanges = false;
+
 function autoSaveTuitionDraft() {
     var state = window.tuitionInvoiceModalState;
     if (!state || !state.studentName) return;
@@ -1725,6 +1727,7 @@ window.autoSaveTuitionDraft = autoSaveTuitionDraft;
 
 function saveTuitionDraftModal() {
     autoSaveTuitionDraft();
+    window.tuitionInvoiceHasUnsavedChanges = false;
     if (typeof showToast === 'function') {
         showToast("Đã lưu bản nháp thành công!", "success");
     }
@@ -1732,6 +1735,7 @@ function saveTuitionDraftModal() {
 window.saveTuitionDraftModal = saveTuitionDraftModal;
 
 function onTuitionPeriodDateChange() {
+    window.tuitionInvoiceHasUnsavedChanges = true;
     var sInp = document.getElementById('tuitionPeriodStartDate');
     var eInp = document.getElementById('tuitionPeriodEndDate');
     var sVal = sInp ? sInp.value : '';
@@ -1754,6 +1758,7 @@ function onTuitionPeriodDateChange() {
 window.onTuitionPeriodDateChange = onTuitionPeriodDateChange;
 
 function onTuitionPeriodTitleChange() {
+    window.tuitionInvoiceHasUnsavedChanges = true;
     var titleInp = document.getElementById('tuitionPeriodTitle');
     var val = titleInp ? titleInp.value.trim() : '';
 
@@ -1867,6 +1872,7 @@ function buildTuitionModalForm(st, studentLogs) {
 }
 
 function onTuitionToggleChange(id, key) {
+    window.tuitionInvoiceHasUnsavedChanges = true;
     var cb = document.getElementById(id);
     if (!cb) return;
     if (!window.tuitionInvoiceModalState) window.tuitionInvoiceModalState = {};
@@ -1911,6 +1917,7 @@ function onTuitionToggleChange(id, key) {
 window.onTuitionToggleChange = onTuitionToggleChange;
 
 function onTuitionFeeAdjustmentChange() {
+    window.tuitionInvoiceHasUnsavedChanges = true;
     var discInp = document.getElementById('inputDiscountFee');
     var surInp = document.getElementById('inputSurchargeFee');
     var discVal = discInp ? Math.max(0, parseInt(discInp.value, 10) || 0) : 0;
@@ -2149,10 +2156,13 @@ function renderTuitionLivePreview() {
 }
 window.renderTuitionLivePreview = renderTuitionLivePreview;
 
-function switchTuitionTemplate(tmpl) {
+function switchTuitionTemplate(tmpl, isInitial) {
     window.currentTuitionTemplate = tmpl;
     if (window.tuitionInvoiceModalState) {
         window.tuitionInvoiceModalState.template = tmpl;
+    }
+    if (!isInitial) {
+        window.tuitionInvoiceHasUnsavedChanges = true;
     }
     var b1 = document.getElementById('btnTemplate1');
     var b2 = document.getElementById('btnTemplate2');
@@ -2284,7 +2294,7 @@ function openStudentInvoiceModal(studentName) {
     }
 
     if (typeof switchTuitionTemplate === 'function') {
-        switchTuitionTemplate(window.tuitionInvoiceModalState.template);
+        switchTuitionTemplate(window.tuitionInvoiceModalState.template, true);
     }
 
     // Filter logs for this student using startDate and endDate
@@ -2309,13 +2319,20 @@ function openStudentInvoiceModal(studentName) {
     buildTuitionModalForm(st, studentLogs);
     renderTuitionLivePreview();
 
+    window.tuitionInvoiceHasUnsavedChanges = false;
     modal.style.display = "flex";
     modal.setAttribute('data-student', st.name);
+    modal.setAttribute('data-start', (window.tuitionInvoiceModalState.startDate || ""));
     modal.setAttribute('data-month', (window.tuitionInvoiceModalState.startDate || "").replace(/-/g, ''));
 }
 window.openStudentInvoiceModal = openStudentInvoiceModal;
 
-function closeStudentInvoiceModal() {
+function closeStudentInvoiceModal(isExplicitCancel) {
+    if (isExplicitCancel && window.tuitionInvoiceHasUnsavedChanges) {
+        var ok = confirm("Bỏ các thay đổi chưa lưu?");
+        if (!ok) return;
+    }
+    window.tuitionInvoiceHasUnsavedChanges = false;
     var modal = document.getElementById('tutorTuitionInvoiceModal');
     if (modal) modal.style.display = "none";
 }
@@ -2323,29 +2340,149 @@ window.closeStudentInvoiceModal = closeStudentInvoiceModal;
 
 function saveTuitionDraftModal() {
     autoSaveTuitionDraft();
-    if (typeof showToast === 'function') showToast("Đã lưu bản nháp thành công!", "success");
+    window.tuitionInvoiceHasUnsavedChanges = false;
+    if (typeof showToast === 'function') {
+        showToast("Đã lưu bản nháp thành công!", "success");
+    }
 }
-window.saveTuitionDraftModal = saveTuitionDraftModal;
 window.saveTuitionDraftModal = saveTuitionDraftModal;
 
 function exportTuitionModalPdf() {
-    window.print();
+    var btn = document.getElementById('btnTuitionExportPdf');
+    var originalText = btn ? btn.innerHTML : "";
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang chuẩn bị...';
+    }
+    setTimeout(function() {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+        window.print();
+    }, 200);
 }
 window.exportTuitionModalPdf = exportTuitionModalPdf;
 
 function copyTuitionModalImage() {
-    if (typeof showToast === 'function') showToast("Tính năng copy ảnh đang được xử lý...", "info");
+    var card = document.getElementById('tuitionInvoiceCard');
+    if (!card) {
+        if (typeof showToast === 'function') showToast("Không tìm thấy phiếu học phí!", "error");
+        return;
+    }
+
+    var btn = document.getElementById('btnTuitionCopyImage');
+    var originalText = btn ? btn.innerHTML : "";
+    if (btn) {
+        btn.disabled = true;
+        btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang copy...';
+    }
+
+    var restoreBtn = function() {
+        if (btn) {
+            btn.disabled = false;
+            btn.innerHTML = originalText;
+        }
+    };
+
+    if (typeof html2canvas !== 'function') {
+        restoreBtn();
+        if (typeof showToast === 'function') showToast("Thư viện html2canvas chưa sẵn sàng!", "error");
+        return;
+    }
+
+    html2canvas(card, {
+        scale: 2,
+        backgroundColor: "#FFFFFF",
+        useCORS: true,
+        logging: false
+    }).then(function(canvas) {
+        if (!navigator.clipboard || typeof ClipboardItem === 'undefined') {
+            restoreBtn();
+            if (typeof showToast === 'function') {
+                showToast("Nhấn chuột phải → Lưu ảnh để tải về!", "info");
+            }
+            return;
+        }
+
+        canvas.toBlob(function(blob) {
+            if (!blob) {
+                restoreBtn();
+                if (typeof showToast === 'function') {
+                    showToast("Nhấn chuột phải → Lưu ảnh để tải về!", "info");
+                }
+                return;
+            }
+
+            try {
+                var item = new ClipboardItem({ 'image/png': blob });
+                navigator.clipboard.write([item]).then(function() {
+                    restoreBtn();
+                    if (typeof showToast === 'function') {
+                        showToast("Đã copy ảnh!", "success");
+                    }
+                }).catch(function(err) {
+                    console.warn("Clipboard write error:", err);
+                    restoreBtn();
+                    if (typeof showToast === 'function') {
+                        showToast("Nhấn chuột phải → Lưu ảnh để tải về!", "info");
+                    }
+                });
+            } catch(e) {
+                console.warn("ClipboardItem creation error:", e);
+                restoreBtn();
+                if (typeof showToast === 'function') {
+                    showToast("Nhấn chuột phải → Lưu ảnh để tải về!", "info");
+                }
+            }
+        }, 'image/png');
+    }).catch(function(err) {
+        console.error("Copy tuition image error:", err);
+        restoreBtn();
+        if (typeof showToast === 'function') {
+            showToast("Lỗi khi xử lý ảnh phiếu học phí!", "error");
+        }
+    });
 }
 window.copyTuitionModalImage = copyTuitionModalImage;
+
+function getTuitionInvoiceFileName(studentName, startDateStr) {
+    var rawName = studentName || "HocSinh";
+    var cleanName = rawName.normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/đ/g, "d").replace(/Đ/g, "D")
+        .replace(/[^a-zA-Z0-9]/g, "_")
+        .replace(/_+/g, "_")
+        .replace(/^_|_$/g, "");
+    
+    var monthPart = "";
+    if (startDateStr && startDateStr.indexOf('-') !== -1) {
+        var sp = startDateStr.split('-');
+        if (sp.length >= 2) {
+            monthPart = "Thang" + sp[1] + "_" + sp[0];
+        }
+    }
+    if (!monthPart) {
+        var now = new Date();
+        var mm = String(now.getMonth() + 1).padStart(2, '0');
+        monthPart = "Thang" + mm + "_" + now.getFullYear();
+    }
+    return "PhieuHocPhi_" + cleanName + "_" + monthPart + ".png";
+}
+window.getTuitionInvoiceFileName = getTuitionInvoiceFileName;
 
 function exportTuitionModalInvoice() {
     var card = document.getElementById('tuitionInvoiceCard');
     var modal = document.getElementById('tutorTuitionInvoiceModal');
-    if (!card) return;
+    if (!card) {
+        if (typeof showToast === 'function') showToast("Không tìm thấy phiếu học phí!", "error");
+        return;
+    }
 
-    var sName = modal ? (modal.getAttribute('data-student') || "HocSinh") : "HocSinh";
-    var mStr = modal ? (modal.getAttribute('data-month') || "KyNay") : "KyNay";
-    var cleanName = sName.replace(/\s+/g, '_');
+    var state = window.tuitionInvoiceModalState || {};
+    var sName = state.studentName || (modal ? modal.getAttribute('data-student') : "") || "HocSinh";
+    var startDateStr = state.startDate || (modal ? modal.getAttribute('data-start') : "") || "";
+    var fileName = getTuitionInvoiceFileName(sName, startDateStr);
 
     var btn = document.getElementById('btnExportTuitionInvoice');
     var originalText = btn ? btn.innerHTML : "";
@@ -2354,31 +2491,40 @@ function exportTuitionModalInvoice() {
         btn.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang xuất...';
     }
 
-    if (typeof html2canvas === 'function') {
-        html2canvas(card, { scale: 2, backgroundColor: "#FFFFFF", useCORS: true }).then(function(canvas) {
-            var link = document.createElement('a');
-            link.download = 'HoaDon_' + cleanName + '_' + mStr + '.png';
-            link.href = canvas.toDataURL('image/png');
-            link.click();
-            if (btn) {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
-        }).catch(function(err) {
-            console.error(err);
-            if (btn) {
-                btn.disabled = false;
-                btn.innerHTML = originalText;
-            }
-            if (typeof showToast === 'function') showToast("Lỗi khi xuất ảnh hóa đơn!", "error");
-        });
-    } else {
+    var restoreBtn = function() {
         if (btn) {
             btn.disabled = false;
             btn.innerHTML = originalText;
         }
+    };
+
+    if (typeof html2canvas !== 'function') {
+        restoreBtn();
         if (typeof showToast === 'function') showToast("Thư viện html2canvas chưa sẵn sàng!", "error");
+        return;
     }
+
+    html2canvas(card, {
+        scale: 2,
+        backgroundColor: "#FFFFFF",
+        useCORS: true,
+        logging: false
+    }).then(function(canvas) {
+        var link = document.createElement('a');
+        link.download = fileName;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        restoreBtn();
+        if (typeof showToast === 'function') {
+            showToast("Đã xuất phiếu học phí thành công!", "success");
+        }
+    }).catch(function(err) {
+        console.error("Export tuition image error:", err);
+        restoreBtn();
+        if (typeof showToast === 'function') {
+            showToast("Lỗi khi xuất ảnh phiếu học phí!", "error");
+        }
+    });
 }
 window.exportTuitionModalInvoice = exportTuitionModalInvoice;
 

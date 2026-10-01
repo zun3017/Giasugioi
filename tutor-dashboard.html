@@ -1944,8 +1944,91 @@
                 justify-content: center !important;
             }
         }
+        @media print {
+            @page {
+                margin: 10mm;
+                size: auto;
+            }
+            body {
+                background: #FFFFFF !important;
+                color: #000000 !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            /* Hide all navigation, sidebars, headers, other modals, toasts, controls */
+            .tutor-sidebar,
+            .tutor-header,
+            .tutor-main,
+            .modal-overlay:not(#tutorTuitionInvoiceModal),
+            #toastContainer,
+            .tuition-modal-header,
+            .tuition-col-left,
+            .tuition-modal-footer,
+            #fullscreenLightbox,
+            .bottom-nav {
+                display: none !important;
+            }
+            #tutorTuitionInvoiceModal {
+                position: static !important;
+                display: block !important;
+                background: transparent !important;
+                padding: 0 !important;
+                margin: 0 !important;
+                border: none !important;
+                box-shadow: none !important;
+                width: 100% !important;
+                height: auto !important;
+                overflow: visible !important;
+            }
+            .tuition-modal-dialog {
+                position: static !important;
+                display: block !important;
+                background: transparent !important;
+                border: none !important;
+                box-shadow: none !important;
+                width: 100% !important;
+                max-width: none !important;
+                max-height: none !important;
+                overflow: visible !important;
+                margin: 0 !important;
+                padding: 0 !important;
+            }
+            .tuition-modal-body-grid {
+                display: block !important;
+                background: transparent !important;
+                overflow: visible !important;
+                border: none !important;
+            }
+            .tuition-col-right {
+                display: block !important;
+                background: transparent !important;
+                max-height: none !important;
+                overflow: visible !important;
+                padding: 0 !important;
+                margin: 0 auto !important;
+                border: none !important;
+            }
+            #tuitionInvoiceModalBody {
+                width: 100% !important;
+                max-width: 500px !important;
+                margin: 0 auto !important;
+            }
+            #tuitionInvoiceCard {
+                display: block !important;
+                width: 100% !important;
+                max-width: 500px !important;
+                margin: 0 auto !important;
+                box-shadow: none !important;
+                border: 1px solid #CBD5E1 !important;
+                background: #FFFFFF !important;
+                color: #0F172A !important;
+                -webkit-print-color-adjust: exact !important;
+                print-color-adjust: exact !important;
+                page-break-inside: avoid !important;
+            }
+        }
     </style>
-    <div id="tutorTuitionInvoiceModal" class="modal-overlay" style="z-index: 1080; display: none;">
+    <div id="tutorTuitionInvoiceModal" class="modal-overlay" style="z-index: 1080; display: none;" onclick="if(event.target === this) closeStudentInvoiceModal(true);">
         <div class="modal-content tuition-modal-dialog">
             <!-- Header: Icon 🎓 + Tạo Phiếu Học Phí + Tên học sinh + STK | Pills Mẫu 1 / Mẫu 2 + Close X -->
             <div class="tuition-modal-header">
@@ -1978,7 +2061,7 @@
                     </div>
 
                     <!-- Close button -->
-                    <button type="button" onclick="closeStudentInvoiceModal()" class="modal-close" style="background: rgba(255, 255, 255, 0.08); border: none; width: 34px; height: 34px; border-radius: 10px; color: #A6ADCE; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" title="Đóng">&times;</button>
+                    <button type="button" onclick="closeStudentInvoiceModal(true)" class="modal-close" style="background: rgba(255, 255, 255, 0.08); border: none; width: 34px; height: 34px; border-radius: 10px; color: #A6ADCE; font-size: 20px; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: all 0.2s;" title="Đóng">&times;</button>
                 </div>
             </div>
 
@@ -2007,7 +2090,7 @@
             <!-- Footer: 5 buttons -->
             <div class="tuition-modal-footer">
                 <div style="display: flex; gap: 10px; align-items: center;">
-                    <button type="button" id="btnTuitionCancel" onclick="closeStudentInvoiceModal()" class="btn-tuition-action" style="padding: 9px 18px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #FFF;">
+                    <button type="button" id="btnTuitionCancel" onclick="closeStudentInvoiceModal(true)" class="btn-tuition-action" style="padding: 9px 18px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.15); color: #FFF;">
                         <i class="fa-solid fa-xmark"></i> Hủy bỏ
                     </button>
                     <button type="button" id="btnTuitionSaveDraft" onclick="saveTuitionDraftModal()" class="btn-tuition-action" style="padding: 9px 18px; background: rgba(142, 77, 255, 0.15); border: 1px solid rgba(142, 77, 255, 0.35); color: #C4B5FD;">
