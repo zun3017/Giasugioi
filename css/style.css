@@ -1643,12 +1643,130 @@
             color: #F87171;
         }
 
+        .tutor-sidebar {
+            transition: width 0.25s ease, padding 0.25s ease;
+        }
+
         .tutor-main-content {
             margin-left: 240px;
             min-height: 100vh;
             padding: 24px 30px 60px 30px;
             box-sizing: border-box;
             width: calc(100% - 240px);
+            transition: margin-left 0.25s ease, width 0.25s ease;
+        }
+
+        /* Sidebar Collapse Button & State */
+        .sidebar-collapse-btn {
+            position: absolute;
+            top: 22px;
+            right: -13px;
+            width: 26px;
+            height: 26px;
+            border-radius: 50%;
+            background: #0B0826;
+            border: 1px solid rgba(142, 77, 255, 0.6);
+            color: #C4B5FD;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 11px;
+            transition: all 0.2s ease;
+            z-index: 1001;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+            outline: none;
+            padding: 0;
+        }
+
+        .sidebar-collapse-btn:hover {
+            background: #8E4DFF;
+            color: #FFFFFF;
+            border-color: #8E4DFF;
+            transform: scale(1.12);
+        }
+
+        @media (min-width: 769px) {
+            .tutor-app-layout.sidebar-collapsed .tutor-sidebar {
+                width: 60px !important;
+                padding: 24px 8px 20px 8px !important;
+            }
+
+            .tutor-app-layout.sidebar-collapsed .tutor-main-content {
+                margin-left: 60px !important;
+                width: calc(100% - 60px) !important;
+            }
+
+            .tutor-app-layout.sidebar-collapsed .sidebar-user-info,
+            .tutor-app-layout.sidebar-collapsed .sidebar-nav-item span,
+            .tutor-app-layout.sidebar-collapsed .sidebar-footer-btn span {
+                display: none !important;
+            }
+
+            .tutor-app-layout.sidebar-collapsed .tutor-sidebar-brand {
+                padding: 0 0 16px 0 !important;
+                justify-content: center;
+            }
+
+            .tutor-app-layout.sidebar-collapsed .sidebar-avatar {
+                width: 38px;
+                height: 38px;
+                font-size: 16px;
+            }
+
+            .tutor-app-layout.sidebar-collapsed .sidebar-nav-item {
+                justify-content: center !important;
+                padding: 12px 0 !important;
+                position: relative;
+                gap: 0 !important;
+            }
+
+            .tutor-app-layout.sidebar-collapsed .sidebar-nav-item i {
+                width: auto;
+                font-size: 17px;
+                margin: 0;
+            }
+
+            .tutor-app-layout.sidebar-collapsed .sidebar-footer-btn {
+                justify-content: center !important;
+                padding: 10px 0 !important;
+                position: relative;
+                gap: 0 !important;
+            }
+
+            .tutor-app-layout.sidebar-collapsed .sidebar-footer-btn i {
+                font-size: 16px;
+                margin: 0;
+            }
+
+            /* Tooltips on hover when collapsed */
+            .tutor-app-layout.sidebar-collapsed .sidebar-nav-item::after,
+            .tutor-app-layout.sidebar-collapsed .sidebar-footer-btn::after {
+                content: attr(data-title);
+                position: absolute;
+                left: calc(100% + 12px);
+                top: 50%;
+                transform: translateY(-50%);
+                background: #18123B;
+                border: 1px solid rgba(142, 77, 255, 0.45);
+                color: #FFFFFF;
+                font-size: 12px;
+                font-weight: 600;
+                padding: 6px 12px;
+                border-radius: 8px;
+                white-space: nowrap;
+                opacity: 0;
+                pointer-events: none;
+                transition: opacity 0.15s ease, transform 0.15s ease;
+                z-index: 1002;
+                box-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
+            }
+
+            .tutor-app-layout.sidebar-collapsed .sidebar-nav-item:hover::after,
+            .tutor-app-layout.sidebar-collapsed .sidebar-footer-btn:hover::after {
+                opacity: 1;
+                transform: translateY(-50%) translateX(2px);
+            }
         }
 
         @media (max-width: 768px) {
@@ -1673,7 +1791,8 @@
             }
 
             .tutor-sidebar-brand,
-            .tutor-sidebar-footer {
+            .tutor-sidebar-footer,
+            .sidebar-collapse-btn {
                 display: none !important;
             }
 

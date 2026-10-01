@@ -353,6 +353,11 @@
     <div id="tutorDashboardBox" class="tutor-app-layout">
         <!-- Sidebar Navigation -->
         <aside class="tutor-sidebar" id="tutorSidebar">
+            <!-- Sidebar Collapse Toggle Button -->
+            <button type="button" class="sidebar-collapse-btn" id="sidebarCollapseBtn" onclick="toggleTutorSidebar()" title="Thu gọn menu">
+                <i class="fa-solid fa-chevron-left" id="sidebarCollapseIcon"></i>
+            </button>
+
             <!-- Brand / Tutor Profile Header -->
             <div class="tutor-sidebar-brand">
                 <div class="sidebar-avatar">
@@ -366,27 +371,27 @@
 
             <!-- Navigation Menu (6 items) -->
             <nav class="tutor-sidebar-nav">
-                <button type="button" class="sidebar-nav-item active" data-tab="overview" onclick="switchTutorNavTab(this, 'overview')">
+                <button type="button" class="sidebar-nav-item active" data-tab="overview" data-title="Tổng quan" onclick="switchTutorNavTab(this, 'overview')">
                     <i class="fa-solid fa-gauge"></i>
                     <span>Tổng quan</span>
                 </button>
-                <button type="button" class="sidebar-nav-item" data-tab="reports" onclick="switchTutorNavTab(this, 'reports')">
+                <button type="button" class="sidebar-nav-item" data-tab="reports" data-title="Báo cáo" onclick="switchTutorNavTab(this, 'reports')">
                     <i class="fa-solid fa-file-image"></i>
                     <span>Báo cáo</span>
                 </button>
-                <button type="button" class="sidebar-nav-item" data-tab="diary" onclick="switchTutorNavTab(this, 'diary')">
+                <button type="button" class="sidebar-nav-item" data-tab="diary" data-title="Nhật ký buổi học" onclick="switchTutorNavTab(this, 'diary')">
                     <i class="fa-solid fa-book-open"></i>
                     <span>Nhật ký buổi học</span>
                 </button>
-                <a href="tutor-calendar.html" class="sidebar-nav-item" data-tab="calendar">
+                <a href="tutor-calendar.html" class="sidebar-nav-item" data-tab="calendar" data-title="Lịch dạy">
                     <i class="fa-solid fa-calendar-days"></i>
                     <span>Lịch dạy</span>
                 </a>
-                <button type="button" class="sidebar-nav-item" data-tab="students" onclick="switchTutorNavTab(this, 'students')">
+                <button type="button" class="sidebar-nav-item" data-tab="students" data-title="Học sinh" onclick="switchTutorNavTab(this, 'students')">
                     <i class="fa-solid fa-user-graduate"></i>
                     <span>Học sinh</span>
                 </button>
-                <button type="button" class="sidebar-nav-item" data-tab="tuition" onclick="switchTutorNavTab(this, 'tuition')">
+                <button type="button" class="sidebar-nav-item" data-tab="tuition" data-title="Học phí" onclick="switchTutorNavTab(this, 'tuition')">
                     <i class="fa-solid fa-money-bill-wave"></i>
                     <span>Học phí</span>
                 </button>
@@ -394,11 +399,11 @@
 
             <!-- Footer Action (Logout & Account) -->
             <div class="tutor-sidebar-footer">
-                <button type="button" class="sidebar-footer-btn" onclick="openTutorAccountModal()" title="Cài đặt tài khoản">
+                <button type="button" class="sidebar-footer-btn" data-title="Tài khoản" onclick="openTutorAccountModal()" title="Cài đặt tài khoản">
                     <i class="fa-solid fa-user-gear"></i>
                     <span>Tài khoản</span>
                 </button>
-                <button type="button" class="sidebar-footer-btn logout" onclick="quayLai()" title="Đăng xuất">
+                <button type="button" class="sidebar-footer-btn logout" data-title="Đăng xuất" onclick="quayLai()" title="Đăng xuất">
                     <i class="fa-solid fa-arrow-right-from-bracket"></i>
                     <span>Đăng xuất</span>
                 </button>

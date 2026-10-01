@@ -1440,6 +1440,49 @@ function switchTutorNavTab(element, tabKey) {
 }
 window.switchTutorNavTab = switchTutorNavTab;
 
+function toggleTutorSidebar() {
+    var layout = document.getElementById('tutorDashboardBox');
+    var icon = document.getElementById('sidebarCollapseIcon');
+    var btn = document.getElementById('sidebarCollapseBtn');
+    if (!layout) return;
+
+    var isCollapsed = layout.classList.toggle('sidebar-collapsed');
+    try {
+        localStorage.setItem('tutorSidebarCollapsed', isCollapsed ? 'true' : 'false');
+    } catch (e) {}
+
+    if (icon) {
+        if (isCollapsed) {
+            icon.className = 'fa-solid fa-chevron-right';
+        } else {
+            icon.className = 'fa-solid fa-chevron-left';
+        }
+    }
+    if (btn) {
+        btn.title = isCollapsed ? 'Mở rộng menu' : 'Thu gọn menu';
+    }
+}
+window.toggleTutorSidebar = toggleTutorSidebar;
+
+function initTutorSidebarState() {
+    try {
+        var isCollapsed = localStorage.getItem('tutorSidebarCollapsed') === 'true';
+        var layout = document.getElementById('tutorDashboardBox');
+        var icon = document.getElementById('sidebarCollapseIcon');
+        var btn = document.getElementById('sidebarCollapseBtn');
+        if (layout && isCollapsed) {
+            layout.classList.add('sidebar-collapsed');
+            if (icon) icon.className = 'fa-solid fa-chevron-right';
+            if (btn) btn.title = 'Mở rộng menu';
+        } else if (layout) {
+            layout.classList.remove('sidebar-collapsed');
+            if (icon) icon.className = 'fa-solid fa-chevron-left';
+            if (btn) btn.title = 'Thu gọn menu';
+        }
+    } catch (e) {}
+}
+window.initTutorSidebarState = initTutorSidebarState;
+
         function renderTutorView(data) {
             tutorDataGlobal = data;
             currentTutorPhone = document.getElementById('maHocSinh').value.trim();
@@ -1459,6 +1502,7 @@ window.switchTutorNavTab = switchTutorNavTab;
             if (headerEl) headerEl.style.display = 'none';
             
             document.getElementById('tutorDashboardBox').style.display = 'block';
+            initTutorSidebarState();
             if (!currentTutorStudent) {
                 document.getElementById('tutorStudentDetail').style.display = 'none';
             }
