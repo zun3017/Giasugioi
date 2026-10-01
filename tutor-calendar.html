@@ -123,31 +123,81 @@
             margin-bottom: 12px !important;
         }
 
-        .fc .fc-button,
-        .fc .fc-button-primary {
-            background: #E8DDD0 !important;
-            border: none !important;
-            color: #2D1F0E !important;
-            font-weight: 600 !important;
-            font-size: 13px !important;
-            text-transform: capitalize !important;
-            border-radius: 30px !important;
-            padding: 6px 16px !important;
-            transition: all 0.25s !important;
-            box-shadow: none !important;
+        /* Toolbar buttons & View toggle pills */
+        .fc .fc-toolbar {
+            margin-bottom: 12px !important;
         }
 
-        .fc .fc-button-primary:hover {
+        .fc .fc-button-group {
+            background: #E8DDD0 !important;
+            border-radius: 30px !important;
+            padding: 3px !important;
+            display: inline-flex !important;
+            gap: 2px !important;
+            border: 1px solid #E5D9CC !important;
+        }
+
+        .fc .fc-button-group .fc-button {
+            border-radius: 20px !important;
+            background: transparent !important;
+            border: none !important;
+            color: #6B4226 !important;
+            padding: 6px 16px !important;
+            font-size: 12.5px !important;
+            font-weight: 600 !important;
+            box-shadow: none !important;
+            transition: all 0.2s ease !important;
+            margin: 0 !important;
+        }
+
+        .fc .fc-button-group .fc-button:hover {
+            background: rgba(192, 94, 142, 0.1) !important;
+            color: #C05E8E !important;
+        }
+
+        .fc .fc-button-group .fc-button.fc-button-active,
+        .fc .fc-button-group .fc-button:not(:disabled).fc-button-active {
+            background: #C05E8E !important;
+            color: #FFFFFF !important;
+            box-shadow: 0 2px 8px rgba(192, 94, 142, 0.35) !important;
+            font-weight: 700 !important;
+        }
+
+        .fc .fc-today-button {
+            background: #E8DDD0 !important;
+            border: 1px solid #E5D9CC !important;
+            color: #2D1F0E !important;
+            border-radius: 20px !important;
+            padding: 6px 16px !important;
+            font-weight: 600 !important;
+            font-size: 12.5px !important;
+            transition: all 0.2s !important;
+        }
+
+        .fc .fc-today-button:hover:not(:disabled) {
             background: #DFD2C3 !important;
             color: #2D1F0E !important;
         }
 
-        .fc .fc-button-active,
-        .fc .fc-button-primary:not(:disabled).fc-button-active {
-            background: #C05E8E !important;
-            border: none !important;
-            color: #FFFFFF !important;
-            box-shadow: 0 4px 12px rgba(192, 94, 142, 0.35) !important;
+        .fc .fc-prev-button,
+        .fc .fc-next-button {
+            background: #E8DDD0 !important;
+            border: 1px solid #E5D9CC !important;
+            color: #2D1F0E !important;
+            border-radius: 50% !important;
+            width: 32px !important;
+            height: 32px !important;
+            padding: 0 !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            transition: all 0.2s !important;
+        }
+
+        .fc .fc-prev-button:hover,
+        .fc .fc-next-button:hover {
+            background: #DFD2C3 !important;
+            color: #2D1F0E !important;
         }
 
         .fc .fc-toolbar-title {
@@ -250,9 +300,21 @@
             background-color: #FFF0F6 !important;
         }
 
-        .fc-day-today .fc-daygrid-day-number {
+        .fc-daygrid-day.fc-day-today {
+            background-color: #FFF0F6 !important;
+        }
+
+        .fc-daygrid-day.fc-day-today .fc-daygrid-day-number {
             color: #C05E8E !important;
             font-weight: 900 !important;
+            background: #FCE7F0 !important;
+            border-radius: 50% !important;
+            width: 26px !important;
+            height: 26px !important;
+            display: inline-flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            margin: 3px !important;
         }
 
         .fc th.fc-day-today {
@@ -264,6 +326,64 @@
             color: #C05E8E !important;
             font-weight: 800 !important;
             text-shadow: none !important;
+        }
+
+        /* +N buổi nữa link và Popover FullCalendar */
+        .fc .fc-daygrid-more-link {
+            color: #C05E8E !important;
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            padding: 2px 6px !important;
+            border-radius: 4px !important;
+            background: #FFF0F6 !important;
+            display: inline-block !important;
+            margin-top: 2px !important;
+            text-decoration: none !important;
+            cursor: pointer !important;
+        }
+
+        .fc .fc-daygrid-more-link:hover {
+            background: #F8E2EC !important;
+            color: #A04270 !important;
+        }
+
+        .fc .fc-popover {
+            background: #FDF8F3 !important;
+            border: 1px solid #E5D9CC !important;
+            box-shadow: 0 10px 30px rgba(45, 31, 14, 0.15) !important;
+            border-radius: 12px !important;
+            overflow: hidden !important;
+            z-index: 2500 !important;
+        }
+
+        .fc .fc-popover-header {
+            background: #F3EDE4 !important;
+            border-bottom: 1px solid #E5D9CC !important;
+            padding: 8px 12px !important;
+            color: #2D1F0E !important;
+            font-weight: 700 !important;
+            font-size: 13px !important;
+        }
+
+        .fc .fc-popover-title {
+            color: #2D1F0E !important;
+            font-weight: 700 !important;
+        }
+
+        .fc .fc-popover-close {
+            color: #6B4226 !important;
+            font-size: 14px !important;
+            opacity: 0.8 !important;
+        }
+
+        .fc .fc-popover-close:hover {
+            opacity: 1 !important;
+            color: #2D1F0E !important;
+        }
+
+        .fc .fc-popover-body {
+            padding: 8px !important;
+            background: #FFFFFF !important;
         }
 
         /* Now Indicator */
@@ -1736,8 +1856,15 @@
             } else {
                 // 'full': fallback toàn bộ (chỉ dùng cho drop/resize/delete sau dialog)
                 // Chỉ regenerate từ local memory - KHÔNG gọi backend
-                let currentStart = calendar.view ? calendar.view.currentStart : new Date();
-                let newEvents = generateEventsForCurrentWeek(currentStart);
+                let vType = calendar && calendar.view ? calendar.view.type : 'dayGridMonth';
+                let newEvents;
+                if (vType === 'dayGridMonth' && calendar && calendar.view) {
+                    let rangeInfo = { start: calendar.view.activeStart, end: calendar.view.activeEnd };
+                    newEvents = getEventsForCalendarRange(rangeInfo, vType);
+                } else {
+                    let currentStart = calendar && calendar.view ? calendar.view.currentStart : new Date();
+                    newEvents = generateEventsForCurrentWeek(currentStart);
+                }
                 // Xóa tất cả events hiện tại rồi thêm lại từ memory
                 calendar.getEvents().forEach(e => e.remove());
                 newEvents.forEach(e => calendar.addEvent(e));
@@ -2018,6 +2145,31 @@
             return events;
         }
 
+        // Lấy danh sách sự kiện theo khoảng thời gian hiển thị (hỗ trợ Month view và Week/Day view)
+        function getEventsForCalendarRange(info, viewType) {
+            if (viewType !== 'dayGridMonth') {
+                return generateEventsForCurrentWeek(info.start);
+            }
+            let events = [];
+            let cur = getStartOfWeek(new Date(info.start));
+            let endLimit = new Date(info.end);
+            let seen = new Set();
+            while (cur < endLimit) {
+                let weekEvents = generateEventsForCurrentWeek(cur);
+                weekEvents.forEach(ev => {
+                    let uniqueKey = ev.id + '_' + ev.start;
+                    if (!seen.has(uniqueKey)) {
+                        seen.add(uniqueKey);
+                        let evClone = Object.assign({}, ev);
+                        evClone.id = uniqueKey;
+                        events.push(evClone);
+                    }
+                });
+                cur.setDate(cur.getDate() + 7);
+            }
+            return events;
+        }
+
         function loadStudentOptions() {
             let select = document.getElementById("eventStudent");
             select.innerHTML = '<option value="">Chọn học sinh...</option>';
@@ -2118,7 +2270,7 @@
 
             
             var calendarEl = document.getElementById('calendar');
-            const initialViewType = 'timeGridWeek';
+            const initialViewType = 'dayGridMonth';
 
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: initialViewType,
@@ -2126,6 +2278,17 @@
                 firstDay: 1, // Bắt đầu tuần từ Thứ Hai
                 height: '100%', // Chiếm 100% .calendar-wrapper - chỉ 1 thanh cuộn bên trong
                 timeZone: 'local',
+                dayMaxEvents: 3, // Giới hạn tối đa 3 event mỗi ô ngày ở Month view, hiện +N buổi nữa
+                moreLinkContent: function(args) {
+                    return '+' + args.num + ' buổi nữa';
+                },
+                moreLinkClick: 'popover',
+                eventDisplay: 'block',
+                eventTimeFormat: {
+                    hour: '2-digit',
+                    minute: '2-digit',
+                    hour12: false
+                },
                 slotMinTime: "00:00:00",
                 slotMaxTime: "24:00:00",
                 slotDuration: '00:30:00',   // Chia ô 30 phút - đúng chuẩn Google Calendar
@@ -2166,21 +2329,23 @@
                 headerToolbar: {
                     left: 'prev,next today',
                     center: 'title',
-                    right: 'timeGridWeek,timeGridDay' // Bỏ Danh Sách - chỉ giữ Lịch Tuần và Lịch Ngày
+                    right: 'dayGridMonth,timeGridWeek,timeGridDay' // Toggle pills: Tháng | Tuần | Ngày
                 },
                 buttonText: {
                     today: 'Hôm nay',
-                    week: 'Lịch tuần',
-                    day: 'Lịch ngày',
+                    month: 'Tháng',
+                    week: 'Tuần',
+                    day: 'Ngày',
                     list: 'Danh sách'
                 },
                 events: function(info, successCallback, failureCallback) {
+                    let vType = this.view ? this.view.type : (calendar && calendar.view ? calendar.view.type : initialViewType);
                     if (isDemoMode) {
-                        let events = generateEventsForCurrentWeek(info.start);
+                        let events = getEventsForCalendarRange(info, vType);
                         successCallback(events);
                     } else {
                         loadTutorScheduleFromBackend(function() {
-                            let events = generateEventsForCurrentWeek(info.start);
+                            let events = getEventsForCalendarRange(info, vType);
                             successCallback(events);
                         });
                     }
@@ -2203,6 +2368,10 @@
                     
                     let startT = start.getHours().toString().padStart(2,'0') + ':' + start.getMinutes().toString().padStart(2,'0');
                     let endT   = end.getHours().toString().padStart(2,'0')   + ':' + end.getMinutes().toString().padStart(2,'0');
+                    if (startT === '00:00' && endT === '00:00') {
+                        startT = '08:00';
+                        endT   = '09:30';
+                    }
                     openCreateEventModal(dayKey, dateStr, startT, endT);
                 },
 
