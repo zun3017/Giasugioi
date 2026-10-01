@@ -1580,12 +1580,19 @@
             box-sizing: border-box;
         }
 
-        .sidebar-nav-item i {
+        .sidebar-nav-item i,
+        .sidebar-nav-item .nav-icon-svg {
             font-size: 16px;
             width: 20px;
+            height: 18px;
             text-align: center;
             color: var(--text-secondary);
+            stroke: currentColor;
             transition: color 0.2s ease;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
         }
 
         .sidebar-nav-item:hover {
@@ -1594,7 +1601,8 @@
             border-color: var(--border-color);
         }
 
-        .sidebar-nav-item:hover i {
+        .sidebar-nav-item:hover i,
+        .sidebar-nav-item:hover .nav-icon-svg {
             color: var(--color-primary);
         }
 
@@ -1606,7 +1614,8 @@
             box-shadow: var(--shadow-primary);
         }
 
-        .sidebar-nav-item.active i {
+        .sidebar-nav-item.active i,
+        .sidebar-nav-item.active .nav-icon-svg {
             color: var(--color-primary);
         }
 
@@ -1723,7 +1732,8 @@
                 gap: 0 !important;
             }
 
-            .tutor-app-layout.sidebar-collapsed .sidebar-nav-item i {
+            .tutor-app-layout.sidebar-collapsed .sidebar-nav-item i,
+            .tutor-app-layout.sidebar-collapsed .sidebar-nav-item .nav-icon-svg {
                 width: auto;
                 font-size: 17px;
                 margin: 0;
@@ -1823,9 +1833,11 @@
                 min-width: 0;
             }
 
-            .sidebar-nav-item i {
+            .sidebar-nav-item i,
+            .sidebar-nav-item .nav-icon-svg {
                 font-size: 16px;
-                width: auto;
+                width: 18px;
+                height: 18px;
             }
 
             .sidebar-nav-item span {
@@ -1842,7 +1854,8 @@
                 color: var(--color-primary);
             }
 
-            .sidebar-nav-item.active i {
+            .sidebar-nav-item.active i,
+            .sidebar-nav-item.active .nav-icon-svg {
                 color: var(--color-primary);
             }
 
