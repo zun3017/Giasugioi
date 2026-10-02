@@ -1383,7 +1383,7 @@
         
         
         .accordion-header {
-            padding: 14px 18px;
+            padding: 16px 18px;
             display: flex;
             justify-content: space-between;
             align-items: center;
@@ -1402,7 +1402,7 @@
         .accordion-header-title {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 5px;
             text-align: left;
         }
         
@@ -1431,13 +1431,13 @@
         }
         
         .accordion-body {
-            padding: 16px 18px;
+            padding: 14px 18px 18px 18px;
             border-top: 1px solid var(--border-card);
             background-color: var(--bg-input);
             text-align: left;
             display: none;
             flex-direction: column;
-            gap: 12px;
+            gap: 0;
             font-size: 13px;
             animation: fade-down 0.3s ease-out;
         }
@@ -1451,29 +1451,72 @@
         .accordion-body-row {
             display: flex;
             flex-direction: column;
-            gap: 4px;
+            gap: 6px;
             border-bottom: 1px dashed var(--border-card);
-            padding-bottom: 8px;
+            padding: 11px 0;
+        }
+
+        .accordion-body-row:first-child {
+            padding-top: 4px;
         }
         
         .accordion-body-row:last-child {
             border-bottom: none;
-            padding-bottom: 0;
+            padding-bottom: 4px;
         }
         
         
         .accordion-body-label {
-            font-size: 10px;
+            font-size: 10.5px;
             color: var(--text-secondary);
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.3px;
+            letter-spacing: 0.4px;
         }
         
         
         .accordion-body-val {
             color: var(--text-primary);
             line-height: 1.5;
+        }
+
+        .accordion-actions {
+            display: flex !important;
+            flex-direction: row !important;
+            align-items: center;
+            gap: 10px;
+            padding-top: 14px;
+            margin-top: 2px;
+            width: 100%;
+            box-sizing: border-box;
+        }
+
+        .accordion-actions .modal-btn {
+            flex: 1;
+            height: 42px;
+            min-height: 42px;
+            border-radius: 12px;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin: 0;
+            padding: 0 12px;
+            box-sizing: border-box;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .accordion-actions .modal-btn-secondary {
+            background: var(--bg-card);
+            color: var(--text-primary);
+            border: 1px solid var(--border-card);
+        }
+
+        .accordion-actions .modal-btn-secondary:hover {
+            background: var(--nav-hover-bg);
         }
         
         
