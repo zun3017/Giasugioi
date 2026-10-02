@@ -136,73 +136,26 @@ function renderStudentView(ketQua) {
         btnDinhKi.className = 'legend-btn active btn-dinh-ki';
     }
     
-    // --- 1. HIỂN THỊ KHUNG THÔNG BÁO ---
+    // --- 1. HIỂN THỊ KHUNG THÔNG BÁO (TASK 15.6) ---
     var khuVucThongBao = document.getElementById('khuVucThongBao');
     if (khuVucThongBao) {
         var thongBaoText = ketQua.thongBaoHocSinh || ketQua.thongBao || "";
         if (thongBaoText.trim() !== "") {
             khuVucThongBao.innerHTML = 
-                '<div class="announcement-box has-msg">' +
-                    '<div class="announcement-icon"><i class="fa-solid fa-bullhorn"></i></div>' +
-                    '<div class="announcement-content">' +
-                        '<div class="announcement-title">Thông báo từ gia sư</div>' +
-                        '<div class="announcement-text">' + thongBaoText + '</div>' +
+                '<div class="announce-card announce-has">' +
+                    '<div class="announce-icon"><i class="fa-solid fa-bullhorn"></i></div>' +
+                    '<div class="announce-body">' +
+                        '<div class="announce-title">Thông báo từ gia sư</div>' +
+                        '<div class="announce-text">' + thongBaoText + '</div>' +
                     '</div>' +
                 '</div>';
         } else {
             khuVucThongBao.innerHTML = 
-                '<div class="announcement-box no-msg">' +
-                    '<div class="announcement-icon"><i class="fa-regular fa-bell"></i></div>' +
-                    '<div class="announcement-content">' +
-                        '<div class="announcement-title">Thông báo</div>' +
-                        '<div class="announcement-text">Chưa có thông báo</div>' +
-                    '</div>' +
+                '<div class="announce-card announce-empty">' +
+                    '<i class="fa-regular fa-bell"></i>' +
+                    '<span>Chưa có thông báo mới</span>' +
                 '</div>';
         }
-    }
-
-    // Hàm chuẩn hoá chuỗi loại bỏ dấu tiếng Việt để kiểm tra chính xác
-    function normalizeStr(str) {
-        if (!str) return "";
-        return String(str).toLowerCase()
-            .normalize('NFD')
-            .replace(/[\u0300-\u036f]/g, '')
-            .replace(/đ/g, 'd')
-            .trim();
-    }
-
-    // Hàm nhận diện buổi nghỉ (chỉ dựa trên thẻ / trạng thái điểm danh do người dùng chọn)
-    function isAbsentSession(statusOrItem) {
-        var rawStatus = "";
-        if (typeof statusOrItem === 'object' && statusOrItem !== null) {
-            rawStatus = statusOrItem.trangThai || statusOrItem.chuyenCan || statusOrItem.attendance_status || statusOrItem.attendance || statusOrItem.status || "";
-        } else {
-            rawStatus = String(statusOrItem || "");
-        }
-        var normTt = normalizeStr(rawStatus);
-
-        // 1. Nếu là học bù / đã bù thì luôn tính là buổi có học
-        if (normTt.includes('hoc bu') || normTt.includes('da bu')) {
-            return false;
-        }
-
-        // 2. Kiểm tra trạng thái / thẻ điểm danh rõ ràng
-        if (
-            normTt.includes('nghi') ||
-            normTt.includes('huy') ||
-            normTt.includes('vang') ||
-            normTt.includes('off') ||
-            normTt.includes('khong hoc') ||
-            normTt.includes('chua hoc') ||
-            normTt.includes('tam hoan') ||
-            normTt === 'v' ||
-            normTt === 'n' ||
-            normTt === 'x'
-        ) {
-            return true;
-        }
-
-        return false;
     }
 
     // --- 2. TÍNH TOÁN SỐ LIỆU TÓM TẮT THEO THÁNG ---

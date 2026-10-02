@@ -262,6 +262,115 @@
             background: #FFFFFF;
         }
 
+        /* ===== PHASE 15: ANNOUNCEMENT & FEEDBACK REDESIGN ===== */
+        .announce-card {
+            border-radius: 14px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .announce-has {
+            background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+            border: 1px solid #BFDBFE;
+            box-shadow: 0 2px 10px rgba(59, 130, 246, 0.08);
+        }
+        .announce-icon {
+            width: 42px;
+            height: 42px;
+            background: #3B82F6;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            font-size: 17px;
+            flex-shrink: 0;
+        }
+        .announce-body { flex: 1; }
+        .announce-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #2563EB;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+        .announce-text {
+            font-size: 14px;
+            color: #1E293B;
+            font-weight: 500;
+            line-height: 1.5;
+        }
+        .announce-empty {
+            background: #F8FAFF;
+            border: 1px dashed #DBEAFE;
+            color: #94A3B8;
+            font-size: 13px;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px;
+        }
+
+        /* Feedback form */
+        #khuVucPhanHoiPhuHuynh {
+            background: #FFFFFF;
+            border: 1px solid #DBEAFE;
+            border-radius: 16px;
+            padding: 20px;
+            margin-top: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 12px rgba(59, 130, 246, 0.05);
+        }
+        #khuVucPhanHoiPhuHuynh h4 {
+            font-size: 15px;
+            font-weight: 700;
+            color: #1E293B;
+            margin: 0 0 14px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        #feedbackInput {
+            width: 100%;
+            background: #F8FAFF;
+            border: 1px solid #DBEAFE;
+            border-radius: 12px;
+            padding: 12px 14px;
+            color: #1E293B;
+            font-size: 14px;
+            font-family: Inter, sans-serif;
+            resize: vertical;
+            min-height: 80px;
+            transition: border-color 0.2s;
+            box-sizing: border-box;
+        }
+        #feedbackInput:focus {
+            border-color: #3B82F6;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.15);
+        }
+        .btn-submit-feedback {
+            margin-top: 10px;
+            background: linear-gradient(135deg, #3B82F6, #1D4ED8);
+            color: #fff;
+            border: none;
+            border-radius: 12px;
+            padding: 12px 24px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            min-height: 44px;
+            transition: opacity 0.2s;
+        }
+        .btn-submit-feedback:hover {
+            opacity: 0.9;
+        }
+
         /* ===== STUDENT DASHBOARD MOBILE ===== */
         @media (max-width: 768px) {
             #resultBox, .main-container {
@@ -419,18 +528,6 @@
         <!-- Khung Thông Báo -->
         <div id="khuVucThongBao"></div>
 
-        <!-- Khung Phản Hồi Phụ Huynh -->
-        <div class="result-section" id="khuVucPhanHoiPhuHuynh" style="margin-top: 20px;">
-            <h4><i class="fa-regular fa-comment-dots"></i> Phản hồi từ Phụ huynh</h4>
-            <div class="feedback-form-container">
-                <textarea id="feedbackInput" placeholder="Nhập ý kiến đóng góp hoặc phản hồi của phụ huynh gửi cho gia sư tại đây..." rows="3"></textarea>
-                <button onclick="guiPhanHoiPhuHuynh()" id="btnSubmitFeedback" class="btn-submit-feedback">
-                    Gửi phản hồi <i class="fa-regular fa-paper-plane"></i>
-                </button>
-            </div>
-            <p id="feedbackMessage" class="feedback-message-status"></p>
-        </div>
-
         <!-- Bảng Tóm Tắt Kết Quả -->
         <div class="summary-grid">
             <!-- Thẻ BÀI TẬP -->
@@ -562,6 +659,18 @@
             <div class="load-more-container" id="loadMoreContainer" style="display: none;">
                 <button id="btnLoadMore" onclick="hienThemBuoi()" class="btn-load-more">...</button>
             </div>
+        </div>
+
+        <!-- Khung Phản Hồi Phụ Huynh -->
+        <div id="khuVucPhanHoiPhuHuynh">
+            <h4><i class="fa-regular fa-comment-dots" style="color: #3B82F6;"></i> Phản hồi từ Phụ huynh</h4>
+            <div class="feedback-form-container">
+                <textarea id="feedbackInput" placeholder="Nhập ý kiến đóng góp hoặc phản hồi của phụ huynh gửi cho gia sư tại đây..." rows="3"></textarea>
+                <button onclick="guiPhanHoiPhuHuynh()" id="btnSubmitFeedback" class="btn-submit-feedback">
+                    Gửi phản hồi <i class="fa-regular fa-paper-plane"></i>
+                </button>
+            </div>
+            <p id="feedbackMessage" class="feedback-message-status"></p>
         </div>
 
         <button onclick="quayLai()" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Trở Về Màn Hình Chính</button>
