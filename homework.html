@@ -23,7 +23,7 @@
     <!-- Chart.js CDN for Phase 16 -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <!-- Public Light Theme -->
-    <link rel="stylesheet" href="css/public-theme.css?v=20261002">
+    <link rel="stylesheet" href="css/public-theme.css?v=20261002_scroll">
 
     <!-- Kiểm tra phiên đăng nhập trên URL (F5 / tải lại trang có tham số ?code=...) -->
     <script>
@@ -1199,7 +1199,7 @@
             </div>
 
             <!-- Form Tra cứu Bài Tập (Dạng Pill) -->
-            <div class="max-w-2xl mx-auto mb-16">
+            <div class="max-w-2xl mx-auto mb-16 reveal" style="transition-delay: 0.15s;">
                 <form id="formBaiTap" onsubmit="event.preventDefault(); check();" class="bg-white p-2.5 rounded-full shadow-2xl shadow-primary-500/20 border border-gray-100 flex items-center transition-all duration-300 focus-within:ring-4 focus-within:ring-primary-100 hover:shadow-glow">
                     
                     <div class="pl-5 pr-3 text-slate-400">
@@ -1292,7 +1292,7 @@
         <div id="homeworkDashboard" style="display: none; width: 100%; max-width: 1100px; margin: 0 auto; padding: 0 16px 80px;">
 
             <!-- 1. HERO BANNER -->
-            <div class="hw-hero-banner" id="hwHeroBanner">
+            <div class="hw-hero-banner reveal" id="hwHeroBanner">
                 <div class="hw-hero-icon"><i class="fa-solid fa-file-arrow-up"></i></div>
                 <div class="hw-hero-info">
                     <h2 class="hw-hero-name" id="hwStudentName">-</h2>
@@ -1308,7 +1308,7 @@
             </div>
 
             <!-- 2. 4 KPI CARDS -->
-            <div class="hw-kpi-grid" id="hwKpiGrid">
+            <div class="hw-kpi-grid reveal-stagger" id="hwKpiGrid">
                 <div class="hw-kpi-card">
                     <div class="hw-kpi-icon" style="background:linear-gradient(135deg,#3B82F6,#1D4ED8);">
                         <i class="fa-solid fa-book-open"></i>
@@ -1348,7 +1348,7 @@
             </div>
 
             <!-- 3. CHARTS + UPLOAD GRID -->
-            <div class="hw-charts-upload-grid">
+            <div class="hw-charts-upload-grid reveal">
                 <!-- Cột trái: 2 Biểu đồ xếp chồng theo chiều dọc (Hình 2) -->
                 <div class="hw-charts-col">
                     <!-- Donut Chart -->
@@ -1470,7 +1470,7 @@
             </div>
 
             <!-- 5. LỊCH SỬ NỘP BÀI -->
-            <div class="hw-section-card">
+            <div class="hw-section-card reveal">
                 <div class="hw-section-title">
                     <i class="fa-solid fa-clock-rotate-left" style="color:#3B82F6;"></i>
                     Lịch sử nộp bài
@@ -3062,6 +3062,6 @@
     </nav>
 
     <!-- Phase 19: Scroll Animation Engine -->
-    <script src="js/scroll-animations.js?v=20261002"></script>
+    <script src="js/scroll-animations.js?v=20261002_scroll"></script>
 </body>
 </html>

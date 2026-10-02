@@ -70,7 +70,8 @@
       })();
     </script>
     <!-- Global CSS -->
-    <link rel="stylesheet" href="css/style.css?v=202610012235">
+    <link rel="stylesheet" href="css/style.css?v=20261002_scroll">
+    <link rel="stylesheet" href="css/public-theme.css?v=20261002_scroll">
     <style>
         /* Đảm bảo nút thu gọn Sidebar luôn hiển thị tròn nguyên vẹn, không bao giờ bị cắt cụt */
         .tutor-sidebar {
@@ -668,7 +669,7 @@
             </div>
 
             <!-- 4 KPI Cards -->
-            <div class="tutor-kpi-grid" id="tutorKpiGrid">
+            <div class="tutor-kpi-grid reveal-stagger" id="tutorKpiGrid">
                 <!-- Card 1: Số học sinh đang dạy -->
                 <div class="tutor-kpi-card">
                     <div class="kpi-card-top">
@@ -708,7 +709,7 @@
             </div>
 
             <!-- Lịch dạy sắp tới (1 hàng ngang riêng) -->
-            <div class="upcoming-schedule-box" id="tutorUpcomingScheduleBox">
+            <div class="upcoming-schedule-box reveal" id="tutorUpcomingScheduleBox">
                 <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; margin-bottom: 12px;">
                     <h3 style="color: var(--text-heading, var(--text-primary)); font-size: 16px; margin: 0; display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-calendar-check" style="color: var(--color-primary);"></i>
@@ -746,7 +747,7 @@
             </div>
 
             <!-- 2 Biểu đồ Doanh thu (Chung 1 hàng ngang) -->
-            <div class="overview-charts-grid" id="overviewChartsGrid">
+            <div class="overview-charts-grid reveal" id="overviewChartsGrid">
                 <!-- Block: Doanh thu N tháng (Bar Chart - Chuẩn Hình 2) -->
                 <div class="overview-chart-box" id="revenueBarChartBox">
                     <div style="margin-bottom: 10px;">
@@ -830,7 +831,7 @@
                 </div>
             </div>
 
-            <div class="schedule-section">
+            <div class="schedule-section reveal">
             <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; flex-wrap: wrap; gap: 10px;">
                 <h3 style="margin: 0; display: flex; align-items: center; gap: 8px;"><i class="fa-regular fa-calendar-alt" style="color: var(--color-primary);"></i> Thời khóa biểu tổng hợp</h3>
                 <button type="button" onclick="openTutorCalendarTab()" class="modal-btn modal-btn-primary" style="width: auto; padding: 8px 18px; background: var(--btn-bg); color: var(--btn-text); font-weight: bold; border-radius: 20px; display: inline-flex; align-items: center; gap: 8px; box-shadow: var(--shadow-primary); text-decoration: none; font-size: 13px; font-family: 'Inter', sans-serif; cursor: pointer;">
@@ -877,7 +878,7 @@
         <!-- SECTION BÁO CÁO (XUẤT ẢNH) -->
         <div id="tutorSectionReports" class="tutor-section" style="display: none;">
             <!-- Filter Toolbar -->
-            <div class="report-filter-toolbar">
+            <div class="report-filter-toolbar reveal">
                 <div class="report-toolbar-header">
                     <h3>
                         <i class="fa-solid fa-file-image" style="color: var(--color-primary);"></i>
@@ -939,7 +940,7 @@
 
         <!-- SECTION NHẬT KÝ BUỔI HỌC -->
         <div id="tutorSectionDiary" class="tutor-section" style="display: none;">
-            <div class="diary-toolbar">
+            <div class="diary-toolbar reveal">
                 <div class="diary-toolbar-title">
                     <h3 style="color: var(--text-primary); font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-book-open" style="color: var(--color-primary);"></i>
@@ -972,7 +973,7 @@
             </div>
 
             <!-- Widget thông báo nhanh cho Phụ huynh / Học sinh -->
-            <div id="tutorQuickAnnouncementWidget" style="background: var(--nav-active-bg); border: 1px dashed var(--border-color); border-radius: 12px; padding: 15px; margin-top: 20px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px;">
+            <div id="tutorQuickAnnouncementWidget" class="reveal" style="background: var(--nav-active-bg); border: 1px dashed var(--border-color); border-radius: 12px; padding: 15px; margin-top: 20px; margin-bottom: 20px; display: flex; flex-direction: column; gap: 10px;">
                 <div style="display: flex; justify-content: space-between; align-items: center;">
                     <span style="color: var(--text-secondary); font-size: 13.5px; font-weight: bold; display: inline-flex; align-items: center; gap: 6px;"><i class="fa-solid fa-bullhorn" style="color: var(--color-primary);"></i> Thông báo nhanh cho phụ huynh <span id="announcementStudentBadge" style="color: var(--color-primary); font-size: 13px; font-weight: 700; margin-left: 6px;"></span></span>
                     <span id="announcementStatus" style="font-size: 12px; color: #10B981; font-weight: bold; display: none;"><i class="fa-solid fa-circle-check"></i> Đã lưu thành công!</span>
@@ -1146,7 +1147,7 @@
         <!-- SECTION HỌC SINH -->
         <div id="tutorSectionStudents" class="tutor-section" style="display: none;">
             <!-- Header Toolbar: Thêm học sinh + Thùng rác -->
-            <div class="students-toolbar">
+            <div class="students-toolbar reveal">
                 <div class="students-toolbar-title">
                     <h3 style="color: var(--text-primary); font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-user-graduate" style="color: var(--color-primary);"></i>
@@ -1166,7 +1167,7 @@
             </div>
 
             <!-- Grid Thẻ học sinh (2-3 cột desktop, 1 cột mobile) -->
-            <div class="students-cards-grid" id="tutorStudentsGrid">
+            <div class="students-cards-grid reveal-stagger" id="tutorStudentsGrid">
                 <!-- Rendered dynamically via renderTutorStudentsGrid() -->
             </div>
 
@@ -1178,7 +1179,7 @@
         <!-- SECTION HỌC PHÍ -->
         <div id="tutorSectionTuition" class="tutor-section" style="display: none;">
             <!-- Toolbar: Tiêu đề + Bộ lọc tháng -->
-            <div class="tuition-toolbar">
+            <div class="tuition-toolbar reveal">
                 <div class="tuition-toolbar-title">
                     <h3 style="color: var(--text-heading, var(--text-primary)); font-size: 18px; margin: 0; display: flex; align-items: center; gap: 8px;">
                         <i class="fa-solid fa-money-bill-wave" style="color: #10B981;"></i>
@@ -1197,7 +1198,7 @@
             </div>
 
             <!-- 3 Banner Cards tổng thu nhập -->
-            <div class="tuition-banner-grid">
+            <div class="tuition-banner-grid reveal-stagger">
                 <!-- Card 1: Tổng thu dự kiến -->
                 <div class="tuition-banner-card">
                     <div class="tuition-banner-top">
@@ -1228,7 +1229,7 @@
             </div>
 
             <!-- Bảng chi tiết học phí từng học sinh (Desktop Table View) -->
-            <div class="table-wrapper desktop-table-view" style="margin-top: 15px; border-radius: 16px;">
+            <div class="table-wrapper desktop-table-view reveal" style="margin-top: 15px; border-radius: 16px;">
                 <table id="tuitionTable" style="width: 100%; border-collapse: collapse;">
                     <thead>
                         <tr>
@@ -2952,6 +2953,6 @@
 </div>
 
 <!-- Phase 19: Scroll Animation Engine -->
-<script src="js/scroll-animations.js?v=20261002"></script>
+<script src="js/scroll-animations.js?v=20261002_scroll"></script>
 </body>
 </html>

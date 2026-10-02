@@ -524,9 +524,9 @@ body {
 /* Fade + trượt lên từ dưới */
 .reveal {
   opacity: 0;
-  transform: translateY(28px);
-  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  transform: translateY(32px);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 .reveal.visible {
@@ -538,24 +538,33 @@ body {
 /* Stagger: Các thẻ con trượt lên so le lần lượt */
 .reveal-stagger > * {
   opacity: 0;
-  transform: translateY(26px);
+  transform: translateY(28px);
   transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1) !important;
   will-change: opacity, transform;
 }
-.reveal-stagger.visible > *:nth-child(1) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.06s; }
-.reveal-stagger.visible > *:nth-child(2) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.16s; }
-.reveal-stagger.visible > *:nth-child(3) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.26s; }
-.reveal-stagger.visible > *:nth-child(4) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.36s; }
-.reveal-stagger.visible > *:nth-child(5) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.46s; }
-.reveal-stagger.visible > *:nth-child(6) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.56s; }
+.reveal-stagger.visible > * {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  will-change: auto;
+}
+.reveal-stagger.visible > *:nth-child(1) { transition-delay: 0.05s !important; }
+.reveal-stagger.visible > *:nth-child(2) { transition-delay: 0.15s !important; }
+.reveal-stagger.visible > *:nth-child(3) { transition-delay: 0.25s !important; }
+.reveal-stagger.visible > *:nth-child(4) { transition-delay: 0.35s !important; }
+.reveal-stagger.visible > *:nth-child(5) { transition-delay: 0.45s !important; }
+.reveal-stagger.visible > *:nth-child(6) { transition-delay: 0.55s !important; }
+.reveal-stagger.visible > *:nth-child(7) { transition-delay: 0.65s !important; }
+.reveal-stagger.visible > *:nth-child(8) { transition-delay: 0.75s !important; }
+.reveal-stagger.visible > *:nth-child(9) { transition-delay: 0.85s !important; }
+.reveal-stagger.visible > *:nth-child(10) { transition-delay: 0.95s !important; }
 
 /* Trượt từ bên trái sang */
 .reveal-left {
   opacity: 0;
   transform: translateX(-40px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 .reveal-left.visible {
@@ -568,8 +577,8 @@ body {
 .reveal-right {
   opacity: 0;
   transform: translateX(40px);
-  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
-              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 .reveal-right.visible {
@@ -581,7 +590,7 @@ body {
 /* Phóng to nhẹ (Scale in) */
 .reveal-scale {
   opacity: 0;
-  transform: scale(0.90);
+  transform: scale(0.92);
   transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
               transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
@@ -594,8 +603,8 @@ body {
 
 /* Mobile: giảm khoảng cách translate */
 @media (max-width: 480px) {
-  .reveal        { transform: translateY(18px); }
-  .reveal-stagger > * { transform: translateY(18px); }
+  .reveal        { transform: translateY(20px); }
+  .reveal-stagger > * { transform: translateY(20px); }
   .reveal-left   { transform: translateX(-20px); }
   .reveal-right  { transform: translateX(20px); }
   .reveal-scale  { transform: scale(0.94); }

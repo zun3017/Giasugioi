@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Public Light Theme -->
-    <link rel="stylesheet" href="css/public-theme.css?v=20261002">
+    <link rel="stylesheet" href="css/public-theme.css?v=20261002_scroll">
 
     <script>
         tailwind.config = {
@@ -166,7 +166,7 @@
             </div>
 
             <!-- Form Đăng nhập Gia sư (Dạng Card lớn) -->
-            <div class="w-full max-w-md mx-auto px-1 sm:px-0">
+            <div class="w-full max-w-md mx-auto px-1 sm:px-0 reveal" style="transition-delay: 0.15s;">
                 <div class="bg-white/90 backdrop-blur-xl p-5 sm:p-8 rounded-2xl sm:rounded-3xl shadow-glass border border-white">
                     
                     <div class="flex items-center gap-3 mb-8 pb-4 border-b border-gray-100">
@@ -227,6 +227,42 @@
                             👨‍🏫 Thầy Trần Hoàng Nam (SĐT: 0123456789 - PIN: 1234)
                         </button>
                     </div>
+                </div>
+            </div>
+
+            <!-- 4 Thẻ tính năng Cổng Gia Sư -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 reveal-stagger mt-16 max-w-6xl mx-auto">
+                <!-- Card 1 -->
+                <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-indigo-50 text-indigo-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-indigo-600 group-hover:text-white transition-colors duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z" /></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Quản lý học sinh</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">Theo dõi chi tiết hồ sơ, lịch học cố định và tiến trình học tập từng học viên.</p>
+                </div>
+                <!-- Card 2 -->
+                <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-blue-50 text-blue-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-blue-600 group-hover:text-white transition-colors duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z" /></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Lịch dạy trực quan</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">Thời khóa biểu dạng lịch tuần thông minh, đồng bộ trạng thái buổi dạy chuẩn xác.</p>
+                </div>
+                <!-- Card 3 -->
+                <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-emerald-50 text-emerald-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-emerald-600 group-hover:text-white transition-colors duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Sổ thu học phí</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">Tự động tính học phí theo buổi hoặc trọn gói, xuất hóa đơn & mã QR 1 chạm.</p>
+                </div>
+                <!-- Card 4 -->
+                <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
+                    <div class="w-14 h-14 bg-amber-50 text-amber-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-amber-600 group-hover:text-white transition-colors duration-300">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" /></svg>
+                    </div>
+                    <h3 class="text-lg font-bold text-slate-800 mb-2">Nhật ký & Báo cáo</h3>
+                    <p class="text-sm text-slate-500 leading-relaxed">Ghi nhận xét buổi học, xuất báo cáo ảnh PNG chuyên nghiệp gửi phụ huynh.</p>
                 </div>
             </div>
         </section>
@@ -693,6 +729,6 @@
     </nav>
 
     <!-- Phase 19: Scroll Animation Engine -->
-    <script src="js/scroll-animations.js?v=20261002"></script>
+    <script src="js/scroll-animations.js?v=20261002_scroll"></script>
 </body>
 </html>

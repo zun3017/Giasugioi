@@ -24,9 +24,9 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Global CSS -->
-    <link rel="stylesheet" href="css/style.css?v=3.0.0">
+    <link rel="stylesheet" href="css/style.css?v=20261002_scroll">
     <!-- Public Light Theme -->
-    <link rel="stylesheet" href="css/public-theme.css">
+    <link rel="stylesheet" href="css/public-theme.css?v=20261002_scroll">
 
     <!-- Mobile Responsive Optimizations -->
     <style>
@@ -775,7 +775,7 @@
         <div id="khuVucThongBao"></div>
 
         <!-- Bảng Tóm Tắt Kết Quả -->
-        <div class="summary-grid">
+        <div class="summary-grid reveal-stagger">
             <!-- Thẻ BÀI TẬP -->
             <a href="homework.html" class="summary-card" style="text-decoration: none; cursor: pointer; border: 1px solid #BFDBFE; background: #FFFFFF; transition: all 0.3s; box-shadow: var(--shadow-card);" onmouseover="this.style.borderColor='#3B82F6'; this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#BFDBFE'; this.style.transform='none'">
                 <div class="summary-icon" style="background: linear-gradient(135deg, #FFD23F, #FF8C00); box-shadow: 0 0 20px rgba(255,210,63,0.4);"><i class="fa-solid fa-file-arrow-up"></i></div>
@@ -803,7 +803,7 @@
         </div>
         
         <!-- Biểu Đồ Học Tập: 2 Cột (Line chart + 2 Donut charts) -->
-        <div class="charts-grid">
+        <div class="charts-grid reveal">
             <!-- Cột trái: Biểu đồ đường (Line chart) -->
             <div class="chart-box chart-line-box">
                 <div class="chart-header" style="justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
@@ -884,7 +884,7 @@
         </div>
         
         <!-- Lịch sử học tập & Nhận xét chi tiết (Nhật ký các buổi học) -->
-        <div class="schedule-section" style="margin-top: 25px; margin-bottom: 30px;">
+        <div class="schedule-section reveal" style="margin-top: 25px; margin-bottom: 30px;">
             <h3 style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
                 <span id="studentHistoryTitle" style="display: flex; align-items: center; gap: 10px;"><i class="fa-solid fa-clock-rotate-left"></i> Lịch sử học tập & Nhận xét chi tiết</span>
                 <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap;">
@@ -900,7 +900,7 @@
         </div>
 
         <!-- Khung Phản Hồi Phụ Huynh -->
-        <div id="khuVucPhanHoiPhuHuynh">
+        <div id="khuVucPhanHoiPhuHuynh" class="reveal">
             <h4><i class="fa-regular fa-comment-dots" style="color: #3B82F6;"></i> Phản hồi từ Phụ huynh</h4>
             <div class="feedback-form-container">
                 <textarea id="feedbackInput" placeholder="Nhập ý kiến đóng góp hoặc phản hồi của phụ huynh gửi cho gia sư tại đây..." rows="3"></textarea>
@@ -1011,6 +1011,6 @@
     </script>
 
     <!-- Phase 19: Scroll Animation Engine -->
-    <script src="js/scroll-animations.js?v=20261002"></script>
+    <script src="js/scroll-animations.js?v=20261002_scroll"></script>
 </body>
 </html>
