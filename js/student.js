@@ -383,17 +383,25 @@ function renderStudentView(ketQua) {
     }
 
     lichSuVe.forEach(function(item) {
-        var rawDate = item.ngay || "";
-        var shortDate = rawDate;
-        var dateParts = rawDate.match(/(\d{1,2})\/(\d{1,2})/);
-        if (dateParts) shortDate = dateParts[1] + "/" + dateParts[2];
-        labels.push(shortDate);
+        var valDG = parseFloat(item.diemDauGio !== undefined && item.diemDauGio !== null ? item.diemDauGio : item.diemDG);
+        var valDK = parseFloat(item.diemDinhKi !== undefined && item.diemDinhKi !== null ? item.diemDinhKi : item.diemDK);
+        var isValidDG = !isNaN(valDG) && valDG >= 0 && valDG <= 10;
+        var isValidDK = !isNaN(valDK) && valDK >= 0 && valDK <= 10;
 
-        var valDG = parseFloat(item.diemDauGio || item.diemDG);
-        var valDK = parseFloat(item.diemDinhKi || item.diemDK);
-
-        dataDauGio.push(!isNaN(valDG) && valDG >= 0 && valDG <= 10 ? valDG : null);
-        dataDinhKi.push(!isNaN(valDK) && valDK >= 0 && valDK <= 10 ? valDK : null);
+        // Chỉ đưa vào biểu đồ điểm số những buổi học CÓ ĐIỂM (loại bỏ các buổi vắng hoặc không có điểm kiểm tra)
+        if (isValidDG || isValidDK) {
+            var rawDate = item.ngay || "";
+            var shortDate = rawDate;
+            if (typeof formatDateOnly === 'function') {
+                shortDate = formatDateOnly(rawDate);
+            } else {
+                var dateParts = rawDate.match(/(\d{1,2})\/(\d{1,2})/);
+                if (dateParts) shortDate = dateParts[1] + "/" + dateParts[2];
+            }
+            labels.push(shortDate);
+            dataDauGio.push(isValidDG ? valDG : null);
+            dataDinhKi.push(isValidDK ? valDK : null);
+        }
     });
 
     var chartCanvas = document.getElementById('diemChart');
