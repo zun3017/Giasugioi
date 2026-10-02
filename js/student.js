@@ -579,7 +579,6 @@ function renderStudentView(ketQua) {
             "<th>Đầu giờ</th>" +
             "<th>Định kì</th>" +
             "<th>Chuyên cần</th>" +
-            "<th style='text-align:center;'>Chi tiết</th>" +
             "</tr></thead><tbody>";
 
         lichSu.slice().reverse().forEach(function(item, idx) {
@@ -600,10 +599,9 @@ function renderStudentView(ketQua) {
                     '<td style="font-weight:700;font-size:15px;color:' + scoreColor(diemDau) + ';">' + (diemDau !== undefined && diemDau !== null && diemDau !== '' ? diemDau : '—') + '</td>' +
                     '<td style="font-weight:700;font-size:15px;color:' + scoreColor(diemDinh) + ';">' + (diemDinh !== undefined && diemDinh !== null && diemDinh !== '' ? diemDinh : '—') + '</td>' +
                     '<td><span class="status-chip ' + (isAbsent ? 'status-absent' : 'status-present') + '">' + (isAbsent ? '❌ Vắng' : '✅ Có mặt') + '</span></td>' +
-                    '<td style="text-align:center;"><button class="btn-expand-row open" onclick="toggleRowDetail(this)" title="Thu gọn / Mở rộng nhận xét"><i class="fa-solid fa-chevron-down"></i></button></td>' +
                 '</tr>' +
                 '<tr' + detailHiddenAttr + '>' +
-                    '<td colspan="8"><div class="detail-content"><i class="fa-solid fa-comment-dots" style="color:#3B82F6;margin-right:6px;"></i><strong>Nhận xét:</strong> ' + (item.nhanXet || 'Chưa có nhận xét cho buổi học này.') + '</div></td>' +
+                    '<td colspan="7"><div class="detail-content"><i class="fa-solid fa-comment-dots" style="color:#3B82F6;margin-right:6px;"></i><strong>Nhận xét:</strong> ' + (item.nhanXet || 'Chưa có nhận xét cho buổi học này.') + '</div></td>' +
                 '</tr>';
         });
 
