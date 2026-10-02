@@ -1359,10 +1359,15 @@
         }
         
         @media (max-width: 768px) {
-            .desktop-table-view {
+            .desktop-table-view,
+            .table-wrapper.desktop-table-view,
+            #tuitionTable,
+            #tutorScheduleTable {
                 display: none !important;
             }
-            .mobile-cards-view {
+            .mobile-cards-view,
+            #tuitionMobileList,
+            #tutorScheduleMobile {
                 display: block !important;
             }
         }

@@ -412,24 +412,18 @@
             .kpi-label { font-size: 11px !important; }
             .kpi-card, .tutor-kpi-card { padding: 14px !important; }
 
-            /* Ẩn bảng rút gọn desktop trên mobile vì đã có thẻ mở (accordion) bên dưới */
-            .desktop-table-view {
+            /* Ẩn hoàn toàn bảng desktop trên mobile vì đã có thẻ mở / cards bên dưới */
+            .desktop-table-view,
+            .table-wrapper.desktop-table-view,
+            #tuitionTable,
+            #tutorScheduleTable,
+            .desktop-table-view table {
                 display: none !important;
             }
-            .mobile-cards-view {
+            .mobile-cards-view,
+            #tuitionMobileList,
+            #tutorScheduleMobile {
                 display: block !important;
-            }
-
-            /* Bảng học phí - horizontal scroll */
-            .tuition-table-wrapper,
-            [class*="tuition"] > table,
-            #tutorSectionTuition table {
-                overflow-x: auto !important;
-                -webkit-overflow-scrolling: touch;
-                width: 100% !important;
-            }
-            #tutorSectionTuition table, #tuitionTable {
-                min-width: 580px !important;
             }
 
             /* Diary entries full width */
