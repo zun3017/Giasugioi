@@ -2284,14 +2284,66 @@
 
           /* List view — đẹp nhất mobile */
           .fc-list-day-cushion {
-            background: #EFF6FF !important; color: #2563EB !important;
-            font-size: 12px !important; font-weight: 700 !important;
-            padding: 8px 14px !important;
+            background: var(--nav-hover-bg, #EFF6FF) !important;
+            color: var(--color-primary, #2563EB) !important;
+            font-size: 12.5px !important;
+            font-weight: 800 !important;
+            padding: 10px 14px !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
           }
-          .fc-list-event-title { font-size: 13px !important; }
-          .fc-list-event { cursor: pointer; }
-          .fc-list-event:hover td { background: #F8FAFF !important; }
-          .fc-list-empty-cushion { font-size: 13px !important; }
+          [data-theme="dark"] .fc-list-day-cushion,
+          .dark-theme .fc-list-day-cushion {
+            background: var(--bg-card-alt) !important;
+            color: var(--color-primary) !important;
+          }
+          .fc-list-event {
+            cursor: pointer;
+            transition: background 0.15s ease;
+          }
+          .fc-list-event:hover td {
+            background: var(--nav-hover-bg, #F8FAFF) !important;
+          }
+          .fc-list-event td {
+            padding: 12px 14px !important;
+            border-bottom: 1px solid var(--border-card, #ECE7F6) !important;
+            vertical-align: middle !important;
+          }
+          .fc-list-event-time {
+            font-size: 13px !important;
+            font-weight: 700 !important;
+            color: var(--text-primary) !important;
+            white-space: nowrap !important;
+            width: 105px;
+          }
+          .fc-list-event-graphic {
+            padding-right: 0 !important;
+            width: 24px !important;
+          }
+          .fc-list-event-dot {
+            width: 10px !important;
+            height: 10px !important;
+            border-radius: 50% !important;
+            border-width: 5px !important;
+          }
+          .fc-list-event-title {
+            font-size: 13.5px !important;
+            padding-left: 10px !important;
+          }
+          .fc-list-event-title a {
+            color: var(--text-primary) !important;
+            text-decoration: none !important;
+            display: block !important;
+            width: 100% !important;
+          }
+          .fc-list-table {
+            border: none !important;
+            width: 100% !important;
+          }
+          .fc-list-empty-cushion {
+            font-size: 13px !important;
+            color: var(--text-muted) !important;
+          }
 
           /* Main calendar area padding */
           .fc { padding: 0 !important; }
@@ -3454,12 +3506,15 @@
             let pillMap = {
                 'dayGridMonth': 'viewPillMonth',
                 'timeGridWeek': 'viewPillWeek',
-                'timeGridDay': 'viewPillDay'
+                'listWeek': 'viewPillWeek',
+                'timeGridDay': 'viewPillDay',
+                'listDay': 'viewPillDay'
             };
-            Object.keys(pillMap).forEach(key => {
-                let el = document.getElementById(pillMap[key]);
+            let activeId = pillMap[viewType] || '';
+            ['viewPillMonth', 'viewPillWeek', 'viewPillDay'].forEach(id => {
+                let el = document.getElementById(id);
                 if (el) {
-                    if (key === viewType) {
+                    if (id === activeId) {
                         el.classList.add('active');
                     } else {
                         el.classList.remove('active');
@@ -3470,6 +3525,9 @@
 
         function switchCalendarView(viewName) {
             if (!calendar) return;
+            if (window.innerWidth <= 768 && viewName === 'timeGridWeek') {
+                viewName = 'listWeek';
+            }
             calendar.changeView(viewName);
             updateActiveViewPills(viewName);
         }
@@ -3822,6 +3880,48 @@
                         return { html: html };
                     }
 
+                    if (arg.view.type.startsWith('list')) {
+                        let props = arg.event.extendedProps || {};
+                        let color = props.eventColor || props.color || '#8E4DFF';
+                        let studentName = props.studentName || arg.event.title || 'Học sinh';
+                        let subject = props.subject || '';
+                        let notes = props.notes || '';
+                        let feeNum = props.fee || 200000;
+                        let feeStr = Number(feeNum).toLocaleString('vi-VN') + ' đ';
+                        let isCancelled = props.status === 'cancelled';
+                        let isOneTime = props.isOneTime;
+
+                        let textClr = isCancelled ? '#9CA3AF' : (isDark ? '#FFFFFF' : 'var(--text-primary)');
+                        let textDecor = isCancelled ? 'text-decoration: line-through;' : '';
+
+                        let badgeHtml = '';
+                        if (isCancelled) {
+                            badgeHtml = '<span style="font-size: 10.5px; padding: 2px 6px; border-radius: 6px; background: rgba(239, 68, 68, 0.15); color: #EF4444; font-weight: 700; margin-left: 6px;">Đã hủy</span>';
+                        } else if (isOneTime) {
+                            badgeHtml = '<span style="font-size: 10.5px; padding: 2px 6px; border-radius: 6px; background: rgba(245, 158, 11, 0.15); color: #F59E0B; font-weight: 700; margin-left: 6px;">1 Lần</span>';
+                        }
+
+                        let subText = subject && subject !== studentName ? subject : '';
+                        if (notes) {
+                            subText = subText ? (subText + ' · ' + notes) : notes;
+                        }
+                        let subHtml = subText ? '<div style="font-size: 12px; color: var(--text-secondary); margin-top: 2px; font-weight: 500;">' + subText + '</div>' : '';
+
+                        let html = '<div class="fc-list-item-content" style="display: flex; align-items: center; justify-content: space-between; gap: 10px; width: 100%; ' + textDecor + '">' +
+                                   '  <div style="display: flex; flex-direction: column; min-width: 0; flex: 1;">' +
+                                   '    <div style="display: flex; align-items: center; gap: 4px; flex-wrap: wrap;">' +
+                                   '      <span style="font-size: 14px; font-weight: 700; color: ' + textClr + ';">' + studentName + '</span>' +
+                                   '      ' + badgeHtml +
+                                   '    </div>' +
+                                   '    ' + subHtml +
+                                   '  </div>' +
+                                   '  <div style="font-size: 12.5px; font-weight: 700; color: var(--color-primary); white-space: nowrap; margin-left: 8px;">' +
+                                   '    ' + feeStr +
+                                   '  </div>' +
+                                   '</div>';
+                        return { html: html };
+                    }
+
                     return null;
                 },
                 slotMinTime: "07:00:00",
@@ -3846,10 +3946,12 @@
                     let evColor = props.eventColor || props.color || '#8E4DFF';
                     let isDark = getComputedStyle(document.documentElement).getPropertyValue('--is-dark-theme').trim() === '1';
 
-                    info.el.style.setProperty('background', 'transparent', 'important');
-                    info.el.style.setProperty('border', 'none', 'important');
-                    info.el.style.setProperty('box-shadow', 'none', 'important');
-                    info.el.style.setProperty('padding', '0', 'important');
+                    if (!info.view.type.startsWith('list')) {
+                        info.el.style.setProperty('background', 'transparent', 'important');
+                        info.el.style.setProperty('border', 'none', 'important');
+                        info.el.style.setProperty('box-shadow', 'none', 'important');
+                        info.el.style.setProperty('padding', '0', 'important');
+                    }
 
                     if (info.view.type === 'dayGridMonth') {
                         var innerChip = info.el.querySelector('.fc-month-chip-inner');
