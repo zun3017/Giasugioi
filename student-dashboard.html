@@ -27,6 +27,105 @@
     <link rel="stylesheet" href="css/style.css?v=3.0.0">
     <!-- Public Light Theme -->
     <link rel="stylesheet" href="css/public-theme.css">
+
+    <!-- Mobile Responsive Optimizations -->
+    <style>
+        /* ===== STUDENT DASHBOARD MOBILE ===== */
+        @media (max-width: 768px) {
+            #resultBox, .main-container {
+                padding: 16px 12px 60px !important;
+                margin: 10px auto !important;
+                border-radius: 16px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
+            }
+            .page-section, .result-section {
+                padding: 16px !important;
+                box-sizing: border-box !important;
+            }
+
+            /* Summary/KPI grid */
+            .summary-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 12px !important;
+            }
+
+            /* Score numbers */
+            .score-number, .kpi-number, .summary-val {
+                font-size: 26px !important;
+            }
+
+            /* Charts */
+            .chart-box {
+                padding: 16px 12px !important;
+                box-sizing: border-box !important;
+            }
+            .chart-container, .chart-canvas-container, canvas {
+                max-width: 100% !important;
+                height: 220px !important;
+            }
+
+            /* Subject cards */
+            .subject-card, .result-card {
+                width: 100% !important;
+                margin: 0 !important;
+            }
+
+            /* Tables */
+            .table-wrapper, .result-table-wrapper {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+                width: 100% !important;
+            }
+            .table-wrapper table, .result-table {
+                min-width: 500px !important;
+            }
+
+            /* Buttons */
+            button, .tab-btn, .filter-btn, .btn-submit-feedback, .btn-back {
+                min-height: 44px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .summary-grid {
+                grid-template-columns: 1fr !important;
+            }
+            #resultBox, .main-container {
+                padding: 12px 8px 60px !important;
+            }
+            .summary-val, .score-number {
+                font-size: 24px !important;
+            }
+            .page-section, .result-section {
+                padding: 12px !important;
+            }
+
+            /* Font sizes */
+            h2, h4, .section-title {
+                font-size: 16px !important;
+            }
+            .card-label, .stat-label, .summary-label {
+                font-size: 12px !important;
+            }
+            .feedback-form-container textarea {
+                font-size: 16px !important;
+            }
+            .btn-submit-feedback, .btn-back {
+                width: 100% !important;
+                justify-content: center !important;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .summary-grid {
+                grid-template-columns: 1fr !important;
+            }
+            .score-number, .summary-val {
+                font-size: 22px !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <!-- Header / Navbar -->
