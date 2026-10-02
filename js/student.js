@@ -360,7 +360,28 @@ function renderStudentView(ketQua) {
     var dataDauGio = [];
     var dataDinhKi = [];
     
+    // Sắp xếp dữ liệu theo trình tự thời gian từ cũ đến mới (trái qua phải)
+    // để biểu đồ thể hiện rõ tiến trình tiến bộ học tập của học sinh
     var lichSuVe = lichSu.slice();
+    if (lichSuVe.length > 1) {
+        var parseDateNum = function(str) {
+            if (!str) return 0;
+            var parts = String(str).split('/');
+            if (parts.length >= 2) {
+                var d = parseInt(parts[0], 10) || 0;
+                var m = parseInt(parts[1], 10) || 0;
+                var y = (parts.length >= 3) ? (parseInt(parts[2], 10) || 2026) : 2026;
+                return y * 10000 + m * 100 + d;
+            }
+            return 0;
+        };
+        var firstD = parseDateNum(lichSuVe[0].ngay);
+        var lastD = parseDateNum(lichSuVe[lichSuVe.length - 1].ngay);
+        if (firstD > lastD) {
+            lichSuVe.reverse();
+        }
+    }
+
     lichSuVe.forEach(function(item) {
         var rawDate = item.ngay || "";
         var shortDate = rawDate;
@@ -378,8 +399,96 @@ function renderStudentView(ketQua) {
     var chartCanvas = document.getElementById('diemChart');
     if (chartCanvas && labels.length > 0) {
         var ctx = chartCanvas.getContext('2d');
+
+        // 1. Tạo linear gradient fill chuyển sắc mượt mà chuẩn phong cách Hình 1
+        var gradDauGio = ctx.createLinearGradient(0, 0, 0, 260);
+        gradDauGio.addColorStop(0, 'rgba(59, 130, 246, 0.35)');
+        gradDauGio.addColorStop(1, 'rgba(59, 130, 246, 0.01)');
+
+        var gradDinhKi = ctx.createLinearGradient(0, 0, 0, 260);
+        gradDinhKi.addColorStop(0, 'rgba(245, 158, 11, 0.32)');
+        gradDinhKi.addColorStop(1, 'rgba(245, 158, 11, 0.01)');
+
+        // Tính toán dải trục Y linh hoạt để đường cong có độ võng/nhấp nhô tự nhiên chuẩn Hình 1
+        var allScores = dataDauGio.concat(dataDinhKi).filter(function(v) { return v !== null && !isNaN(v); });
+        var minScore = allScores.length > 0 ? Math.min.apply(null, allScores) : 0;
+        var maxScore = allScores.length > 0 ? Math.max.apply(null, allScores) : 10;
+        var yMin = (minScore >= 6) ? Math.max(0, Math.floor(minScore) - 2) : 0;
+        var yMax = Math.min(11, Math.max(10.2, maxScore + 0.8));
+
+        // 2. Plugin vẽ nhãn số điểm trực tiếp trên đầu mỗi nút tròn (giống nhãn 5,2tr, 3,6tr... ở Hình 1)
+        var studentTopLabelsPlugin = {
+            id: 'studentTopDataLabels',
+            afterDatasetsDraw: function(chart) {
+                var c = chart.ctx;
+                c.save();
+                c.font = '700 11px Inter, -apple-system, sans-serif';
+                c.textAlign = 'center';
+                c.textBaseline = 'bottom';
+
+                var meta0 = chart.getDatasetMeta(0);
+                var meta1 = chart.getDatasetMeta(1);
+                var isVis0 = meta0 && !meta0.hidden;
+                var isVis1 = meta1 && !meta1.hidden;
+
+                var formatScore = function(val) {
+                    if (val === null || val === undefined || isNaN(val)) return "";
+                    return (val % 1 === 0) ? String(val) : val.toFixed(1);
+                };
+
+                labels.forEach(function(lbl, idx) {
+                    var pt0 = (isVis0 && meta0.data) ? meta0.data[idx] : null;
+                    var pt1 = (isVis1 && meta1.data) ? meta1.data[idx] : null;
+                    var val0 = dataDauGio[idx];
+                    var val1 = dataDinhKi[idx];
+
+                    var has0 = (pt0 && val0 !== null && val0 !== undefined && !isNaN(val0));
+                    var has1 = (pt1 && val1 !== null && val1 !== undefined && !isNaN(val1));
+
+                    if (has0 && has1) {
+                        var str0 = formatScore(val0);
+                        var str1 = formatScore(val1);
+
+                        // Nếu 2 điểm trùng nhau hoặc khoảng cách Y quá gần (< 16px)
+                        if (val0 === val1 || Math.abs(pt0.y - pt1.y) < 16) {
+                            if (pt0.x > chart.width - 36) {
+                                // Sát mép phải: dịch nhẹ sang trái để không bị tràn
+                                c.fillStyle = '#2563EB';
+                                c.fillText(str0, pt0.x - 20, pt0.y - 8);
+                                c.fillStyle = '#94A3B8';
+                                c.fillText('/', pt0.x - 10, pt0.y - 8);
+                                c.fillStyle = '#D97706';
+                                c.fillText(str1, pt1.x, pt1.y - 8);
+                            } else {
+                                c.fillStyle = '#2563EB';
+                                c.fillText(str0, pt0.x - 13, pt0.y - 8);
+                                c.fillStyle = '#94A3B8';
+                                c.fillText('/', pt0.x, pt0.y - 8);
+                                c.fillStyle = '#D97706';
+                                c.fillText(str1, pt1.x + 13, pt1.y - 8);
+                            }
+                        } else {
+                            // Hai điểm tách biệt trên dưới rõ ràng
+                            c.fillStyle = '#2563EB';
+                            c.fillText(str0, pt0.x, pt0.y - 8);
+                            c.fillStyle = '#D97706';
+                            c.fillText(str1, pt1.x, pt1.y - 8);
+                        }
+                    } else if (has0) {
+                        c.fillStyle = '#2563EB';
+                        c.fillText(formatScore(val0), pt0.x, pt0.y - 8);
+                    } else if (has1) {
+                        c.fillStyle = '#D97706';
+                        c.fillText(formatScore(val1), pt1.x, pt1.y - 8);
+                    }
+                });
+                c.restore();
+            }
+        };
+
         currentChartInstance = new Chart(ctx, {
             type: 'line',
+            plugins: [studentTopLabelsPlugin],
             data: {
                 labels: labels,
                 datasets: [
@@ -387,30 +496,30 @@ function renderStudentView(ketQua) {
                         label: 'Điểm đầu giờ',
                         data: dataDauGio,
                         borderColor: '#3B82F6',
-                        backgroundColor: 'rgba(59,130,246,0.08)',
-                        borderWidth: 2.5,
+                        backgroundColor: gradDauGio,
+                        borderWidth: 3,
                         fill: true,
-                        tension: 0.4,
+                        tension: 0.38,
                         pointBackgroundColor: '#3B82F6',
-                        pointBorderColor: '#fff',
+                        pointBorderColor: '#FFFFFF',
                         pointBorderWidth: 2,
                         pointRadius: 5,
-                        pointHoverRadius: 7,
+                        pointHoverRadius: 7.5,
                         spanGaps: true
                     },
                     {
                         label: 'Điểm định kì',
                         data: dataDinhKi,
                         borderColor: '#F59E0B',
-                        backgroundColor: 'rgba(245,158,11,0.08)',
-                        borderWidth: 2.5,
-                        fill: true,
-                        tension: 0.4,
+                        backgroundColor: gradDinhKi,
+                        borderWidth: 3,
+                        fill: false, // Đường cam nổi bật sắc sảo trên nền gradient xanh
+                        tension: 0.38,
                         pointBackgroundColor: '#F59E0B',
-                        pointBorderColor: '#fff',
+                        pointBorderColor: '#FFFFFF',
                         pointBorderWidth: 2,
                         pointRadius: 5,
-                        pointHoverRadius: 7,
+                        pointHoverRadius: 7.5,
                         spanGaps: true
                     }
                 ]
@@ -418,40 +527,59 @@ function renderStudentView(ketQua) {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                layout: {
+                    padding: {
+                        left: 16,
+                        right: 28,
+                        top: 24,
+                        bottom: 6
+                    }
+                },
                 interaction: { mode: 'index', intersect: false },
                 plugins: {
                     legend: { display: false },
                     tooltip: {
                         backgroundColor: '#1E293B',
-                        titleColor: '#F1F5F9',
-                        bodyColor: '#CBD5E1',
-                        borderColor: 'rgba(255,255,255,0.1)',
+                        titleColor: '#FFFFFF',
+                        titleFont: { family: 'Inter', size: 12, weight: 'bold' },
+                        bodyColor: '#FFFFFF',
+                        bodyFont: { family: 'Inter', size: 11, weight: '600' },
+                        borderColor: 'rgba(59, 130, 246, 0.4)',
                         borderWidth: 1,
-                        padding: 12,
+                        padding: 10,
                         cornerRadius: 10,
+                        boxPadding: 4,
+                        usePointStyle: true,
                         callbacks: {
+                            title: function(items) {
+                                return items.length > 0 ? ('Buổi ngày ' + items[0].label) : '';
+                            },
                             label: function(c) {
                                 if (c.raw === null || c.raw === undefined) return null;
-                                return '  ' + c.dataset.label + ': ' + c.parsed.y;
+                                return ' ' + c.dataset.label + ': ' + c.parsed.y + ' điểm';
                             }
                         }
                     }
                 },
                 scales: {
                     x: {
-                        grid: { color: 'rgba(226,232,240,0.5)', drawBorder: false },
-                        ticks: { color: '#94A3B8', font: { size: 11 }, maxTicksLimit: 10 }
-                    },
-                    y: {
-                        min: 0,
-                        max: 10,
-                        grid: { color: 'rgba(226,232,240,0.5)', drawBorder: false },
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
                         ticks: {
                             color: '#94A3B8',
-                            font: { size: 11 },
-                            stepSize: 2,
-                            callback: function(v) { return v.toFixed(1); }
+                            font: { family: 'Inter', size: 11, weight: '500' }
                         }
+                    },
+                    y: {
+                        display: false,
+                        grid: {
+                            display: false,
+                            drawBorder: false
+                        },
+                        min: yMin,
+                        suggestedMax: yMax
                     }
                 }
             }
@@ -764,6 +892,14 @@ function toggleDataset(index) {
         btn.classList.add('active');
     }
     
+    // Nếu đường điểm đầu giờ bị ẩn, bật fill cho điểm định kì để luôn có gradient đẹp mắt
+    var meta0 = currentChartInstance.getDatasetMeta(0);
+    if (meta0 && meta0.hidden) {
+        currentChartInstance.data.datasets[1].fill = true;
+    } else {
+        currentChartInstance.data.datasets[1].fill = false;
+    }
+
     currentChartInstance.update();
 }
 

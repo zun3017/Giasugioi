@@ -393,6 +393,79 @@
             opacity: 0.9;
         }
 
+        /* ===== BIỂU ĐỒ ĐIỂM SỐ CHUẨN GIA SƯ (IMAGE 1) ===== */
+        .chart-box.chart-line-box {
+            background: var(--bg-card, #FFFFFF);
+            border: 1px solid var(--border-color, #DBEAFE);
+            border-radius: 20px !important;
+            padding: 24px;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.06);
+        }
+        .chart-legend-wrapper {
+            display: flex;
+            justify-content: flex-start;
+            margin-bottom: 16px;
+        }
+        .chart-legend-container {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .legend-btn {
+            background: #FFFFFF !important;
+            border: 1px solid #E2E8F0 !important;
+            border-radius: 9999px !important;
+            padding: 7px 18px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            cursor: pointer;
+            display: inline-flex !important;
+            align-items: center !important;
+            gap: 8px !important;
+            transition: all 0.2s ease !important;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04) !important;
+            outline: none !important;
+            color: #475569 !important;
+        }
+        .legend-btn:hover {
+            background: #F8FAFC !important;
+            border-color: #CBD5E1 !important;
+            transform: translateY(-1px);
+        }
+        .legend-btn.btn-dau-gio.active {
+            border-color: #3B82F6 !important;
+            background: #EFF6FF !important;
+            color: #2563EB !important;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.15) !important;
+        }
+        .legend-btn.btn-dinh-ki.active {
+            border-color: #F59E0B !important;
+            background: #FFFBEB !important;
+            color: #D97706 !important;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.15) !important;
+        }
+        .legend-btn.inactive {
+            opacity: 0.45 !important;
+            text-decoration: line-through !important;
+            background: transparent !important;
+            border-color: #E2E8F0 !important;
+            box-shadow: none !important;
+        }
+        .legend-dot.dot-purple {
+            background: #3B82F6 !important;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+        .legend-dot.dot-yellow {
+            background: #F59E0B !important;
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            display: inline-block;
+        }
+
         /* ===== STUDENT DASHBOARD MOBILE ===== */
         @media (max-width: 768px) {
             #resultBox, .main-container {
@@ -613,13 +686,13 @@
         <div class="charts-grid">
             <!-- Cột trái: Biểu đồ đường (Line chart) -->
             <div class="chart-box chart-line-box">
-                <div class="chart-header" style="justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                <div class="chart-header" style="justify-content: space-between; flex-wrap: wrap; gap: 10px; margin-bottom: 12px;">
                     <div style="display: flex; align-items: center; gap: 10px;">
-                        <i class="fa-solid fa-chart-line"></i>
-                        <h4>Biểu đồ điểm số học tập</h4>
+                        <i class="fa-solid fa-chart-line" style="color: #3B82F6; font-size: 18px;"></i>
+                        <h4 style="margin: 0; font-size: 16px; font-weight: 700; color: #1E293B;">Biểu đồ điểm số học tập</h4>
                     </div>
-                    <div class="chart-instruction">
-                        <i class="fa-solid fa-circle-info"></i> Nhấn nút điểm để ẩn/hiện đường dữ liệu. Nhấn vào nút tròn trên biểu đồ để xem điểm chi tiết hôm đó
+                    <div class="chart-instruction" style="font-size: 12px; color: #64748B;">
+                        <i class="fa-solid fa-circle-info" style="color: #3B82F6;"></i> Nhấn nút điểm để ẩn/hiện đường dữ liệu. Nhấn vào điểm tròn để xem chi tiết
                     </div>
                 </div>
                 
