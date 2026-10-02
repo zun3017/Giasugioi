@@ -171,6 +171,97 @@
         .donut-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
         .donut-legend-count { margin-left: auto; font-weight: 700; color: #1E293B; font-size: 13px; }
 
+        /* ===== PHASE 15: HISTORY TABLE ENHANCEMENT ===== */
+        .history-table { width: 100%; border-collapse: collapse; font-family: Inter, sans-serif; min-width: 650px; }
+        .history-table th {
+            background: #F0F7FF;
+            color: #64748B;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.4px;
+            padding: 10px 12px;
+            text-align: left;
+            border-bottom: 2px solid #DBEAFE;
+            white-space: nowrap;
+        }
+        .history-row td {
+            padding: 11px 12px;
+            border-bottom: 1px solid #F1F5F9;
+            font-size: 13px;
+            color: #475569;
+            vertical-align: middle;
+        }
+        .history-row.row-absent { background: rgba(239, 68, 68, 0.04); }
+        .history-row:hover { background: #F8FAFF; }
+        .history-row:last-child td { border-bottom: none; }
+
+        .date-badge {
+            background: #EFF6FF;
+            color: #2563EB;
+            border-radius: 8px;
+            padding: 3px 8px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .subj-chip {
+            background: #F0FDF4;
+            color: #059669;
+            border-radius: 8px;
+            padding: 3px 8px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .btvn-chip {
+            border-radius: 8px;
+            padding: 3px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .btvn-done { background: #ECFDF5; color: #059669; }
+        .btvn-fail { background: #FFF7ED; color: #C2410C; }
+        .btvn-na   { background: #F1F5F9; color: #94A3B8; }
+
+        .status-chip {
+            border-radius: 8px;
+            padding: 3px 10px;
+            font-size: 12px;
+            font-weight: 600;
+            white-space: nowrap;
+        }
+        .status-present { background: #EFF6FF; color: #2563EB; }
+        .status-absent  { background: #FEF2F2; color: #DC2626; }
+
+        .btn-expand-row {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #94A3B8;
+            font-size: 13px;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+        .btn-expand-row:hover { background: #EFF6FF; color: #3B82F6; }
+        .btn-expand-row.open { color: #3B82F6; transform: rotate(180deg); }
+
+        .history-detail-row td {
+            padding: 0;
+            background: #F8FAFF;
+            border-bottom: 1px solid #F1F5F9;
+        }
+        .detail-content {
+            padding: 10px 16px;
+            font-size: 13px;
+            color: #475569;
+            border-left: 3px solid #3B82F6;
+            margin: 6px 10px;
+            border-radius: 0 6px 6px 0;
+            background: #FFFFFF;
+        }
+
         /* ===== STUDENT DASHBOARD MOBILE ===== */
         @media (max-width: 768px) {
             #resultBox, .main-container {

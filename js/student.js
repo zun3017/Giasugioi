@@ -518,104 +518,64 @@ function renderStudentView(ketQua) {
             historyHeaderEl.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i> Lịch sử Đánh giá Học tập <span style="font-size: 12px; color: var(--text-secondary); font-weight: normal; margin-left: 8px;">(Tổng đã học: <b style="color:var(--text-primary);">' + totalPresentAllTime + ' buổi</b> • Nghỉ: <b style="color:var(--text-primary);">' + totalAbsentAllTime + ' buổi</b>)</span>';
         }
 
-        // Đồng bộ hoàn toàn hàm getStatusBadge với web chính
-        var getStatusBadge = function(trangThai) {
-            if (isAbsentSession(trangThai)) return '<span class="status-badge badge-nghi">Hủy/Nghỉ</span>';
-            var normTt = normalizeStr(trangThai);
-            if (normTt.includes('hoc bu') || normTt.includes('da bu')) return '<span class="status-badge badge-hocbu">Học bù</span>';
-            if (normTt.includes('di muon')) return '<span class="status-badge badge-hocbu" style="background:rgba(245,158,11,0.15); border-color:rgba(245,158,11,0.4); color:var(--text-primary);">Đi muộn</span>';
-            return '<span class="status-badge badge-dahoc">Có mặt</span>';
-        };
+        // Helper màu sắc điểm số (Task 15.5)
+        function scoreColor(val) {
+            var n = parseFloat(val);
+            if (isNaN(n)) return '#94A3B8';
+            if (n >= 9) return '#059669';
+            if (n >= 7) return '#2563EB';
+            if (n >= 5) return '#D97706';
+            return '#DC2626';
+        }
 
-        // Đồng bộ hoàn toàn hàm getBtvnBadge với web chính
-        var getBtvnBadge = function(btvn) {
-            var raw = (btvn || "").trim();
-            var bt = raw.toLowerCase();
-            if (!raw || raw === "-" || raw === "không có") return '<span class="status-badge" style="background: var(--bg-input); border: 1px solid var(--border-card); color: var(--text-secondary);">-</span>';
-            
-            // Kiểm tra phần trăm (ví dụ: "Hoàn thành 90%", "Hoàn thành 75%", "60%")
-            var pctMatch = bt.match(/(\d+(\.\d+)?)\s*%/);
-            if (pctMatch) {
-                var pct = parseFloat(pctMatch[1]);
-                if (pct >= 90) {
-                    return '<span class="status-badge badge-hoanthanh">' + raw + '</span>';
-                } else if (pct >= 50) {
-                    return '<span class="status-badge badge-thieu">' + raw + '</span>';
-                } else {
-                    return '<span class="status-badge badge-nghi">' + raw + '</span>';
-                }
-            }
+        // Helper chip BTVN (Task 15.5)
+        function btvnChip(raw, isAbsent) {
+            if (isAbsent) return '<span class="btvn-chip btvn-na">—</span>';
+            var n = normalizeStr(raw || '');
+            if (n.includes('hoan') || n.includes('tot') || n.includes('day du') || n.includes('xuat') || n === 'co' || n === 'dat')
+                return '<span class="btvn-chip btvn-done">✅ Hoàn thành</span>';
+            return '<span class="btvn-chip btvn-fail">❌ Chưa HT</span>';
+        }
 
-            if (bt.indexOf("không làm") !== -1 || bt.indexOf("chưa làm") !== -1 || bt.indexOf("chưa nộp") !== -1 || bt.indexOf("chưa đạt") !== -1 || bt === "không") {
-                return '<span class="status-badge badge-nghi">' + raw + '</span>';
-            }
-            if (bt.indexOf("hoàn thành") !== -1 || bt === "đạt" || bt === "tốt" || bt === "xuất sắc" || bt === "có") {
-                return '<span class="status-badge badge-hoanthanh">' + raw + '</span>';
-            }
-            if (bt.indexOf("thiếu") !== -1) {
-                return '<span class="status-badge badge-thieu">' + raw + '</span>';
-            }
-            if (bt.indexOf("phụ huynh") !== -1 || bt.indexOf("nhắc") !== -1) {
-                return '<span class="status-badge badge-hocbu" style="font-size:10.5px; padding:3px 8px;">' + raw + '</span>';
-            }
-            return '<span class="status-badge badge-hoanthanh">' + raw + '</span>';
-        };
-
-        // 1. Desktop View (Table)
-        htmlLichSu += "<div class='desktop-table-view'>";
-        htmlLichSu += "<table><tr><th>Tuần</th><th>Ngày dạy</th><th>Môn</th><th>Nội dung</th><th>Đánh giá BTVN</th><th>KT Đầu giờ</th><th>KT Định kì</th><th>Trạng thái</th></tr>";
-        
-        // 2. Mobile View (Accordion list)
-        var htmlMobile = "<div class='mobile-cards-view'>";
+        htmlLichSu += "<table class='history-table'>";
+        htmlLichSu += "<thead><tr>" +
+            "<th>Ngày</th>" +
+            "<th>Môn</th>" +
+            "<th>Nội dung</th>" +
+            "<th>BTVN</th>" +
+            "<th>Đầu giờ</th>" +
+            "<th>Định kì</th>" +
+            "<th>Chuyên cần</th>" +
+            "<th style='text-align:center;'>Chi tiết</th>" +
+            "</tr></thead><tbody>";
 
         lichSu.slice().reverse().forEach(function(item, idx) {
-            var styleStr = (idx >= 5) ? 'style="display: none;" class="history-row hidden-row"' : 'class="history-row"';
-            var btvnValue = item.danhGiaBTVN || item.btvn || "";
-            var diemDau = item.diemDauGio || item.diemDG || "-";
-            var diemDinh = item.diemDinhKi || item.diemDK || "-";
-            var badgeHtml = getStatusBadge(item);
-            
-            // Desktop Row
-            htmlLichSu += "<tr " + styleStr + ">";
-            htmlLichSu += "<td>" + (item.tuan || (idx + 1)) + "</td>";
-            htmlLichSu += "<td>" + (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "")) + "</td>";
-            htmlLichSu += "<td>" + (item.mon || "") + "</td>";
-            htmlLichSu += "<td>" + (item.noiDung || item.topic || "") + "</td>";
-            htmlLichSu += "<td>" + getBtvnBadge(btvnValue) + "</td>";
-            htmlLichSu += "<td>" + diemDau + "</td>";
-            htmlLichSu += "<td>" + diemDinh + "</td>";
-            htmlLichSu += "<td>" + badgeHtml + "</td>";
-            htmlLichSu += "</tr>";
+            var isAbsent = isAbsentSession(item);
+            var isHidden = (idx >= 5);
+            var hiddenAttr = isHidden ? ' style="display:none;" class="history-row hidden-row' + (isAbsent ? ' row-absent' : '') + '"' : ' class="history-row' + (isAbsent ? ' row-absent' : '') + '"';
+            var rawDate = (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "-"));
+            var diemDau = item.diemDauGio !== undefined && item.diemDauGio !== null ? item.diemDauGio : item.diemDG;
+            var diemDinh = item.diemDinhKi !== undefined && item.diemDinhKi !== null ? item.diemDinhKi : item.diemDK;
 
-            // Mobile Row (Accordion Card)
-            var mobileStyleStr = (idx >= 5) ? 'style="display: none;" class="accordion-item history-row hidden-row"' : 'class="accordion-item history-row"';
-            htmlMobile += "<div " + mobileStyleStr + ">";
-            htmlMobile += "  <div class='accordion-header' onclick='toggleAccordion(" + idx + ")'>";
-            htmlMobile += "    <div class='accordion-header-title'>";
-            htmlMobile += "      <span>Tuần " + (item.tuan || (idx + 1)) + "</span>";
-            htmlMobile += "      <span class='accordion-header-date'>" + (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "")) + "</span>";
-            htmlMobile += "    </div>";
-            htmlMobile += "    <div class='accordion-header-status'>";
-            htmlMobile += "      " + badgeHtml;
-            htmlMobile += "      <i class='fa-solid fa-chevron-down' id='chevron-" + idx + "'></i>";
-            htmlMobile += "    </div>";
-            htmlMobile += "  </div>";
-            htmlMobile += "  <div class='accordion-body' id='accordion-body-" + idx + "'>";
-            htmlMobile += "    <div class='accordion-body-row'><span class='accordion-body-label'>Môn học</span><span class='accordion-body-val'>" + (item.mon || "") + "</span></div>";
-            htmlMobile += "    <div class='accordion-body-row'><span class='accordion-body-label'>Nội dung dạy học</span><span class='accordion-body-val'>" + (item.noiDung || item.topic || "") + "</span></div>";
-            htmlMobile += "    <div class='accordion-body-row'><span class='accordion-body-label'>Đánh giá bài tập về nhà</span><span class='accordion-body-val'>" + getBtvnBadge(btvnValue) + "</span></div>";
-            htmlMobile += "    <div class='accordion-body-row'><span class='accordion-body-label'>Kiểm tra đầu giờ</span><span class='accordion-body-val'>" + diemDau + "</span></div>";
-            htmlMobile += "    <div class='accordion-body-row'><span class='accordion-body-label'>Kiểm tra định kì</span><span class='accordion-body-val'>" + diemDinh + "</span></div>";
-            htmlMobile += "  </div>";
-            htmlMobile += "</div>";
+            htmlLichSu +=
+                '<tr' + hiddenAttr + '>' +
+                    '<td><span class="date-badge">' + rawDate + '</span></td>' +
+                    '<td><span class="subj-chip">' + (item.mon || '-') + '</span></td>' +
+                    '<td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + (item.noiDung || item.topic || '') + '">' + (item.noiDung || item.topic || '-') + '</td>' +
+                    '<td>' + btvnChip(item.danhGiaBTVN || item.btvn, isAbsent) + '</td>' +
+                    '<td style="font-weight:700;font-size:15px;color:' + scoreColor(diemDau) + ';">' + (diemDau !== undefined && diemDau !== null && diemDau !== '' ? diemDau : '—') + '</td>' +
+                    '<td style="font-weight:700;font-size:15px;color:' + scoreColor(diemDinh) + ';">' + (diemDinh !== undefined && diemDinh !== null && diemDinh !== '' ? diemDinh : '—') + '</td>' +
+                    '<td><span class="status-chip ' + (isAbsent ? 'status-absent' : 'status-present') + '">' + (isAbsent ? '❌ Vắng' : '✅ Có mặt') + '</span></td>' +
+                    '<td style="text-align:center;"><button class="btn-expand-row" onclick="toggleRowDetail(this)" title="Xem nhận xét"><i class="fa-solid fa-chevron-down"></i></button></td>' +
+                '</tr>' +
+                '<tr class="history-detail-row" style="display:none;">' +
+                    '<td colspan="8"><div class="detail-content"><i class="fa-solid fa-comment-dots" style="color:#3B82F6;margin-right:6px;"></i><strong>Nhận xét:</strong> ' + (item.nhanXet || 'Chưa có nhận xét cho buổi học này.') + '</div></td>' +
+                '</tr>';
         });
 
-        htmlLichSu += "</table></div>";
-        htmlMobile += "</div>";
-        
-        htmlLichSu = htmlLichSu + htmlMobile;
+        htmlLichSu += "</tbody></table>";
     } else {
-        htmlLichSu = "<p style='color: #A6ADCE;'>Chưa có dữ liệu đánh giá nào được cập nhật.</p>";
+        htmlLichSu = "<p style='color: #A6ADCE; padding: 16px;'>Chưa có dữ liệu đánh giá nào được cập nhật.</p>";
     }
     
     var khuVucLichSuEl = document.getElementById('khuVucLichSu');
@@ -866,6 +826,15 @@ function toggleAccordion(idx) {
         body.style.display = 'flex';
         if (item) item.classList.add('active');
     }
+}
+
+function toggleRowDetail(btn) {
+    var tr = btn.closest('tr');
+    var detailRow = tr ? tr.nextElementSibling : null;
+    if (!detailRow) return;
+    var isOpen = detailRow.style.display !== 'none';
+    detailRow.style.display = isOpen ? 'none' : 'table-row';
+    btn.classList.toggle('open', !isOpen);
 }
 
 function guiPhanHoiPhuHuynh() {
