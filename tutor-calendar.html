@@ -9,7 +9,7 @@
     </script>
     <meta charset="UTF-8">
     <link rel="icon" type="image/png" href="https://i.postimg.cc/66rKbPmb/trinh-duyet.png">
-    <meta name="viewport" content="width=1200, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Google Calendar style for Tutors - Recurrence Timetable</title>
     <!-- PWA Settings -->
     <link rel="manifest" href="manifest.json">
@@ -1807,18 +1807,50 @@
         @media (max-width: 768px) {
             body { padding: 0 !important; }
             .container { 
-                padding: 10px 12px !important; 
+                flex-direction: column !important;
+                gap: 10px !important;
+                padding: 12px 16px !important; 
                 border-radius: 0 !important; 
-                border-bottom: 1px solid #E5D9CC !important;
+                border-bottom: 1px solid var(--border-card, #E5D9CC) !important;
             }
+            .header-left h1 { font-size: 18px !important; }
+            .header-right { flex-wrap: wrap !important; gap: 8px !important; width: 100% !important; }
             .calendar-header-custom {
                 gap: 8px !important;
+                flex-wrap: wrap !important;
             }
             .cal-header-left {
                 gap: 8px !important;
+                flex-wrap: wrap !important;
             }
             .cal-header-right {
                 gap: 6px !important;
+                flex-wrap: wrap !important;
+                width: 100% !important;
+            }
+
+            /* FullCalendar toolbar & cells */
+            .fc-toolbar {
+                flex-direction: column !important;
+                gap: 8px !important;
+                align-items: flex-start !important;
+            }
+            .fc-toolbar-title { font-size: 16px !important; }
+            .fc-button {
+                font-size: 12px !important;
+                padding: 6px 10px !important;
+                min-height: 36px !important;
+            }
+            .fc-daygrid-day-number { font-size: 12px !important; }
+            .fc-col-header-cell-cushion { font-size: 11px !important; }
+            .fc-event-title { font-size: 10px !important; }
+            .fc-daygrid-event { padding: 1px 3px !important; }
+
+            /* Sheet panel full width trên mobile */
+            .sheet-panel, [class*="sheet"] {
+                width: 100% !important;
+                right: 0 !important;
+                left: 0 !important;
             }
             /* Mobile: nút Quay lại thu gọn thành icon ← (không có chữ) */
             .btn-back-dashboard {
@@ -1978,6 +2010,14 @@
                 border-radius: 2px;
                 margin: 0 auto 12px auto;
             }
+        }
+
+        @media (max-width: 480px) {
+            .fc-toolbar-title { font-size: 14px !important; }
+            .fc-button-group .fc-button, .fc-button { padding: 5px 8px !important; font-size: 11px !important; }
+            .fc-daygrid-day-number { font-size: 11px !important; }
+            .calendar-month-title { font-size: 14px !important; }
+            .cal-header-right { flex-wrap: wrap; gap: 6px; }
         }
     
         /* === THEME OVERRIDES FOR CALENDAR === */
@@ -3609,10 +3649,17 @@
             }
 
             var calendarEl = document.getElementById('calendar');
-            const initialViewType = 'dayGridMonth';
+            const initialViewType = window.innerWidth <= 768 ? 'dayGridMonth' : 'timeGridWeek';
 
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: initialViewType,
+                windowResize: function(arg) {
+                    if (window.innerWidth <= 768) {
+                        calendar.changeView('dayGridMonth');
+                    } else {
+                        calendar.changeView('timeGridWeek');
+                    }
+                },
                 initialDate: isDemoMode ? '2026-09-01' : undefined,
                 now: isDemoMode ? '2026-09-26T08:00:00' : undefined,
                 locale: 'vi',
