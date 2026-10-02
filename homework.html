@@ -923,6 +923,150 @@
         .sub-late    { background: #FFFBEB; color: #D97706; }
         .sub-default { background: #EFF6FF; color: #2563EB; }
 
+        /* ===== ACCORDION CARD BÀI NỘP MOBILE (PHASE 17) ===== */
+        .accordion-item {
+            background: #FFFFFF;
+            border: 1px solid #DBEAFE;
+            border-radius: 14px;
+            margin-bottom: 10px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(59, 130, 246, 0.05);
+            transition: all 0.25s ease;
+        }
+        .accordion-item:hover {
+            border-color: #BFDBFE;
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.08);
+        }
+        .accordion-header {
+            padding: 14px 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            user-select: none;
+            background: #FFFFFF;
+            transition: background-color 0.2s;
+        }
+        .accordion-header:hover, .accordion-item.active .accordion-header {
+            background-color: #F8FAFF;
+        }
+        .accordion-header-title {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            text-align: left;
+            min-width: 0;
+            flex: 1;
+            padding-right: 10px;
+        }
+        .accordion-header-title > span:first-child {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1E293B;
+            line-height: 1.3;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+        .accordion-header-date {
+            font-size: 12px;
+            color: #94A3B8;
+            font-weight: 500;
+        }
+        .accordion-header-status {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+        .accordion-header-status i.fa-chevron-down {
+            font-size: 12px;
+            color: #64748B;
+            transition: transform 0.3s ease;
+        }
+        .accordion-item.active .accordion-header-status i.fa-chevron-down {
+            transform: rotate(180deg);
+        }
+        .accordion-body {
+            display: none;
+            padding: 12px 16px 16px 16px;
+            border-top: 1px solid #DBEAFE;
+            background-color: #F8FAFF;
+            text-align: left;
+            font-size: 13px;
+            animation: hwFadeDown 0.25s ease-out;
+        }
+        @keyframes hwFadeDown {
+            0% { opacity: 0; transform: translateY(-4px); }
+            100% { opacity: 1; transform: translateY(0); }
+        }
+        .accordion-body-row {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            border-bottom: 1px dashed #E2E8F0;
+            padding: 10px 0;
+        }
+        .accordion-body-row:first-child {
+            padding-top: 2px;
+        }
+        .accordion-body-row:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+        .accordion-body-label {
+            font-size: 10.5px;
+            color: #64748B;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+        .accordion-body-val {
+            color: #1E293B;
+            line-height: 1.5;
+        }
+        .btn-load-more-hw {
+            background: rgba(245, 158, 11, 0.05);
+            border: 1.5px solid #F59E0B;
+            color: #D97706;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 13.5px;
+            font-weight: 700;
+            width: 100%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 2px 8px rgba(245, 158, 11, 0.08);
+            transition: all 0.2s ease;
+        }
+        .btn-load-more-hw:hover {
+            background: #FFFBEB;
+            border-color: #D97706;
+        }
+        .btn-collapse-hw {
+            background: #FFFFFF;
+            border: 1.5px solid #94A3B8;
+            color: #64748B;
+            padding: 10px 20px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-size: 13.5px;
+            font-weight: 700;
+            width: 100%;
+            display: inline-flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s ease;
+        }
+        .btn-collapse-hw:hover {
+            background: #F1F5F9;
+            color: #334155;
+        }
+
         .hw-sub-mobile-card {
             background: #FFFFFF; border: 1px solid #DBEAFE;
             border-radius: 14px; padding: 16px; margin-bottom: 10px;
@@ -2126,22 +2270,38 @@
                     rowHtml += "</tr>";
                     body.innerHTML += rowHtml;
 
-                    // Mobile Modern Card
-                    mobileHtml += '<div class="hw-sub-mobile-card">';
-                    mobileHtml += '  <div class="hw-sub-card-header">';
-                    mobileHtml += '    <span class="hw-sub-lesson">' + item.lessonName + '</span>';
-                    mobileHtml += '    ' + statusBadge;
-                    mobileHtml += '  </div>';
-                    mobileHtml += '  <div class="hw-sub-card-meta">';
-                    mobileHtml += '    <i class="fa-regular fa-clock" style="color:#94A3B8;"></i> ' + displayTime;
-                    mobileHtml += '  </div>';
-                    mobileHtml += '  <div class="hw-sub-card-actions">';
-                    if (item.fileUrl) {
-                        mobileHtml += '    <button type="button" onclick="openSubmissionPreviewModal(\'' + lessonNameSafe + '\', \'' + fileUrlSafe + '\')" class="hw-btn-preview"><i class="fa-solid fa-eye"></i> Xem bài</button>';
+                    // Mobile Accordion Card
+                    var headerStatusBadge = "";
+                    if (statusStr === "Deleted") {
+                        headerStatusBadge = "<span class='sub-status-chip' style='background:#FEF2F2; color:#DC2626; font-weight:700;'><i class='fa-solid fa-trash-can'></i> Thùng rác</span>";
+                    } else if (scoreVal) {
+                        var scoreText = scoreVal + (scoreVal.endsWith('đ') || scoreVal.endsWith(' điểm') ? '' : 'đ');
+                        headerStatusBadge = "<span style='color:var(--color-primary, #3B82F6); font-size:12.5px; font-weight:700; display:inline-flex; align-items:center; gap:4px;'><i class='fa-solid fa-star'></i> " + scoreText + "</span>";
+                    } else {
+                        headerStatusBadge = "<span style='color:#8B5CF6; font-size:12.5px; font-weight:600; display:inline-flex; align-items:center; gap:5px;'><i class='fa-regular fa-clock'></i> Chưa chấm</span>";
                     }
-                    mobileHtml +=      mobileActionsHtml;
-                    mobileHtml += '  </div>';
-                    mobileHtml += '</div>';
+
+                    mobileHtml += "<div class='accordion-item' id='hw-item-" + idx + "'>";
+                    mobileHtml += "  <div class='accordion-header' onclick='toggleHwAccordion(" + idx + ")'>";
+                    mobileHtml += "    <div class='accordion-header-title'>";
+                    mobileHtml += "      <span>" + item.lessonName + "</span>";
+                    mobileHtml += "      <span class='accordion-header-date'>" + displayTime + "</span>";
+                    mobileHtml += "    </div>";
+                    mobileHtml += "    <div class='accordion-header-status'>";
+                    mobileHtml += "      " + headerStatusBadge;
+                    mobileHtml += "      <i class='fa-solid fa-chevron-down' id='hw-chevron-" + idx + "'></i>";
+                    mobileHtml += "    </div>";
+                    mobileHtml += "  </div>";
+                    mobileHtml += "  <div class='accordion-body' id='hw-accordion-body-" + idx + "' style='display: none;'>";
+                    mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>Thời gian nộp</span><span class='accordion-body-val'>" + displayTime + "</span></div>";
+                    mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>Xem bài làm</span><span class='accordion-body-val'>" + viewBtn + "</span></div>";
+                    mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>Trạng thái / Điểm</span><span class='accordion-body-val'>" + statusBadge + "</span></div>";
+                    if (item.comment && item.comment.trim() !== "") {
+                        mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>Nhận xét của Giáo viên</span><span class='accordion-body-val' style='color:#2563EB; font-style:italic; font-size:12.5px;'>" + item.comment + "</span></div>";
+                    }
+                    mobileHtml += "    <div class='accordion-body-row' style='border-bottom:none; padding-bottom:0; padding-top:10px;'><span class='accordion-body-label'>Thao tác</span><span class='accordion-body-val' style='margin-top:4px;'>" + mobileActionsHtml + "</span></div>";
+                    mobileHtml += "  </div>";
+                    mobileHtml += "</div>";
                 });
 
                 // Nút Xem thêm / Thu gọn
@@ -2150,23 +2310,23 @@
                     if (!showAll) {
                         // Thêm dòng Xem thêm vào bảng desktop
                         body.innerHTML += "<tr><td colspan='5' style='text-align:center; padding:12px;'>"
-                            + "<button onclick=\"renderHomeworkList(true)\" style=\"background:#EFF6FF; border:1px solid #BFDBFE; color:#2563EB; padding:6px 22px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:700;\">"
-                            + "<i class='fa-solid fa-chevron-down' style='margin-right:5px;'></i>Xem thêm " + remaining + " bài nộp cũ hơn"
+                            + "<button type='button' onclick=\"renderHomeworkList(true)\" class=\"btn-load-more-hw\" style=\"width:auto; min-width:280px; margin:0 auto;\">"
+                            + "<i class='fa-solid fa-chevron-down'></i> Xem thêm " + remaining + " bài nộp cũ hơn"
                             + "</button></td></tr>";
                         // Thêm nút Xem thêm vào mobile
-                        mobileHtml += "<div style='text-align:center; padding:10px;'>"
-                            + "<button onclick=\"renderHomeworkList(true)\" style=\"background:#EFF6FF; border:1px solid #BFDBFE; color:#2563EB; padding:8px 20px; border-radius:10px; cursor:pointer; font-size:13px; font-weight:700; width:100%; display:inline-flex; justify-content:center; align-items:center; gap:6px;\">"
-                            + "<i class='fa-solid fa-chevron-down'></i>Xem thêm " + remaining + " bài nộp cũ hơn"
+                        mobileHtml += "<div style='text-align:center; padding:10px 0;'>"
+                            + "<button type='button' onclick=\"renderHomeworkList(true)\" class=\"btn-load-more-hw\">"
+                            + "<i class='fa-solid fa-chevron-down'></i> Xem thêm " + remaining + " bài nộp cũ hơn"
                             + "</button></div>";
                     } else {
                         // Nút Thu gọn
                         body.innerHTML += "<tr><td colspan='5' style='text-align:center; padding:12px;'>"
-                            + "<button onclick=\"renderHomeworkList(false)\" style=\"background:#EFF6FF; border:1px solid #BFDBFE; color:#64748B; padding:6px 22px; border-radius:8px; cursor:pointer; font-size:13px; font-weight:700;\">"
-                            + "<i class='fa-solid fa-chevron-up' style='margin-right:5px;'></i>Thu gọn"
+                            + "<button type='button' onclick=\"renderHomeworkList(false)\" class=\"btn-collapse-hw\" style=\"width:auto; min-width:200px; margin:0 auto;\">"
+                            + "<i class='fa-solid fa-chevron-up'></i> Thu gọn"
                             + "</button></td></tr>";
-                        mobileHtml += "<div style='text-align:center; padding:10px;'>"
-                            + "<button onclick=\"renderHomeworkList(false)\" style=\"background:#EFF6FF; border:1px solid #BFDBFE; color:#64748B; padding:8px 20px; border-radius:10px; cursor:pointer; font-size:13px; font-weight:700; width:100%; display:inline-flex; justify-content:center; align-items:center; gap:6px;\">"
-                            + "<i class='fa-solid fa-chevron-up'></i>Thu gọn"
+                        mobileHtml += "<div style='text-align:center; padding:10px 0;'>"
+                            + "<button type='button' onclick=\"renderHomeworkList(false)\" class=\"btn-collapse-hw\">"
+                            + "<i class='fa-solid fa-chevron-up'></i> Thu gọn"
                             + "</button></div>";
                     }
                 }

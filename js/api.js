@@ -34,9 +34,17 @@
         if (!store) {
             store = initial;
             saveDemoStore(store);
-        } else if (!store.assignedHomework || !Array.isArray(store.assignedHomework) || store.assignedHomework.length === 0) {
-            store.assignedHomework = (initial && initial.assignedHomework) ? JSON.parse(JSON.stringify(initial.assignedHomework)) : [];
-            saveDemoStore(store);
+        } else {
+            let changed = false;
+            if (!store.assignedHomework || !Array.isArray(store.assignedHomework) || store.assignedHomework.length === 0) {
+                store.assignedHomework = (initial && initial.assignedHomework) ? JSON.parse(JSON.stringify(initial.assignedHomework)) : [];
+                changed = true;
+            }
+            if (!store.submissions || !Array.isArray(store.submissions) || store.submissions.length < 5) {
+                store.submissions = (initial && initial.submissions) ? JSON.parse(JSON.stringify(initial.submissions)) : [];
+                changed = true;
+            }
+            if (changed) saveDemoStore(store);
         }
         if (store && purgeExpiredDemoSubmissions(store)) {
             saveDemoStore(store);
