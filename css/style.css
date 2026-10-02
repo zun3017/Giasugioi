@@ -5220,3 +5220,20 @@
   body { padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important; }
 }
 
+/* ===== PHASE 17 — HEADER COMPACT ===== */
+@media (max-width: 768px) {
+  .header {
+    padding: 8px 16px !important;
+    min-height: 52px !important;
+  }
+  .nav-logo { width: 32px !important; height: 32px !important; }
+  .header-text h1 { font-size: 14px !important; margin: 0 !important; }
+  .header-text p  { display: none !important; }
+  .nav-container  { min-height: 52px !important; }
+}
+@media (max-width: 480px) {
+  .header { padding: 6px 12px !important; min-height: 48px !important; }
+  .header-text h1 { font-size: 13px !important; }
+}
+
+
