@@ -59,7 +59,6 @@
     padding-right: calc(constant(safe-area-inset-right, 0px) + 24px) !important;
     padding-right: calc(env(safe-area-inset-right, 0px) + 24px) !important;
     box-sizing: border-box !important;
-    position: relative !important;
 }
 
 .nav-container {
@@ -89,6 +88,7 @@
 
 .header-text {
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
+    min-width: 0 !important;
 }
 
 .header-text h1 {
@@ -99,6 +99,7 @@
     margin-bottom: -2px !important;
     letter-spacing: -0.5px !important;
     line-height: 1.2 !important;
+    white-space: nowrap !important;
     font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif !important;
 }
 
@@ -237,50 +238,69 @@
     text-align: center !important;
 }
 
-/* Khi màn hình > 400px: Đảm bảo hamburger và dropdown KHÔNG BAO GIỜ hiển thị */
-@media (min-width: 401px) {
+/* Khi màn hình > 768px (Desktop & Tablet ngang): Ẩn hamburger và dropdown, hiện nav-right */
+@media (min-width: 769px) {
     .hamburger-btn {
         display: none !important;
     }
     .mobile-nav-dropdown {
         display: none !important;
     }
+    .nav-right {
+        display: flex !important;
+    }
 }
 
-/* MÀN HÌNH NHỎ (≤ 600px): Thu gọn chữ của nav-btn, chỉ hiển thị icon */
-@media (max-width: 600px) and (min-width: 401px) {
-    .nav-btn .nav-label {
-        display: none !important;
+/* MÀN HÌNH ĐIỆN THOẠI & TABLET DỌC (≤ 768px): Ẩn nav-right, hiển thị nút Hamburger ☰ */
+@media (max-width: 768px) {
+    .header {
+        padding: 10px 16px !important;
+        padding-top: calc(constant(safe-area-inset-top, 0px) + 10px) !important;
+        padding-top: calc(env(safe-area-inset-top, 0px) + 10px) !important;
+        padding-left: calc(constant(safe-area-inset-left, 0px) + 16px) !important;
+        padding-left: calc(env(safe-area-inset-left, 0px) + 16px) !important;
+        padding-right: calc(constant(safe-area-inset-right, 0px) + 16px) !important;
+        padding-right: calc(env(safe-area-inset-right, 0px) + 16px) !important;
+        width: 100% !important;
+        box-sizing: border-box !important;
     }
-    .nav-btn {
-        padding: 8px 12px !important;
-        min-width: 42px !important;
-        justify-content: center !important;
-        gap: 0 !important;
+    .nav-container {
+        width: 100% !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: space-between !important;
+        gap: 12px !important;
+        box-sizing: border-box !important;
+    }
+    .nav-left {
+        gap: 10px !important;
+        min-width: 0 !important;
+        flex-shrink: 1 !important;
+    }
+    .nav-logo {
+        width: 34px !important;
+        height: 34px !important;
+        flex-shrink: 0 !important;
+    }
+    .header-text {
+        min-width: 0 !important;
+    }
+    .header-text h1 {
+        font-size: 15.5px !important;
+        white-space: nowrap !important;
+        overflow: hidden !important;
+        text-overflow: ellipsis !important;
+        margin: 0 !important;
+        line-height: 1.2 !important;
     }
     .header-text p {
         display: none !important;
-    }
-    .header-text h1 {
-        font-size: 15px !important;
-    }
-}
-
-/* MÀN HÌNH ĐIỆN THOẠI HẸP (≤ 400px): Ẩn nav-right, hiển thị nút Hamburger ☰ */
-@media (max-width: 400px) {
-    .header {
-        padding: 8px 12px !important;
     }
     .nav-right {
         display: none !important;
     }
     .hamburger-btn {
         display: flex !important;
-    }
-    .header-text p {
-        display: none !important;
-    }
-    .header-text h1 {
-        font-size: 14.5px !important;
+        flex-shrink: 0 !important;
     }
 }
