@@ -509,34 +509,74 @@ function renderStudentView(ketQua) {
     // Task 15.3: Render 2 biểu đồ tròn donut (BTVN + Chuyên cần)
     renderDonutCharts(lichSu);
 
-    // --- 4. RENDER BẢNG LỊCH SỬ & MOBILE CARDS ---
+    // --- 4. RENDER BẢNG LỊCH SỬ & MOBILE ACCORDION CARDS ---
     var htmlLichSu = "";
+    var htmlMobile = "";
     var totalBuoi = lichSu.length;
     if (totalBuoi > 0) {
         // Cập nhật tiêu đề Lịch sử có kèm tổng số buổi rõ ràng
-        var historyHeaderEl = document.querySelector('#resultBox .result-section h4');
-        if (historyHeaderEl && historyHeaderEl.innerHTML.includes('Lịch sử')) {
-            historyHeaderEl.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i> Lịch sử Đánh giá Học tập <span style="font-size: 12px; color: var(--text-secondary); font-weight: normal; margin-left: 8px;">(Tổng đã học: <b style="color:var(--text-primary);">' + totalPresentAllTime + ' buổi</b> • Nghỉ: <b style="color:var(--text-primary);">' + totalAbsentAllTime + ' buổi</b>)</span>';
+        var historyTitleEl = document.getElementById('studentHistoryTitle');
+        if (!historyTitleEl) historyTitleEl = document.querySelector('#resultBox .schedule-section h3 span') || document.querySelector('#resultBox .result-section h4');
+        if (historyTitleEl) {
+            historyTitleEl.innerHTML = '<i class="fa-solid fa-clock-rotate-left"></i> Lịch sử học tập & Nhận xét chi tiết <span style="font-size: 12px; color: var(--text-secondary); font-weight: normal; margin-left: 8px;">(Đã học: <b style="color:#10B981;">' + totalPresentAllTime + '</b> • Nghỉ: <b style="color:#EF4444;">' + totalAbsentAllTime + '</b>)</span>';
         }
 
-        // Helper màu sắc điểm số (Task 15.5)
+        // Helper màu sắc điểm số
         function scoreColor(val) {
             var n = parseFloat(val);
-            if (isNaN(n)) return '#94A3B8';
+            if (isNaN(n)) return 'var(--text-secondary, #94A3B8)';
             if (n >= 9) return '#059669';
             if (n >= 7) return '#2563EB';
             if (n >= 5) return '#D97706';
             return '#DC2626';
         }
 
-        // Helper chip BTVN (Task 15.5)
-        function btvnChip(raw, isAbsent) {
-            if (isAbsent) return '<span class="btvn-chip btvn-na">—</span>';
-            var n = normalizeStr(raw || '');
-            if (n.includes('hoan') || n.includes('tot') || n.includes('day du') || n.includes('xuat') || n === 'co' || n === 'dat')
-                return '<span class="btvn-chip btvn-done">✅ Hoàn thành</span>';
-            return '<span class="btvn-chip btvn-fail">❌ Chưa HT</span>';
-        }
+        // Helper trạng thái chuyên cần (chuẩn theo tutor.js)
+        var getStatusBadge = function(trangThai, isAbsent) {
+            if (isAbsent) return '<span class="status-badge badge-nghi">Vắng</span>';
+            var tt = (trangThai || "").trim().toLowerCase();
+            if (tt === "đã học" || tt === "có mặt" || tt === "có") return '<span class="status-badge badge-dahoc">Có mặt</span>';
+            if (tt === "học bù") return '<span class="status-badge badge-hocbu">Học bù</span>';
+            if (tt === "đi muộn") return '<span class="status-badge badge-hocbu" style="background:rgba(245,158,11,0.15); border-color:rgba(245,158,11,0.4); color:var(--text-primary);">Đi muộn</span>';
+            if (tt.indexOf("hủy") !== -1 || tt.indexOf("nghỉ") !== -1 || tt === "vắng" || tt === "vắng mặt" || tt === "cả lớp nghỉ") {
+                var label = (tt === "cả lớp nghỉ") ? "Cả lớp nghỉ" : (tt.indexOf("hủy") !== -1 ? "Hủy/Nghỉ" : "Vắng");
+                return '<span class="status-badge badge-nghi">' + label + '</span>';
+            }
+            return '<span class="status-badge badge-dahoc">' + (trangThai || 'Có mặt') + '</span>';
+        };
+
+        // Helper đánh giá bài tập về nhà (chuẩn theo tutor.js)
+        var getBtvnBadge = function(btvn) {
+            var raw = (btvn || "").trim();
+            var bt = raw.toLowerCase();
+            if (!raw || raw === "-" || raw === "không có") return '<span class="status-badge" style="background: var(--bg-input); border: 1px solid var(--border-card); color: var(--text-secondary);">-</span>';
+            
+            var pctMatch = bt.match(/(\d+(\.\d+)?)\s*%/);
+            if (pctMatch) {
+                var pct = parseFloat(pctMatch[1]);
+                if (pct >= 90) {
+                    return '<span class="status-badge badge-hoanthanh">' + raw + '</span>';
+                } else if (pct >= 50) {
+                    return '<span class="status-badge badge-thieu">' + raw + '</span>';
+                } else {
+                    return '<span class="status-badge badge-nghi">' + raw + '</span>';
+                }
+            }
+
+            if (bt.indexOf("không làm") !== -1 || bt.indexOf("chưa làm") !== -1 || bt.indexOf("chưa nộp") !== -1 || bt.indexOf("chưa đạt") !== -1 || bt === "không") {
+                return '<span class="status-badge badge-nghi">' + raw + '</span>';
+            }
+            if (bt.indexOf("hoàn thành") !== -1 || bt === "đạt" || bt === "tốt" || bt === "xuất sắc" || bt === "có") {
+                return '<span class="status-badge badge-hoanthanh">' + raw + '</span>';
+            }
+            if (bt.indexOf("thiếu") !== -1) {
+                return '<span class="status-badge badge-thieu">' + raw + '</span>';
+            }
+            if (bt.indexOf("phụ huynh") !== -1 || bt.indexOf("nhắc") !== -1) {
+                return '<span class="status-badge badge-hocbu" style="font-size:10.5px; padding:3px 8px;">' + raw + '</span>';
+            }
+            return '<span class="status-badge badge-hoanthanh">' + raw + '</span>';
+        };
 
         // Helper định dạng ngày chỉ lấy ngày/tháng, bỏ thứ (Ví dụ: "22/09")
         function formatDateOnly(dStr) {
@@ -568,48 +608,90 @@ function renderStudentView(ketQua) {
             return s;
         }
 
+        // 1. Desktop View (Bảng Table)
+        htmlLichSu += "<div class='table-wrapper desktop-table-view'>";
         htmlLichSu += "<table class='history-table'>";
         htmlLichSu += "<thead><tr>" +
-            "<th>Ngày</th>" +
-            "<th>Môn</th>" +
+            "<th style='width: 65px; text-align: center;'>Tuần</th>" +
+            "<th style='width: 110px;'>Ngày dạy</th>" +
+            "<th style='width: 120px;'>Môn</th>" +
             "<th>Nội dung</th>" +
-            "<th>BTVN</th>" +
-            "<th>Đầu giờ</th>" +
-            "<th>Định kì</th>" +
-            "<th>Chuyên cần</th>" +
+            "<th style='width: 140px;'>BTVN</th>" +
+            "<th style='width: 90px; text-align: center;'>Đầu giờ</th>" +
+            "<th style='width: 90px; text-align: center;'>Định kì</th>" +
+            "<th style='width: 110px; text-align: center;'>Chuyên cần</th>" +
             "</tr></thead><tbody>";
 
-        lichSu.slice().reverse().forEach(function(item, idx) {
+        // 2. Mobile View (Thẻ Accordion Cards y hệt Gia sư)
+        htmlMobile = "<div class='mobile-cards-view' id='studentHistoryMobile'>";
+
+        var reversedList = lichSu.slice().reverse();
+        reversedList.forEach(function(item, idx) {
             var isAbsent = isAbsentSession(item);
             var isHidden = (idx >= 5);
             var hiddenAttr = isHidden ? ' style="display:none;" class="history-row hidden-row' + (isAbsent ? ' row-absent' : '') + '"' : ' class="history-row' + (isAbsent ? ' row-absent' : '') + '"';
             var detailHiddenAttr = isHidden ? ' style="display:none;" class="history-detail-row hidden-row"' : ' style="display:table-row;" class="history-detail-row"';
-            var rawDate = formatDateOnly(item.ngay);
+            
+            var btvnValue = (item.danhGiaBTVN || item.btvn || "");
             var diemDau = item.diemDauGio !== undefined && item.diemDauGio !== null ? item.diemDauGio : item.diemDG;
             var diemDinh = item.diemDinhKi !== undefined && item.diemDinhKi !== null ? item.diemDinhKi : item.diemDK;
+            var tuanVal = item.tuan !== undefined && item.tuan !== null && item.tuan !== '' ? item.tuan : (item.buoi || item.rowIndex || (idx + 1));
+            
+            var rawDateShort = formatDateOnly(item.ngay);
+            var rawDateWithDay = (typeof window.formatDateWithDayOfWeek === 'function') 
+                ? window.formatDateWithDayOfWeek(item.ngay) 
+                : (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "—"));
 
+            // --- Desktop Row ---
             htmlLichSu +=
                 '<tr' + hiddenAttr + '>' +
-                    '<td><span class="date-badge">' + rawDate + '</span></td>' +
-                    '<td><span class="subj-chip">' + (item.mon || '-') + '</span></td>' +
+                    '<td style="text-align: center; font-weight: 700; color: var(--text-primary);">' + tuanVal + '</td>' +
+                    '<td><span class="date-badge">' + rawDateShort + '</span></td>' +
+                    '<td><span class="subj-chip">' + (item.mon || lopHoc || '-') + '</span></td>' +
                     '<td class="cell-noidung">' + (item.noiDung || item.topic || '-') + '</td>' +
-                    '<td>' + btvnChip(item.danhGiaBTVN || item.btvn, isAbsent) + '</td>' +
-                    '<td style="font-weight:700;font-size:15px;color:' + scoreColor(diemDau) + ';">' + (diemDau !== undefined && diemDau !== null && diemDau !== '' ? diemDau : '—') + '</td>' +
-                    '<td style="font-weight:700;font-size:15px;color:' + scoreColor(diemDinh) + ';">' + (diemDinh !== undefined && diemDinh !== null && diemDinh !== '' ? diemDinh : '—') + '</td>' +
-                    '<td><span class="status-chip ' + (isAbsent ? 'status-absent' : 'status-present') + '">' + (isAbsent ? '❌ Vắng' : '✅ Có mặt') + '</span></td>' +
+                    '<td>' + getBtvnBadge(btvnValue) + '</td>' +
+                    '<td style="text-align: center; font-weight: 700; font-size: 15px; color:' + scoreColor(diemDau) + ';">' + (diemDau !== undefined && diemDau !== null && diemDau !== '' ? diemDau : '—') + '</td>' +
+                    '<td style="text-align: center; font-weight: 700; font-size: 15px; color:' + scoreColor(diemDinh) + ';">' + (diemDinh !== undefined && diemDinh !== null && diemDinh !== '' ? diemDinh : '—') + '</td>' +
+                    '<td style="text-align: center;">' + getStatusBadge(item.trangThai || item.chuyenCan, isAbsent) + '</td>' +
                 '</tr>' +
                 '<tr' + detailHiddenAttr + '>' +
-                    '<td colspan="7"><div class="detail-content"><i class="fa-solid fa-comment-dots" style="color:#3B82F6;margin-right:6px;"></i><strong>Nhận xét:</strong> ' + (item.nhanXet || 'Chưa có nhận xét cho buổi học này.') + '</div></td>' +
+                    '<td colspan="8"><div class="detail-content"><i class="fa-solid fa-comment-dots" style="color:#3B82F6;margin-right:6px;"></i><strong>Nhận xét:</strong> ' + (item.nhanXet || 'Chưa có nhận xét cho buổi học này.') + '</div></td>' +
                 '</tr>';
+
+            // --- Mobile Accordion Card (Theo đúng mẫu ảnh media_1790923332447.png) ---
+            var mobileStyleStr = isHidden ? 'style="display: none;" class="accordion-item student-history-row student-hidden-row"' : 'class="accordion-item student-history-row"';
+            htmlMobile += '<div ' + mobileStyleStr + '>';
+            htmlMobile += '  <div class="accordion-header" onclick="toggleStudentAccordion(' + idx + ')">';
+            htmlMobile += '    <div style="display: flex; align-items: center;">';
+            htmlMobile += '      <div class="accordion-header-title">';
+            htmlMobile += '        <span style="font-size: 15px; font-weight: 700; color: var(--text-primary);">' + tuanVal + '</span>';
+            htmlMobile += '        <span class="accordion-header-date">' + rawDateWithDay + '</span>';
+            htmlMobile += '      </div>';
+            htmlMobile += '    </div>';
+            htmlMobile += '    <div class="accordion-header-status">';
+            htmlMobile += '      ' + getStatusBadge(item.trangThai || item.chuyenCan, isAbsent);
+            htmlMobile += '      <i class="fa-solid fa-chevron-down" id="student-chevron-' + idx + '" style="font-size: 13px; color: var(--color-primary, #3B82F6);"></i>';
+            htmlMobile += '    </div>';
+            htmlMobile += '  </div>';
+            htmlMobile += '  <div class="accordion-body" id="student-accordion-body-' + idx + '" style="display: none;">';
+            htmlMobile += '    <div class="accordion-body-row"><span class="accordion-body-label">Môn học</span><span class="accordion-body-val">' + (item.mon || lopHoc || '—') + '</span></div>';
+            htmlMobile += '    <div class="accordion-body-row"><span class="accordion-body-label">Nội dung dạy học</span><span class="accordion-body-val">' + (item.noiDung || item.topic || '—') + '</span></div>';
+            htmlMobile += '    <div class="accordion-body-row"><span class="accordion-body-label">Nhận xét của gia sư</span><span class="accordion-body-val" style="font-style: italic; color: #2563EB; font-weight: 500;">' + (item.nhanXet ? ("<i class='fa-solid fa-comment-dots' style='margin-right: 4px;'></i>" + item.nhanXet) : 'Chưa có nhận xét') + '</span></div>';
+            htmlMobile += '    <div class="accordion-body-row"><span class="accordion-body-label">Đánh giá bài tập về nhà</span><span class="accordion-body-val">' + getBtvnBadge(btvnValue) + '</span></div>';
+            htmlMobile += '    <div class="accordion-body-row"><span class="accordion-body-label">Kiểm tra đầu giờ</span><span class="accordion-body-val" style="font-weight: 700; color:' + scoreColor(diemDau) + ';">' + (diemDau !== undefined && diemDau !== null && diemDau !== '' ? diemDau : '—') + '</span></div>';
+            htmlMobile += '    <div class="accordion-body-row"><span class="accordion-body-label">Kiểm tra định kì</span><span class="accordion-body-val" style="font-weight: 700; color:' + scoreColor(diemDinh) + ';">' + (diemDinh !== undefined && diemDinh !== null && diemDinh !== '' ? diemDinh : '—') + '</span></div>';
+            htmlMobile += '  </div>';
+            htmlMobile += '</div>';
         });
 
-        htmlLichSu += "</tbody></table>";
+        htmlLichSu += "</tbody></table></div>";
+        htmlMobile += "</div>";
     } else {
         htmlLichSu = "<p style='color: #A6ADCE; padding: 16px;'>Chưa có dữ liệu đánh giá nào được cập nhật.</p>";
     }
     
     var khuVucLichSuEl = document.getElementById('khuVucLichSu');
-    if (khuVucLichSuEl) khuVucLichSuEl.innerHTML = htmlLichSu;
+    if (khuVucLichSuEl) khuVucLichSuEl.innerHTML = htmlLichSu + htmlMobile;
     
     // Ẩn/Hiện nút Xem thêm (...) dựa trên số lượng buổi học
     var loadMoreContainer = document.getElementById('loadMoreContainer');
@@ -841,6 +923,7 @@ function quayLai() {
 
 // --- Student Dashboard UI Helpers ---
 function hienThemBuoi() {
+    // 1. Mở thêm 5 dòng trong bảng Desktop
     var hiddenRows = document.querySelectorAll('.history-row.hidden-row');
     var showCount = 0;
     for (var i = 0; i < hiddenRows.length; i++) {
@@ -857,10 +940,24 @@ function hienThemBuoi() {
             break;
         }
     }
+
+    // 2. Mở thêm 5 thẻ Accordion trong Mobile View
+    var hiddenCards = document.querySelectorAll('.accordion-item.student-hidden-row');
+    var cardCount = 0;
+    for (var j = 0; j < hiddenCards.length; j++) {
+        if (cardCount < 5) {
+            hiddenCards[j].style.display = '';
+            hiddenCards[j].classList.remove('student-hidden-row');
+            cardCount++;
+        } else {
+            break;
+        }
+    }
     
-    // Ẩn nút nếu không còn dòng nào bị ẩn
-    var remainingHidden = document.querySelectorAll('.history-row.hidden-row');
-    if (remainingHidden.length === 0) {
+    // Ẩn nút nếu không còn dòng hoặc thẻ nào bị ẩn
+    var remainingRows = document.querySelectorAll('.history-row.hidden-row');
+    var remainingCards = document.querySelectorAll('.accordion-item.student-hidden-row');
+    if (remainingRows.length === 0 && remainingCards.length === 0) {
         var loadMoreContainer = document.getElementById('loadMoreContainer');
         if (loadMoreContainer) loadMoreContainer.style.display = 'none';
     }
@@ -896,17 +993,102 @@ function toggleDataset(index) {
     currentChartInstance.update();
 }
 
-function toggleAccordion(idx) {
-    var body = document.getElementById('accordion-body-' + idx);
+function toggleStudentAccordion(idx) {
+    var body = document.getElementById('student-accordion-body-' + idx) || document.getElementById('accordion-body-' + idx);
+    var chevron = document.getElementById('student-chevron-' + idx);
     if (!body) return;
-    var item = body.closest('.accordion-item');
     
-    if (body.style.display === 'flex') {
-        body.style.display = 'none';
-        if (item) item.classList.remove('active');
-    } else {
-        body.style.display = 'flex';
+    var item = body.closest('.accordion-item');
+    var isActive = item ? item.classList.contains('active') : false;
+    
+    var allBodies = document.querySelectorAll('[id^="student-accordion-body-"], [id^="accordion-body-"]');
+    allBodies.forEach(function(b) {
+        b.style.display = 'none';
+        var it = b.closest('.accordion-item');
+        if (it) it.classList.remove('active');
+    });
+    
+    if (!isActive) {
+        body.style.display = 'block';
         if (item) item.classList.add('active');
+    }
+}
+
+function toggleAccordion(idx) {
+    toggleStudentAccordion(idx);
+}
+
+function showToast(message, type) {
+    type = type || 'info';
+    var container = document.getElementById('toastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toastContainer';
+        container.style.cssText = 'position: fixed; top: 20px; right: 20px; z-index: 99999; display: flex; flex-direction: column; gap: 10px; pointer-events: none; max-width: calc(100vw - 40px);';
+        document.body.appendChild(container);
+    }
+    var toast = document.createElement('div');
+    toast.style.cssText = 'padding: 12px 20px; border-radius: 12px; color: #FFF; font-size: 13.5px; font-weight: 600; box-shadow: 0 10px 25px rgba(0,0,0,0.25); pointer-events: auto; font-family: Inter, sans-serif; display: flex; align-items: center; gap: 10px; border: 1px solid transparent; transition: all 0.3s ease;';
+    if (type === 'success') {
+        toast.style.background = '#059669';
+        toast.style.borderColor = '#10B981';
+        toast.innerHTML = '<i class="fa-solid fa-circle-check"></i> ' + message;
+    } else if (type === 'error') {
+        toast.style.background = '#DC2626';
+        toast.style.borderColor = '#EF4444';
+        toast.innerHTML = '<i class="fa-solid fa-circle-xmark"></i> ' + message;
+    } else {
+        toast.style.background = '#2563EB';
+        toast.style.borderColor = '#60A5FA';
+        toast.innerHTML = '<i class="fa-solid fa-circle-info"></i> ' + message;
+    }
+    container.appendChild(toast);
+    setTimeout(function() {
+        toast.style.opacity = '0';
+        toast.style.transform = 'translateY(-10px)';
+        setTimeout(function() {
+            if (toast.parentNode) toast.parentNode.removeChild(toast);
+        }, 300);
+    }, 3000);
+}
+
+function lamMoiLichSuHocTap() {
+    var btn = document.querySelector('[onclick="lamMoiLichSuHocTap()"]');
+    var icon = btn ? btn.querySelector('i') : null;
+    if (icon) icon.classList.add('fa-spin');
+    
+    if (typeof google !== 'undefined' && google.script && google.script.run && google.script.run.traCuuThongTin) {
+        var studentPhone = sessionStorage.getItem('userPhone') || localStorage.getItem('userPhone') || "";
+        google.script.run
+            .withSuccessHandler(function(res) {
+                if (icon) icon.classList.remove('fa-spin');
+                if (res && res.timThay) {
+                    sessionStorage.setItem('dashboardData', JSON.stringify(res));
+                    renderStudentView(res);
+                    showToast('Đã làm mới dữ liệu học tập!', 'success');
+                } else {
+                    showToast('Không có dữ liệu mới.', 'info');
+                }
+            })
+            .withFailureHandler(function(err) {
+                if (icon) icon.classList.remove('fa-spin');
+                showToast('Lỗi khi tải dữ liệu: ' + err.toString(), 'error');
+            })
+            .traCuuThongTin(studentPhone);
+    } else {
+        setTimeout(function() {
+            if (icon) icon.classList.remove('fa-spin');
+            var dataStr = sessionStorage.getItem('dashboardData') || localStorage.getItem('dashboardData');
+            var data = null;
+            try {
+                if (dataStr) data = JSON.parse(dataStr);
+            } catch(e) {}
+            
+            if (data) {
+                renderStudentView(data);
+            }
+            showToast('Đã làm mới dữ liệu học tập!', 'success');
+        }, 500);
     }
 }
 
