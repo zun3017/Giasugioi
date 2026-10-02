@@ -379,3 +379,17 @@
   .header { padding: 6px 12px !important; min-height: 48px !important; }
   .header-text h1 { font-size: 13px !important; }
 }
+
+/* ===== PHASE 17 — TOAST NOTIFICATIONS MOBILE FIX ===== */
+@media (max-width: 480px) {
+  #toastNotification {
+    right: 8px !important;
+    left: 8px !important;
+    top: 56px !important;
+  }
+  #toastNotification > div {
+    min-width: unset !important;
+    width: 100% !important;
+    box-sizing: border-box;
+  }
+}
