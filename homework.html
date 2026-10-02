@@ -26,9 +26,10 @@
     <link rel="stylesheet" href="css/public-theme.css">
 
     <script>
-        tailwind.config = {
-            theme: {
-                extend: {
+        if (typeof tailwind !== 'undefined') {
+            tailwind.config = {
+                theme: {
+                    extend: {
                     fontFamily: {
                         sans: ['Inter', 'sans-serif'],
                     },
@@ -45,8 +46,9 @@
                     }
                 }
             }
-        }
-    </script>
+        };
+    }
+</script>
     
     <style>
         body {
@@ -1751,13 +1753,12 @@
                     var rawScore = (item.score !== undefined && item.score !== null) ? String(item.score).trim() : "";
                     var isGraded = rawScore !== "" && rawScore !== "-" && rawScore !== "null" && rawScore !== "undefined";
                     var scoreVal = isGraded ? rawScore : null;
-                    var commentVal = item.comment || "";
                     var statusBadge = "";
                     if (statusStr === "Deleted") {
                         statusBadge = "<span class='sub-status-chip' style='background:#FEF2F2; color:#DC2626; font-weight:700;'><i class='fa-solid fa-trash-can'></i> Thùng rác</span>";
                     } else if (scoreVal) {
                         var scoreText = scoreVal + (scoreVal.endsWith('đ') || scoreVal.endsWith(' điểm') ? '' : 'đ');
-                        statusBadge = "<span class='sub-status-chip sub-on-time' style='font-weight:700;' title='" + (commentVal ? "Nhận xét: " + commentVal : "") + "'><i class='fa-solid fa-star'></i> " + scoreText + "</span>";
+                        statusBadge = "<span class='sub-status-chip sub-on-time' style='font-weight:700;'><i class='fa-solid fa-star'></i> " + scoreText + "</span>";
                     } else {
                         statusBadge = "<span class='sub-status-chip sub-default'><i class='fa-solid fa-circle-check' style='margin-right:4px;'></i>Đã nộp</span>";
                     }
@@ -1800,11 +1801,6 @@
                     mobileHtml += '  <div class="hw-sub-card-meta">';
                     mobileHtml += '    <i class="fa-regular fa-clock" style="color:#94A3B8;"></i> ' + displayTime;
                     mobileHtml += '  </div>';
-                    if (commentVal) {
-                        mobileHtml += '  <div style="font-size:12.5px; color:#2563EB; font-style:italic; margin-bottom:10px; background:#F0F7FF; padding:8px 12px; border-radius:8px;">';
-                        mobileHtml += '    <strong>Nhận xét:</strong> ' + commentVal;
-                        mobileHtml += '  </div>';
-                    }
                     mobileHtml += '  <div class="hw-sub-card-actions">';
                     if (item.fileUrl) {
                         mobileHtml += '    <button type="button" onclick="openSubmissionPreviewModal(\'' + lessonNameSafe + '\', \'' + fileUrlSafe + '\')" class="hw-btn-preview"><i class="fa-solid fa-eye"></i> Xem bài</button>';
