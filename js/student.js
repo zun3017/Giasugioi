@@ -340,21 +340,6 @@ function renderStudentView(ketQua) {
     var badgeDinhKiEl = document.getElementById('badgeDinhKiContainer');
     if (badgeDinhKiEl) badgeDinhKiEl.innerHTML = scoreLevelBadge(numDiemDinhKi);
 
-    var btvnBadgeHtml = "";
-    if (btvnPercent !== null) {
-        if (btvnPercent === 100) {
-            btvnBadgeHtml = '<div class="medal-badge medal-platinum"><i class="fa-solid fa-trophy"></i> Chăm chỉ Xuất sắc 🏆</div>';
-        } else if (btvnPercent >= 90) {
-            btvnBadgeHtml = '<div class="medal-badge medal-gold"><i class="fa-solid fa-medal"></i> Tích cực 🥇</div>';
-        } else if (btvnPercent >= 80) {
-            btvnBadgeHtml = '<div class="medal-badge medal-silver"><i class="fa-solid fa-medal"></i> Tiến bộ 🥈</div>';
-        } else if (btvnPercent >= 70) {
-            btvnBadgeHtml = '<div class="medal-badge medal-bronze"><i class="fa-solid fa-medal"></i> Cố gắng 🥉</div>';
-        }
-    }
-    var elBtvnBadge = document.getElementById('btvnBadgeContainer');
-    if (elBtvnBadge) elBtvnBadge.innerHTML = btvnBadgeHtml;
-
     // --- 3. KHỞI TẠO BIỂU ĐỒ ĐIỂM SỐ ---
     var labels = [];
     var dataDauGio = [];
@@ -688,6 +673,27 @@ function renderDonutCharts(lichSu) {
             donutLegItem('#10B981', 'Hoàn thành', btvnHT) +
             donutLegItem('#F97316', 'Chưa hoàn thành', btvnKHT);
     }
+
+    // Khích lệ BTVN bằng huy hiệu / cúp
+    var btvnRewardEl = document.getElementById('btvnRewardBadge');
+    if (btvnRewardEl) {
+        var btvnRewardHtml = "";
+        if (btvnActive > 0) {
+            if (btvnPct === 100) {
+                btvnRewardHtml = '<div class="donut-reward-pill reward-trophy"><i class="fa-solid fa-trophy" style="color: #D97706;"></i> Chăm chỉ Xuất sắc 🏆</div>';
+            } else if (btvnPct >= 90) {
+                btvnRewardHtml = '<div class="donut-reward-pill reward-gold"><i class="fa-solid fa-medal" style="color: #2563EB;"></i> Tích cực Làm bài 🥇</div>';
+            } else if (btvnPct >= 80) {
+                btvnRewardHtml = '<div class="donut-reward-pill reward-silver"><i class="fa-solid fa-award" style="color: #059669;"></i> Tiến bộ Vượt bậc 🥈</div>';
+            } else if (btvnPct >= 60) {
+                btvnRewardHtml = '<div class="donut-reward-pill reward-cheer"><i class="fa-solid fa-star" style="color: #9333EA;"></i> Đang Cố gắng 🥉</div>';
+            } else {
+                btvnRewardHtml = '<div class="donut-reward-pill reward-cheer"><i class="fa-solid fa-hand-sparkles" style="color: #EA580C;"></i> Cần Cố gắng Hơn 💪</div>';
+            }
+        }
+        btvnRewardEl.innerHTML = btvnRewardHtml;
+    }
+
     var btvnCtx = document.getElementById('btvnChart');
     if (btvnCtx) {
         if (window._btvnInst) { window._btvnInst.destroy(); }
@@ -737,6 +743,25 @@ function renderDonutCharts(lichSu) {
             donutLegItem('#3B82F6', 'Có mặt', coMat) +
             donutLegItem('#EF4444', 'Vắng', vangHoc);
     }
+
+    // Khích lệ Chuyên cần bằng huy hiệu / cúp
+    var ccRewardEl = document.getElementById('chuyenCanRewardBadge');
+    if (ccRewardEl) {
+        var ccRewardHtml = "";
+        if (ccTotal > 0) {
+            if (ccPct === 100) {
+                ccRewardHtml = '<div class="donut-reward-pill reward-trophy"><i class="fa-solid fa-crown" style="color: #D97706;"></i> Chuyên cần 100% 👑</div>';
+            } else if (ccPct >= 90) {
+                ccRewardHtml = '<div class="donut-reward-pill reward-gold"><i class="fa-solid fa-medal" style="color: #2563EB;"></i> Đi học Đều đặn 🌟</div>';
+            } else if (ccPct >= 80) {
+                ccRewardHtml = '<div class="donut-reward-pill reward-silver"><i class="fa-solid fa-thumbs-up" style="color: #059669;"></i> Chuyên cần Tốt 👍</div>';
+            } else {
+                ccRewardHtml = '<div class="donut-reward-pill reward-cheer"><i class="fa-solid fa-seedling" style="color: #EA580C;"></i> Đi học Đều Hơn Nhé 🌱</div>';
+            }
+        }
+        ccRewardEl.innerHTML = ccRewardHtml;
+    }
+
     var ccCtx = document.getElementById('chuyenCanChart');
     if (ccCtx) {
         if (window._ccInst) { window._ccInst.destroy(); }

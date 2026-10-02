@@ -183,6 +183,47 @@
         }
         .donut-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
         .donut-legend-count { margin-left: auto; font-weight: 700; color: #1E293B; font-size: 13px; }
+        .donut-legend-wrap {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            flex: 1;
+            min-width: 130px;
+        }
+        .donut-reward-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 9999px;
+            font-size: 11.5px;
+            font-weight: 700;
+            margin-top: 10px;
+            width: fit-content;
+            line-height: 1.25;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
+            animation: bounce-in 0.5s ease-out;
+        }
+        .reward-trophy {
+            background: linear-gradient(135deg, #FFFBEB, #FEF3C7);
+            color: #B45309;
+            border: 1px solid #FCD34D;
+        }
+        .reward-gold {
+            background: linear-gradient(135deg, #EFF6FF, #DBEAFE);
+            color: #1D4ED8;
+            border: 1px solid #93C5FD;
+        }
+        .reward-silver {
+            background: linear-gradient(135deg, #F0FDF4, #DCFCE7);
+            color: #15803D;
+            border: 1px solid #86EFAC;
+        }
+        .reward-cheer {
+            background: linear-gradient(135deg, #FAF5FF, #F3E8FF);
+            color: #7E22CE;
+            border: 1px solid #D8B4FE;
+        }
 
         /* ===== PHASE 15: HISTORY TABLE ENHANCEMENT ===== */
         .history-table { width: 100%; border-collapse: collapse; font-family: Inter, sans-serif; min-width: 820px; }
@@ -538,10 +579,13 @@
                 box-sizing: border-box !important;
             }
 
-            /* Summary/KPI grid */
+            /* Summary/KPI grid (Card Bài Tập full width, 2 card điểm song song) */
             .summary-grid {
                 grid-template-columns: 1fr 1fr !important;
                 gap: 12px !important;
+            }
+            .summary-card:first-child {
+                grid-column: 1 / -1 !important;
             }
 
             /* Score numbers */
@@ -588,6 +632,9 @@
             .summary-grid {
                 grid-template-columns: 1fr 1fr !important;
                 gap: 10px !important;
+            }
+            .summary-card:first-child {
+                grid-column: 1 / -1 !important;
             }
             .summary-card {
                 padding: 12px 10px !important;
@@ -725,28 +772,6 @@
                     <div id="badgeDinhKiContainer" style="margin-top: 6px;"></div>
                 </div>
             </div>
-            <div class="summary-card">
-                <div class="summary-icon icon-blue" style="background: linear-gradient(135deg, #33ccff, #0066ff); box-shadow: 0 0 20px rgba(0,102,255,0.4);"><i class="fa-solid fa-list-check"></i></div>
-                <div class="summary-info">
-                    <span class="summary-label">Hoàn thành BTVN (tháng)</span>
-                    <span class="summary-val" id="valBTVN">-</span>
-                    <div id="btvnBadgeContainer" style="margin-top: 6px;"></div>
-                </div>
-            </div>
-            <div class="summary-card">
-                <div class="summary-icon icon-green" style="background: linear-gradient(135deg, #33ff99, #009933); box-shadow: 0 0 20px rgba(0,153,51,0.4);"><i class="fa-solid fa-calendar-check"></i></div>
-                <div class="summary-info">
-                    <span class="summary-label" id="lblBuoiHoc">Số buổi đã học (tháng này)</span>
-                    <span class="summary-val" id="valBuoiHoc">-</span>
-                </div>
-            </div>
-            <div class="summary-card">
-                <div class="summary-icon icon-orange" style="background: linear-gradient(135deg, #ffcc66, #ff6600); box-shadow: 0 0 20px rgba(255,102,0,0.4);"><i class="fa-solid fa-calendar-times"></i></div>
-                <div class="summary-info">
-                    <span class="summary-label" id="lblBuoiNghi">Số buổi nghỉ (tháng này)</span>
-                    <span class="summary-val" id="valBuoiNghi">-</span>
-                </div>
-            </div>
         </div>
         
         <!-- Biểu Đồ Học Tập: 2 Cột (Line chart + 2 Donut charts) -->
@@ -799,7 +824,10 @@
                                 <span class="donut-lbl">Hoàn thành</span>
                             </div>
                         </div>
-                        <div class="donut-legend" id="btvnLegend"></div>
+                        <div class="donut-legend-wrap">
+                            <div class="donut-legend" id="btvnLegend"></div>
+                            <div id="btvnRewardBadge"></div>
+                        </div>
                     </div>
                 </div>
 
@@ -818,7 +846,10 @@
                                 <span class="donut-lbl">Có mặt</span>
                             </div>
                         </div>
-                        <div class="donut-legend" id="chuyenCanLegend"></div>
+                        <div class="donut-legend-wrap">
+                            <div class="donut-legend" id="chuyenCanLegend"></div>
+                            <div id="chuyenCanRewardBadge"></div>
+                        </div>
                     </div>
                 </div>
             </div>
