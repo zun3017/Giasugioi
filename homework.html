@@ -1183,17 +1183,17 @@
         <!-- SECTION: BÀI TẬP (MÀN HÌNH ĐĂNG NHẬP / TÌM KIẾM - THAY THẾ TỪ GIAO DIỆN ĐĂNG NHẬP.HTML) -->
         <section id="mainScreen" class="w-full">
             <div class="text-center max-w-3xl mx-auto mb-10">
-                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 border border-blue-200 mb-5 shadow-sm">
+                <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-100 border border-blue-200 mb-5 shadow-sm reveal" style="transition-delay:0.1s">
                     <span class="text-yellow-500 text-sm">⭐</span>
                     <span class="text-xs sm:text-sm font-bold text-primary-700 tracking-wide uppercase">Cổng Nộp Bài Tập Học Viên</span>
                 </div>
                 
-                <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-800 tracking-tight leading-tight mb-5">
+                <h2 class="text-4xl sm:text-5xl md:text-6xl font-extrabold text-slate-800 tracking-tight leading-tight mb-5 reveal" style="transition-delay:0.2s">
                     Đăng nhập & Nộp bài <br class="hidden sm:block" />
                     <span class="text-transparent bg-clip-text bg-gradient-to-r from-primary-600 to-cyan-500">Bài tập học viên</span> 📝
                 </h2>
                 
-                <p class="text-base sm:text-lg text-slate-500 font-medium">
+                <p class="text-base sm:text-lg text-slate-500 font-medium reveal" style="transition-delay:0.3s">
                     Nộp bài tập của bạn trực tuyến và theo dõi kết quả chấm điểm nhanh chóng, thuận tiện 🚀
                 </p>
             </div>
@@ -1252,7 +1252,7 @@
             </div>
 
             <!-- 4 Thẻ tính năng -->
-            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 reveal-stagger">
                 <!-- Card 1 -->
                 <div class="bg-white rounded-3xl p-6 border border-gray-100 shadow-soft hover:shadow-xl hover:-translate-y-1 transition-all duration-300 group">
                     <div class="w-14 h-14 bg-purple-50 text-purple-600 rounded-2xl flex items-center justify-center mb-5 group-hover:bg-purple-600 group-hover:text-white transition-colors duration-300">
@@ -3060,5 +3060,8 @@
       <a href="homework.html" class="bottom-nav-item active"><i class="fa-solid fa-file-arrow-up"></i><span>Bài tập</span></a>
       <a href="tutor-login.html" class="bottom-nav-item"><i class="fa-solid fa-chalkboard-user"></i><span>Gia sư</span></a>
     </nav>
+
+    <!-- Phase 19: Scroll Animation Engine -->
+    <script src="js/scroll-animations.js"></script>
 </body>
 </html>

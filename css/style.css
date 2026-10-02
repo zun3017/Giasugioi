@@ -5411,4 +5411,83 @@ body {
   100% { background-position: -200% 0; }
 }
 
+/* ============================================================
+ * PHASE 19 — SCROLL ANIMATION CLASSES
+ * ============================================================ */
+
+/* Fade + slide up */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1),
+              transform 0.6s cubic-bezier(0.4,0,0.2,1);
+  will-change: opacity, transform;
+}
+.reveal.visible {
+  opacity: 1;
+  transform: translateY(0);
+  will-change: auto;
+}
+
+/* Stagger children */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(20px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  will-change: opacity, transform;
+}
+.reveal-stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:0.04s; }
+.reveal-stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:0.12s; }
+.reveal-stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:0.20s; }
+.reveal-stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:0.28s; }
+.reveal-stagger.visible > *:nth-child(5) { opacity:1; transform:none; transition-delay:0.36s; }
+.reveal-stagger.visible > *:nth-child(6) { opacity:1; transform:none; transition-delay:0.44s; }
+
+/* Slide từ trái */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-36px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+  will-change: opacity, transform;
+}
+.reveal-left.visible { opacity:1; transform:translateX(0); will-change:auto; }
+
+/* Slide từ phải */
+.reveal-right {
+  opacity: 0;
+  transform: translateX(36px);
+  transition: opacity 0.65s ease, transform 0.65s ease;
+  will-change: opacity, transform;
+}
+.reveal-right.visible { opacity:1; transform:translateX(0); will-change:auto; }
+
+/* Scale in */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.90);
+  transition: opacity 0.55s ease, transform 0.55s ease;
+  will-change: opacity, transform;
+}
+.reveal-scale.visible { opacity:1; transform:scale(1); will-change:auto; }
+
+/* Accessibility: tắt animation khi prefer-reduced-motion */
+@media (prefers-reduced-motion: reduce) {
+  .reveal, .reveal-left, .reveal-right, .reveal-scale,
+  .reveal-stagger > * {
+    opacity: 1 !important;
+    transform: none !important;
+    transition: none !important;
+    will-change: auto !important;
+  }
+}
+
+/* Mobile: giảm khoảng cách translate */
+@media (max-width: 480px) {
+  .reveal        { transform: translateY(16px); }
+  .reveal-left   { transform: translateX(-20px); }
+  .reveal-right  { transform: translateX(20px); }
+  .reveal-scale  { transform: scale(0.94); }
+}
+
+
 
