@@ -140,6 +140,37 @@
         .badge-average   { background: #FFFBEB; color: #D97706; }
         .badge-poor      { background: #FEF2F2; color: #DC2626; }
 
+        /* ===== PHASE 15: CHARTS GRID & 2 DONUT CHARTS ===== */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: 1.6fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+            align-items: start;
+        }
+        .chart-donuts-col { display: flex; flex-direction: column; gap: 16px; }
+        .chart-donut-box { flex: 1; }
+        .donut-wrapper { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+        .donut-canvas-wrap {
+            position: relative; width: 120px; height: 120px; flex-shrink: 0;
+        }
+        .donut-canvas-wrap canvas { width: 120px !important; height: 120px !important; }
+        .donut-center {
+            position: absolute; inset: 0;
+            display: flex; flex-direction: column;
+            align-items: center; justify-content: center;
+            pointer-events: none;
+        }
+        .donut-pct  { font-size: 20px; font-weight: 800; color: #1E293B; line-height: 1; }
+        .donut-lbl  { font-size: 10px; font-weight: 600; color: #64748B; text-align: center; margin-top: 2px; }
+        .donut-legend { display: flex; flex-direction: column; gap: 7px; flex: 1; min-width: 90px; }
+        .donut-legend-item {
+            display: flex; align-items: center; gap: 8px;
+            font-size: 12px; color: #475569; font-weight: 500;
+        }
+        .donut-legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+        .donut-legend-count { margin-left: auto; font-weight: 700; color: #1E293B; font-size: 13px; }
+
         /* ===== STUDENT DASHBOARD MOBILE ===== */
         @media (max-width: 768px) {
             #resultBox, .main-container {
@@ -170,7 +201,10 @@
                 padding: 16px 12px !important;
                 box-sizing: border-box !important;
             }
-            .chart-container, .chart-canvas-container, canvas {
+            .charts-grid { grid-template-columns: 1fr; }
+            .chart-donuts-col { flex-direction: row; }
+            .chart-donut-box { flex: 1; }
+            .chart-container, .chart-canvas-container, #diemChart {
                 max-width: 100% !important;
                 height: 220px !important;
             }
@@ -202,6 +236,10 @@
                 grid-template-columns: 1fr 1fr !important;
                 gap: 10px !important;
             }
+            .chart-donuts-col { flex-direction: column; }
+            .donut-canvas-wrap { width: 100px; height: 100px; }
+            .donut-canvas-wrap canvas { width: 100px !important; height: 100px !important; }
+            .donut-pct { font-size: 17px; }
             #resultBox, .main-container {
                 padding: 12px 8px 60px !important;
             }
@@ -352,34 +390,78 @@
             </div>
         </div>
         
-        <!-- Biểu Đồ Học Tập -->
-        <div class="chart-box">
-            <div class="chart-header" style="justify-content: space-between; flex-wrap: wrap; gap: 10px;">
-                <div style="display: flex; align-items: center; gap: 10px;">
-                    <i class="fa-solid fa-chart-line"></i>
-                    <h4>Biểu đồ điểm số học tập</h4>
+        <!-- Biểu Đồ Học Tập: 2 Cột (Line chart + 2 Donut charts) -->
+        <div class="charts-grid">
+            <!-- Cột trái: Biểu đồ đường (Line chart) -->
+            <div class="chart-box chart-line-box">
+                <div class="chart-header" style="justify-content: space-between; flex-wrap: wrap; gap: 10px;">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <h4>Biểu đồ điểm số học tập</h4>
+                    </div>
+                    <div class="chart-instruction">
+                        <i class="fa-solid fa-circle-info"></i> Nhấn nút điểm để ẩn/hiện đường dữ liệu. Nhấn vào nút tròn trên biểu đồ để xem điểm chi tiết hôm đó
+                    </div>
                 </div>
-                <div class="chart-instruction">
-                    <i class="fa-solid fa-circle-info"></i> Nhấn nút điểm để ẩn/hiện đường dữ liệu. Nhấn vào nút tròn trên biểu đồ để xem điểm chi tiết hôm đó
+                
+                <!-- Custom Legend Buttons -->
+                <div class="chart-legend-wrapper">
+                    <div class="chart-legend-container">
+                        <button class="legend-btn active btn-dau-gio" id="btnLegDauGio" onclick="toggleDataset(0)">
+                            <span class="legend-dot dot-purple"></span>
+                            Điểm đầu giờ
+                        </button>
+                        <button class="legend-btn active btn-dinh-ki" id="btnLegDinhKi" onclick="toggleDataset(1)">
+                            <span class="legend-dot dot-yellow"></span>
+                            Điểm định kì
+                        </button>
+                    </div>
                 </div>
-            </div>
-            
-            <!-- Custom Legend Buttons -->
-            <div class="chart-legend-wrapper">
-                <div class="chart-legend-container">
-                    <button class="legend-btn active btn-dau-gio" id="btnLegDauGio" onclick="toggleDataset(0)">
-                        <span class="legend-dot dot-purple"></span>
-                        Điểm đầu giờ
-                    </button>
-                    <button class="legend-btn active btn-dinh-ki" id="btnLegDinhKi" onclick="toggleDataset(1)">
-                        <span class="legend-dot dot-yellow"></span>
-                        Điểm định kì
-                    </button>
+
+                <div class="chart-canvas-container">
+                    <canvas id="diemChart"></canvas>
                 </div>
             </div>
 
-            <div class="chart-canvas-container">
-                <canvas id="diemChart"></canvas>
+            <!-- Cột phải: 2 Donut charts (BTVN + Chuyên cần) -->
+            <div class="chart-donuts-col">
+                <div class="chart-box chart-donut-box">
+                    <div class="chart-header" style="margin-bottom: 14px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 16px;"></i>
+                            <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-primary, #1E293B);">Hoàn thành BTVN</h4>
+                        </div>
+                    </div>
+                    <div class="donut-wrapper">
+                        <div class="donut-canvas-wrap">
+                            <canvas id="btvnChart" width="120" height="120"></canvas>
+                            <div class="donut-center">
+                                <span class="donut-pct" id="btvnPct">-</span>
+                                <span class="donut-lbl">Hoàn thành</span>
+                            </div>
+                        </div>
+                        <div class="donut-legend" id="btvnLegend"></div>
+                    </div>
+                </div>
+
+                <div class="chart-box chart-donut-box">
+                    <div class="chart-header" style="margin-bottom: 14px;">
+                        <div style="display: flex; align-items: center; gap: 8px;">
+                            <i class="fa-solid fa-user-check" style="color: #3B82F6; font-size: 16px;"></i>
+                            <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-primary, #1E293B);">Chuyên cần</h4>
+                        </div>
+                    </div>
+                    <div class="donut-wrapper">
+                        <div class="donut-canvas-wrap">
+                            <canvas id="chuyenCanChart" width="120" height="120"></canvas>
+                            <div class="donut-center">
+                                <span class="donut-pct" id="chuyenCanPct">-</span>
+                                <span class="donut-lbl">Có mặt</span>
+                            </div>
+                        </div>
+                        <div class="donut-legend" id="chuyenCanLegend"></div>
+                    </div>
+                </div>
             </div>
         </div>
         

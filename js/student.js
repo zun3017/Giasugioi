@@ -1,6 +1,50 @@
 var currentChartInstance = null;
 var currentStudentName = "";
 
+// Hàm chuẩn hoá chuỗi loại bỏ dấu tiếng Việt để kiểm tra chính xác
+function normalizeStr(str) {
+    if (!str) return "";
+    return String(str).toLowerCase()
+        .normalize('NFD')
+        .replace(/[\u0300-\u036f]/g, '')
+        .replace(/đ/g, 'd')
+        .trim();
+}
+
+// Hàm nhận diện buổi nghỉ (chỉ dựa trên thẻ / trạng thái điểm danh do người dùng chọn)
+function isAbsentSession(statusOrItem) {
+    var rawStatus = "";
+    if (typeof statusOrItem === 'object' && statusOrItem !== null) {
+        rawStatus = statusOrItem.trangThai || statusOrItem.chuyenCan || statusOrItem.attendance_status || statusOrItem.attendance || statusOrItem.status || "";
+    } else {
+        rawStatus = String(statusOrItem || "");
+    }
+    var normTt = normalizeStr(rawStatus);
+
+    // 1. Nếu là học bù / đã bù thì luôn tính là buổi có học
+    if (normTt.includes('hoc bu') || normTt.includes('da bu')) {
+        return false;
+    }
+
+    // 2. Kiểm tra trạng thái / thẻ điểm danh rõ ràng
+    if (
+        normTt.includes('nghi') ||
+        normTt.includes('huy') ||
+        normTt.includes('vang') ||
+        normTt.includes('off') ||
+        normTt.includes('khong hoc') ||
+        normTt.includes('chua hoc') ||
+        normTt.includes('tam hoan') ||
+        normTt === 'v' ||
+        normTt === 'n' ||
+        normTt === 'x'
+    ) {
+        return true;
+    }
+
+    return false;
+}
+
 function renderStudentView(ketQua) {
     if (!ketQua) return;
     
@@ -11,6 +55,14 @@ function renderStudentView(ketQua) {
     if (currentChartInstance) {
         currentChartInstance.destroy();
         currentChartInstance = null;
+    }
+    if (window._btvnInst) {
+        window._btvnInst.destroy();
+        window._btvnInst = null;
+    }
+    if (window._ccInst) {
+        window._ccInst.destroy();
+        window._ccInst = null;
     }
 
     // Ẩn màn hình chính và các nhân vật 3D nếu tồn tại
@@ -444,6 +496,9 @@ function renderStudentView(ketQua) {
         });
     }
 
+    // Task 15.3: Render 2 biểu đồ tròn donut (BTVN + Chuyên cần)
+    renderDonutCharts(lichSu);
+
     // --- 4. RENDER BẢNG LỊCH SỬ & MOBILE CARDS ---
     var htmlLichSu = "";
     var totalBuoi = lichSu.length;
@@ -588,6 +643,123 @@ function renderStudentView(ketQua) {
     }
 } // End renderStudentView
 
+// ===== TASK 15.3: 2 BIỂU ĐỒ TRÒN DONUT (BTVN & CHUYÊN CẦN) =====
+function renderDonutCharts(lichSu) {
+    if (!lichSu) lichSu = [];
+
+    // --- TÍNH BTVN ---
+    var btvnHT = 0, btvnKHT = 0, btvnVang = 0;
+    lichSu.forEach(function(item) {
+        if (isAbsentSession(item)) {
+            btvnVang++;
+        } else {
+            var raw = normalizeStr(item.danhGiaBTVN || item.btvn || '');
+            if (raw.includes('hoan') || raw.includes('tot') || raw === 'co' || raw.includes('day du') || raw.includes('xuat')) {
+                btvnHT++;
+            } else {
+                btvnKHT++;
+            }
+        }
+    });
+    var btvnActive = btvnHT + btvnKHT; // buổi có học (không vắng)
+    var btvnPct = btvnActive > 0 ? Math.round(btvnHT / btvnActive * 100) : 0;
+
+    var btvnPctEl = document.getElementById('btvnPct');
+    var btvnLegEl = document.getElementById('btvnLegend');
+    if (btvnPctEl) btvnPctEl.textContent = btvnPct + '%';
+    if (btvnLegEl) {
+        btvnLegEl.innerHTML =
+            donutLegItem('#10B981', 'Hoàn thành', btvnHT) +
+            donutLegItem('#F97316', 'Chưa hoàn thành', btvnKHT) +
+            donutLegItem('#94A3B8', 'Buổi vắng', btvnVang);
+    }
+    var btvnCtx = document.getElementById('btvnChart');
+    if (btvnCtx) {
+        if (window._btvnInst) { window._btvnInst.destroy(); }
+        window._btvnInst = new Chart(btvnCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [btvnHT, btvnKHT, btvnVang],
+                    backgroundColor: ['#10B981', '#F97316', '#E2E8F0'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                cutout: '72%',
+                responsive: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(c) {
+                                var L = ['Hoàn thành', 'Chưa HT', 'Buổi vắng'];
+                                return ' ' + L[c.dataIndex] + ': ' + c.raw + ' buổi';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    // --- TÍNH CHUYÊN CẦN ---
+    var coMat = 0, vangHoc = 0;
+    lichSu.forEach(function(item) {
+        if (isAbsentSession(item)) { vangHoc++; } else { coMat++; }
+    });
+    var ccTotal = coMat + vangHoc;
+    var ccPct = ccTotal > 0 ? Math.round(coMat / ccTotal * 100) : 0;
+
+    var ccPctEl = document.getElementById('chuyenCanPct');
+    var ccLegEl = document.getElementById('chuyenCanLegend');
+    if (ccPctEl) ccPctEl.textContent = ccPct + '%';
+    if (ccLegEl) {
+        ccLegEl.innerHTML =
+            donutLegItem('#3B82F6', 'Có mặt', coMat) +
+            donutLegItem('#EF4444', 'Vắng', vangHoc);
+    }
+    var ccCtx = document.getElementById('chuyenCanChart');
+    if (ccCtx) {
+        if (window._ccInst) { window._ccInst.destroy(); }
+        window._ccInst = new Chart(ccCtx, {
+            type: 'doughnut',
+            data: {
+                datasets: [{
+                    data: [coMat, vangHoc],
+                    backgroundColor: ['#3B82F6', '#EF4444'],
+                    borderWidth: 0,
+                    hoverOffset: 4
+                }]
+            },
+            options: {
+                cutout: '72%',
+                responsive: false,
+                plugins: {
+                    legend: { display: false },
+                    tooltip: {
+                        callbacks: {
+                            label: function(c) {
+                                var L = ['Có mặt', 'Vắng'];
+                                return ' ' + L[c.dataIndex] + ': ' + c.raw + ' buổi';
+                            }
+                        }
+                    }
+                }
+            }
+        });
+    }
+}
+
+function donutLegItem(color, label, count) {
+    return '<div class="donut-legend-item">' +
+        '<span class="donut-legend-dot" style="background:' + color + ';"></span>' +
+        '<span>' + label + '</span>' +
+        '<span class="donut-legend-count">' + count + '</span>' +
+        '</div>';
+}
+
 // Hàm chuyển đổi link Google Drive sang link ảnh trực tiếp
 function convertDriveLink(url) {
     if (!url) return "";
@@ -608,6 +780,14 @@ function quayLai() {
     if (currentChartInstance) {
         currentChartInstance.destroy();
         currentChartInstance = null;
+    }
+    if (window._btvnInst) {
+        window._btvnInst.destroy();
+        window._btvnInst = null;
+    }
+    if (window._ccInst) {
+        window._ccInst.destroy();
+        window._ccInst = null;
     }
     sessionStorage.clear();
     if (isSinglePageApp()) {
