@@ -5236,4 +5236,19 @@
   .header-text h1 { font-size: 13px !important; }
 }
 
+/* ===== PHASE 17 — TYPOGRAPHY ===== */
+@media (max-width: 480px) {
+  html { -webkit-text-size-adjust: 100%; }
+  input, select, textarea { font-size: 16px !important; }
+
+  /* Hero section index.html */
+  .hero-title  { font-size: 24px !important; line-height: 1.3 !important; }
+  .hero-subtitle { font-size: 14px !important; }
+  .hero-ctas { flex-direction: column !important; gap: 10px !important; }
+  .btn-cta { width: 100% !important; justify-content: center !important; }
+}
+@media (max-width: 360px) {
+  .hero-title { font-size: 20px !important; }
+}
+
 
