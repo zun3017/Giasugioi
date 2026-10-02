@@ -1360,10 +1360,10 @@
         
         @media (max-width: 768px) {
             .desktop-table-view {
-                display: none;
+                display: none !important;
             }
             .mobile-cards-view {
-                display: block;
+                display: block !important;
             }
         }
         

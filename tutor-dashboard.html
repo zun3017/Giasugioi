@@ -410,14 +410,20 @@
             .kpi-label { font-size: 11px !important; }
             .kpi-card, .tutor-kpi-card { padding: 14px !important; }
 
+            /* Ẩn bảng rút gọn desktop trên mobile vì đã có thẻ mở (accordion) bên dưới */
+            .desktop-table-view {
+                display: none !important;
+            }
+            .mobile-cards-view {
+                display: block !important;
+            }
+
             /* Bảng học phí - horizontal scroll */
             .tuition-table-wrapper,
             [class*="tuition"] > table,
-            #tutorSectionTuition table,
-            .table-wrapper.desktop-table-view {
+            #tutorSectionTuition table {
                 overflow-x: auto !important;
                 -webkit-overflow-scrolling: touch;
-                display: block !important;
                 width: 100% !important;
             }
             #tutorSectionTuition table, #tuitionTable {
