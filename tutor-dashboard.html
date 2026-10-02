@@ -464,6 +464,61 @@
         @media (max-width: 360px) {
             .kpi-number, .kpi-value { font-size: 18px !important; }
         }
+
+        /* ===== PHASE 17 — TUTOR DASHBOARD MOBILE ===== */
+        @media (max-width: 768px) {
+          /* Sidebar ẩn mặc định, slide từ trái */
+          .tutor-sidebar {
+            position: fixed !important;
+            left: -280px !important; top: 0 !important; bottom: 0 !important;
+            width: 260px !important; z-index: 1050 !important;
+            transition: left 0.3s cubic-bezier(0.4,0,0.2,1) !important;
+            overflow-y: auto; overflow-x: hidden;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.15);
+          }
+          .tutor-sidebar.sidebar-open,
+          .tutor-sidebar.mobile-open { left: 0 !important; }
+
+          /* Overlay mờ */
+          .sidebar-overlay {
+            display: none; position: fixed; inset: 0;
+            background: rgba(15,23,42,0.5); z-index: 1040;
+            backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+          }
+          .sidebar-overlay.active { display: block; }
+
+          /* Nút mở sidebar */
+          .sidebar-toggle-btn {
+            display: flex !important; position: fixed;
+            top: 12px; left: 12px; z-index: 1060;
+            width: 40px; height: 40px;
+            background: #3B82F6; border: none; border-radius: 12px;
+            color: #fff; font-size: 16px;
+            align-items: center; justify-content: center;
+            cursor: pointer; box-shadow: 0 4px 12px rgba(59,130,246,0.3);
+            -webkit-tap-highlight-color: transparent;
+          }
+
+          /* Main content full width */
+          .tutor-main-content {
+            margin-left: 0 !important; width: 100% !important;
+            padding: 60px 14px 80px !important;
+          }
+
+          /* KPI grid 2 cột */
+          [class*="kpi-grid"], .kpi-grid, .stats-row, .overview-grid {
+            grid-template-columns: 1fr 1fr !important;
+            gap: 12px !important;
+          }
+          [class*="kpi-number"], .kpi-number, .stat-number { font-size: 22px !important; }
+          [class*="kpi-card"], .kpi-card { padding: 14px !important; }
+
+          /* Bảng học phí scroll ngang */
+          .table-wrapper, [class*="table-wrap"], .fee-table-wrap {
+            overflow-x: auto !important;
+            -webkit-overflow-scrolling: touch;
+          }
+        }
     </style>
 </head>
 <body>
@@ -2462,6 +2517,26 @@
             }
         }
         window.toggleTutorMobileSidebar = toggleTutorMobileSidebar;
+
+        function openTutorSidebar() {
+            toggleTutorMobileSidebar(true);
+        }
+        function closeTutorSidebar() {
+            toggleTutorMobileSidebar(false);
+        }
+        window.openTutorSidebar = openTutorSidebar;
+        window.closeTutorSidebar = closeTutorSidebar;
+
+        // Swipe trái → đóng sidebar mobile
+        var _txStart = 0;
+        document.addEventListener('touchstart', function(e) {
+            if (e.touches && e.touches[0]) _txStart = e.touches[0].clientX;
+        }, { passive: true });
+        document.addEventListener('touchend', function(e) {
+            if (e.changedTouches && e.changedTouches[0] && (e.changedTouches[0].clientX - _txStart < -60)) {
+                closeTutorSidebar();
+            }
+        }, { passive: true });
 
         window.addEventListener('DOMContentLoaded', () => {
             var phone = sessionStorage.getItem('userPhone') || '0123456789';
