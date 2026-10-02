@@ -90,6 +90,35 @@
         return dayName + ', ' + dStrFormatted;
     };
 
+    // ĐỊNH DẠNG CHỈ NGÀY (VÍ DỤ: "22/09", BỎ THỨ)
+    window.formatDateOnly = function(dStr) {
+        if (!dStr || dStr === "-" || dStr === "null") return "-";
+        let s = String(dStr).trim();
+        s = s.replace(/^(thứ\s*\d+|chủ nhật|cn)\s*[,.-]?\s*/i, '').trim();
+        let day = null, month = null;
+        let mIso = s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
+        if (mIso) {
+            month = parseInt(mIso[2], 10);
+            day = parseInt(mIso[3], 10);
+        } else {
+            let mDmy = s.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})/);
+            if (mDmy) {
+                day = parseInt(mDmy[1], 10);
+                month = parseInt(mDmy[2], 10);
+            } else {
+                let mDm = s.match(/^(\d{1,2})[-/.](\d{1,2})/);
+                if (mDm) {
+                    day = parseInt(mDm[1], 10);
+                    month = parseInt(mDm[2], 10);
+                }
+            }
+        }
+        if (day && month) {
+            return String(day).padStart(2, '0') + '/' + String(month).padStart(2, '0');
+        }
+        return s;
+    };
+
     function isOlderThan10Days(dateVal) {
         if (!dateVal) return false;
         let ts = 0;

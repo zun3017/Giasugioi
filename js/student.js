@@ -618,6 +618,36 @@ function renderStudentView(ketQua) {
             return '<span class="btvn-chip btvn-fail">❌ Chưa HT</span>';
         }
 
+        // Helper định dạng ngày chỉ lấy ngày/tháng, bỏ thứ (Ví dụ: "22/09")
+        function formatDateOnly(dStr) {
+            if (typeof window.formatDateOnly === 'function') return window.formatDateOnly(dStr);
+            if (!dStr || dStr === "-" || dStr === "null") return "-";
+            var s = String(dStr).trim();
+            s = s.replace(/^(thứ\s*\d+|chủ nhật|cn)\s*[,.-]?\s*/i, '').trim();
+            var day = null, month = null;
+            var mIso = s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
+            if (mIso) {
+                month = parseInt(mIso[2], 10);
+                day = parseInt(mIso[3], 10);
+            } else {
+                var mDmy = s.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})/);
+                if (mDmy) {
+                    day = parseInt(mDmy[1], 10);
+                    month = parseInt(mDmy[2], 10);
+                } else {
+                    var mDm = s.match(/^(\d{1,2})[-/.](\d{1,2})/);
+                    if (mDm) {
+                        day = parseInt(mDm[1], 10);
+                        month = parseInt(mDm[2], 10);
+                    }
+                }
+            }
+            if (day && month) {
+                return String(day).padStart(2, '0') + '/' + String(month).padStart(2, '0');
+            }
+            return s;
+        }
+
         htmlLichSu += "<table class='history-table'>";
         htmlLichSu += "<thead><tr>" +
             "<th>Ngày</th>" +
@@ -634,7 +664,7 @@ function renderStudentView(ketQua) {
             var isAbsent = isAbsentSession(item);
             var isHidden = (idx >= 5);
             var hiddenAttr = isHidden ? ' style="display:none;" class="history-row hidden-row' + (isAbsent ? ' row-absent' : '') + '"' : ' class="history-row' + (isAbsent ? ' row-absent' : '') + '"';
-            var rawDate = (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "-"));
+            var rawDate = formatDateOnly(item.ngay);
             var diemDau = item.diemDauGio !== undefined && item.diemDauGio !== null ? item.diemDauGio : item.diemDG;
             var diemDinh = item.diemDinhKi !== undefined && item.diemDinhKi !== null ? item.diemDinhKi : item.diemDK;
             var nxText = item.nhanXet ? ('<span style="color:#1E293B; font-style:italic;"><i class="fa-solid fa-comment-dots" style="color:#3B82F6; margin-right:5px; font-style:normal;"></i>' + item.nhanXet + '</span>') : '<span class="cell-nhanxet-empty">—</span>';
