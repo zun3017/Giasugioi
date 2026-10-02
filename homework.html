@@ -430,16 +430,27 @@
             .file-cards-mobile, .mobile-cards-view { display: flex !important; flex-direction: column; gap: 10px; }
             .table-wrapper { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
 
-            /* Hero Banner Mobile */
+            /* Căn giữa toàn bộ Dashboard & Loại bỏ lệch lề trên Mobile */
+            #homeworkDashboard {
+                padding: 0 0 calc(60px + env(safe-area-inset-bottom)) !important;
+                margin: 0 auto !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+            }
+
+            /* Hero Banner Mobile - Căn giữa đối xứng */
             .hw-hero-banner {
                 position: relative !important;
                 padding: 16px 14px !important;
-                margin: 12px 0 14px !important;
+                margin: 12px auto 14px !important;
                 border-radius: 16px !important;
                 display: flex !important;
                 flex-direction: column !important;
                 align-items: stretch !important;
                 gap: 12px !important;
+                width: 100% !important;
+                box-sizing: border-box !important;
             }
             .hw-hero-left {
                 min-width: 0 !important;
@@ -475,6 +486,54 @@
                 font-weight: 700 !important;
                 border-radius: 10px !important;
                 min-height: 32px !important;
+            }
+
+            /* KPI Grid Căn giữa */
+            .hw-kpi-grid {
+                width: 100% !important;
+                margin: 0 auto 14px !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 10px !important;
+                box-sizing: border-box !important;
+            }
+
+            /* Charts & Upload Grid Căn giữa */
+            .hw-charts-upload-grid {
+                width: 100% !important;
+                margin: 0 auto 14px !important;
+                grid-template-columns: 1fr !important;
+                gap: 14px !important;
+                box-sizing: border-box !important;
+            }
+            .hw-charts-col {
+                width: 100% !important;
+                min-width: 0 !important;
+                gap: 14px !important;
+                box-sizing: border-box !important;
+            }
+            .hw-chart-card, .hw-section-card {
+                width: 100% !important;
+                min-width: 0 !important;
+                margin: 0 auto 14px !important;
+                padding: 18px 14px !important;
+                box-sizing: border-box !important;
+            }
+
+            /* Căn giữa nội dung Donut chart */
+            .hw-donut-wrap {
+                justify-content: center !important;
+                gap: 18px !important;
+                width: 100% !important;
+            }
+            .hw-donut-legend {
+                min-width: 120px !important;
+                flex: initial !important;
+            }
+
+            /* Form Nộp bài Mobile Căn giữa */
+            .hw-upload-card {
+                width: 100% !important;
+                box-sizing: border-box !important;
             }
         }
 
