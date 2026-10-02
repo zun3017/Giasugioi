@@ -131,7 +131,7 @@
 
         /* === NAVBAR MOBILE BASE === */
         .hamburger-btn {
-            display: none;
+            display: none !important;
             background: none;
             border: none;
             color: var(--nav-btn-text, #1E293B);
@@ -150,7 +150,7 @@
         }
 
         .mobile-nav-dropdown {
-            display: none;
+            display: none !important;
             position: absolute;
             top: 100%;
             right: 0;
@@ -167,6 +167,15 @@
         }
         .mobile-nav-dropdown.open {
             display: flex !important;
+        }
+
+        @media (min-width: 401px) {
+            .hamburger-btn {
+                display: none !important;
+            }
+            .mobile-nav-dropdown {
+                display: none !important;
+            }
         }
 
         .mobile-nav-item {
