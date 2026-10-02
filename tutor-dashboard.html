@@ -399,6 +399,71 @@
             border: 1px solid rgba(239, 68, 68, 0.5);
             color: #FCA5A5;
         }
+
+        /* ===== TUTOR DASHBOARD MOBILE OPTIMIZATIONS (TASK 14.4) ===== */
+        @media (max-width: 768px) {
+            .tutor-kpi-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 12px !important;
+            }
+            .kpi-number, .kpi-value { font-size: 22px !important; }
+            .kpi-label { font-size: 11px !important; }
+            .kpi-card, .tutor-kpi-card { padding: 14px !important; }
+
+            /* Bảng học phí - horizontal scroll */
+            .tuition-table-wrapper,
+            [class*="tuition"] > table,
+            #tutorSectionTuition table,
+            .table-wrapper.desktop-table-view {
+                overflow-x: auto !important;
+                -webkit-overflow-scrolling: touch;
+                display: block !important;
+                width: 100% !important;
+            }
+            #tutorSectionTuition table, #tuitionTable {
+                min-width: 580px !important;
+            }
+
+            /* Diary entries full width */
+            .diary-entry, .tutor-session-row {
+                flex-direction: column !important;
+                gap: 8px !important;
+            }
+
+            /* Safe area iOS bottom padding for tutor content */
+            .tutor-main-content {
+                padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important;
+            }
+
+            /* Tuition banner grid 1 or 2 cols on mobile */
+            .tuition-banner-grid {
+                grid-template-columns: 1fr !important;
+                gap: 10px !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .tutor-kpi-grid {
+                grid-template-columns: 1fr 1fr !important;
+                gap: 8px !important;
+            }
+            .tutor-kpi-card { padding: 12px 10px !important; }
+            .kpi-value { font-size: 19px !important; }
+            .kpi-label { font-size: 10.5px !important; }
+            .overview-top-bar {
+                flex-direction: column !important;
+                align-items: flex-start !important;
+                gap: 10px !important;
+            }
+            .month-selector-widget {
+                width: 100% !important;
+                justify-content: space-between !important;
+            }
+        }
+
+        @media (max-width: 360px) {
+            .kpi-number, .kpi-value { font-size: 18px !important; }
+        }
     </style>
 </head>
 <body>
