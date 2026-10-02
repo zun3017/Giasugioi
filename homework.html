@@ -1753,6 +1753,12 @@
 
                 // Hiện Dashboard nộp bài tập
                 document.getElementById('homeworkDashboard').style.display = 'block';
+                document.body.classList.add('logged-in');
+                var bottomNav = document.querySelector('.bottom-nav');
+                if (bottomNav) {
+                    bottomNav.style.setProperty('display', 'none', 'important');
+                    bottomNav.classList.add('hidden-nav');
+                }
 
                 // Điền thông tin học sinh & bài tập
                 document.getElementById('hwStudentName').innerText = res.studentName;
@@ -2737,6 +2743,12 @@
             // Khôi phục giao diện màn hình chính
             document.getElementById('mainScreen').style.display = 'block';
             document.getElementById('homeworkDashboard').style.display = 'none';
+            document.body.classList.remove('logged-in');
+            var bottomNav = document.querySelector('.bottom-nav');
+            if (bottomNav) {
+                bottomNav.style.removeProperty('display');
+                bottomNav.classList.remove('hidden-nav');
+            }
             document.getElementById('maInput').value = "";
             document.getElementById('error').style.display = "none"; 
             

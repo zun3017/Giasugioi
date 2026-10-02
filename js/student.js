@@ -81,6 +81,9 @@ function renderStudentView(ketQua) {
     // Hiện khung kết quả
     var resBox = document.getElementById('resultBox');
     if (resBox) resBox.style.display = 'block';
+    document.body.classList.add('logged-in');
+    var bottomNavEl = document.querySelector('.bottom-nav');
+    if (bottomNavEl) bottomNavEl.style.setProperty('display', 'none', 'important');
     
     var studentPhone = sessionStorage.getItem('userPhone') || localStorage.getItem('userPhone') || "";
     if (studentPhone && studentPhone.charAt(0) !== '0' && studentPhone.length === 9) {

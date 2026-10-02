@@ -5216,6 +5216,14 @@
 /* ===== PHASE 17 — BOTTOM NAVIGATION ===== */
 .bottom-nav { display: none; }
 
+body.logged-in .bottom-nav,
+.logged-in .bottom-nav,
+.bottom-nav.hidden-nav,
+.bottom-nav[style*="display: none"],
+.bottom-nav[style*="display:none"] {
+  display: none !important;
+}
+
 @media (max-width: 768px) {
   .bottom-nav {
     display: flex !important;
@@ -5237,6 +5245,13 @@
     z-index: 9000 !important;
     align-items: center !important;
     justify-content: space-around !important;
+  }
+  body.logged-in .bottom-nav,
+  .logged-in .bottom-nav,
+  .bottom-nav.hidden-nav,
+  .bottom-nav[style*="display: none"],
+  .bottom-nav[style*="display:none"] {
+    display: none !important;
   }
   .bottom-nav-item {
     display: flex !important;
@@ -5286,6 +5301,7 @@
 
   /* Padding bottom để content không bị bottom nav che */
   body { padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important; }
+  body.logged-in { padding-bottom: 24px !important; }
 }
 
 /* ===== PHASE 17 — HEADER COMPACT ===== */
