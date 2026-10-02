@@ -6236,8 +6236,19 @@ window.initTutorSidebarState = initTutorSidebarState;
                 var htmlLichSu = "";
                 
                 // 1. Desktop View (Table)
-                htmlLichSu += "<div class='desktop-table-view'>";
-                htmlLichSu += "<table><tr><th>Tuần</th><th>Ngày dạy</th><th>Môn</th><th>Nội dung</th><th>Nhận xét của gia sư</th><th>Đánh giá BTVN</th><th>KT Đầu giờ</th><th>KT Định kì</th><th>Trạng thái</th><th style='width: 90px; text-align: center;'>Thao tác</th></tr>";
+                htmlLichSu += "<div class='table-wrapper desktop-table-view'>";
+                htmlLichSu += "<table class='history-table tutor-history-table'><thead><tr>" +
+                    "<th style='width: 42px; text-align: center;'>Tuần</th>" +
+                    "<th style='width: 62px; text-align: center;'>Ngày dạy</th>" +
+                    "<th style='width: 65px; text-align: center;'>Môn</th>" +
+                    "<th>Nội dung</th>" +
+                    "<th>Nhận xét của gia sư</th>" +
+                    "<th style='width: 105px; text-align: center;'>Đánh giá BTVN</th>" +
+                    "<th style='width: 70px; text-align: center;'>KT Đầu giờ</th>" +
+                    "<th style='width: 70px; text-align: center;'>KT Định kì</th>" +
+                    "<th style='width: 78px; text-align: center;'>Trạng thái</th>" +
+                    "<th style='width: 75px; text-align: center;'>Thao tác</th>" +
+                    "</tr></thead><tbody>";
                 
                 // 2. Mobile View (Accordion list)
                 var htmlMobile = "<div class='mobile-cards-view'>";
@@ -6246,20 +6257,24 @@ window.initTutorSidebarState = initTutorSidebarState;
                     var styleStr = (idx >= 5) ? 'style="display: none;" class="tutor-history-row tutor-hidden-row"' : 'class="tutor-history-row"';
                     var btvnValue = (item.btvn || item.danhGiaBTVN || "");
 
+                    var rawDateOnly = (typeof window.formatDateOnly === 'function') 
+                        ? window.formatDateOnly(item.ngay) 
+                        : (typeof formatDateOnly === 'function' ? formatDateOnly(item.ngay) : (item.ngay || "—"));
+
                     // Desktop Row
                     htmlLichSu += "<tr " + styleStr + ">";
-                    htmlLichSu += "<td>" + (item.tuan || "") + "</td>";
-                    htmlLichSu += "<td>" + (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "")) + "</td>";
-                    htmlLichSu += "<td>" + (item.mon || "") + "</td>";
-                    htmlLichSu += "<td>" + (item.noiDung || item.topic || "") + "</td>";
-                    htmlLichSu += "<td style='max-width: 220px; font-size: 12.5px; line-height: 1.4;'>" + (item.nhanXet ? "<span style='color: var(--text-primary); font-style: italic;'><i class='fa-solid fa-comment-dots' style='color: var(--color-primary); font-size: 11px; margin-right: 4px;'></i>" + item.nhanXet + "</span>" : "<span style='color: var(--text-muted);'>—</span>") + "</td>";
-                    htmlLichSu += "<td>" + getBtvnBadge(btvnValue) + "</td>";
-                    htmlLichSu += "<td>" + (item.diemDauGio || item.diemDG || "") + "</td>";
-                    htmlLichSu += "<td>" + (item.diemDinhKi || item.diemDK || "") + "</td>";
-                    htmlLichSu += "<td>" + getStatusBadge(item.trangThai || item.chuyenCan) + "</td>";
+                    htmlLichSu += "<td style='text-align: center; font-weight: 700; color: var(--text-primary);'>" + (item.tuan || "") + "</td>";
+                    htmlLichSu += "<td style='white-space: nowrap; text-align: center; color: var(--text-primary); font-weight: 500;'>" + rawDateOnly + "</td>";
+                    htmlLichSu += "<td style='text-align: center;'>" + (item.mon ? ('<span class="subj-chip">' + item.mon + '</span>') : '') + "</td>";
+                    htmlLichSu += "<td class='cell-noidung'>" + (item.noiDung || item.topic || "") + "</td>";
+                    htmlLichSu += "<td class='cell-nhanxet'>" + (item.nhanXet ? "<span style='color: var(--text-primary); font-style: italic;'><i class='fa-solid fa-comment-dots' style='color: var(--color-primary); font-size: 11px; margin-right: 4px;'></i>" + item.nhanXet + "</span>" : "<span style='color: var(--text-muted);'>—</span>") + "</td>";
+                    htmlLichSu += "<td style='text-align: center;'>" + getBtvnBadge(btvnValue) + "</td>";
+                    htmlLichSu += "<td style='text-align: center; font-weight: 700; font-size: 14px;'>" + (item.diemDauGio || item.diemDG || "—") + "</td>";
+                    htmlLichSu += "<td style='text-align: center; font-weight: 700; font-size: 14px;'>" + (item.diemDinhKi || item.diemDK || "—") + "</td>";
+                    htmlLichSu += "<td style='text-align: center;'>" + getStatusBadge(item.trangThai || item.chuyenCan) + "</td>";
                     htmlLichSu += "<td style='text-align: center; white-space: nowrap;'>" +
                                   "  <button onclick='openEditLessonModal(\"" + item.rowIndex + "\")' class='btn-icon-edit' title='Sửa buổi học' style='margin: 0; padding: 4px;'><i class='fa-solid fa-pen-to-square'></i></button>" +
-                                  "  <button onclick='duplicateLesson(\"" + item.rowIndex + "\")' class='btn-icon-edit' title='Nhân bản buổi học' style='margin: 0 0 0 8px; padding: 4px; color: #10B981;'><i class='fa-solid fa-copy'></i></button>" +
+                                  "  <button onclick='duplicateLesson(\"" + item.rowIndex + "\")' class='btn-icon-edit' title='Nhân bản buổi học' style='margin: 0 0 0 6px; padding: 4px; color: #10B981;'><i class='fa-solid fa-copy'></i></button>" +
                                   "</td>";
                     htmlLichSu += "</tr>";
 
@@ -6270,7 +6285,7 @@ window.initTutorSidebarState = initTutorSidebarState;
                     htmlMobile += "    <div style='display: flex; align-items: center;'>";
                     htmlMobile += "      <div class='accordion-header-title'>";
                     htmlMobile += "        <span>" + (item.tuan || "") + "</span>";
-                    htmlMobile += "        <span class='accordion-header-date'>" + (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "")) + "</span>";
+                    htmlMobile += "        <span class='accordion-header-date'>" + rawDateOnly + "</span>";
                     htmlMobile += "      </div>";
                     htmlMobile += "    </div>";
                     htmlMobile += "    <div class='accordion-header-status'>";
@@ -6294,7 +6309,7 @@ window.initTutorSidebarState = initTutorSidebarState;
 
                 });
 
-                htmlLichSu += "</table></div>";
+                htmlLichSu += "</tbody></table></div>";
                 htmlMobile += "</div>";
 
                 var totalHtml = htmlLichSu + htmlMobile;

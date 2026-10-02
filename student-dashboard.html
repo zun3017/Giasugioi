@@ -226,42 +226,58 @@
         }
 
         /* ===== PHASE 15: HISTORY TABLE ENHANCEMENT ===== */
-        .history-table { width: 100%; border-collapse: collapse; font-family: Inter, sans-serif; min-width: 980px; }
+        .table-wrapper.desktop-table-view {
+            width: 100% !important;
+            overflow-x: hidden !important;
+            border-radius: 12px;
+            box-sizing: border-box;
+        }
+        .history-table {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            border-collapse: collapse;
+            font-family: Inter, sans-serif;
+            table-layout: auto;
+        }
         .history-table th {
             background: #F0F7FF;
             color: #64748B;
             font-size: 11px;
             font-weight: 700;
             text-transform: uppercase;
-            letter-spacing: 0.4px;
-            padding: 10px 12px;
+            letter-spacing: 0.3px;
+            padding: 8px 6px;
             text-align: left;
             border-bottom: 2px solid #DBEAFE;
             white-space: nowrap;
+            box-sizing: border-box;
         }
         .history-row td {
-            padding: 11px 12px;
+            padding: 8px 6px;
             border-bottom: 1px solid #F1F5F9;
-            font-size: 13px;
+            font-size: 12.5px;
             color: #475569;
             vertical-align: middle;
+            box-sizing: border-box;
         }
         .cell-noidung {
-            min-width: 150px;
-            max-width: 260px;
+            min-width: 100px;
             white-space: normal !important;
             word-break: break-word;
-            line-height: 1.45;
+            overflow-wrap: break-word;
+            line-height: 1.35;
             color: #1E293B;
             font-weight: 500;
+            font-size: 12px;
         }
         .cell-nhanxet {
-            min-width: 200px;
-            max-width: 340px;
+            min-width: 120px;
             white-space: normal !important;
             word-break: break-word;
-            line-height: 1.45;
-            font-size: 13px;
+            overflow-wrap: break-word;
+            line-height: 1.35;
+            font-size: 12px;
             color: #334155;
         }
         .cell-nhanxet-empty {

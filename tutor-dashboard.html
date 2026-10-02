@@ -403,6 +403,70 @@
             color: #FCA5A5;
         }
 
+        /* ===== TUTOR HISTORY TABLE (DESKTOP NO HORIZONTAL SCROLL) ===== */
+        .table-wrapper.desktop-table-view {
+            width: 100% !important;
+            overflow-x: hidden !important;
+            border-radius: 12px;
+            box-sizing: border-box;
+        }
+        .tutor-history-table {
+            width: 100% !important;
+            max-width: 100% !important;
+            min-width: 0 !important;
+            border-collapse: collapse;
+            font-family: Inter, sans-serif;
+            table-layout: auto;
+        }
+        .tutor-history-table th {
+            background: #F0F7FF;
+            color: #64748B;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            padding: 8px 6px !important;
+            text-align: left;
+            border-bottom: 2px solid #DBEAFE;
+            white-space: nowrap;
+            box-sizing: border-box;
+        }
+        [data-theme="dark"] .tutor-history-table th {
+            background: rgba(30, 41, 59, 0.7);
+            color: #94A3B8;
+            border-bottom: 2px solid rgba(59, 130, 246, 0.3);
+        }
+        .tutor-history-table td {
+            padding: 8px 6px !important;
+            border-bottom: 1px solid var(--border-card, #F1F5F9);
+            font-size: 12.5px;
+            color: var(--text-primary, #475569);
+            vertical-align: middle;
+            box-sizing: border-box;
+        }
+        .tutor-history-table tr:hover td {
+            background-color: var(--nav-hover-bg, #F8FAFF);
+        }
+        .tutor-history-table .cell-noidung {
+            min-width: 100px;
+            white-space: normal !important;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.35;
+            color: var(--text-heading, #1E293B);
+            font-weight: 500;
+            font-size: 12px;
+        }
+        .tutor-history-table .cell-nhanxet {
+            min-width: 120px;
+            white-space: normal !important;
+            word-break: break-word;
+            overflow-wrap: break-word;
+            line-height: 1.35;
+            font-size: 12px;
+            color: var(--text-primary, #334155);
+        }
+
         /* ===== TUTOR DASHBOARD MOBILE OPTIMIZATIONS (TASK 14.4) ===== */
         @media (max-width: 768px) {
             .tutor-kpi-grid {

@@ -615,15 +615,15 @@ function renderStudentView(ketQua) {
         htmlLichSu += "<div class='table-wrapper desktop-table-view'>";
         htmlLichSu += "<table class='history-table'>";
         htmlLichSu += "<thead><tr>" +
-            "<th style='width: 55px; text-align: center;'>Tuần</th>" +
-            "<th style='width: 130px;'>Ngày dạy</th>" +
-            "<th style='width: 75px;'>Môn</th>" +
-            "<th style='min-width: 170px;'>Nội dung</th>" +
-            "<th style='min-width: 250px;'>Nhận xét của gia sư</th>" +
-            "<th style='width: 135px; text-align: center;'>Đánh giá BTVN</th>" +
-            "<th style='width: 95px; text-align: center;'>KT Đầu giờ</th>" +
-            "<th style='width: 95px; text-align: center;'>KT Định kì</th>" +
-            "<th style='width: 105px; text-align: center;'>Trạng thái</th>" +
+            "<th style='width: 42px; text-align: center;'>Tuần</th>" +
+            "<th style='width: 62px; text-align: center;'>Ngày dạy</th>" +
+            "<th style='width: 65px; text-align: center;'>Môn</th>" +
+            "<th>Nội dung</th>" +
+            "<th>Nhận xét của gia sư</th>" +
+            "<th style='width: 105px; text-align: center;'>Đánh giá BTVN</th>" +
+            "<th style='width: 70px; text-align: center;'>KT Đầu giờ</th>" +
+            "<th style='width: 70px; text-align: center;'>KT Định kì</th>" +
+            "<th style='width: 78px; text-align: center;'>Trạng thái</th>" +
             "</tr></thead><tbody>";
 
         // 2. Mobile View (Thẻ Accordion Cards y hệt Gia sư)
@@ -640,10 +640,9 @@ function renderStudentView(ketQua) {
             var diemDinh = item.diemDinhKi !== undefined && item.diemDinhKi !== null ? item.diemDinhKi : item.diemDK;
             var tuanVal = item.tuan !== undefined && item.tuan !== null && item.tuan !== '' ? item.tuan : (item.buoi || item.rowIndex || (idx + 1));
             
-            var rawDateShort = formatDateOnly(item.ngay);
-            var rawDateWithDay = (typeof window.formatDateWithDayOfWeek === 'function') 
-                ? window.formatDateWithDayOfWeek(item.ngay) 
-                : (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "—"));
+            var rawDateOnly = (typeof window.formatDateOnly === 'function') 
+                ? window.formatDateOnly(item.ngay) 
+                : (typeof formatDateOnly === 'function' ? formatDateOnly(item.ngay) : (item.ngay || "—"));
 
             var commentHtml = (item.nhanXet && String(item.nhanXet).trim() !== "")
                 ? '<span style="color: var(--text-primary); font-style: italic;"><i class="fa-solid fa-comment-dots" style="color: #3B82F6; font-size: 12px; margin-right: 5px;"></i>' + item.nhanXet + '</span>'
@@ -663,7 +662,7 @@ function renderStudentView(ketQua) {
             htmlLichSu +=
                 '<tr' + hiddenAttr + '>' +
                     '<td style="text-align: center; font-weight: 700; color: var(--text-primary);">' + tuanVal + '</td>' +
-                    '<td style="white-space: nowrap; color: var(--text-primary); font-weight: 500;">' + rawDateWithDay + '</td>' +
+                    '<td style="white-space: nowrap; text-align: center; color: var(--text-primary); font-weight: 500;">' + rawDateOnly + '</td>' +
                     '<td>' + (item.mon || lopHoc ? ('<span class="subj-chip">' + (item.mon || lopHoc) + '</span>') : '') + '</td>' +
                     '<td class="cell-noidung">' + (item.noiDung || item.topic || '-') + '</td>' +
                     '<td class="cell-nhanxet">' + commentHtml + '</td>' +
@@ -680,7 +679,7 @@ function renderStudentView(ketQua) {
             htmlMobile += '    <div style="display: flex; align-items: center;">';
             htmlMobile += '      <div class="accordion-header-title">';
             htmlMobile += '        <span style="font-size: 15px; font-weight: 700; color: var(--text-primary);">' + tuanVal + '</span>';
-            htmlMobile += '        <span class="accordion-header-date">' + rawDateWithDay + '</span>';
+            htmlMobile += '        <span class="accordion-header-date">' + rawDateOnly + '</span>';
             htmlMobile += '      </div>';
             htmlMobile += '    </div>';
             htmlMobile += '    <div class="accordion-header-status">';
