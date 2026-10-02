@@ -162,6 +162,33 @@
             align-items: start;
         }
         .chart-donuts-col { display: flex; flex-direction: column; gap: 16px; }
+        .donut-month-filter-wrap {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-card, #FFFFFF);
+            padding: 8px 14px;
+            border-radius: 12px;
+            border: 1px solid var(--border-card, #E2E8F0);
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .donut-month-select {
+            padding: 5px 12px;
+            border-radius: 8px;
+            border: 1px solid var(--border-card, #CBD5E1);
+            background: var(--bg-input, #F8FAFC);
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--color-primary, #2563EB);
+            cursor: pointer;
+            outline: none;
+            transition: all 0.2s;
+        }
+        .donut-month-select:focus {
+            border-color: var(--color-primary, #3B82F6);
+        }
         .chart-donut-box { flex: 1; }
         .donut-wrapper { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
         .donut-canvas-wrap {
@@ -201,6 +228,7 @@
             margin-top: 10px;
             width: fit-content;
             line-height: 1.25;
+            white-space: nowrap;
             box-shadow: 0 2px 6px rgba(0, 0, 0, 0.04);
             animation: bounce-in 0.5s ease-out;
         }
@@ -720,7 +748,12 @@
           /* Donut col: ngang */
           .chart-donuts-col {
             flex-direction: row !important;
+            flex-wrap: wrap !important;
             gap: 12px !important;
+          }
+          .donut-month-filter-wrap {
+            width: 100% !important;
+            flex-basis: 100% !important;
           }
           .chart-donut-box { flex: 1 !important; }
           .donut-canvas-wrap { width: 90px !important; height: 90px !important; }
@@ -776,6 +809,21 @@
         </div>
     </div>
 
+    <!-- SKELETON STUDENT DASHBOARD -->
+    <div id="skeletonStudent" style="display: none; padding: 20px 0; max-width: 1000px; margin: 0 auto;">
+        <div class="skeleton" style="height: 80px; border-radius: 16px; margin-bottom: 16px;"></div>
+        <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 20px;">
+            <div class="skeleton" style="height: 70px; border-radius: 12px;"></div>
+            <div class="skeleton" style="height: 70px; border-radius: 12px;"></div>
+            <div class="skeleton" style="height: 70px; border-radius: 12px;"></div>
+        </div>
+        <div class="skeleton" style="height: 200px; border-radius: 16px; margin-bottom: 16px;"></div>
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+            <div class="skeleton" style="height: 150px; border-radius: 16px;"></div>
+            <div class="skeleton" style="height: 150px; border-radius: 16px;"></div>
+        </div>
+    </div>
+
     <div id="resultBox">
         <div class="result-top-bar">
             <button type="button" onclick="quayLai()" class="btn-back-compact" title="Trở về màn hình chính">
@@ -790,16 +838,18 @@
         <!-- Khung Thông Báo -->
         <div id="khuVucThongBao"></div>
 
-        <!-- Bảng Tóm Tắt Kết Quả -->
+        <!-- Bảng Tóm Tắt Kết Quả (Bổ sung đủ 6 IDs tương thích Production) -->
         <div class="summary-grid reveal-stagger">
-            <!-- Thẻ BÀI TẬP -->
-            <a href="homework.html" class="summary-card" style="text-decoration: none; cursor: pointer; border: 1px solid #BFDBFE; background: #FFFFFF; transition: all 0.3s; box-shadow: var(--shadow-card);" onmouseover="this.style.borderColor='#3B82F6'; this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#BFDBFE'; this.style.transform='none'">
+            <!-- Thẻ 1: BÀI TẬP (Click điều hướng sang Portal nộp bài) -->
+            <a href="javascript:void(0)" onclick="goToHomeworkPortal()" class="summary-card" style="text-decoration: none; cursor: pointer; border: 1px solid #BFDBFE; background: #FFFFFF; transition: all 0.3s; box-shadow: var(--shadow-card);" onmouseover="this.style.borderColor='#3B82F6'; this.style.transform='translateY(-2px)'" onmouseout="this.style.borderColor='#BFDBFE'; this.style.transform='none'">
                 <div class="summary-icon" style="background: linear-gradient(135deg, #FFD23F, #FF8C00); box-shadow: 0 0 20px rgba(255,210,63,0.4);"><i class="fa-solid fa-file-arrow-up"></i></div>
                 <div class="summary-info">
                     <span class="summary-label" style="color: #2563EB; font-weight: 700;">BÀI TẬP</span>
-                    <span style="font-size: 14px; color: #64748B; font-weight: 600; margin-top: 4px; display: block;">Bấm vào để nộp →</span>
+                    <span style="font-size: 13px; color: #64748B; font-weight: 600; margin-top: 4px; display: block;">Bấm vào để nộp →</span>
                 </div>
             </a>
+
+            <!-- Thẻ 2: TB Đầu giờ -->
             <div class="summary-card">
                 <div class="summary-icon icon-purple" style="background: linear-gradient(135deg, #3B82F6, #1D4ED8); box-shadow: 0 0 20px rgba(59,130,246,0.3);"><i class="fa-solid fa-graduation-cap"></i></div>
                 <div class="summary-info">
@@ -808,6 +858,8 @@
                     <div id="badgeDauGioContainer" style="margin-top: 6px;"></div>
                 </div>
             </div>
+
+            <!-- Thẻ 3: TB Định kì -->
             <div class="summary-card">
                 <div class="summary-icon" style="background: linear-gradient(135deg, #FFD23F, #FF8C00); box-shadow: 0 0 20px rgba(255,210,63,0.4);"><i class="fa-solid fa-award"></i></div>
                 <div class="summary-info">
@@ -815,6 +867,18 @@
                     <span class="summary-val" id="valDiemDinhKi">-</span>
                     <div id="badgeDinhKiContainer" style="margin-top: 6px;"></div>
                 </div>
+            </div>
+        </div>
+
+        <!-- SO SÁNH TIẾN BỘ -->
+        <div id="progressCompare" class="progress-compare-box reveal" style="display: none;">
+            <h4 style="margin: 0 0 16px; font-size: 15px; font-weight: 700; color: var(--text-primary, #1E293B);">
+                <i class="fa-solid fa-arrow-trend-up" style="color: var(--color-primary, #3B82F6); margin-right: 6px;"></i>
+                So sánh tiến bộ học tập
+                <span id="progressCompareLabel" style="font-size: 12px; color: var(--text-secondary, #64748B); font-weight: 500; margin-left: 8px;"></span>
+            </h4>
+            <div class="progress-compare-grid" id="progressCompareGrid">
+                <!-- JS render -->
             </div>
         </div>
         
@@ -853,11 +917,20 @@
 
             <!-- Cột phải: 2 Donut charts (BTVN + Chuyên cần) -->
             <div class="chart-donuts-col">
+                <div class="donut-month-filter-wrap">
+                    <div style="display: flex; align-items: center; gap: 6px; font-size: 13px; font-weight: 700; color: var(--text-primary, #1E293B);">
+                        <i class="fa-solid fa-calendar-days" style="color: var(--color-primary, #3B82F6);"></i>
+                        <span>Kỳ đánh giá:</span>
+                    </div>
+                    <select id="studentStatsMonthFilter" class="donut-month-select" onchange="onStudentMonthFilterChange(this.value)">
+                    </select>
+                </div>
+
                 <div class="chart-box chart-donut-box">
                     <div class="chart-header" style="margin-bottom: 14px;">
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 16px;"></i>
-                            <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-primary, #1E293B);">Hoàn thành BTVN</h4>
+                            <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-primary, #1E293B);">Hoàn thành BTVN <span id="btvnMonthBadge" style="font-size: 11.5px; font-weight: 600; color: #10B981; margin-left: 4px;"></span></h4>
                         </div>
                     </div>
                     <div class="donut-wrapper">
@@ -879,7 +952,7 @@
                     <div class="chart-header" style="margin-bottom: 14px;">
                         <div style="display: flex; align-items: center; gap: 8px;">
                             <i class="fa-solid fa-user-check" style="color: #3B82F6; font-size: 16px;"></i>
-                            <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-primary, #1E293B);">Chuyên cần</h4>
+                            <h4 style="margin: 0; font-size: 14px; font-weight: 700; color: var(--text-primary, #1E293B);">Chuyên cần <span id="chuyenCanMonthBadge" style="font-size: 11.5px; font-weight: 600; color: #3B82F6; margin-left: 4px;"></span></h4>
                         </div>
                     </div>
                     <div class="donut-wrapper">
@@ -898,7 +971,8 @@
                 </div>
             </div>
         </div>
-        
+
+
         <!-- Lịch sử học tập & Nhận xét chi tiết (Nhật ký các buổi học) -->
         <div class="schedule-section reveal" style="margin-top: 25px; margin-bottom: 30px;">
             <h3 style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px;">
@@ -940,78 +1014,83 @@
     <div class="star twinkle-1" style="top: 70%; right: 15%; width: 3px; height: 3px;"></div>
     <div class="star twinkle-2" style="top: 85%; left: 30%; width: 2px; height: 2px;"></div>
 
+    <!-- Thư viện Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <!-- Core API kết nối Supabase và Apps Script -->
     <script src="js/demo-data.js"></script>
-    <script src="js/api.js?v=3.0.0"></script>
-    <script src="js/student.js?v=3.0.0"></script>
+    <script src="js/api.js?v=3.0.1"></script>
+    <!-- Logic hiển thị Học sinh -->
+    <script src="js/student.js?v=3.0.2"></script>
     <script>
+        // Khởi động trang và nạp dữ liệu thật từ Session hoặc gọi API đăng nhập lại
         window.addEventListener('DOMContentLoaded', () => {
+            var data = null;
             var dataStr = sessionStorage.getItem('dashboardData') || localStorage.getItem('dashboardData');
             var role = sessionStorage.getItem('userRole') || localStorage.getItem('userRole');
-            var data = null;
+            var phone = sessionStorage.getItem('userPhone') || localStorage.getItem('userPhone');
+
             try {
                 if (dataStr) data = JSON.parse(dataStr);
-            } catch(e) {}
-
-            if (!data) {
-                // Tự động nạp dữ liệu mẫu của học sinh (Lê Minh Thư) khi mở trực tiếp
-                var store = getGiaSuDemoStore();
-                var s = store.students[1] || store.students[0];
-                var formattedLogs = (s.logs || []).map((l, idx) => ({
-                    rowIndex: idx + 1,
-                    tuan: l.tuan || (idx + 1),
-                    ngay: l.ngay,
-                    mon: s.subject,
-                    noiDung: l.topic || l.noiDung || "Luyện tập chuyên đề",
-                    danhGiaBTVN: l.btvn || l.danhGiaBTVN || "Hoàn thành",
-                    btvn: l.btvn || l.danhGiaBTVN || "Hoàn thành",
-                    diemDauGio: l.diemDG || l.diemDauGio || "9.0",
-                    diemDinhKi: l.diemDK || l.diemDinhKi || "9.5",
-                    nhanXet: l.nhanXet || "Tiếp thu bài nhanh.",
-                    trangThai: l.chuyenCan || l.trangThai || "Có mặt"
-                }));
-                data = {
-                    timThay: true,
-                    tenHocSinh: s.name,
-                    sdt: s.phone,
-                    lop: s.classLevel + ' - ' + s.subject,
-                    giaSu: s.tutorName,
-                    thongBaoHocSinh: "Chúc mừng em đạt kết quả xuất sắc trong các buổi học vừa qua!",
-                    lichSuHocTap: formattedLogs,
-                    danhSachNhatKy: formattedLogs,
-                    danhSachBaiTap: (store.homework || []).map(h => ({
-                        mon: s.subject || "Gia sư",
-                        tenBai: h.title,
-                        link: h.file || ""
-                    })),
-                    danhSachHuyChuong: []
-                };
-                sessionStorage.setItem('dashboardData', JSON.stringify(data));
-                sessionStorage.setItem('userRole', 'student');
-                sessionStorage.setItem('userPhone', s.phone);
+            } catch (e) {
+                console.error("Lỗi parse dashboardData:", e);
             }
-            renderStudentView(data);
+
+            if (data && role === 'student') {
+                renderStudentView(data);
+            } else if (!phone) {
+                // Không có phiên đăng nhập -> chuyển về màn hình đăng nhập học sinh
+                window.location.href = 'student-login.html';
+                return;
+            }
+
+            // Đồng bộ dữ liệu mới nhất từ backend nếu có số điện thoại
+            if (phone && typeof google !== 'undefined' && google.script && google.script.run && google.script.run.loginSystem) {
+                google.script.run.withSuccessHandler(function(res) {
+                    if (res && res.role === 'student' && res.data && res.data.timThay) {
+                        sessionStorage.setItem('userRole', 'student');
+                        sessionStorage.setItem('dashboardData', JSON.stringify(res.data));
+                        renderStudentView(res.data);
+                    }
+                }).loginSystem(phone, '');
+            }
         });
+
+        // Hàm điều hướng sang trang Bài tập của học sinh
+        function goToHomeworkPortal() {
+            var phone = sessionStorage.getItem('userPhone') || localStorage.getItem('userPhone') || '';
+            if (phone) {
+                window.location.href = 'homework.html?code=' + encodeURIComponent(phone);
+            } else {
+                window.location.href = 'homework.html?new=1';
+            }
+        }
     </script>
+
     <!-- PWA Install Script -->
     <script src="js/pwa-install.js"></script>
+
     <!-- Mobile Nav Script -->
     <script>
         function toggleMobileNav() {
             var dd = document.getElementById('mobileNavDropdown');
             var icon = document.getElementById('hamburgerIcon');
+            if (!dd) return;
             var isOpen = dd.classList.contains('open');
             dd.classList.toggle('open', !isOpen);
-            icon.className = isOpen ? 'fa-solid fa-bars' : 'fa-solid fa-xmark';
+            if (icon) {
+                icon.className = isOpen ? 'fa-solid fa-bars' : 'fa-solid fa-xmark';
+            }
         }
+
         document.addEventListener('click', function(e) {
             if (!e.target.closest('#hamburgerBtn') && !e.target.closest('#mobileNavDropdown')) {
                 var dd = document.getElementById('mobileNavDropdown');
                 var icon = document.getElementById('hamburgerIcon');
                 if (dd) { dd.classList.remove('open'); }
-                if (icon) icon.className = 'fa-solid fa-bars';
+                if (icon) { icon.className = 'fa-solid fa-bars'; }
             }
         });
+
         (function() {
             var path = window.location.pathname.split('/').pop() || 'index.html';
             var map = {
@@ -1019,14 +1098,17 @@
                 'student-login.html': 'mobileStudent',
                 'student-dashboard.html': 'mobileStudent',
                 'homework.html': 'mobileHomework',
-                'tutor-login.html': 'mobileTutor',
+                'tutor-login.html': 'mobileTutor'
             };
             var id = map[path];
-            if (id) { var el = document.getElementById(id); if (el) el.classList.add('active'); }
+            if (id) {
+                var el = document.getElementById(id);
+                if (el) el.classList.add('active');
+            }
         })();
     </script>
 
-    <!-- Phase 19: Scroll Animation Engine -->
-    <script src="js/scroll-animations.js?v=20261002_scroll"></script>
+    <!-- Scroll Animation Engine -->
+    <script src="js/scroll-animations.js"></script>
 </body>
 </html>

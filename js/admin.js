@@ -490,12 +490,19 @@ var pinVerifyAction = "deleteStudent";
                                 "<td style='font-size:12px;'>" + lastActiveDisplay + "</td>" +
                                 "<td style='text-align:center;'>" + statusText + "</td>" +
                                 "<td style='text-align:center;'>" +
-                                  "<button class='btn-icon-edit' onclick='openAdminEditTutorModal(\"" + t.phone + "\")' title='Sửa/Vô hiệu hóa gia sư'><i class='fa-solid fa-pen-to-square'></i> Sửa</button>" +
+                                  "<button class='btn-icon-edit' onclick='openAdminEditTutorModal(\"" + t.phone + "\")' title='Sửa thông tin gia sư' style='margin-right:4px;'><i class='fa-solid fa-pen-to-square'></i> Sửa</button>" +
+                                   (isCurrentlyDeactivated ? 
+                                     "<button class='btn-icon-edit' onclick='quickToggleTutorStatus(\"" + t.phone + "\", \"" + t.name + "\", true)' style='background:rgba(16, 185, 129, 0.15); border:1px solid #10B981; color:#10B981;' title='Kích hoạt lại tài khoản'><i class='fa-solid fa-user-check'></i> Mở</button>" : 
+                                     "<button class='btn-icon-edit' onclick='quickToggleTutorStatus(\"" + t.phone + "\", \"" + t.name + "\", false)' style='background:rgba(245, 158, 11, 0.15); border:1px solid #F59E0B; color:#F59E0B;' title='Vô hiệu hóa tài khoản'><i class='fa-solid fa-user-slash'></i> Khóa</button>"
+                                   ) +
                                 "</td>";
                  tbody.appendChild(tr);
                  
                  // Mobile accordion view
                  var editBtn = "<button class='action-btn-hw' onclick='openAdminEditTutorModal(\"" + t.phone + "\")' style='color:#FFD23F; border-color:rgba(255,210,63,0.3); background:rgba(255,210,63,0.1); padding: 4px 14px; text-decoration: none; font-size:12px; border-radius: 20px;'><i class='fa-solid fa-pen-to-square'></i> Sửa</button>";
+                  var lockBtn = isCurrentlyDeactivated ?
+                    "<button class='action-btn-hw' onclick='quickToggleTutorStatus(\"" + t.phone + "\", \"" + t.name + "\", true)' style='color:#10B981; border-color:rgba(16,185,129,0.3); background:rgba(16,185,129,0.1); padding: 4px 14px; text-decoration: none; font-size:12px; border-radius: 20px; margin-right: 6px;'><i class='fa-solid fa-user-check'></i> Mở</button>" :
+                    "<button class='action-btn-hw' onclick='quickToggleTutorStatus(\"" + t.phone + "\", \"" + t.name + "\", false)' style='color:#F59E0B; border-color:rgba(245,158,11,0.3); background:rgba(245,158,11,0.1); padding: 4px 14px; text-decoration: none; font-size:12px; border-radius: 20px; margin-right: 6px;'><i class='fa-solid fa-user-slash'></i> Khóa</button>";
                  var mobilePayBtn = "";
                  if (isCurrentlyDeactivated) {
                      mobilePayBtn = "<span style='color:#6c757d; font-size:12px; margin-right: 8px;'>Đã khóa</span>";
@@ -519,7 +526,7 @@ var pinVerifyAction = "deleteStudent";
                  mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>Phí thuê Web</span><span class='accordion-body-val'><b style='color:#A78BFA;'>" + webFee.toLocaleString('vi-VN') + "đ</b></span></div>";
                  mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>Hoạt động cuối</span><span class='accordion-body-val'>" + lastActiveDisplay + "</span></div>";
                  mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>Trạng thái</span><span class='accordion-body-val'>" + statusText + "</span></div>";
-                 mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>Thao tác</span><span class='accordion-body-val'>" + mobilePayBtn + editBtn + "</span></div>";
+                 mobileHtml += "    <div class='accordion-body-row'><span class='accordion-body-label'>Thao tác</span><span class='accordion-body-val'>" + mobilePayBtn + lockBtn + editBtn + "</span></div>";
                  mobileHtml += "  </div>";
                  mobileHtml += "</div>";
             });
@@ -571,7 +578,7 @@ var pinVerifyAction = "deleteStudent";
             var mobileHtml = "";
             adminDataGlobal.students.forEach((st, idx) => {
                 var statusText = st.deletedDate ? "<span class='badge' style='background:rgba(239,68,68,0.1); color:#EF4444; margin-bottom:0;'>Đã xóa (" + st.deletedDate.split(" ")[0] + ")</span>" : "<span class='badge' style='background:rgba(16,185,129,0.1); color:#10B981; margin-bottom:0;'>Hoạt động</span>";
-                var tName = adminDataGlobal.tutors.find(t => t.phone === st.tutorPhone)?.name || "Chưa gán";
+                var tName = adminDataGlobal.tutors.find(t => normalizePhone(t.phone) === normalizePhone(st.tutorPhone))?.name || "Chưa gán";
                 
                 // Desktop
                 var tr = document.createElement('tr');
@@ -614,10 +621,10 @@ var pinVerifyAction = "deleteStudent";
 
         // --- Admin Modals ---
         function openAdminAccountModal() {
-            var selfData = adminDataGlobal.tutors.find(t => t.phone === currentAdminPhone);
-            document.getElementById('adminAccName').value = selfData ? selfData.name : "Quản trị viên";
-            document.getElementById('adminAccPhone').value = currentAdminPhone;
-            document.getElementById('adminAccPin').value = selfData ? selfData.pin : "";
+            var adminInfo = (adminDataGlobal && adminDataGlobal.adminInfo) ? adminDataGlobal.adminInfo : {};
+            document.getElementById('adminAccName').value = adminInfo.name || "Quản trị viên";
+            document.getElementById('adminAccPhone').value = adminInfo.phone || currentAdminPhone || "302001";
+            document.getElementById('adminAccPin').value = adminInfo.pin || sessionStorage.getItem('userPin') || "";
             document.getElementById('adminAccountModal').style.display = "flex";
         }
         function closeAdminAccountModal() {
@@ -646,7 +653,16 @@ var pinVerifyAction = "deleteStudent";
                     } else {
                         showToast("Cập nhật tài khoản Admin thành công!", "success");
                         currentAdminPhone = phone;
-                        document.getElementById('maPin').value = pin;
+                        sessionStorage.setItem('userPhone', phone);
+                        sessionStorage.setItem('userPin', pin);
+                        if (document.getElementById('maPin')) document.getElementById('maPin').value = pin;
+                        if (adminDataGlobal && adminDataGlobal.adminInfo) {
+                            adminDataGlobal.adminInfo.name = name;
+                            adminDataGlobal.adminInfo.phone = phone;
+                            adminDataGlobal.adminInfo.pin = pin;
+                        }
+                        var adminNameEl = document.getElementById('adminNameDisplay');
+                        if (adminNameEl) adminNameEl.innerText = "Xin chào, " + name;
                         closeAdminAccountModal();
                         refreshAdminDashboard();
                     }
@@ -656,7 +672,7 @@ var pinVerifyAction = "deleteStudent";
                     btn.innerText = "Cập nhật";
                     showToast("Lỗi kết nối: " + err.toString(), "error");
                 })
-                .adminCapNhatTaiKhoan(currentAdminPhone, name, phone, pin);
+                .adminCapNhatTaiKhoanAdmin(currentAdminPhone, name, phone, pin);
         }
 
         // Admin Edit Tutor Modal
@@ -675,7 +691,7 @@ var pinVerifyAction = "deleteStudent";
         }
         
         function openAdminEditTutorModal(phone) {
-            var tutor = adminDataGlobal.tutors.find(t => t.phone === phone);
+            var tutor = (adminDataGlobal && adminDataGlobal.tutors) ? adminDataGlobal.tutors.find(t => t.phone === phone || normalizePhone(t.phone) === normalizePhone(phone)) : null;
             if (!tutor) return;
             
             document.getElementById('adminTutorModalTitle').innerHTML = '<i class="fa-solid fa-chalkboard-user"></i> Sửa Thông Tin Gia Sư';
@@ -747,12 +763,14 @@ var pinVerifyAction = "deleteStudent";
                     btn.innerText = "Lưu lại";
                     showToast("Lỗi kết nối: " + err.toString(), "error");
                 })
-                .adminLuuGiaSur(oldPhone, name, phone, pin, qrUrl, createdDate, nextBillingDate);
+                .adminLuuGiaSu(oldPhone, name, phone, pin, qrUrl, createdDate, nextBillingDate);
         }
 
         // Xóa/Khôi phục & Thùng rác Gia sư JS Controllers
         function confirmDeleteAdminTutor() {
             pinVerifyAction = "deleteTutor";
+            var desc = document.getElementById('confirmPinModalText');
+            if (desc) desc.innerText = "Vui lòng nhập mã PIN Admin để xác nhận đưa gia sư vào thùng rác.";
             document.getElementById('confirmTutorPinInput').value = "";
             document.getElementById('pinConfirmModal').style.display = "flex";
         }
@@ -763,11 +781,19 @@ var pinVerifyAction = "deleteStudent";
 
         function submitPinVerifyForDelete() {
             var inputPin = document.getElementById('confirmTutorPinInput').value.trim();
-            var adminPin = document.getElementById('maPin').value.trim();
-            if (inputPin === adminPin) {
+            var adminPin = (document.getElementById('maPin') ? document.getElementById('maPin').value.trim() : "") || sessionStorage.getItem('userPin') || (adminDataGlobal && adminDataGlobal.adminInfo ? adminDataGlobal.adminInfo.pin : "") || "";
+            var currentAdminTutor = (adminDataGlobal && adminDataGlobal.tutors) ? adminDataGlobal.tutors.find(t => t.phone === currentAdminPhone) : null;
+            var validPin = adminPin || (currentAdminTutor ? currentAdminTutor.pin : "");
+            
+            if (inputPin && (inputPin === validPin || inputPin === adminPin || (currentAdminTutor && inputPin === currentAdminTutor.pin))) {
                 closePinConfirmModal();
-                closeAdminEditTutorModal();
-                deleteTutorBackend();
+                if (pinVerifyAction === "deleteTutor") {
+                    closeAdminEditTutorModal();
+                    deleteTutorBackend();
+                } else if (pinVerifyAction === "deleteStudent") {
+                    closeAdminEditStudentModal();
+                    deleteStudentBackend();
+                }
             } else {
                 showToast("Mã PIN xác thực của Admin không chính xác!", "error");
             }
@@ -864,6 +890,8 @@ var pinVerifyAction = "deleteStudent";
 
         // Admin Edit Student Modal
         function openAdminAddStudentModal() {
+            var btnDel = document.getElementById('btnDeleteAdminStudent');
+            if (btnDel) btnDel.style.display = "none";
             document.getElementById('adminStudentModalTitle').innerHTML = '<i class="fa-solid fa-user-graduate"></i> Thêm Học Sinh Mới';
             document.getElementById('adminStudentOldPhone').value = "";
             document.getElementById('adminStudentParentName').value = "";
@@ -876,12 +904,14 @@ var pinVerifyAction = "deleteStudent";
         }
 
         function openAdminEditStudentModal(phone, parentName, name, tuition, tutorPhone) {
+            var btnDel = document.getElementById('btnDeleteAdminStudent');
+            if (btnDel) btnDel.style.display = "flex";
             document.getElementById('adminStudentModalTitle').innerHTML = '<i class="fa-solid fa-user-graduate"></i> Sửa Thông Tin Học Sinh';
             document.getElementById('adminStudentOldPhone').value = phone;
             document.getElementById('adminStudentParentName').value = parentName;
             document.getElementById('adminStudentName').value = name;
             document.getElementById('adminStudentPhone').value = phone;
-            document.getElementById('adminStudentTuition').value = tuition;
+            document.getElementById('adminStudentTuition').value = tuition ? formatNumberWithDots(tuition) : "";
             
             populateAdminTutorSelect(tutorPhone);
             document.getElementById('adminEditStudentModal').style.display = "flex";
@@ -905,6 +935,36 @@ var pinVerifyAction = "deleteStudent";
                 }
                 select.appendChild(opt);
             });
+        }
+
+        
+        function confirmDeleteAdminStudent() {
+            pinVerifyAction = "deleteStudent";
+            var desc = document.getElementById('confirmPinModalText');
+            if (desc) desc.innerText = "Vui lòng nhập mã PIN Admin để xác nhận đưa học sinh vào thùng rác.";
+            document.getElementById('confirmTutorPinInput').value = "";
+            document.getElementById('pinConfirmModal').style.display = "flex";
+        }
+
+        function deleteStudentBackend() {
+             var phone = document.getElementById('adminStudentOldPhone').value;
+             var name = document.getElementById('adminStudentName').value;
+             
+             showCustomConfirm("Xác nhận đưa học sinh " + name + " vào thùng rác? Học sinh sẽ ẩn khỏi danh sách và sẽ bị xóa vĩnh viễn sau 10 ngày.", function() {
+                 google.script.run
+                     .withSuccessHandler(function(res) {
+                         if (res.error) {
+                             showToast("Lỗi: " + res.error, "error");
+                         } else {
+                             showToast("Đã đưa học sinh vào thùng rác thành công!", "success");
+                             refreshAdminDashboard();
+                         }
+                     })
+                     .withFailureHandler(function(err) {
+                         showToast("Lỗi kết nối hoặc hệ thống: " + err.toString(), "error");
+                     })
+                     .adminXoaHocSinhTamThoi(phone);
+             });
         }
 
         function saveAdminStudent() {
@@ -941,7 +1001,7 @@ var pinVerifyAction = "deleteStudent";
                     btn.innerText = "Lưu lại";
                     showToast("Lỗi kết nối: " + err.toString(), "error");
                 })
-                .adminLuuHocSinh(oldPhone, parentName, studentName, phone, parseFloat(tuition) || 0, tutorPhone);
+                .adminLuuHocSinh(oldPhone, parentName, studentName, phone, parseFloat(String(tuition).replace(/\D/g, '')) || 0, tutorPhone);
         }
 
         function refreshAdminDashboard(silent) {
@@ -1097,13 +1157,25 @@ var pinVerifyAction = "deleteStudent";
         // --- Cải tiến Admin quản lý Phí thuê Web và Marquee ---
         function confirmQuickPaid(phone, name) {
             showCustomConfirm("Xác nhận đã nhận tiền thuê Web của gia sư " + name + " cho chu kỳ này và tự động gia hạn thêm 1 tháng?", function() {
-                showToast("Đang gửi xác nhận lên Google Sheets...", "info");
+                showToast("Đang cập nhật lên hệ thống...", "info");
                 google.script.run
                     .withSuccessHandler(function(res) {
                         if (res.error) {
                             showToast("Lỗi: " + res.error, "error");
                         } else {
                             showToast("Xác nhận đóng phí thuê web và gia hạn thành công!", "success");
+                            
+                            // Cập nhật ngay trên cache cục bộ để giao diện đổi tức thì
+                            if (adminDataGlobal && adminDataGlobal.tutors) {
+                                var t = adminDataGlobal.tutors.find(x => x.phone === phone || normalizePhone(x.phone) === normalizePhone(phone));
+                                if (t) {
+                                    if (res.nextDue) t.nextBillingDate = res.nextDue;
+                                    t.status = "Hoạt động";
+                                }
+                                sessionStorage.setItem('dashboardData', JSON.stringify(adminDataGlobal));
+                                renderAdminTutorsList();
+                            }
+                            
                             refreshAdminDashboard();
                         }
                     })
@@ -1118,31 +1190,79 @@ var pinVerifyAction = "deleteStudent";
          function toggleTutorDeactivateStatus() {
              var phone = document.getElementById('adminTutorOldPhone').value;
              var name = document.getElementById('adminTutorName').value;
-             var tutor = adminDataGlobal.tutors.find(t => t.phone === phone);
+             var tutor = (adminDataGlobal && adminDataGlobal.tutors) ? adminDataGlobal.tutors.find(t => t.phone === phone || normalizePhone(t.phone) === normalizePhone(phone)) : null;
              if (!tutor) return;
              
-             var isCurrentlyDeactivated = (tutor.status === "Vô hiệu hóa");
-             var newStatus = isCurrentlyDeactivated ? "" : "Vô hiệu hóa";
-             var actionText = isCurrentlyDeactivated ? "kích hoạt lại" : "vô hiệu hóa";
+             var isCurrentlyDeactivated = (tutor.status === 'Vô hiệu hóa');
+             var newStatus = isCurrentlyDeactivated ? 'Hoạt động' : 'Vô hiệu hóa';
+             var actionText = isCurrentlyDeactivated ? 'kích hoạt lại' : 'vô hiệu hóa';
              
-             showCustomConfirm("Xác nhận " + actionText + " tài khoản gia sư " + name + "?", function() {
-                 showToast("Đang cập nhật trạng thái gia sư...", "info");
+             showCustomConfirm('Xác nhận ' + actionText + ' tài khoản gia sư ' + name + '?', function() {
+                 showToast('Đang cập nhật trạng thái gia sư...', 'info');
                  google.script.run
                      .withSuccessHandler(function(res) {
                          if (res.error) {
-                             showToast("Lỗi: " + res.error, "error");
+                             showToast('Lỗi: ' + res.error, 'error');
                          } else {
-                             showToast((isCurrentlyDeactivated ? "Kích hoạt lại" : "Vô hiệu hóa") + " tài khoản gia sư thành công!", "success");
+                             showToast((isCurrentlyDeactivated ? 'Kích hoạt lại' : 'Vô hiệu hóa') + ' tài khoản gia sư thành công!', 'success');
                              closeAdminEditTutorModal();
                              refreshAdminDashboard();
                          }
                      })
                      .withFailureHandler(function(err) {
-                         showToast("Lỗi kết nối: " + err.toString(), "error");
+                         showToast('Lỗi kết nối: ' + err.toString(), 'error');
                      })
                      .adminSetTutorStatus(phone, newStatus);
              });
          }
+
+         function quickToggleTutorStatus(phone, name, isCurrentlyDeactivated) {
+             var actionText = isCurrentlyDeactivated ? 'kích hoạt lại' : 'vô hiệu hóa';
+             var newStatus = isCurrentlyDeactivated ? 'Hoạt động' : 'Vô hiệu hóa';
+             
+             showCustomConfirm('Xác nhận ' + actionText + ' tài khoản gia sư ' + name + '?', function() {
+                 showToast('Đang cập nhật trạng thái gia sư...', 'info');
+                 google.script.run
+                     .withSuccessHandler(function(res) {
+                         if (res.error) {
+                             showToast('Lỗi: ' + res.error, 'error');
+                         } else {
+                             showToast((isCurrentlyDeactivated ? 'Kích hoạt lại' : 'Vô hiệu hóa') + ' tài khoản gia sư thành công!', 'success');
+                             refreshAdminDashboard();
+                         }
+                     })
+                     .withFailureHandler(function(err) {
+                         showToast('Lỗi kết nối: ' + err.toString(), 'error');
+                     })
+                     .adminSetTutorStatus(phone, newStatus);
+             });
+         }
+
+        
+        function clearAdminMarquee() {
+            showCustomConfirm("Bạn có chắc chắn muốn xóa dòng chữ chạy thông báo này không?", function() {
+                var input = document.getElementById('adminMarqueeInput');
+                if (input) input.value = "";
+                
+                showToast("Đang xóa thông báo...", "info");
+                google.script.run
+                    .withSuccessHandler(function(res) {
+                        if (res.error) {
+                            showToast("Lỗi: " + res.error, "error");
+                        } else {
+                            showToast("Đã xóa dòng chạy chữ thông báo thành công!", "success");
+                            if (adminDataGlobal) {
+                                adminDataGlobal.marqueeAnnouncement = "";
+                            }
+                        }
+                    })
+                    .withFailureHandler(function(err) {
+                        showToast("Lỗi hệ thống: " + err.toString(), "error");
+                    })
+                    .adminLuuMarquee("");
+            });
+        }
+        window.clearAdminMarquee = clearAdminMarquee;
 
         function saveAdminMarquee() {
             var text = document.getElementById('adminMarqueeInput').value.trim();
@@ -1177,3 +1297,4 @@ var pinVerifyAction = "deleteStudent";
                 })
                 .adminLuuMarquee(text);
         }
+        window.saveAdminMarquee = saveAdminMarquee;
