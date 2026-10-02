@@ -413,82 +413,11 @@ function renderStudentView(ketQua) {
         var allScores = dataDauGio.concat(dataDinhKi).filter(function(v) { return v !== null && !isNaN(v); });
         var minScore = allScores.length > 0 ? Math.min.apply(null, allScores) : 0;
         var maxScore = allScores.length > 0 ? Math.max.apply(null, allScores) : 10;
-        var yMin = (minScore >= 6) ? Math.max(0, Math.floor(minScore) - 2) : 0;
-        var yMax = Math.min(11, Math.max(10.2, maxScore + 0.8));
-
-        // 2. Plugin vẽ nhãn số điểm trực tiếp trên đầu mỗi nút tròn (giống nhãn 5,2tr, 3,6tr... ở Hình 1)
-        var studentTopLabelsPlugin = {
-            id: 'studentTopDataLabels',
-            afterDatasetsDraw: function(chart) {
-                var c = chart.ctx;
-                c.save();
-                c.font = '700 11px Inter, -apple-system, sans-serif';
-                c.textAlign = 'center';
-                c.textBaseline = 'bottom';
-
-                var meta0 = chart.getDatasetMeta(0);
-                var meta1 = chart.getDatasetMeta(1);
-                var isVis0 = meta0 && !meta0.hidden;
-                var isVis1 = meta1 && !meta1.hidden;
-
-                var formatScore = function(val) {
-                    if (val === null || val === undefined || isNaN(val)) return "";
-                    return (val % 1 === 0) ? String(val) : val.toFixed(1);
-                };
-
-                labels.forEach(function(lbl, idx) {
-                    var pt0 = (isVis0 && meta0.data) ? meta0.data[idx] : null;
-                    var pt1 = (isVis1 && meta1.data) ? meta1.data[idx] : null;
-                    var val0 = dataDauGio[idx];
-                    var val1 = dataDinhKi[idx];
-
-                    var has0 = (pt0 && val0 !== null && val0 !== undefined && !isNaN(val0));
-                    var has1 = (pt1 && val1 !== null && val1 !== undefined && !isNaN(val1));
-
-                    if (has0 && has1) {
-                        var str0 = formatScore(val0);
-                        var str1 = formatScore(val1);
-
-                        // Nếu 2 điểm trùng nhau hoặc khoảng cách Y quá gần (< 16px)
-                        if (val0 === val1 || Math.abs(pt0.y - pt1.y) < 16) {
-                            if (pt0.x > chart.width - 36) {
-                                // Sát mép phải: dịch nhẹ sang trái để không bị tràn
-                                c.fillStyle = '#2563EB';
-                                c.fillText(str0, pt0.x - 20, pt0.y - 8);
-                                c.fillStyle = '#94A3B8';
-                                c.fillText('/', pt0.x - 10, pt0.y - 8);
-                                c.fillStyle = '#D97706';
-                                c.fillText(str1, pt1.x, pt1.y - 8);
-                            } else {
-                                c.fillStyle = '#2563EB';
-                                c.fillText(str0, pt0.x - 13, pt0.y - 8);
-                                c.fillStyle = '#94A3B8';
-                                c.fillText('/', pt0.x, pt0.y - 8);
-                                c.fillStyle = '#D97706';
-                                c.fillText(str1, pt1.x + 13, pt1.y - 8);
-                            }
-                        } else {
-                            // Hai điểm tách biệt trên dưới rõ ràng
-                            c.fillStyle = '#2563EB';
-                            c.fillText(str0, pt0.x, pt0.y - 8);
-                            c.fillStyle = '#D97706';
-                            c.fillText(str1, pt1.x, pt1.y - 8);
-                        }
-                    } else if (has0) {
-                        c.fillStyle = '#2563EB';
-                        c.fillText(formatScore(val0), pt0.x, pt0.y - 8);
-                    } else if (has1) {
-                        c.fillStyle = '#D97706';
-                        c.fillText(formatScore(val1), pt1.x, pt1.y - 8);
-                    }
-                });
-                c.restore();
-            }
-        };
+        var yMin = (minScore >= 6) ? Math.max(0, Math.floor(minScore) - 1) : 0;
+        var yMax = Math.min(10.5, Math.max(10, maxScore + 0.5));
 
         currentChartInstance = new Chart(ctx, {
             type: 'line',
-            plugins: [studentTopLabelsPlugin],
             data: {
                 labels: labels,
                 datasets: [
@@ -531,7 +460,7 @@ function renderStudentView(ketQua) {
                     padding: {
                         left: 16,
                         right: 28,
-                        top: 24,
+                        top: 12,
                         bottom: 6
                     }
                 },
