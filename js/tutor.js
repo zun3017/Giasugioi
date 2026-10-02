@@ -1250,7 +1250,7 @@ function renderTutorStudentsGrid() {
         var sName = st.name.trim();
         var stStyle = (typeof getStudentStyle === 'function') 
             ? getStudentStyle(sName) 
-            : { bg: "rgba(142, 77, 255, 0.15)", border: "#8E4DFF", text: "#C4B5FD" };
+            : { bg: "var(--nav-active-bg)", border: "var(--color-primary)", text: "var(--color-primary)" };
         var initial = getStudentInitial(sName);
 
         // Schedule summary
@@ -1474,7 +1474,7 @@ function renderTutorTuitionSection() {
         var sName = st.name.trim();
         var stStyle = (typeof getStudentStyle === 'function') 
             ? getStudentStyle(sName) 
-            : { bg: "rgba(142, 77, 255, 0.15)", border: "#8E4DFF", text: "#C4B5FD" };
+            : { bg: "var(--nav-active-bg)", border: "var(--color-primary)", text: "var(--color-primary)" };
 
         // Count sessions in selected month
         var sessionCount = 0;
@@ -3493,7 +3493,7 @@ function previewTutorReport() {
             var log = it.log;
             var stStyle = (typeof getStudentStyle === 'function') 
                 ? getStudentStyle(it.studentName) 
-                : { bg: "rgba(142, 77, 255, 0.15)", border: "#8E4DFF", text: "#C4B5FD" };
+                : { bg: "var(--nav-active-bg)", border: "var(--color-primary)", text: "var(--color-primary)" };
 
             var dateWithDay = fmtFn(log.ngay);
             var btvnBadge = (typeof getDiaryBtvnBadge === 'function') 

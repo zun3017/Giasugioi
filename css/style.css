@@ -3234,8 +3234,8 @@
 
         .student-profile-card {
             background: var(--glass-bg, var(--bg-card));
-            border: 1px solid var(--glass-border, var(--border-card));
-            border-radius: 18px;
+            border: 1.5px solid rgba(var(--color-primary-rgb), 0.32);
+            border-radius: 20px;
             padding: 18px 20px;
             display: flex;
             flex-direction: column;
@@ -3246,6 +3246,7 @@
             transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
             backdrop-filter: blur(var(--glass-blur, 18px));
             -webkit-backdrop-filter: blur(var(--glass-blur, 18px));
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.04), 0 2px 6px rgba(var(--color-primary-rgb), 0.08);
         }
 
         .student-profile-card:hover {
@@ -3256,7 +3257,7 @@
 
         .student-profile-card.active {
             border-color: var(--color-primary);
-            box-shadow: 0 0 0 2px rgba(var(--color-primary-rgb), 0.25), var(--shadow-card);
+            box-shadow: 0 0 0 2.5px rgba(var(--color-primary-rgb), 0.35), var(--shadow-card);
             background: var(--bg-card-alt);
         }
 
@@ -3290,7 +3291,10 @@
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+            box-shadow: 0 2px 8px rgba(var(--color-primary-rgb), 0.2);
+            background: var(--nav-active-bg);
+            border: 2px solid var(--color-primary);
+            color: var(--color-primary);
         }
 
         .student-card-info {
@@ -3321,9 +3325,9 @@
         }
 
         .student-card-schedule {
-            background: var(--glass-inner, rgba(255, 255, 255, 0.35));
-            border: 1px solid var(--glass-inner-border, rgba(255, 255, 255, 0.5));
-            border-radius: 10px;
+            background: rgba(var(--color-primary-rgb), 0.05);
+            border: 1px solid rgba(var(--color-primary-rgb), 0.2);
+            border-radius: 12px;
             padding: 7px 12px;
             font-size: 12px;
             color: var(--text-primary);
@@ -3352,9 +3356,9 @@
         }
 
         .card-metric-box {
-            background: var(--glass-inner, rgba(255, 255, 255, 0.35));
-            border: 1px solid var(--glass-inner-border, rgba(255, 255, 255, 0.5));
-            border-radius: 10px;
+            background: rgba(var(--color-primary-rgb), 0.04);
+            border: 1px solid rgba(var(--color-primary-rgb), 0.18);
+            border-radius: 12px;
             padding: 6px 3px;
         }
 
@@ -3382,12 +3386,12 @@
         .btn-card-detail {
             flex: 1;
             background: var(--nav-active-bg);
-            border: 1px solid var(--border-color);
-            color: var(--text-heading);
+            border: 1px solid rgba(var(--color-primary-rgb), 0.35);
+            color: var(--color-primary);
             font-size: 12px;
             font-weight: 700;
-            padding: 7px 10px;
-            border-radius: 8px;
+            padding: 8px 12px;
+            border-radius: 10px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -3399,16 +3403,17 @@
         .btn-card-detail:hover {
             background: var(--btn-bg);
             color: var(--btn-text);
+            border-color: var(--color-primary);
         }
 
         .btn-card-diary {
-            background: var(--bg-input);
-            border: 1px solid var(--border-color);
+            background: var(--bg-card);
+            border: 1px solid rgba(var(--color-primary-rgb), 0.25);
             color: var(--text-primary);
             font-size: 12px;
             font-weight: 600;
-            padding: 7px 12px;
-            border-radius: 8px;
+            padding: 8px 14px;
+            border-radius: 10px;
             cursor: pointer;
             display: inline-flex;
             align-items: center;
@@ -3419,7 +3424,7 @@
 
         .btn-card-diary:hover {
             background: var(--nav-hover-bg);
-            border-color: var(--border-color);
+            border-color: var(--color-primary);
         }
 
         /* Schedule Day Pills for Add/Edit Student */
