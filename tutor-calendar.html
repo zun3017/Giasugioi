@@ -72,7 +72,13 @@
         }
 
         // Tự động nhận diện khi được nhúng trong Dashboard (iframe / ?embedded=1)
-        if (window.self !== window.top || window.location.search.indexOf('embedded=1') !== -1) {
+        var isEmbedded = false;
+        try {
+          isEmbedded = (window.self !== window.top) || (window.location.search.indexOf('embedded=1') !== -1);
+        } catch(e) {
+          isEmbedded = (window.location.search.indexOf('embedded=1') !== -1);
+        }
+        if (isEmbedded) {
           document.documentElement.classList.add('is-embedded-calendar');
           window.addEventListener('DOMContentLoaded', function() {
             document.body.classList.add('is-embedded-calendar');
@@ -2752,25 +2758,51 @@
             }
         ];
 
+        // Safe helpers for cross-origin / file:/// parent window access
+        function getSafeParentStore() {
+            try {
+                if (window.parent && window.parent !== window && typeof window.parent.getGiaSuDemoStore === 'function') {
+                    return window.parent.getGiaSuDemoStore();
+                }
+            } catch(e) {}
+            return null;
+        }
+
+        function getSafeParentTutorData() {
+            try {
+                if (window.parent && window.parent !== window && window.parent.tutorDataGlobal) {
+                    return window.parent.tutorDataGlobal;
+                }
+            } catch(e) {}
+            return null;
+        }
+
+        function safeSaveParentStore(store) {
+            try {
+                if (window.parent && window.parent !== window && typeof window.parent.saveDemoStore === 'function') {
+                    window.parent.saveDemoStore(store);
+                }
+            } catch(e) {}
+        }
+
         // Hàm nạp thời khóa biểu từ Store demo hoặc Backend Sheets
         function loadTutorScheduleFromBackend(onSuccess) {
             var store = (typeof getGiaSuDemoStore === 'function') ? getGiaSuDemoStore() : null;
-            if (!store && window.parent && typeof window.parent.getGiaSuDemoStore === 'function') {
-                try { store = window.parent.getGiaSuDemoStore(); } catch(e) {}
+            if (!store) {
+                store = getSafeParentStore();
             }
             if (!tutorDataGlobal && store && store.students) {
                 tutorDataGlobal = { students: store.students };
-            } else if (!tutorDataGlobal && window.parent && window.parent.tutorDataGlobal) {
-                tutorDataGlobal = window.parent.tutorDataGlobal;
+            } else if (!tutorDataGlobal) {
+                var pTutorData = getSafeParentTutorData();
+                if (pTutorData) tutorDataGlobal = pTutorData;
             }
 
             if (isDemoMode) {
                 var sched = (store && store.tutorSchedule && store.tutorSchedule.length > 0) ? store.tutorSchedule : null;
-                if (!sched && window.parent && window.parent.getGiaSuDemoStore) {
-                    try {
-                        var pStore = window.parent.getGiaSuDemoStore();
-                        if (pStore && pStore.tutorSchedule && pStore.tutorSchedule.length > 0) sched = pStore.tutorSchedule;
-                    } catch(e) {}
+                if (!sched) {
+                    var pStore = getSafeParentStore();
+                    if (pStore && pStore.tutorSchedule && pStore.tutorSchedule.length > 0) sched = pStore.tutorSchedule;
                 }
 
                 if (sched && sched.length > 0) {
@@ -2874,8 +2906,8 @@
             if (isDemoMode) {
                 try {
                     var store = typeof getGiaSuDemoStore === 'function' ? getGiaSuDemoStore() : null;
-                    if (!store && window.parent && typeof window.parent.getGiaSuDemoStore === 'function') {
-                        store = window.parent.getGiaSuDemoStore();
+                    if (!store) {
+                        store = getSafeParentStore();
                     }
                     if (store && store.tutorSchedule) {
                         let row = tutorScheduleSheetData.find(r => r.studentName === studentName);
@@ -2887,7 +2919,7 @@
                                 store.tutorSchedule.push(Object.assign({}, row));
                             }
                             if (typeof saveDemoStore === 'function') saveDemoStore(store);
-                            if (window.parent && typeof window.parent.saveDemoStore === 'function') window.parent.saveDemoStore(store);
+                            safeSaveParentStore(store);
                         }
                     }
                 } catch(e) {}
