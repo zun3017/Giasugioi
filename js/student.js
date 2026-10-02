@@ -615,14 +615,15 @@ function renderStudentView(ketQua) {
         htmlLichSu += "<div class='table-wrapper desktop-table-view'>";
         htmlLichSu += "<table class='history-table'>";
         htmlLichSu += "<thead><tr>" +
-            "<th style='width: 65px; text-align: center;'>Tuần</th>" +
-            "<th style='width: 110px;'>Ngày dạy</th>" +
-            "<th style='width: 120px;'>Môn</th>" +
-            "<th>Nội dung</th>" +
-            "<th style='width: 140px;'>BTVN</th>" +
-            "<th style='width: 90px; text-align: center;'>Đầu giờ</th>" +
-            "<th style='width: 90px; text-align: center;'>Định kì</th>" +
-            "<th style='width: 110px; text-align: center;'>Chuyên cần</th>" +
+            "<th style='width: 55px; text-align: center;'>Tuần</th>" +
+            "<th style='width: 130px;'>Ngày dạy</th>" +
+            "<th style='width: 75px;'>Môn</th>" +
+            "<th style='min-width: 170px;'>Nội dung</th>" +
+            "<th style='min-width: 250px;'>Nhận xét của gia sư</th>" +
+            "<th style='width: 135px; text-align: center;'>Đánh giá BTVN</th>" +
+            "<th style='width: 95px; text-align: center;'>KT Đầu giờ</th>" +
+            "<th style='width: 95px; text-align: center;'>KT Định kì</th>" +
+            "<th style='width: 105px; text-align: center;'>Trạng thái</th>" +
             "</tr></thead><tbody>";
 
         // 2. Mobile View (Thẻ Accordion Cards y hệt Gia sư)
@@ -633,7 +634,6 @@ function renderStudentView(ketQua) {
             var isAbsent = isAbsentSession(item);
             var isHidden = (idx >= 5);
             var hiddenAttr = isHidden ? ' style="display:none;" class="history-row hidden-row' + (isAbsent ? ' row-absent' : '') + '"' : ' class="history-row' + (isAbsent ? ' row-absent' : '') + '"';
-            var detailHiddenAttr = isHidden ? ' style="display:none;" class="history-detail-row hidden-row"' : ' style="display:table-row;" class="history-detail-row"';
             
             var btvnValue = (item.danhGiaBTVN || item.btvn || "");
             var diemDau = item.diemDauGio !== undefined && item.diemDauGio !== null ? item.diemDauGio : item.diemDG;
@@ -645,20 +645,32 @@ function renderStudentView(ketQua) {
                 ? window.formatDateWithDayOfWeek(item.ngay) 
                 : (typeof formatDateWithDayOfWeek === 'function' ? formatDateWithDayOfWeek(item.ngay) : (item.ngay || "—"));
 
+            var commentHtml = (item.nhanXet && String(item.nhanXet).trim() !== "")
+                ? '<span style="color: var(--text-primary); font-style: italic;"><i class="fa-solid fa-comment-dots" style="color: #3B82F6; font-size: 12px; margin-right: 5px;"></i>' + item.nhanXet + '</span>'
+                : '<span style="color: var(--text-muted); font-style: italic;">—</span>';
+
+            var ktDauGioText = (diemDau !== undefined && diemDau !== null && String(diemDau).trim() !== "" && String(diemDau).trim() !== "-")
+                ? diemDau
+                : (isAbsent ? 'Không có' : '—');
+            var ktDinhKiText = (diemDinh !== undefined && diemDinh !== null && String(diemDinh).trim() !== "" && String(diemDinh).trim() !== "-")
+                ? diemDinh
+                : (isAbsent ? 'Không có' : '—');
+
+            var ktDauGioColor = (ktDauGioText === 'Không có' || ktDauGioText === '—') ? 'var(--text-secondary)' : scoreColor(diemDau);
+            var ktDinhKiColor = (ktDinhKiText === 'Không có' || ktDinhKiText === '—') ? 'var(--text-secondary)' : scoreColor(diemDinh);
+
             // --- Desktop Row ---
             htmlLichSu +=
                 '<tr' + hiddenAttr + '>' +
                     '<td style="text-align: center; font-weight: 700; color: var(--text-primary);">' + tuanVal + '</td>' +
-                    '<td><span class="date-badge">' + rawDateShort + '</span></td>' +
-                    '<td><span class="subj-chip">' + (item.mon || lopHoc || '-') + '</span></td>' +
+                    '<td style="white-space: nowrap; color: var(--text-primary); font-weight: 500;">' + rawDateWithDay + '</td>' +
+                    '<td>' + (item.mon || lopHoc ? ('<span class="subj-chip">' + (item.mon || lopHoc) + '</span>') : '') + '</td>' +
                     '<td class="cell-noidung">' + (item.noiDung || item.topic || '-') + '</td>' +
-                    '<td>' + getBtvnBadge(btvnValue) + '</td>' +
-                    '<td style="text-align: center; font-weight: 700; font-size: 15px; color:' + scoreColor(diemDau) + ';">' + (diemDau !== undefined && diemDau !== null && diemDau !== '' ? diemDau : '—') + '</td>' +
-                    '<td style="text-align: center; font-weight: 700; font-size: 15px; color:' + scoreColor(diemDinh) + ';">' + (diemDinh !== undefined && diemDinh !== null && diemDinh !== '' ? diemDinh : '—') + '</td>' +
+                    '<td class="cell-nhanxet">' + commentHtml + '</td>' +
+                    '<td style="text-align: center;">' + getBtvnBadge(btvnValue) + '</td>' +
+                    '<td style="text-align: center; font-weight: 700; font-size: 14px; color:' + ktDauGioColor + ';">' + ktDauGioText + '</td>' +
+                    '<td style="text-align: center; font-weight: 700; font-size: 14px; color:' + ktDinhKiColor + ';">' + ktDinhKiText + '</td>' +
                     '<td style="text-align: center;">' + getStatusBadge(item.trangThai || item.chuyenCan, isAbsent) + '</td>' +
-                '</tr>' +
-                '<tr' + detailHiddenAttr + '>' +
-                    '<td colspan="8"><div class="detail-content"><i class="fa-solid fa-comment-dots" style="color:#3B82F6;margin-right:6px;"></i><strong>Nhận xét:</strong> ' + (item.nhanXet || 'Chưa có nhận xét cho buổi học này.') + '</div></td>' +
                 '</tr>';
 
             // --- Mobile Accordion Card (Theo đúng mẫu ảnh media_1790923332447.png) ---
@@ -932,11 +944,6 @@ function hienThemBuoi() {
     for (var i = 0; i < hiddenRows.length; i++) {
         if (showCount < 5) {
             hiddenRows[i].style.display = '';
-            var nextDetail = hiddenRows[i].nextElementSibling;
-            if (nextDetail && nextDetail.classList.contains('history-detail-row')) {
-                nextDetail.style.display = 'table-row';
-                nextDetail.classList.remove('hidden-row');
-            }
             hiddenRows[i].classList.remove('hidden-row');
             showCount++;
         } else {
