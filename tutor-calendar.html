@@ -2275,6 +2275,31 @@
             background: var(--color-primary) !important;
         }
 
+        /* ===== PHASE 17 — CALENDAR MOBILE ===== */
+        @media (max-width: 768px) {
+          .fc-toolbar { flex-direction: column !important; gap: 8px !important; align-items: flex-start !important; }
+          .fc-toolbar-title { font-size: 16px !important; }
+          .fc-button { font-size: 12px !important; padding: 7px 12px !important; min-height: 38px !important; }
+          .fc-button-group .fc-button { padding: 7px 10px !important; }
+
+          /* List view — đẹp nhất mobile */
+          .fc-list-day-cushion {
+            background: #EFF6FF !important; color: #2563EB !important;
+            font-size: 12px !important; font-weight: 700 !important;
+            padding: 8px 14px !important;
+          }
+          .fc-list-event-title { font-size: 13px !important; }
+          .fc-list-event { cursor: pointer; }
+          .fc-list-event:hover td { background: #F8FAFF !important; }
+          .fc-list-empty-cushion { font-size: 13px !important; }
+
+          /* Main calendar area padding */
+          .fc { padding: 0 !important; }
+        }
+        @media (max-width: 480px) {
+          .fc-toolbar-title { font-size: 14px !important; }
+          .fc-button { font-size: 11px !important; padding: 6px 8px !important; }
+        }
     </style>
 </head>
 <body>
@@ -3649,13 +3674,13 @@
             }
 
             var calendarEl = document.getElementById('calendar');
-            const initialViewType = window.innerWidth <= 768 ? 'dayGridMonth' : 'timeGridWeek';
+            const initialViewType = window.innerWidth <= 768 ? 'listWeek' : 'timeGridWeek';
 
             calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: initialViewType,
                 windowResize: function(arg) {
                     if (window.innerWidth <= 768) {
-                        calendar.changeView('dayGridMonth');
+                        calendar.changeView('listWeek');
                     } else {
                         calendar.changeView('timeGridWeek');
                     }
