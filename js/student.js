@@ -320,24 +320,20 @@ function renderStudentView(ketQua) {
     var elBuoiNghi = document.getElementById('valBuoiNghi');
     if (elBuoiNghi) elBuoiNghi.innerText = buoiNghiThangNay + " buổi";
 
-    // Sinh huy chương vinh danh động cho 2 loại điểm
-    function createScoreBadgeHtml(scoreNum) {
-        if (scoreNum === null) return "";
-        if (scoreNum >= 9.0) {
-            return '<div class="medal-badge medal-academic"><i class="fa-solid fa-award"></i> Học giỏi 🎖️</div>';
-        } else if (scoreNum >= 8.0) {
-            return '<div class="medal-badge medal-silver"><i class="fa-solid fa-award"></i> Học khá 🎖️</div>';
-        } else if (scoreNum >= 7.0) {
-            return '<div class="medal-badge medal-bronze"><i class="fa-solid fa-award"></i> Học TB 🎖️</div>';
-        } else {
-            return '<div class="medal-badge" style="background: rgba(255, 51, 51, 0.15); border: 1px solid #FF3333; color: #FF3333; text-shadow: 0 0 5px rgba(255, 51, 51, 0.3);"><i class="fa-solid fa-triangle-exclamation"></i> Học yếu</div>';
-        }
+    // Phân loại mức điểm đánh giá
+    function scoreLevelBadge(val) {
+        var n = parseFloat(val);
+        if (isNaN(n) || val === '-' || val === '' || val === null) return '';
+        if (n >= 9.0) return '<span class="score-badge-xs badge-excellent">Xuất sắc ⭐</span>';
+        if (n >= 7.0) return '<span class="score-badge-xs badge-good">Giỏi 👍</span>';
+        if (n >= 5.0) return '<span class="score-badge-xs badge-average">Khá 📚</span>';
+        return '<span class="score-badge-xs badge-poor">Cần cố gắng 💪</span>';
     }
     var badgeDauGioEl = document.getElementById('badgeDauGioContainer');
-    if (badgeDauGioEl) badgeDauGioEl.innerHTML = createScoreBadgeHtml(numDiemDauGio);
+    if (badgeDauGioEl) badgeDauGioEl.innerHTML = scoreLevelBadge(numDiemDauGio);
 
     var badgeDinhKiEl = document.getElementById('badgeDinhKiContainer');
-    if (badgeDinhKiEl) badgeDinhKiEl.innerHTML = createScoreBadgeHtml(numDiemDinhKi);
+    if (badgeDinhKiEl) badgeDinhKiEl.innerHTML = scoreLevelBadge(numDiemDinhKi);
 
     var btvnBadgeHtml = "";
     if (btvnPercent !== null) {

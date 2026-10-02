@@ -82,6 +82,64 @@
             .hero-month-badge { width: 100%; justify-content: center; }
         }
 
+        /* ===== PHASE 15: KPI CARDS ENHANCEMENT ===== */
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(155px, 1fr));
+            gap: 14px;
+            margin-bottom: 20px;
+        }
+        .summary-card {
+            border-radius: 16px !important;
+            padding: 18px 16px !important;
+            box-shadow: 0 2px 12px rgba(59,130,246,0.07) !important;
+            transition: all 0.25s cubic-bezier(0.4,0,0.2,1) !important;
+            display: flex !important;
+            align-items: center !important;
+            gap: 14px !important;
+            min-height: 80px;
+        }
+        .summary-card:hover {
+            transform: translateY(-3px) !important;
+            box-shadow: 0 8px 24px rgba(59,130,246,0.14) !important;
+        }
+        .summary-icon {
+            width: 48px !important; height: 48px !important;
+            border-radius: 14px !important;
+            font-size: 20px !important;
+            flex-shrink: 0 !important;
+        }
+        .summary-label {
+            font-size: 11px !important;
+            font-weight: 700 !important;
+            color: #64748B !important;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            display: block;
+            margin-bottom: 4px;
+        }
+        .summary-val {
+            font-size: 26px !important;
+            font-weight: 800 !important;
+            color: #1E293B !important;
+            line-height: 1 !important;
+            display: block !important;
+        }
+
+        /* Score level badges */
+        .score-badge-xs {
+            display: inline-block;
+            margin-top: 5px;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 700;
+        }
+        .badge-excellent { background: #ECFDF5; color: #059669; }
+        .badge-good      { background: #EFF6FF; color: #2563EB; }
+        .badge-average   { background: #FFFBEB; color: #D97706; }
+        .badge-poor      { background: #FEF2F2; color: #DC2626; }
+
         /* ===== STUDENT DASHBOARD MOBILE ===== */
         @media (max-width: 768px) {
             #resultBox, .main-container {
@@ -141,13 +199,19 @@
 
         @media (max-width: 480px) {
             .summary-grid {
-                grid-template-columns: 1fr !important;
+                grid-template-columns: 1fr 1fr !important;
+                gap: 10px !important;
             }
             #resultBox, .main-container {
                 padding: 12px 8px 60px !important;
             }
             .summary-val, .score-number {
-                font-size: 24px !important;
+                font-size: 22px !important;
+            }
+            .summary-icon {
+                width: 40px !important;
+                height: 40px !important;
+                font-size: 17px !important;
             }
             .page-section, .result-section {
                 padding: 12px !important;
