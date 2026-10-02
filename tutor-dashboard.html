@@ -430,9 +430,9 @@
                 gap: 8px !important;
             }
 
-            /* Safe area iOS bottom padding for tutor content */
+            /* Content padding on mobile */
             .tutor-main-content {
-                padding-bottom: calc(85px + env(safe-area-inset-bottom)) !important;
+                padding: 12px 12px calc(30px + env(safe-area-inset-bottom)) 12px !important;
             }
 
             /* Tuition banner grid 1 or 2 cols on mobile */
@@ -468,6 +468,9 @@
 </head>
 <body>
     <div id="tutorDashboardBox" class="tutor-app-layout">
+        <!-- Sidebar Backdrop Overlay on Mobile -->
+        <div class="sidebar-overlay" id="tutorSidebarOverlay" onclick="toggleTutorMobileSidebar(false)"></div>
+
         <!-- Sidebar Navigation -->
         <aside class="tutor-sidebar" id="tutorSidebar" style="overflow: visible !important;">
             <!-- Sidebar Collapse Toggle Button -->
@@ -477,13 +480,18 @@
 
             <!-- Brand / Tutor Profile Header -->
             <div class="tutor-sidebar-brand">
-                <div class="sidebar-avatar">
-                    <i class="fa-solid fa-chalkboard-user"></i>
+                <div style="display: flex; align-items: center; gap: 12px; min-width: 0;">
+                    <div class="sidebar-avatar">
+                        <i class="fa-solid fa-chalkboard-user"></i>
+                    </div>
+                    <div class="sidebar-user-info">
+                        <div class="sidebar-user-title">Gia Sư 4.0</div>
+                        <div class="sidebar-user-name" id="sidebarTutorName">Gia sư</div>
+                    </div>
                 </div>
-                <div class="sidebar-user-info">
-                    <div class="sidebar-user-title">Gia Sư 4.0</div>
-                    <div class="sidebar-user-name" id="sidebarTutorName">Gia sư</div>
-                </div>
+                <button type="button" class="sidebar-mobile-close-btn" onclick="toggleTutorMobileSidebar(false)" aria-label="Đóng menu" title="Đóng menu">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
             </div>
 
             <!-- Navigation Menu (6 items) -->
@@ -539,12 +547,36 @@
 
         <!-- Main Content Area -->
         <main class="tutor-main-content" id="tutorMainContent">
-        <div class="tutor-header" style="display: none;">
-            <div>
-                <h2 id="tutorNameDisplay">Xin chào, Gia sư</h2>
-                <p>Tổng quan hệ thống giảng dạy</p>
+            <!-- Mobile Sticky Top Header (Only on <= 768px) -->
+            <header class="tutor-mobile-header" id="tutorMobileHeader">
+                <div class="mobile-header-left">
+                    <button type="button" class="tutor-mobile-menu-btn" onclick="toggleTutorMobileSidebar(true)" aria-label="Mở menu" title="Mở danh mục">
+                        <i class="fa-solid fa-bars"></i>
+                    </button>
+                    <div class="mobile-header-brand">
+                        <span class="mobile-brand-title">Gia Sư 4.0</span>
+                        <span class="mobile-brand-name" id="mobileHeaderTutorName">Gia sư</span>
+                    </div>
+                </div>
+                <div class="mobile-header-actions">
+                    <button type="button" class="mobile-action-btn theme-btn" onclick="openThemeSwitcher()" title="Đổi giao diện" aria-label="Đổi giao diện">
+                        <i class="fa-solid fa-palette"></i>
+                    </button>
+                    <button type="button" class="mobile-action-btn account-btn" onclick="openTutorAccountModal()" title="Cài đặt tài khoản" aria-label="Tài khoản">
+                        <i class="fa-solid fa-user-gear"></i>
+                    </button>
+                    <button type="button" class="mobile-action-btn logout-btn" onclick="quayLai()" title="Đăng xuất" aria-label="Đăng xuất">
+                        <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                    </button>
+                </div>
+            </header>
+
+            <div class="tutor-header" style="display: none;">
+                <div>
+                    <h2 id="tutorNameDisplay">Xin chào, Gia sư</h2>
+                    <p>Tổng quan hệ thống giảng dạy</p>
+                </div>
             </div>
-        </div>
 
         <!-- SECTION TỔNG QUAN -->
         <div id="tutorSectionOverview" class="tutor-section" style="display: block;">
@@ -2402,6 +2434,23 @@
     <script src="js/api.js?v=202610012235"></script>
     <script src="js/tutor.js?v=202610012235"></script>
     <script>
+        function toggleTutorMobileSidebar(force) {
+            var sidebar = document.getElementById('tutorSidebar');
+            var overlay = document.getElementById('tutorSidebarOverlay');
+            if (!sidebar) return;
+            var isOpen = typeof force === 'boolean' ? force : !sidebar.classList.contains('mobile-open');
+            if (isOpen) {
+                sidebar.classList.add('mobile-open');
+                if (overlay) overlay.classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } else {
+                sidebar.classList.remove('mobile-open');
+                if (overlay) overlay.classList.remove('active');
+                document.body.style.overflow = '';
+            }
+        }
+        window.toggleTutorMobileSidebar = toggleTutorMobileSidebar;
+
         window.addEventListener('DOMContentLoaded', () => {
             var phone = sessionStorage.getItem('userPhone') || '0123456789';
             var pin = sessionStorage.getItem('userPin') || '1234';
@@ -2438,6 +2487,9 @@
             if (document.getElementById('maPin')) document.getElementById('maPin').value = pin;
             
             renderTutorView(data);
+
+            var mobName = document.getElementById('mobileHeaderTutorName');
+            if (mobName && data.tutorName) mobName.innerText = data.tutorName;
 
             // Kích hoạt tab nếu có hash hoặc query param
             var hash = window.location.hash.toLowerCase();

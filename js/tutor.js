@@ -3816,10 +3816,18 @@ function switchTutorNavTab(element, tabKey) {
     } else if (tabKey === 'tuition') {
         renderTutorTuitionSection();
     }
+
+    if (window.innerWidth <= 768 && typeof toggleTutorMobileSidebar === 'function') {
+        toggleTutorMobileSidebar(false);
+    }
 }
 window.switchTutorNavTab = switchTutorNavTab;
 
 function toggleTutorSidebar() {
+    if (window.innerWidth <= 768 && typeof toggleTutorMobileSidebar === 'function') {
+        toggleTutorMobileSidebar();
+        return;
+    }
     var layout = document.getElementById('tutorDashboardBox');
     var icon = document.getElementById('sidebarCollapseIcon');
     var btn = document.getElementById('sidebarCollapseBtn');
@@ -3897,6 +3905,10 @@ window.initTutorSidebarState = initTutorSidebarState;
             var sidebarTutorName = document.getElementById('sidebarTutorName');
             if (sidebarTutorName && data.tutorName) {
                 sidebarTutorName.innerText = data.tutorName;
+            }
+            var mobileHeaderTutorName = document.getElementById('mobileHeaderTutorName');
+            if (mobileHeaderTutorName && data.tutorName) {
+                mobileHeaderTutorName.innerText = data.tutorName;
             }
             
             // Render 4 KPI Cards for Overview
