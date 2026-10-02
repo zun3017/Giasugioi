@@ -1653,8 +1653,12 @@
                 </div>
             </div>
             <div class="modal-form-group">
-                <label>Nội dung bài học & Nhận xét</label>
-                <textarea id="lesNoiDung" rows="3" placeholder="Nhập nội dung giảng dạy và nhận xét chi tiết..."></textarea>
+                <label>Nội dung bài học</label>
+                <input type="text" id="lesNoiDung" placeholder="Ví dụ: Ôn tập Đại số đầu năm, Căn bậc hai & Hằng đẳng thức...">
+            </div>
+            <div class="modal-form-group">
+                <label><i class="fa-solid fa-comment-dots" style="color: var(--color-primary); margin-right: 4px;"></i> Nhận xét buổi học (gửi cho PH & HS)</label>
+                <textarea id="lesNhanXet" rows="3" placeholder="Nhập nhận xét về tinh thần học tập, nắm bài, làm BTVN hoặc lý do nghỉ học..."></textarea>
             </div>
             <div class="modal-footer">
                 <button onclick="closeAddLessonModal()" class="modal-btn modal-btn-secondary">Đóng</button>
@@ -1705,8 +1709,12 @@
                     <span class="preview-val" id="prevDiemDinhKi">...</span>
                 </div>
                 <div style="margin-top: 10px; text-align: left;">
-                    <span class="preview-label" style="display: block; margin-bottom: 4px;">Nội dung & nhận xét:</span>
-                    <div id="prevNoiDung" style="background: var(--bg-card-alt); padding: 8px 12px; border-radius: 8px; font-size: 13px; max-height: 100px; overflow-y: auto;">...</div>
+                    <span class="preview-label" style="display: block; margin-bottom: 4px;">Nội dung bài học:</span>
+                    <div id="prevNoiDung" style="background: var(--bg-card-alt); padding: 8px 12px; border-radius: 8px; font-size: 13px; margin-bottom: 8px;">...</div>
+                </div>
+                <div style="margin-top: 8px; text-align: left;">
+                    <span class="preview-label" style="display: block; margin-bottom: 4px;"><i class="fa-solid fa-comment-dots" style="color: var(--color-primary); margin-right: 4px;"></i> Nhận xét gia sư:</span>
+                    <div id="prevNhanXet" style="background: var(--bg-card-alt); padding: 8px 12px; border-radius: 8px; font-size: 13px; max-height: 100px; overflow-y: auto; color: var(--text-primary); font-style: italic;">...</div>
                 </div>
             </div>
             <div class="modal-footer">
@@ -1784,8 +1792,12 @@
                     </div>
                 </div>
                 <div class="modal-form-group">
-                    <label>Nội dung bài học & nhận xét</label>
-                    <textarea id="editLesNoiDung" rows="3" placeholder="Nhập nội dung giảng dạy và nhận xét chi tiết..."></textarea>
+                    <label>Nội dung bài học</label>
+                    <input type="text" id="editLesNoiDung" placeholder="Ví dụ: Ôn tập Đại số đầu năm...">
+                </div>
+                <div class="modal-form-group">
+                    <label><i class="fa-solid fa-comment-dots" style="color: var(--color-primary); margin-right: 4px;"></i> Nhận xét buổi học (gửi cho PH & HS)</label>
+                    <textarea id="editLesNhanXet" rows="3" placeholder="Nhập nhận xét về tinh thần học tập, nắm bài, làm BTVN hoặc lý do nghỉ học..."></textarea>
                 </div>
             </div>
             <div class="modal-footer" style="justify-content: space-between;">
