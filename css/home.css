@@ -1023,6 +1023,8 @@
   border-radius: 20px; padding: 28px 20px 22px;
   text-align: center; box-shadow: 0 4px 20px rgba(59,130,246,0.08);
   transition: all 0.3s ease; position: relative; overflow: hidden;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-start;
+  width: 100%;
 }
 .metric-donut-card::after {
   content: ''; position: absolute; top: 0; left: 0; right: 0;
@@ -1035,8 +1037,9 @@
 .metric-donut-card:hover { transform: translateY(-6px); box-shadow: 0 12px 32px rgba(59,130,246,0.14); }
 .metric-donut-canvas-wrap {
   position: relative; width: 130px; height: 130px; margin: 0 auto 16px;
+  display: flex; align-items: center; justify-content: center;
 }
-.metric-donut-canvas-wrap canvas { width: 130px !important; height: 130px !important; }
+.metric-donut-canvas-wrap canvas { width: 130px !important; height: 130px !important; display: block; margin: 0 auto; }
 .metric-donut-center {
   position: absolute; inset: 0;
   display: flex; align-items: center; justify-content: center;
@@ -1053,21 +1056,36 @@
   color: #3B82F6;
   margin-bottom: 6px;
   align-self: center;
+  margin-right: -10px; /* Cân bằng quang học giúp đưa số chính xác vào tâm vòng tròn */
 }
-.metric-donut-card:nth-child(1) .metric-donut-unit { color: #3B82F6; }
-.metric-donut-card:nth-child(2) .metric-donut-unit { color: #10B981; }
-.metric-donut-card:nth-child(3) .metric-donut-unit { color: #F59E0B; }
-.metric-donut-card:nth-child(4) .metric-donut-unit { color: #8B5CF6; }
-.metric-donut-label { font-size: 13px; color: #475569; line-height: 1.55; font-weight: 500; }
+.metric-donut-card:nth-child(1) .metric-donut-unit { color: #3B82F6; margin-right: -10px; }
+.metric-donut-card:nth-child(2) .metric-donut-unit { color: #10B981; margin-right: -10px; }
+.metric-donut-card:nth-child(3) .metric-donut-unit { color: #F59E0B; margin-right: -6px; }
+.metric-donut-card:nth-child(4) .metric-donut-unit { color: #8B5CF6; margin-right: -10px; }
+.metric-donut-label { font-size: 13px; color: #475569; line-height: 1.55; font-weight: 500; width: 100%; text-align: center; }
 
 @media (max-width: 768px) {
-  .metrics-donut-grid { grid-template-columns: 1fr 1fr; gap: 16px; }
-  .metric-donut-canvas-wrap { width: 110px; height: 110px; }
+  .metrics-donut-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 16px;
+    max-width: 500px;
+    margin: 0 auto;
+    width: 100%;
+    justify-content: center;
+  }
+  .metric-donut-canvas-wrap { width: 110px; height: 110px; margin: 0 auto 16px; }
   .metric-donut-canvas-wrap canvas { width: 110px !important; height: 110px !important; }
   .metric-donut-num { font-size: 24px; }
-  .metric-donut-unit { font-size: 14px; margin-bottom: 4px; }
+  .metric-donut-unit { font-size: 14px; margin-bottom: 4px; margin-right: -8px; }
+  .metric-donut-card:nth-child(1) .metric-donut-unit { margin-right: -8px; }
+  .metric-donut-card:nth-child(2) .metric-donut-unit { margin-right: -8px; }
+  .metric-donut-card:nth-child(3) .metric-donut-unit { margin-right: -5px; }
+  .metric-donut-card:nth-child(4) .metric-donut-unit { margin-right: -8px; }
 }
-@media (max-width: 480px) { .metric-donut-card { padding: 18px 12px 16px; } }
+@media (max-width: 480px) {
+  .metrics-section { padding: 50px 16px 40px; }
+  .metric-donut-card { padding: 18px 12px 16px; }
+}
 
 /* ===== PHASE 18 — HERO UPGRADE ===== */
 .hero-section { position: relative; overflow: visible; }
