@@ -516,3 +516,87 @@ body {
   0%   { background-position: 200% 0; }
   100% { background-position: -200% 0; }
 }
+
+/* ============================================================
+ * PHASE 19 — SCROLL REVEAL ANIMATIONS (Cuộn đến đâu hiện đến đó)
+ * ============================================================ */
+
+/* Fade + trượt lên từ dưới */
+.reveal {
+  opacity: 0;
+  transform: translateY(28px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal.visible {
+  opacity: 1 !important;
+  transform: translateY(0) !important;
+  will-change: auto;
+}
+
+/* Stagger: Các thẻ con trượt lên so le lần lượt */
+.reveal-stagger > * {
+  opacity: 0;
+  transform: translateY(26px);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal-stagger.visible > *:nth-child(1) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.06s; }
+.reveal-stagger.visible > *:nth-child(2) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.16s; }
+.reveal-stagger.visible > *:nth-child(3) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.26s; }
+.reveal-stagger.visible > *:nth-child(4) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.36s; }
+.reveal-stagger.visible > *:nth-child(5) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.46s; }
+.reveal-stagger.visible > *:nth-child(6) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.56s; }
+
+/* Trượt từ bên trái sang */
+.reveal-left {
+  opacity: 0;
+  transform: translateX(-40px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal-left.visible {
+  opacity: 1 !important;
+  transform: translateX(0) !important;
+  will-change: auto;
+}
+
+/* Trượt từ bên phải sang */
+.reveal-right {
+  opacity: 0;
+  transform: translateX(40px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal-right.visible {
+  opacity: 1 !important;
+  transform: translateX(0) !important;
+  will-change: auto;
+}
+
+/* Phóng to nhẹ (Scale in) */
+.reveal-scale {
+  opacity: 0;
+  transform: scale(0.90);
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  will-change: opacity, transform;
+}
+.reveal-scale.visible {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+  will-change: auto;
+}
+
+/* Mobile: giảm khoảng cách translate */
+@media (max-width: 480px) {
+  .reveal        { transform: translateY(18px); }
+  .reveal-stagger > * { transform: translateY(18px); }
+  .reveal-left   { transform: translateX(-20px); }
+  .reveal-right  { transform: translateX(20px); }
+  .reveal-scale  { transform: scale(0.94); }
+}

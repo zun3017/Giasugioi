@@ -5412,78 +5412,84 @@ body {
 }
 
 /* ============================================================
- * PHASE 19 — SCROLL ANIMATION CLASSES
+ * PHASE 19 — SCROLL REVEAL ANIMATIONS (Cuộn đến đâu hiện đến đó)
  * ============================================================ */
 
-/* Fade + slide up */
+/* Fade + trượt lên từ dưới */
 .reveal {
   opacity: 0;
-  transform: translateY(24px);
-  transition: opacity 0.6s cubic-bezier(0.4,0,0.2,1),
-              transform 0.6s cubic-bezier(0.4,0,0.2,1);
+  transform: translateY(28px);
+  transition: opacity 0.65s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.65s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
 .reveal.visible {
-  opacity: 1;
-  transform: translateY(0);
+  opacity: 1 !important;
+  transform: translateY(0) !important;
   will-change: auto;
 }
 
-/* Stagger children */
+/* Stagger: Các thẻ con trượt lên so le lần lượt */
 .reveal-stagger > * {
   opacity: 0;
-  transform: translateY(20px);
-  transition: opacity 0.5s ease, transform 0.5s ease;
+  transform: translateY(26px);
+  transition: opacity 0.55s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
-.reveal-stagger.visible > *:nth-child(1) { opacity:1; transform:none; transition-delay:0.04s; }
-.reveal-stagger.visible > *:nth-child(2) { opacity:1; transform:none; transition-delay:0.12s; }
-.reveal-stagger.visible > *:nth-child(3) { opacity:1; transform:none; transition-delay:0.20s; }
-.reveal-stagger.visible > *:nth-child(4) { opacity:1; transform:none; transition-delay:0.28s; }
-.reveal-stagger.visible > *:nth-child(5) { opacity:1; transform:none; transition-delay:0.36s; }
-.reveal-stagger.visible > *:nth-child(6) { opacity:1; transform:none; transition-delay:0.44s; }
+.reveal-stagger.visible > *:nth-child(1) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.06s; }
+.reveal-stagger.visible > *:nth-child(2) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.16s; }
+.reveal-stagger.visible > *:nth-child(3) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.26s; }
+.reveal-stagger.visible > *:nth-child(4) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.36s; }
+.reveal-stagger.visible > *:nth-child(5) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.46s; }
+.reveal-stagger.visible > *:nth-child(6) { opacity: 1 !important; transform: translateY(0) !important; transition-delay: 0.56s; }
 
-/* Slide từ trái */
+/* Trượt từ bên trái sang */
 .reveal-left {
   opacity: 0;
-  transform: translateX(-36px);
-  transition: opacity 0.65s ease, transform 0.65s ease;
+  transform: translateX(-40px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
-.reveal-left.visible { opacity:1; transform:translateX(0); will-change:auto; }
+.reveal-left.visible {
+  opacity: 1 !important;
+  transform: translateX(0) !important;
+  will-change: auto;
+}
 
-/* Slide từ phải */
+/* Trượt từ bên phải sang */
 .reveal-right {
   opacity: 0;
-  transform: translateX(36px);
-  transition: opacity 0.65s ease, transform 0.65s ease;
+  transform: translateX(40px);
+  transition: opacity 0.7s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.7s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
-.reveal-right.visible { opacity:1; transform:translateX(0); will-change:auto; }
+.reveal-right.visible {
+  opacity: 1 !important;
+  transform: translateX(0) !important;
+  will-change: auto;
+}
 
-/* Scale in */
+/* Phóng to nhẹ (Scale in) */
 .reveal-scale {
   opacity: 0;
   transform: scale(0.90);
-  transition: opacity 0.55s ease, transform 0.55s ease;
+  transition: opacity 0.6s cubic-bezier(0.16, 1, 0.3, 1),
+              transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
   will-change: opacity, transform;
 }
-.reveal-scale.visible { opacity:1; transform:scale(1); will-change:auto; }
-
-/* Accessibility: tắt animation khi prefer-reduced-motion */
-@media (prefers-reduced-motion: reduce) {
-  .reveal, .reveal-left, .reveal-right, .reveal-scale,
-  .reveal-stagger > * {
-    opacity: 1 !important;
-    transform: none !important;
-    transition: none !important;
-    will-change: auto !important;
-  }
+.reveal-scale.visible {
+  opacity: 1 !important;
+  transform: scale(1) !important;
+  will-change: auto;
 }
 
 /* Mobile: giảm khoảng cách translate */
 @media (max-width: 480px) {
-  .reveal        { transform: translateY(16px); }
+  .reveal        { transform: translateY(18px); }
+  .reveal-stagger > * { transform: translateY(18px); }
   .reveal-left   { transform: translateX(-20px); }
   .reveal-right  { transform: translateX(20px); }
   .reveal-scale  { transform: scale(0.94); }
