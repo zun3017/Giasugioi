@@ -343,28 +343,36 @@
         }
 
         .lock-badge {
-            background: rgba(239, 68, 68, 0.1);
-            border: 1px solid rgba(239, 68, 68, 0.25);
-            color: #EF4444;
-            font-size: 11px;
-            padding: 3px 8px;
+            background: #DC2626;
+            color: #FFFFFF !important;
+            font-size: 12px;
+            padding: 4px 12px;
             border-radius: 20px;
-            font-weight: 600;
+            font-weight: 700;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+        }
+        .lock-badge i {
+            color: #FFFFFF !important;
         }
         .active-badge {
-            background: rgba(16, 185, 129, 0.1);
-            border: 1px solid rgba(16, 185, 129, 0.25);
-            color: #10B981;
-            font-size: 11px;
-            padding: 3px 8px;
+            background: #059669;
+            color: #FFFFFF !important;
+            font-size: 12px;
+            padding: 4px 12px;
             border-radius: 20px;
-            font-weight: 600;
+            font-weight: 700;
             display: inline-flex;
             align-items: center;
-            gap: 4px;
+            gap: 6px;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.18);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+        }
+        .active-badge i {
+            color: #FFFFFF !important;
         }
 
         @media (max-width: 900px) {
@@ -886,7 +894,7 @@
                         <div class="hw-hero-tags">
                             <span class="hw-tag" id="hwCodeTag"><i class="fa-solid fa-hashtag"></i> <span id="hwCode">-</span></span>
                             <span class="hw-tag" id="hwSubjectTag"><i class="fa-solid fa-book"></i> <span id="hwSubject">Toán học</span></span>
-                            <span class="hw-tag" id="hwLockBadge"></span>
+                            <span id="hwLockBadge"></span>
                         </div>
                     </div>
                 </div>
