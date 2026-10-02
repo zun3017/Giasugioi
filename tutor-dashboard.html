@@ -56,6 +56,8 @@
             root.style.setProperty('--text-primary', '#1A1A1A');
             root.style.setProperty('--text-secondary', '#555555');
             root.style.setProperty('--text-muted', '#888888');
+            root.style.setProperty('--header-bg', '#FFFFFF');
+            root.style.setProperty('--header-border', '#E5E5E5');
             root.style.setProperty('--shadow-card', '0 4px 16px rgba(0,0,0,0.06)');
             root.style.setProperty('--shadow-primary', '0 4px 15px rgba(' + r + ',' + g + ',' + b + ', 0.3)');
             root.style.setProperty('--is-dark-theme', '0');
@@ -487,28 +489,32 @@
 
           /* Overlay mờ */
           .sidebar-overlay {
-            display: none; position: fixed; inset: 0;
-            background: rgba(15,23,42,0.5); z-index: 1040;
-            backdrop-filter: blur(2px); -webkit-backdrop-filter: blur(2px);
+            display: none !important;
+            position: fixed !important;
+            inset: 0 !important;
+            background: rgba(15, 23, 42, 0.65) !important;
+            backdrop-filter: blur(4px) !important;
+            -webkit-backdrop-filter: blur(4px) !important;
+            z-index: 1050 !important;
+            opacity: 0 !important;
+            pointer-events: none !important;
           }
-          .sidebar-overlay.active { display: block; }
-
-          /* Nút mở sidebar */
-          .sidebar-toggle-btn {
-            display: flex !important; position: fixed;
-            top: 12px; left: 12px; z-index: 1060;
-            width: 40px; height: 40px;
-            background: #3B82F6; border: none; border-radius: 12px;
-            color: #fff; font-size: 16px;
-            align-items: center; justify-content: center;
-            cursor: pointer; box-shadow: 0 4px 12px rgba(59,130,246,0.3);
-            -webkit-tap-highlight-color: transparent;
+          .sidebar-overlay.active {
+            display: block !important;
+            opacity: 1 !important;
+            pointer-events: auto !important;
           }
 
-          /* Main content full width */
+          /* Main content full width & header flush to top */
           .tutor-main-content {
-            margin-left: 0 !important; width: 100% !important;
-            padding: 60px 14px 80px !important;
+            margin-left: 0 !important;
+            width: 100% !important;
+            padding: 0 12px 60px 12px !important;
+          }
+          .tutor-mobile-header {
+            margin: 0 -12px 14px -12px !important;
+            width: calc(100% + 24px) !important;
+            background: var(--header-bg, var(--bg-card)) !important;
           }
 
           /* KPI grid 2 cột */

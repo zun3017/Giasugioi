@@ -8584,6 +8584,8 @@ function applyCustomTheme() {
   root.style.setProperty('--text-primary', '#1A1A1A');
   root.style.setProperty('--text-secondary', '#555555');
   root.style.setProperty('--text-muted', '#888888');
+  root.style.setProperty('--header-bg', '#FFFFFF');
+  root.style.setProperty('--header-border', '#E5E5E5');
   root.style.setProperty('--shadow-card', '0 4px 16px rgba(0,0,0,0.06)');
   root.style.setProperty('--shadow-primary', '0 4px 15px rgba(' + r + ', ' + g + ', ' + b + ', 0.3)');
   root.style.setProperty('--is-dark-theme', '0');
