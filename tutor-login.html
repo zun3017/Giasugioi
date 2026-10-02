@@ -90,8 +90,10 @@
 
 <body class="relative min-h-screen bg-gradient-to-b from-primary-50 via-white to-primary-50 text-slate-800 antialiased overflow-x-hidden selection:bg-primary-200 selection:text-primary-900">
     
-    <div class="absolute top-[-10%] left-[-5%] w-[40rem] h-[40rem] bg-indigo-400 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 pointer-events-none z-0"></div>
-    <div class="absolute top-[30%] right-[-10%] w-[35rem] h-[35rem] bg-blue-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 pointer-events-none z-0"></div>
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+        <div class="absolute top-[-10%] left-[-5%] w-[40rem] h-[40rem] max-w-full bg-indigo-400 rounded-full mix-blend-multiply filter blur-[100px] opacity-20"></div>
+        <div class="absolute top-[30%] right-[-10%] w-[35rem] h-[35rem] max-w-full bg-blue-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-20"></div>
+    </div>
 
     <!-- Navbar / Header Gốc -->
     <div class="header">
@@ -164,8 +166,8 @@
             </div>
 
             <!-- Form Đăng nhập Gia sư (Dạng Card lớn) -->
-            <div class="max-w-md mx-auto">
-                <div class="bg-white/90 backdrop-blur-xl p-8 rounded-3xl shadow-glass border border-white">
+            <div class="w-full max-w-md mx-auto px-1 sm:px-0">
+                <div class="bg-white/90 backdrop-blur-xl p-5 sm:p-8 rounded-2xl sm:rounded-3xl shadow-glass border border-white">
                     
                     <div class="flex items-center gap-3 mb-8 pb-4 border-b border-gray-100">
                         <div class="bg-indigo-100 p-2 rounded-lg text-indigo-600">
@@ -221,7 +223,7 @@
                                 Vào thẳng Quản lý &rarr;
                             </a>
                         </div>
-                        <button type="button" onclick="fillQuickTutor('0123456789', '1234')" class="w-full bg-indigo-50 hover:bg-indigo-600 hover:text-white border border-indigo-200 text-indigo-700 py-3 px-3 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm flex items-center justify-center gap-2 active:scale-95 cursor-pointer">
+                        <button type="button" onclick="fillQuickTutor('0123456789', '1234')" class="w-full bg-indigo-50 hover:bg-indigo-600 hover:text-white border border-indigo-200 text-indigo-700 py-3 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm flex flex-wrap items-center justify-center gap-1.5 active:scale-95 cursor-pointer text-center break-words leading-snug">
                             👨‍🏫 Thầy Trần Hoàng Nam (SĐT: 0123456789 - PIN: 1234)
                         </button>
                     </div>

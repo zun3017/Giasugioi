@@ -90,8 +90,10 @@
 
 <body class="relative min-h-screen bg-gradient-to-b from-primary-50 via-white to-primary-50 text-slate-800 antialiased overflow-x-hidden selection:bg-primary-200 selection:text-primary-900">
     
-    <div class="absolute top-[-10%] left-[-5%] w-[40rem] h-[40rem] bg-blue-400 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 pointer-events-none z-0"></div>
-    <div class="absolute top-[30%] right-[-10%] w-[35rem] h-[35rem] bg-cyan-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-20 pointer-events-none z-0"></div>
+    <div class="fixed inset-0 overflow-hidden pointer-events-none z-0" aria-hidden="true">
+        <div class="absolute top-[-10%] left-[-5%] w-[40rem] h-[40rem] max-w-full bg-blue-400 rounded-full mix-blend-multiply filter blur-[100px] opacity-20"></div>
+        <div class="absolute top-[30%] right-[-10%] w-[35rem] h-[35rem] max-w-full bg-cyan-300 rounded-full mix-blend-multiply filter blur-[100px] opacity-20"></div>
+    </div>
 
     <!-- Navbar / Header Gốc -->
     <div class="header">
