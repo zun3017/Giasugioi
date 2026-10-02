@@ -433,25 +433,31 @@ function renderStudentView(ketQua) {
                     {
                         label: 'Điểm đầu giờ',
                         data: dataDauGio,
-                        borderColor: '#8E4DFF',
-                        backgroundColor: 'rgba(142, 77, 255, 0.1)',
-                        borderWidth: 2,
-                        pointBackgroundColor: '#8E4DFF',
-                        pointBorderColor: '#ffffff',
-                        pointHoverRadius: 5,
-                        tension: 0.3,
+                        borderColor: '#3B82F6',
+                        backgroundColor: 'rgba(59,130,246,0.08)',
+                        borderWidth: 2.5,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#3B82F6',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
                         spanGaps: true
                     },
                     {
                         label: 'Điểm định kì',
                         data: dataDinhKi,
-                        borderColor: '#FFD23F',
-                        backgroundColor: 'rgba(255, 210, 63, 0.1)',
-                        borderWidth: 2,
-                        pointBackgroundColor: '#FFD23F',
-                        pointBorderColor: '#ffffff',
-                        pointHoverRadius: 5,
-                        tension: 0.3,
+                        borderColor: '#F59E0B',
+                        backgroundColor: 'rgba(245,158,11,0.08)',
+                        borderWidth: 2.5,
+                        fill: true,
+                        tension: 0.4,
+                        pointBackgroundColor: '#F59E0B',
+                        pointBorderColor: '#fff',
+                        pointBorderWidth: 2,
+                        pointRadius: 5,
+                        pointHoverRadius: 7,
                         spanGaps: true
                     }
                 ]
@@ -459,37 +465,40 @@ function renderStudentView(ketQua) {
             options: {
                 responsive: true,
                 maintainAspectRatio: false,
+                interaction: { mode: 'index', intersect: false },
                 plugins: {
-                    legend: {
-                        display: false
-                    },
+                    legend: { display: false },
                     tooltip: {
-                        backgroundColor: 'rgba(11, 8, 38, 0.95)',
-                        titleColor: '#FFF',
-                        bodyColor: '#A6ADCE',
-                        titleFont: { family: 'Inter', weight: 'bold', size: 11 },
-                        bodyFont: { family: 'Inter', size: 10 },
-                        borderColor: '#8E4DFF',
-                        borderWidth: 1
+                        backgroundColor: '#1E293B',
+                        titleColor: '#F1F5F9',
+                        bodyColor: '#CBD5E1',
+                        borderColor: 'rgba(255,255,255,0.1)',
+                        borderWidth: 1,
+                        padding: 12,
+                        cornerRadius: 10,
+                        callbacks: {
+                            label: function(c) {
+                                if (c.raw === null || c.raw === undefined) return null;
+                                return '  ' + c.dataset.label + ': ' + c.parsed.y;
+                            }
+                        }
                     }
                 },
                 scales: {
                     x: {
-                        grid: { color: 'rgba(255, 255, 255, 0.03)' },
-                        ticks: {
-                            color: '#A6ADCE',
-                            font: { family: 'Inter', size: 9.5 },
-                            maxRotation: 45,
-                            minRotation: 0,
-                            autoSkip: true,
-                            maxTicksLimit: 12
-                        }
+                        grid: { color: 'rgba(226,232,240,0.5)', drawBorder: false },
+                        ticks: { color: '#94A3B8', font: { size: 11 }, maxTicksLimit: 10 }
                     },
                     y: {
                         min: 0,
                         max: 10,
-                        grid: { color: 'rgba(255, 255, 255, 0.03)' },
-                        ticks: { color: '#A6ADCE', font: { family: 'Inter', size: 9.5 }, stepSize: 2 }
+                        grid: { color: 'rgba(226,232,240,0.5)', drawBorder: false },
+                        ticks: {
+                            color: '#94A3B8',
+                            font: { size: 11 },
+                            stepSize: 2,
+                            callback: function(v) { return v.toFixed(1); }
+                        }
                     }
                 }
             }
