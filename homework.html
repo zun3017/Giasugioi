@@ -554,6 +554,62 @@
         @media (max-width: 768px) {
             #uploadAreaMobile { display: block !important; }
             #uploadAreaDesktop { display: none !important; }
+
+            /* ===== HOMEWORK TOUCH OPTIMIZATIONS (TASK 14.5) ===== */
+            .upload-area, [class*="drop-zone"], [class*="upload-zone"] {
+                min-height: 100px !important;
+                padding: 20px !important;
+                cursor: pointer;
+            }
+            .drag-hint { display: none !important; }
+            .tap-hint { display: block !important; }
+
+            /* Nút chụp ảnh và tải file trong mobile upload area */
+            #uploadAreaMobile button {
+                min-height: 48px !important;
+                font-size: 14px !important;
+            }
+            #uploadAreaMobile > div {
+                max-width: 100% !important;
+                width: 100% !important;
+            }
+            .hw-dashboard {
+                padding: 12px 8px !important;
+            }
+            .hw-info-card {
+                padding: 16px !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            .file-table-desktop, .desktop-table-view { display: none !important; }
+            .file-cards-mobile, .mobile-cards-view { display: flex !important; flex-direction: column; gap: 10px; }
+            .table-wrapper { overflow-x: auto !important; -webkit-overflow-scrolling: touch; }
+        }
+
+        @media (max-width: 480px) {
+            .action-btn-hw, [class*="hw-btn"], .btn-upload, .btn-submit {
+                width: 100% !important;
+                justify-content: center !important;
+                min-height: 48px !important;
+            }
+            .hw-actions-row, [class*="action-row"], div:has(> #btnSubmitHomework) {
+                flex-direction: column !important;
+                gap: 8px !important;
+            }
+            #btnCancelEdit {
+                width: 100% !important;
+            }
+            .score-badge, [class*="score"], .badge {
+                font-size: 13px !important;
+                padding: 5px 10px !important;
+            }
+            .hw-card, [class*="hw-card"], .hw-info-card {
+                padding: 12px !important;
+            }
+            .student-info-grid {
+                grid-template-columns: 1fr !important;
+            }
         }
     </style>
 </head>
@@ -773,7 +829,8 @@
                         <div class="upload-area" id="uploadAreaDesktop" onclick="document.getElementById('hwFileInputDesktop').click()">
                             <i class="fa-solid fa-file-arrow-up upload-icon" id="uploadAreaIcon"></i>
                             <div class="upload-text" id="uploadAreaText">Kéo thả hoặc click chọn hình ảnh/tài liệu bài tập của bạn</div>
-                            <div class="upload-hint">Hỗ trợ PDF, Word, PNG, JPG, JPEG (Có thể chọn nhiều tệp)</div>
+                            <div class="upload-hint drag-hint">Hỗ trợ PDF, Word, PNG, JPG, JPEG (Có thể chọn nhiều tệp)</div>
+                            <span class="tap-hint" style="display:none; font-size: 13px; color: #3B82F6; font-weight: 600; margin-top: 6px;">📎 Nhấn để chọn file</span>
                             <input type="file" id="hwFileInputDesktop" style="display: none;" multiple onchange="handleFileSelect(event)">
                         </div>
 
