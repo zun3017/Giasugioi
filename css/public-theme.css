@@ -300,7 +300,66 @@
         display: none !important;
     }
     .hamburger-btn {
-        display: flex !important;
-        flex-shrink: 0 !important;
+        display: none !important;
     }
+}
+
+/* ===== PHASE 17 — BOTTOM NAVIGATION (Public Pages) ===== */
+.bottom-nav { display: none; }
+
+@media (max-width: 768px) {
+  .bottom-nav {
+    display: flex;
+    position: fixed;
+    bottom: 0; left: 0; right: 0;
+    height: calc(60px + env(safe-area-inset-bottom, 0px));
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    background: rgba(255, 255, 255, 0.97);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+    border-top: 1px solid #E2E8F0;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.06);
+    z-index: 9000;
+    align-items: center;
+    justify-content: space-around;
+  }
+  .bottom-nav-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 3px;
+    padding: 6px 4px;
+    text-decoration: none;
+    border-radius: 12px;
+    transition: all 0.2s;
+    flex: 1;
+    min-height: 48px;
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+  }
+  .bottom-nav-item i {
+    font-size: 20px;
+    color: #94A3B8;
+    transition: color 0.2s, transform 0.2s;
+  }
+  .bottom-nav-item span {
+    font-size: 10px;
+    font-weight: 600;
+    color: #94A3B8;
+    font-family: Inter, sans-serif;
+    transition: color 0.2s;
+  }
+  .bottom-nav-item.active i  { color: #3B82F6; transform: scale(1.1); }
+  .bottom-nav-item.active span { color: #3B82F6; }
+  .bottom-nav-item.active { background: rgba(59, 130, 246, 0.08); }
+  .bottom-nav-item:active { transform: scale(0.94); }
+
+  /* Ẩn hamburger + desktop nav + dropdown cũ */
+  .hamburger-btn        { display: none !important; }
+  .nav-right            { display: none !important; }
+  .mobile-nav-dropdown  { display: none !important; }
+
+  /* Padding bottom để content không bị bottom nav che */
+  body { padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important; }
 }
