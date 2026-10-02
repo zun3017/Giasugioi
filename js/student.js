@@ -1,4 +1,4 @@
-﻿var currentChartInstance = null;
+var currentChartInstance = null;
 var currentStudentName = "";
 
 function renderStudentView(ketQua) {
@@ -47,9 +47,32 @@ function renderStudentView(ketQua) {
     
     var loiChaoEl = document.getElementById('loiChao');
     if (loiChaoEl) {
-        loiChaoEl.innerHTML = 
-            "<h3 style='color: var(--text-heading); font-size: 20px; font-weight: 800; margin: 0 0 8px 0; text-align: center; font-family: Inter;'>Xin chào, <span style='color: var(--text-primary);'>" + (ketQua.tenHocSinh || 'Học sinh') + "</span> 👋</h3>" +
-            "<p style='color: var(--text-secondary); font-size: 13px; text-align: center; margin: 0 0 25px 0; font-family: Inter;'>(" + lopHoc + " • Số điện thoại: " + (studentPhone || ketQua.sdt || "") + ")</p>";
+        // Lấy 2 chữ initials từ tên
+        var nameParts = (ketQua.tenHocSinh || 'HS').trim().split(/\s+/);
+        var initials = nameParts.length >= 2
+            ? nameParts[0][0] + nameParts[nameParts.length - 1][0]
+            : nameParts[0].substring(0, 2);
+        initials = initials.toUpperCase();
+
+        // Tháng hiện tại
+        var now = new Date();
+        var monthLabel = 'Tháng ' + (now.getMonth() + 1) + '/' + now.getFullYear();
+
+        var displayPhone = studentPhone || ketQua.sdt || "";
+
+        loiChaoEl.innerHTML =
+            '<div class="student-hero-card">' +
+                '<div class="hero-avatar">' + initials + '</div>' +
+                '<div class="hero-info">' +
+                    '<h2 class="hero-name">Xin chào, <strong>' + (ketQua.tenHocSinh || 'Học sinh') + '</strong> 👋</h2>' +
+                    '<div class="hero-meta">' +
+                        '<span class="hero-tag"><i class="fa-solid fa-book"></i> ' + lopHoc + '</span>' +
+                        (ketQua.giaSu ? '<span class="hero-tag"><i class="fa-solid fa-chalkboard-user"></i> Gia sư: ' + ketQua.giaSu + '</span>' : '') +
+                        (displayPhone ? '<span class="hero-tag"><i class="fa-solid fa-phone"></i> ' + displayPhone + '</span>' : '') +
+                    '</div>' +
+                '</div>' +
+                '<div class="hero-month-badge"><i class="fa-solid fa-calendar-days"></i> ' + monthLabel + '</div>' +
+            '</div>';
     }
     currentStudentName = ketQua.tenHocSinh || "";
     
