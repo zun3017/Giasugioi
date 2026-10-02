@@ -658,11 +658,9 @@ function renderDonutCharts(lichSu) {
     if (!lichSu) lichSu = [];
 
     // --- TÍNH BTVN ---
-    var btvnHT = 0, btvnKHT = 0, btvnVang = 0;
+    var btvnHT = 0, btvnKHT = 0;
     lichSu.forEach(function(item) {
-        if (isAbsentSession(item)) {
-            btvnVang++;
-        } else {
+        if (!isAbsentSession(item)) {
             var raw = normalizeStr(item.danhGiaBTVN || item.btvn || '');
             if (raw.includes('hoan') || raw.includes('tot') || raw === 'co' || raw.includes('day du') || raw.includes('xuat')) {
                 btvnHT++;
@@ -680,18 +678,19 @@ function renderDonutCharts(lichSu) {
     if (btvnLegEl) {
         btvnLegEl.innerHTML =
             donutLegItem('#10B981', 'Hoàn thành', btvnHT) +
-            donutLegItem('#F97316', 'Chưa hoàn thành', btvnKHT) +
-            donutLegItem('#94A3B8', 'Buổi vắng', btvnVang);
+            donutLegItem('#F97316', 'Chưa hoàn thành', btvnKHT);
     }
     var btvnCtx = document.getElementById('btvnChart');
     if (btvnCtx) {
         if (window._btvnInst) { window._btvnInst.destroy(); }
+        var chartData = (btvnHT === 0 && btvnKHT === 0) ? [0, 1] : [btvnHT, btvnKHT];
+        var chartColors = (btvnHT === 0 && btvnKHT === 0) ? ['#10B981', '#E2E8F0'] : ['#10B981', '#F97316'];
         window._btvnInst = new Chart(btvnCtx, {
             type: 'doughnut',
             data: {
                 datasets: [{
-                    data: [btvnHT, btvnKHT, btvnVang],
-                    backgroundColor: ['#10B981', '#F97316', '#E2E8F0'],
+                    data: chartData,
+                    backgroundColor: chartColors,
                     borderWidth: 0,
                     hoverOffset: 4
                 }]
@@ -704,8 +703,8 @@ function renderDonutCharts(lichSu) {
                     tooltip: {
                         callbacks: {
                             label: function(c) {
-                                var L = ['Hoàn thành', 'Chưa HT', 'Buổi vắng'];
-                                return ' ' + L[c.dataIndex] + ': ' + c.raw + ' buổi';
+                                var L = ['Hoàn thành', 'Chưa hoàn thành'];
+                                return ' ' + (L[c.dataIndex] || '') + ': ' + c.raw + ' buổi';
                             }
                         }
                     }
