@@ -514,7 +514,7 @@ function renderStudentView(ketQua) {
                 '<tr' + hiddenAttr + '>' +
                     '<td><span class="date-badge">' + rawDate + '</span></td>' +
                     '<td><span class="subj-chip">' + (item.mon || '-') + '</span></td>' +
-                    '<td style="max-width:200px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;" title="' + (item.noiDung || item.topic || '') + '">' + (item.noiDung || item.topic || '-') + '</td>' +
+                    '<td class="cell-noidung">' + (item.noiDung || item.topic || '-') + '</td>' +
                     '<td>' + btvnChip(item.danhGiaBTVN || item.btvn, isAbsent) + '</td>' +
                     '<td style="font-weight:700;font-size:15px;color:' + scoreColor(diemDau) + ';">' + (diemDau !== undefined && diemDau !== null && diemDau !== '' ? diemDau : '—') + '</td>' +
                     '<td style="font-weight:700;font-size:15px;color:' + scoreColor(diemDinh) + ';">' + (diemDinh !== undefined && diemDinh !== null && diemDinh !== '' ? diemDinh : '—') + '</td>' +
