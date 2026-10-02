@@ -479,6 +479,51 @@
             display: inline-block;
         }
 
+        /* Top Navigation Bar / Compact Back Button */
+        .result-top-bar {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            margin-bottom: 14px;
+        }
+        .btn-back-compact {
+            display: inline-flex !important;
+            align-items: center;
+            gap: 8px;
+            padding: 7px 14px !important;
+            background: #FFFFFF !important;
+            color: #475569 !important;
+            border: 1px solid #CBD5E1 !important;
+            border-radius: 9999px !important;
+            font-size: 13px !important;
+            font-weight: 600 !important;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+            outline: none;
+            width: auto !important;
+            text-decoration: none;
+            min-height: 34px !important;
+            line-height: 1;
+        }
+        .btn-back-compact:hover {
+            background: #EFF6FF !important;
+            border-color: #3B82F6 !important;
+            color: #2563EB !important;
+            transform: translateX(-2px);
+            box-shadow: 0 2px 6px rgba(37, 99, 235, 0.12);
+        }
+        .btn-back-compact:active {
+            transform: translateX(0);
+        }
+        .btn-back-compact i {
+            font-size: 12px;
+            transition: transform 0.2s ease;
+        }
+        .btn-back-compact:hover i {
+            transform: translateX(-2px);
+        }
+
         /* ===== STUDENT DASHBOARD MOBILE ===== */
         @media (max-width: 768px) {
             #resultBox, .main-container {
@@ -582,9 +627,12 @@
             .feedback-form-container textarea {
                 font-size: 16px !important;
             }
-            .btn-submit-feedback, .btn-back {
+            .btn-submit-feedback {
                 width: 100% !important;
                 justify-content: center !important;
+            }
+            .btn-back-compact {
+                width: auto !important;
             }
         }
 
@@ -638,6 +686,12 @@
     </div>
 
     <div id="resultBox">
+        <div class="result-top-bar">
+            <button type="button" onclick="quayLai()" class="btn-back-compact" title="Trở về màn hình chính">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Trở về màn hình chính</span>
+            </button>
+        </div>
         <div id="loiChao"></div>
         
         <!-- Khu vực hiển thị Huy chương vinh danh (đã dời vào thẻ bên dưới) -->
@@ -789,8 +843,6 @@
             </div>
             <p id="feedbackMessage" class="feedback-message-status"></p>
         </div>
-
-        <button onclick="quayLai()" class="btn-back"><i class="fa-solid fa-arrow-left"></i> Trở Về Màn Hình Chính</button>
     </div>
 
 
