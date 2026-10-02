@@ -25,6 +25,27 @@
     <!-- Public Light Theme -->
     <link rel="stylesheet" href="css/public-theme.css">
 
+    <!-- Kiểm tra phiên đăng nhập đã lưu để duy trì trạng thái khi F5 / tải lại trang -->
+    <script>
+        (function() {
+            try {
+                var p = new URLSearchParams(window.location.search);
+                var c = p.get('code') || p.get('ma') || p.get('maBaiTap') || p.get('maHocSinh') || sessionStorage.getItem('currentHwCode') || localStorage.getItem('currentHwCode');
+                if (c && String(c).trim() !== "") {
+                    document.documentElement.classList.add('auto-logging-in');
+                }
+            } catch(e) {}
+        })();
+    </script>
+    <style>
+        html.auto-logging-in #mainScreen {
+            display: none !important;
+        }
+        html.auto-logging-in #pageAutoLoading {
+            display: flex !important;
+        }
+    </style>
+
     <script>
         if (typeof tailwind !== 'undefined') {
             tailwind.config = {
@@ -990,6 +1011,15 @@
     <div id="charGirl" style="display: none;"></div>
 
     <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 pt-8 pb-20 w-full overflow-hidden flex flex-col items-center">
+        <!-- LOADING KHI TỰ ĐỘNG KHÔI PHỤC PHIÊN ĐĂNG NHẬP -->
+        <div id="pageAutoLoading" style="display: none; flex-direction: column; align-items: center; justify-content: center; min-height: 50vh; width: 100%; text-align: center;">
+            <div style="display: inline-flex; align-items: center; justify-content: center; width: 68px; height: 68px; background: #EFF6FF; border: 1.5px solid #BFDBFE; border-radius: 20px; margin-bottom: 18px; box-shadow: 0 8px 24px rgba(59,130,246,0.18);">
+                <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 30px; color: #2563EB;"></i>
+            </div>
+            <div style="font-size: 17px; font-weight: 800; color: #1E293B; margin-bottom: 6px;">Đang tải trang bài tập...</div>
+            <div style="font-size: 13.5px; color: #64748B;">Vui lòng chờ trong giây lát</div>
+        </div>
+
         <!-- SECTION: BÀI TẬP (MÀN HÌNH ĐĂNG NHẬP / TÌM KIẾM - THAY THẾ TỪ GIAO DIỆN ĐĂNG NHẬP.HTML) -->
         <section id="mainScreen" class="w-full">
             <div class="text-center max-w-3xl mx-auto mb-10">
@@ -1527,6 +1557,10 @@
                         btn.disabled = false;
                     }
                     document.getElementById('loadingText').style.display = 'none';
+                    document.documentElement.classList.remove('auto-logging-in');
+                    var pageLoading = document.getElementById('pageAutoLoading');
+                    if (pageLoading) pageLoading.style.display = 'none';
+                    document.getElementById('mainScreen').style.display = 'block';
                     errorMsg.innerText = "Lỗi kết nối: " + err.toString();
                     errorMsg.style.display = "block";
                 })
@@ -1536,10 +1570,19 @@
         // 2. Chuyển sang màn hình Dashboard sau khi đăng nhập thành công
         function showHomeworkDashboard(res) {
             document.getElementById('loadingText').style.display = 'none';
+            document.documentElement.classList.remove('auto-logging-in');
+            var pageLoading = document.getElementById('pageAutoLoading');
+            if (pageLoading) pageLoading.style.display = 'none';
             var errorMsg = document.getElementById('error');
 
             if (res.timThay) {
+                // Lưu phiên vào cả sessionStorage và localStorage để duy trì trạng thái khi tải lại trang
                 sessionStorage.setItem('currentHwCode', res.ma);
+                localStorage.setItem('currentHwCode', res.ma);
+                if (window.history && window.history.replaceState) {
+                    var newUrl = window.location.pathname + '?code=' + encodeURIComponent(res.ma);
+                    window.history.replaceState({ code: res.ma }, '', newUrl);
+                }
                 currentHW = res; // lưu trữ dữ liệu phiên
 
                 // Ẩn UI chính
@@ -1565,6 +1608,12 @@
                 renderHwKpi(currentHW.assignedList, currentHW.submissions);
                 renderHwCharts(currentHW.assignedList, currentHW.submissions);
             } else {
+                sessionStorage.removeItem('currentHwCode');
+                localStorage.removeItem('currentHwCode');
+                if (window.history && window.history.replaceState) {
+                    window.history.replaceState(null, '', window.location.pathname);
+                }
+                document.getElementById('mainScreen').style.display = 'block';
                 errorMsg.innerText = res.thongBao;
                 errorMsg.style.display = 'block';
             }
@@ -2496,9 +2545,19 @@
         // 10. Đăng xuất khỏi cổng nộp bài tập
         function backToLogin() {
             sessionStorage.removeItem('currentHwCode');
+            localStorage.removeItem('currentHwCode');
             currentHW = null;
             cancelEdit();
             
+            // Xóa query param trên URL
+            if (window.history && window.history.replaceState) {
+                window.history.replaceState(null, '', window.location.pathname);
+            }
+            
+            document.documentElement.classList.remove('auto-logging-in');
+            var pageLoading = document.getElementById('pageAutoLoading');
+            if (pageLoading) pageLoading.style.display = 'none';
+
             // Khôi phục giao diện màn hình chính
             document.getElementById('mainScreen').style.display = 'block';
             document.getElementById('homeworkDashboard').style.display = 'none';
@@ -2749,10 +2808,23 @@
             try {
                 var urlParams = new URLSearchParams(window.location.search);
                 var queryCode = urlParams.get('code') || urlParams.get('ma') || urlParams.get('maBaiTap') || urlParams.get('maHocSinh');
-                if (queryCode) {
-                    fillQuickHw(queryCode);
+                var savedCode = queryCode || sessionStorage.getItem('currentHwCode') || localStorage.getItem('currentHwCode');
+                
+                if (savedCode && String(savedCode).trim() !== "") {
+                    var trimmedCode = String(savedCode).trim();
+                    fillQuickHw(trimmedCode);
+                } else {
+                    document.documentElement.classList.remove('auto-logging-in');
+                    var pageLoading = document.getElementById('pageAutoLoading');
+                    if (pageLoading) pageLoading.style.display = 'none';
+                    document.getElementById('mainScreen').style.display = 'block';
                 }
-            } catch(e) {}
+            } catch(e) {
+                document.documentElement.classList.remove('auto-logging-in');
+                var pageLoading = document.getElementById('pageAutoLoading');
+                if (pageLoading) pageLoading.style.display = 'none';
+                document.getElementById('mainScreen').style.display = 'block';
+            }
         });
     </script>
     <!-- PWA Install Script -->
