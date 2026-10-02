@@ -119,8 +119,6 @@ function renderStudentView(ketQua) {
                     '<h2 class="hero-name">Xin chào, <strong>' + (ketQua.tenHocSinh || 'Học sinh') + '</strong> 👋</h2>' +
                     '<div class="hero-meta">' +
                         '<span class="hero-tag"><i class="fa-solid fa-book"></i> ' + lopHoc + '</span>' +
-                        (ketQua.giaSu ? '<span class="hero-tag"><i class="fa-solid fa-chalkboard-user"></i> Gia sư: ' + ketQua.giaSu + '</span>' : '') +
-                        (displayPhone ? '<span class="hero-tag"><i class="fa-solid fa-phone"></i> ' + displayPhone + '</span>' : '') +
                     '</div>' +
                 '</div>' +
                 '<div class="hero-month-badge"><i class="fa-solid fa-calendar-days"></i> ' + monthLabel + '</div>' +
