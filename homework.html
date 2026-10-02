@@ -25,12 +25,12 @@
     <!-- Public Light Theme -->
     <link rel="stylesheet" href="css/public-theme.css">
 
-    <!-- Kiểm tra phiên đăng nhập đã lưu để duy trì trạng thái khi F5 / tải lại trang -->
+    <!-- Kiểm tra phiên đăng nhập trên URL (F5 / tải lại trang có tham số ?code=...) -->
     <script>
         (function() {
             try {
                 var p = new URLSearchParams(window.location.search);
-                var c = p.get('code') || p.get('ma') || p.get('maBaiTap') || p.get('maHocSinh') || sessionStorage.getItem('currentHwCode') || localStorage.getItem('currentHwCode');
+                var c = p.get('code') || p.get('ma') || p.get('maBaiTap') || p.get('maHocSinh');
                 if (c && String(c).trim() !== "") {
                     document.documentElement.classList.add('auto-logging-in');
                 }
@@ -2984,18 +2984,23 @@
             try {
                 var urlParams = new URLSearchParams(window.location.search);
                 var queryCode = urlParams.get('code') || urlParams.get('ma') || urlParams.get('maBaiTap') || urlParams.get('maHocSinh');
-                var savedCode = queryCode || sessionStorage.getItem('currentHwCode') || localStorage.getItem('currentHwCode');
                 
-                if (savedCode && String(savedCode).trim() !== "") {
-                    var trimmedCode = String(savedCode).trim();
+                // Chỉ tự động đăng nhập khi có tham số mã cụ thể trên URL (?code=...)
+                // Khi bấm vào nút Bài tập (không có param), luôn hiển thị màn hình tìm kiếm / đăng nhập
+                if (queryCode && String(queryCode).trim() !== "") {
+                    var trimmedCode = String(queryCode).trim();
                     fillQuickHw(trimmedCode);
                 } else {
+                    sessionStorage.removeItem('currentHwCode');
+                    localStorage.removeItem('currentHwCode');
                     document.documentElement.classList.remove('auto-logging-in');
                     var pageLoading = document.getElementById('pageAutoLoading');
                     if (pageLoading) pageLoading.style.display = 'none';
                     document.getElementById('mainScreen').style.display = 'block';
                 }
             } catch(e) {
+                sessionStorage.removeItem('currentHwCode');
+                localStorage.removeItem('currentHwCode');
                 document.documentElement.classList.remove('auto-logging-in');
                 var pageLoading = document.getElementById('pageAutoLoading');
                 if (pageLoading) pageLoading.style.display = 'none';
