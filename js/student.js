@@ -653,32 +653,35 @@ function renderStudentView(ketQua) {
             "<th>Ngày</th>" +
             "<th>Môn</th>" +
             "<th>Nội dung</th>" +
-            "<th>Nhận xét của gia sư</th>" +
             "<th>BTVN</th>" +
             "<th>Đầu giờ</th>" +
             "<th>Định kì</th>" +
             "<th>Chuyên cần</th>" +
+            "<th style='text-align:center;'>Chi tiết</th>" +
             "</tr></thead><tbody>";
 
         lichSu.slice().reverse().forEach(function(item, idx) {
             var isAbsent = isAbsentSession(item);
             var isHidden = (idx >= 5);
             var hiddenAttr = isHidden ? ' style="display:none;" class="history-row hidden-row' + (isAbsent ? ' row-absent' : '') + '"' : ' class="history-row' + (isAbsent ? ' row-absent' : '') + '"';
+            var detailHiddenAttr = isHidden ? ' style="display:none;" class="history-detail-row hidden-row"' : ' style="display:table-row;" class="history-detail-row"';
             var rawDate = formatDateOnly(item.ngay);
             var diemDau = item.diemDauGio !== undefined && item.diemDauGio !== null ? item.diemDauGio : item.diemDG;
             var diemDinh = item.diemDinhKi !== undefined && item.diemDinhKi !== null ? item.diemDinhKi : item.diemDK;
-            var nxText = item.nhanXet ? ('<span style="color:#1E293B; font-style:italic;"><i class="fa-solid fa-comment-dots" style="color:#3B82F6; margin-right:5px; font-style:normal;"></i>' + item.nhanXet + '</span>') : '<span class="cell-nhanxet-empty">—</span>';
 
             htmlLichSu +=
                 '<tr' + hiddenAttr + '>' +
                     '<td><span class="date-badge">' + rawDate + '</span></td>' +
                     '<td><span class="subj-chip">' + (item.mon || '-') + '</span></td>' +
                     '<td class="cell-noidung">' + (item.noiDung || item.topic || '-') + '</td>' +
-                    '<td class="cell-nhanxet">' + nxText + '</td>' +
                     '<td>' + btvnChip(item.danhGiaBTVN || item.btvn, isAbsent) + '</td>' +
                     '<td style="font-weight:700;font-size:15px;color:' + scoreColor(diemDau) + ';">' + (diemDau !== undefined && diemDau !== null && diemDau !== '' ? diemDau : '—') + '</td>' +
                     '<td style="font-weight:700;font-size:15px;color:' + scoreColor(diemDinh) + ';">' + (diemDinh !== undefined && diemDinh !== null && diemDinh !== '' ? diemDinh : '—') + '</td>' +
                     '<td><span class="status-chip ' + (isAbsent ? 'status-absent' : 'status-present') + '">' + (isAbsent ? '❌ Vắng' : '✅ Có mặt') + '</span></td>' +
+                    '<td style="text-align:center;"><button class="btn-expand-row open" onclick="toggleRowDetail(this)" title="Thu gọn / Mở rộng nhận xét"><i class="fa-solid fa-chevron-down"></i></button></td>' +
+                '</tr>' +
+                '<tr' + detailHiddenAttr + '>' +
+                    '<td colspan="8"><div class="detail-content"><i class="fa-solid fa-comment-dots" style="color:#3B82F6;margin-right:6px;"></i><strong>Nhận xét:</strong> ' + (item.nhanXet || 'Chưa có nhận xét cho buổi học này.') + '</div></td>' +
                 '</tr>';
         });
 
@@ -886,6 +889,11 @@ function hienThemBuoi() {
     for (var i = 0; i < hiddenRows.length; i++) {
         if (showCount < 5) {
             hiddenRows[i].style.display = '';
+            var nextDetail = hiddenRows[i].nextElementSibling;
+            if (nextDetail && nextDetail.classList.contains('history-detail-row')) {
+                nextDetail.style.display = 'table-row';
+                nextDetail.classList.remove('hidden-row');
+            }
             hiddenRows[i].classList.remove('hidden-row');
             showCount++;
         } else {
