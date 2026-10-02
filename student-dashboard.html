@@ -691,6 +691,34 @@
                 font-size: 22px !important;
             }
         }
+
+        /* ===== PHASE 17 — CHARTS MOBILE ===== */
+        @media (max-width: 480px) {
+          /* Charts grid: 1 cột */
+          .charts-grid { grid-template-columns: 1fr !important; }
+
+          /* Line chart height */
+          .chart-canvas-container { height: 200px !important; }
+          .chart-canvas-container canvas { height: 200px !important; }
+
+          /* Donut col: ngang */
+          .chart-donuts-col {
+            flex-direction: row !important;
+            gap: 12px !important;
+          }
+          .chart-donut-box { flex: 1 !important; }
+          .donut-canvas-wrap { width: 90px !important; height: 90px !important; }
+          .donut-canvas-wrap canvas { width: 90px !important; height: 90px !important; }
+          .donut-pct { font-size: 16px !important; }
+          .donut-lbl { font-size: 9px !important; }
+          .donut-legend { display: none !important; } /* ẩn legend khi quá nhỏ */
+        }
+        @media (max-width: 360px) {
+          .chart-donuts-col { flex-direction: column !important; }
+          .donut-canvas-wrap { width: 100px !important; height: 100px !important; }
+          .donut-canvas-wrap canvas { width: 100px !important; height: 100px !important; }
+          .donut-legend { display: flex !important; }
+        }
     </style>
 </head>
 <body>

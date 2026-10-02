@@ -959,6 +959,22 @@
                 padding-bottom: calc(60px + env(safe-area-inset-bottom)) !important;
             }
         }
+
+        /* ===== PHASE 17 — CHARTS MOBILE ===== */
+        @media (max-width: 480px) {
+          .hw-charts-upload-grid { grid-template-columns: 1fr !important; }
+          .hw-kpi-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+          .hw-kpi-val { font-size: 22px !important; }
+          .hw-donut-canvas-wrap { width: 110px !important; height: 110px !important; }
+          .hw-donut-canvas-wrap canvas { width: 110px !important; height: 110px !important; }
+          .hw-donut-pct { font-size: 20px !important; }
+          /* Bar chart height */
+          #hwBarCard [style*="height:160px"] { height: 130px !important; }
+        }
+        @media (max-width: 360px) {
+          .hw-kpi-val { font-size: 20px !important; }
+          .hw-hero-name { font-size: 16px !important; }
+        }
     </style>
 </head>
 <body class="relative min-h-screen bg-gradient-to-b from-primary-50 via-white to-primary-50 text-slate-800 antialiased overflow-x-hidden selection:bg-primary-200 selection:text-primary-900">
