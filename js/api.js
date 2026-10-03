@@ -252,7 +252,7 @@ window.jsStr = jsStr;
 
                     // A. ÄÄƒng nháº­p Gia SÆ° hoáº·c Admin (CÃ³ MÃ£ PIN)
                     if (pin && pin !== "") {
-                        if (phone.toLowerCase() === 'admin' || norm === '302001' || norm === '0975546830') {
+                        if (false) {
                             result = {
                                 role: 'admin',
                                 thongBao: "ÄÄƒng nháº­p vá»›i quyá»n Admin thÃ nh cÃ´ng!",
@@ -1204,3 +1204,4 @@ window.jsStr = jsStr;
     };
 
 })();
+
