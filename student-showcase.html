@@ -1,0 +1,1400 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bảng Điểm & Tiến Độ Học Tập — Nguyễn Hoàng Nam</title>
+    <link rel="icon" type="image/png" href="https://i.postimg.cc/66rKbPmb/trinh-duyet.png">
+    
+    <!-- Google Fonts: Plus Jakarta Sans -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome 6 Free -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+    
+    <!-- Chart.js & Datalabels Plugin -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-dark: #1D4ED8;
+            --primary-light: #60A5FA;
+            --text-main: #0F172A;
+            --text-sub: #475569;
+            --text-muted: #94A3B8;
+            --border-card: #E2E8F0;
+            --border-light: #F1F5F9;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        body {
+            font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: #EAF2FD;
+            color: var(--text-main);
+            min-height: 100vh;
+            padding: 30px 20px 50px;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+        }
+
+        /* Container chuẩn — Trắng tinh tế bo góc lớn như một App Dashboard chuẩn chỉnh */
+        .dashboard-container {
+            width: 100%;
+            max-width: 1040px;
+            background: #FFFFFF;
+            border-radius: 28px;
+            padding: 28px 32px 36px;
+            box-shadow: 0 20px 50px -10px rgba(37, 99, 235, 0.12), 0 8px 20px -4px rgba(15, 23, 42, 0.04);
+            border: 1px solid rgba(191, 219, 254, 0.6);
+            position: relative;
+        }
+
+        /* Top Action Bar */
+        .top-action-bar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 20px;
+        }
+
+        .btn-back-main {
+            display: inline-flex;
+            align-items: center;
+            gap: 9px;
+            padding: 8px 16px;
+            background: #F8FAFC;
+            border: 1px solid #E2E8F0;
+            border-radius: 12px;
+            color: #475569;
+            font-size: 13px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .btn-back-main:hover {
+            color: var(--primary);
+            border-color: #BFDBFE;
+            background: #EFF6FF;
+        }
+
+        .btn-back-main i {
+            font-size: 12px;
+            transition: transform 0.2s;
+        }
+        .btn-back-main:hover i {
+            transform: translateX(-3px);
+        }
+
+        .header-tag-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            background: #F1F5F9;
+            border: 1px solid #E2E8F0;
+            border-radius: 20px;
+            padding: 5px 14px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #64748B;
+        }
+
+        .dot-green-live {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background: #10B981;
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.25);
+        }
+
+        /* Hero Student Profile Card */
+        .hero-student-card {
+            background: linear-gradient(135deg, #1E40AF 0%, #2563EB 55%, #3B82F6 100%);
+            border-radius: 20px;
+            padding: 24px 28px;
+            color: #FFFFFF;
+            box-shadow: 0 12px 30px -6px rgba(37, 99, 235, 0.35);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 20px;
+            margin-bottom: 18px;
+        }
+
+        .hero-student-card::before {
+            content: '';
+            position: absolute;
+            top: -40px;
+            right: 40px;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+        }
+
+        .hero-left {
+            display: flex;
+            align-items: center;
+            gap: 18px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .avatar-circle {
+            width: 66px;
+            height: 66px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: 2.5px solid rgba(255, 255, 255, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+            font-weight: 800;
+            color: #FFFFFF;
+            letter-spacing: 0.5px;
+            flex-shrink: 0;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .hero-info-title {
+            font-size: 22px;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-bottom: 8px;
+            letter-spacing: -0.2px;
+        }
+
+        .hero-chips-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hero-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.18);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.28);
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.95);
+        }
+
+        .hero-right {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 6px;
+        }
+
+        .hero-month-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 8px 16px;
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.35);
+            border-radius: 12px;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #FFFFFF;
+            white-space: nowrap;
+        }
+
+        .hero-month-pill i {
+            color: #FDE047;
+            font-size: 14px;
+        }
+
+        /* Announcement Banner */
+        .announcement-banner {
+            background: linear-gradient(135deg, #EFF6FF 0%, #F5F9FF 100%);
+            border: 1px solid #BFDBFE;
+            border-left: 4px solid #2563EB;
+            border-radius: 16px;
+            padding: 14px 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 14px rgba(37, 99, 235, 0.04);
+        }
+
+        .announcement-icon-wrap {
+            width: 42px;
+            height: 42px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+            color: #FFFFFF;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 17px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 10px rgba(37, 99, 235, 0.25);
+        }
+
+        .announcement-content {
+            flex: 1;
+        }
+
+        .announcement-tag {
+            font-size: 11px;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #1D4ED8;
+            margin-bottom: 2px;
+        }
+
+        .announcement-text {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1E293B;
+            line-height: 1.4;
+        }
+
+        /* 3 Summary KPI Cards */
+        .kpi-cards-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 16px;
+            margin-bottom: 22px;
+        }
+
+        .kpi-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-card);
+            border-radius: 18px;
+            padding: 18px 20px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            transition: transform 0.2s, box-shadow 0.2s, border-color 0.2s;
+        }
+
+        .kpi-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(37, 99, 235, 0.08);
+            border-color: #BFDBFE;
+        }
+
+        .kpi-icon-box {
+            width: 48px;
+            height: 48px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #FFFFFF;
+            flex-shrink: 0;
+        }
+
+        .icon-box-gold {
+            background: linear-gradient(135deg, #FFB703 0%, #FB8500 100%);
+            box-shadow: 0 6px 16px rgba(251, 133, 0, 0.25);
+        }
+
+        .icon-box-blue {
+            background: linear-gradient(135deg, #3B82F6 0%, #1D4ED8 100%);
+            box-shadow: 0 6px 16px rgba(59, 130, 246, 0.25);
+        }
+
+        .icon-box-purple {
+            background: linear-gradient(135deg, #8B5CF6 0%, #6D28D9 100%);
+            box-shadow: 0 6px 16px rgba(139, 92, 246, 0.25);
+        }
+
+        .kpi-content {
+            flex: 1;
+        }
+
+        .kpi-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #64748B;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            display: block;
+        }
+
+        .kpi-value-row {
+            display: flex;
+            align-items: baseline;
+            gap: 6px;
+            margin-bottom: 4px;
+        }
+
+        .kpi-num {
+            font-size: 27px;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1;
+            letter-spacing: -0.5px;
+        }
+
+        .kpi-action-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13.5px;
+            font-weight: 700;
+            color: #2563EB;
+            text-decoration: none;
+            margin-top: 2px;
+        }
+
+        .kpi-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 3px 9px;
+            border-radius: 14px;
+            font-size: 11.5px;
+            font-weight: 700;
+            width: fit-content;
+        }
+
+        .kpi-badge-gold {
+            background: #FEF3C7;
+            color: #B45309;
+            border: 1px solid #FDE68A;
+        }
+
+        /* Charts Grid Section */
+        .charts-section-grid {
+            display: grid;
+            grid-template-columns: 1fr 330px;
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .chart-card-box {
+            background: #FFFFFF;
+            border: 1px solid var(--border-card);
+            border-radius: 18px;
+            padding: 20px 22px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+        }
+
+        .chart-header-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 14px;
+        }
+
+        .chart-title-group {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .chart-title-icon {
+            color: #2563EB;
+            font-size: 16px;
+        }
+
+        .chart-title-text {
+            font-size: 15.5px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .chart-hint-text {
+            font-size: 11.5px;
+            color: var(--text-muted);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .chart-toggles-bar {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 12px;
+        }
+
+        .toggle-dataset-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 5px 12px;
+            border-radius: 16px;
+            border: 1px solid var(--border-card);
+            background: #FFFFFF;
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-sub);
+            cursor: pointer;
+        }
+
+        .toggle-dataset-btn.active-blue {
+            background: #EFF6FF;
+            border-color: #93C5FD;
+            color: #1D4ED8;
+            font-weight: 700;
+        }
+
+        .toggle-dataset-btn.active-gold {
+            background: #FEF3C7;
+            border-color: #FCD34D;
+            color: #B45309;
+            font-weight: 700;
+        }
+
+        .btn-dot {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+        }
+
+        .btn-dot.blue { background: #2563EB; }
+        .btn-dot.gold { background: #F59E0B; }
+
+        .line-chart-container {
+            position: relative;
+            height: 230px;
+            width: 100%;
+        }
+
+        /* Right Column: 2 Donut Cards */
+        .donuts-stack-col {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .donut-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-card);
+            border-radius: 18px;
+            padding: 16px 18px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .donut-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 10px;
+        }
+
+        .donut-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: var(--text-main);
+        }
+
+        .donut-body-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .donut-canvas-holder {
+            position: relative;
+            width: 95px;
+            height: 95px;
+            flex-shrink: 0;
+        }
+
+        .donut-center-info {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            pointer-events: none;
+        }
+
+        .donut-center-pct {
+            font-size: 19px;
+            font-weight: 800;
+            color: var(--text-main);
+            line-height: 1;
+            display: block;
+        }
+
+        .donut-center-lbl {
+            font-size: 10px;
+            font-weight: 600;
+            color: var(--text-muted);
+            margin-top: 2px;
+            display: block;
+        }
+
+        .donut-details-col {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+
+        .donut-detail-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-size: 11.5px;
+            color: var(--text-sub);
+        }
+
+        .donut-detail-item strong {
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        .donut-legend-dot {
+            display: inline-block;
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            margin-right: 5px;
+        }
+
+        .badge-reward-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            padding: 4px 10px;
+            border-radius: 10px;
+            font-size: 11px;
+            font-weight: 700;
+            margin-top: 6px;
+            width: fit-content;
+        }
+
+        .badge-reward-gold {
+            background: #FEF3C7;
+            color: #92400E;
+            border: 1px solid #FDE68A;
+        }
+
+        .badge-reward-green {
+            background: #DCFCE7;
+            color: #166534;
+            border: 1px solid #BBF7D0;
+        }
+
+        /* Detailed History Table Card */
+        .history-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-card);
+            border-radius: 20px;
+            padding: 22px 24px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+            margin-bottom: 22px;
+        }
+
+        .history-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-bottom: 16px;
+        }
+
+        .history-title-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .history-title-icon {
+            color: var(--text-main);
+            font-size: 18px;
+        }
+
+        .history-title-text {
+            font-size: 16.5px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .history-stats-badge {
+            background: #F1F5F9;
+            color: #475569;
+            font-size: 12px;
+            font-weight: 600;
+            padding: 3px 10px;
+            border-radius: 14px;
+            margin-left: 4px;
+        }
+
+        .btn-refresh-history {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            border-radius: 10px;
+            border: 1px solid var(--border-card);
+            background: #FFFFFF;
+            color: var(--text-sub);
+            font-size: 12.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.15s;
+        }
+
+        .btn-refresh-history:hover {
+            color: var(--primary);
+            border-color: #BFDBFE;
+            background: #F8FAFF;
+        }
+
+        /* Table Styling — All 9 Columns perfectly fitted */
+        .custom-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 13px;
+            text-align: left;
+        }
+
+        .custom-table thead th {
+            background: #F8FAFC;
+            color: #64748B;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 12px 10px;
+            border-bottom: 1.5px solid var(--border-card);
+            white-space: nowrap;
+        }
+
+        .custom-table tbody tr {
+            border-bottom: 1px solid var(--border-light);
+            transition: background 0.15s ease;
+        }
+
+        .custom-table tbody tr:last-child {
+            border-bottom: none;
+        }
+
+        .custom-table tbody tr:hover {
+            background: #F8FAFF;
+        }
+
+        .custom-table td {
+            padding: 14px 10px;
+            vertical-align: middle;
+            color: var(--text-main);
+        }
+
+        .col-week {
+            font-weight: 700;
+            color: #1E293B;
+            text-align: center;
+            width: 44px;
+        }
+
+        .col-date {
+            color: #475569;
+            font-weight: 600;
+            white-space: nowrap;
+            width: 55px;
+        }
+
+        .subject-badge {
+            background: #E8F5E9;
+            color: #2E7D32;
+            font-weight: 700;
+            font-size: 11.5px;
+            padding: 3px 8px;
+            border-radius: 6px;
+            display: inline-block;
+            text-align: center;
+        }
+
+        .topic-name {
+            font-weight: 700;
+            color: #0F172A;
+            line-height: 1.35;
+            max-width: 160px;
+        }
+
+        .tutor-comment-cell {
+            max-width: 260px;
+            font-size: 12.5px;
+            color: #334155;
+            line-height: 1.4;
+            display: flex;
+            align-items: flex-start;
+            gap: 6px;
+        }
+
+        .tutor-comment-cell i {
+            color: #2563EB;
+            font-size: 12px;
+            margin-top: 3px;
+            flex-shrink: 0;
+        }
+
+        /* Status Pills */
+        .status-pill {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 4px 10px;
+            border-radius: 14px;
+            font-size: 11.5px;
+            font-weight: 700;
+            white-space: nowrap;
+        }
+
+        .pill-present {
+            background: #DCFCE7;
+            color: #166534;
+        }
+
+        .pill-absent {
+            background: #FCE7F3;
+            color: #9D174D;
+        }
+
+        .pill-hw-done {
+            background: #DCFCE7;
+            color: #166534;
+        }
+
+        .pill-hw-partial {
+            background: #FEF3C7;
+            color: #92400E;
+        }
+
+        .pill-hw-none {
+            background: #FCE7F3;
+            color: #9D174D;
+        }
+
+        .score-val {
+            font-size: 13.5px;
+            font-weight: 800;
+            text-align: center;
+            display: inline-block;
+            min-width: 35px;
+        }
+
+        .score-blue {
+            color: #2563EB;
+        }
+
+        .score-purple {
+            color: #7C3AED;
+        }
+
+        .score-none {
+            color: #94A3B8;
+            font-weight: 500;
+            font-size: 12px;
+        }
+
+        /* Parent Feedback Section */
+        .feedback-card {
+            background: #FFFFFF;
+            border: 1px solid var(--border-card);
+            border-radius: 20px;
+            padding: 22px 24px;
+            box-shadow: 0 4px 16px rgba(15, 23, 42, 0.03);
+        }
+
+        .feedback-header {
+            display: flex;
+            align-items: center;
+            gap: 9px;
+            margin-bottom: 14px;
+        }
+
+        .feedback-title-icon {
+            color: #2563EB;
+            font-size: 17px;
+        }
+
+        .feedback-title-text {
+            font-size: 15.5px;
+            font-weight: 800;
+            color: var(--text-main);
+        }
+
+        .feedback-textarea {
+            width: 100%;
+            min-height: 95px;
+            border: 1.5px solid var(--border-card);
+            border-radius: 14px;
+            padding: 14px 16px;
+            font-family: inherit;
+            font-size: 13.5px;
+            color: var(--text-main);
+            background: #FAFAFA;
+            resize: vertical;
+            outline: none;
+            transition: all 0.2s ease;
+            margin-bottom: 14px;
+        }
+
+        .feedback-textarea:focus {
+            background: #FFFFFF;
+            border-color: #2563EB;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.12);
+        }
+
+        .feedback-bottom-row {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+        }
+
+        .btn-submit-feedback {
+            display: inline-flex;
+            align-items: center;
+            gap: 7px;
+            padding: 10px 24px;
+            background: linear-gradient(135deg, #2563EB 0%, #1D4ED8 100%);
+            border: none;
+            border-radius: 12px;
+            color: #FFFFFF;
+            font-size: 13.5px;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .btn-submit-feedback:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="dashboard-container" id="mainShowcaseContainer">
+        
+        <!-- Top Bar -->
+        <div class="top-action-bar">
+            <a href="index.html" class="btn-back-main">
+                <i class="fa-solid fa-arrow-left"></i>
+                <span>Trở về màn hình chính</span>
+            </a>
+            <div class="header-tag-pill">
+                <span class="dot-green-live"></span>
+                <span>Học kỳ 1 • Niên khóa 2026 - 2027</span>
+            </div>
+        </div>
+
+        <!-- Hero Student Profile Card -->
+        <div class="hero-student-card">
+            <div class="hero-left">
+                <div class="avatar-circle">NN</div>
+                <div>
+                    <h1 class="hero-info-title">Xin chào, Nguyễn Hoàng Nam 👋</h1>
+                    <div class="hero-chips-row">
+                        <span class="hero-chip">
+                            <i class="fa-solid fa-book"></i> Lớp 9 - Toán
+                        </span>
+                        <span class="hero-chip">
+                            <i class="fa-solid fa-chalkboard-user"></i> Gia sư: Thầy Trần Hoàng Nam
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="hero-right">
+                <div class="hero-month-pill">
+                    <i class="fa-solid fa-calendar-days"></i>
+                    <span>Tháng 10/2026</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Announcement Notification Card -->
+        <div class="announcement-banner">
+            <div class="announcement-icon-wrap">
+                <i class="fa-solid fa-bullhorn"></i>
+            </div>
+            <div class="announcement-content">
+                <div class="announcement-tag">THÔNG BÁO TỪ GIA SƯ</div>
+                <div class="announcement-text">Chúc mừng em đạt kết quả xuất sắc trong buổi học vừa qua!</div>
+            </div>
+        </div>
+
+        <!-- 3 Summary KPI Cards -->
+        <div class="kpi-cards-grid">
+            <!-- Card 1: BÀI TẬP -->
+            <div class="kpi-card">
+                <div class="kpi-icon-box icon-box-gold">
+                    <i class="fa-solid fa-file-arrow-up"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">BÀI TẬP</span>
+                    <a href="homework.html" class="kpi-action-link">
+                        <span>Bấm vào để nộp →</span>
+                    </a>
+                </div>
+            </div>
+
+            <!-- Card 2: TB ĐẦU GIỜ -->
+            <div class="kpi-card">
+                <div class="kpi-icon-box icon-box-blue">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">TB ĐẦU GIỜ (THÁNG)</span>
+                    <div class="kpi-value-row">
+                        <span class="kpi-num">8.50</span>
+                    </div>
+                    <div class="kpi-badge kpi-badge-gold">
+                        <span>Giỏi</span>
+                        <i class="fa-solid fa-star" style="color: #F59E0B;"></i>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 3: TB ĐỊNH KÌ -->
+            <div class="kpi-card">
+                <div class="kpi-icon-box icon-box-purple">
+                    <i class="fa-solid fa-award"></i>
+                </div>
+                <div class="kpi-content">
+                    <span class="kpi-label">TB ĐỊNH KÌ (THÁNG)</span>
+                    <div class="kpi-value-row">
+                        <span class="kpi-num">8.83</span>
+                    </div>
+                    <div class="kpi-badge kpi-badge-gold">
+                        <span>Giỏi</span>
+                        <i class="fa-solid fa-star" style="color: #F59E0B;"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Charts Grid (Line Chart & 2 Donut Cards) -->
+        <div class="charts-section-grid">
+            <!-- Left: Line Chart -->
+            <div class="chart-card-box">
+                <div class="chart-header-row">
+                    <div class="chart-title-group">
+                        <i class="fa-solid fa-chart-line chart-title-icon"></i>
+                        <h2 class="chart-title-text">Biểu đồ điểm số học tập</h2>
+                    </div>
+                    <div class="chart-hint-text">
+                        <i class="fa-solid fa-circle-info" style="color: #2563EB;"></i>
+                        <span>Nhấn nút điểm để ẩn/hiện đường dữ liệu. Nhấn vào điểm tròn để xem chi tiết</span>
+                    </div>
+                </div>
+
+                <div class="chart-toggles-bar">
+                    <button class="toggle-dataset-btn active-blue" id="btnDauGio" onclick="toggleDataset(0)">
+                        <span class="btn-dot blue"></span>
+                        <span>Điểm đầu giờ</span>
+                    </button>
+                    <button class="toggle-dataset-btn active-gold" id="btnDinhKi" onclick="toggleDataset(1)">
+                        <span class="btn-dot gold"></span>
+                        <span>Điểm định kì</span>
+                    </button>
+                </div>
+
+                <div class="line-chart-container">
+                    <canvas id="lineChartCanvas"></canvas>
+                </div>
+            </div>
+
+            <!-- Right: 2 Donut Cards -->
+            <div class="donuts-stack-col">
+                <!-- Donut 1: BTVN -->
+                <div class="donut-card">
+                    <div class="donut-header">
+                        <i class="fa-solid fa-circle-check" style="color: #10B981; font-size: 15px;"></i>
+                        <span class="donut-title">Hoàn thành BTVN</span>
+                    </div>
+                    <div class="donut-body-row">
+                        <div class="donut-canvas-holder">
+                            <canvas id="donutBtvnCanvas"></canvas>
+                            <div class="donut-center-info">
+                                <span class="donut-center-pct">100%</span>
+                                <span class="donut-center-lbl">Hoàn thành</span>
+                            </div>
+                        </div>
+                        <div class="donut-details-col">
+                            <div class="donut-detail-item">
+                                <span><span class="donut-legend-dot" style="background:#10B981;"></span>Hoàn thành</span>
+                                <strong>3</strong>
+                            </div>
+                            <div class="donut-detail-item">
+                                <span><span class="donut-legend-dot" style="background:#CBD5E1;"></span>Chưa hoàn thành</span>
+                                <strong>0</strong>
+                            </div>
+                            <div class="badge-reward-pill badge-reward-gold">
+                                <i class="fa-solid fa-trophy" style="color: #D97706;"></i>
+                                <span>Chăm chỉ Xuất sắc 🏆</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Donut 2: Chuyên cần -->
+                <div class="donut-card">
+                    <div class="donut-header">
+                        <i class="fa-solid fa-user-check" style="color: #2563EB; font-size: 15px;"></i>
+                        <span class="donut-title">Chuyên cần</span>
+                    </div>
+                    <div class="donut-body-row">
+                        <div class="donut-canvas-holder">
+                            <canvas id="donutCcCanvas"></canvas>
+                            <div class="donut-center-info">
+                                <span class="donut-center-pct">75%</span>
+                                <span class="donut-center-lbl">Có mặt</span>
+                            </div>
+                        </div>
+                        <div class="donut-details-col">
+                            <div class="donut-detail-item">
+                                <span><span class="donut-legend-dot" style="background:#2563EB;"></span>Có mặt</span>
+                                <strong>3</strong>
+                            </div>
+                            <div class="donut-detail-item">
+                                <span><span class="donut-legend-dot" style="background:#EF4444;"></span>Vắng</span>
+                                <strong>1</strong>
+                            </div>
+                            <div class="badge-reward-pill badge-reward-green">
+                                <i class="fa-solid fa-seedling" style="color: #16A34A;"></i>
+                                <span>Đi học Đều Hơn Nhé 🌱</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- History & Detailed Remarks Table Card -->
+        <div class="history-card">
+            <div class="history-header">
+                <div class="history-title-group">
+                    <i class="fa-solid fa-clock-rotate-left history-title-icon"></i>
+                    <h2 class="history-title-text">Lịch sử học tập & Nhận xét chi tiết</h2>
+                    <span class="history-stats-badge">Đã học: 3 • Nghỉ: 1</span>
+                </div>
+                <button class="btn-refresh-history" onclick="window.location.reload()">
+                    <i class="fa-solid fa-arrows-rotate"></i>
+                    <span>Làm mới</span>
+                </button>
+            </div>
+
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th style="width: 48px; text-align: center;">TUẦN</th>
+                        <th style="width: 72px;">NGÀY DẠY</th>
+                        <th style="width: 58px; text-align: center;">MÔN</th>
+                        <th style="width: 175px;">NỘI DUNG</th>
+                        <th>NHẬN XÉT CỦA GIA SƯ</th>
+                        <th style="text-align: center; width: 120px;">ĐÁNH GIÁ BTVN</th>
+                        <th style="text-align: center; width: 85px;">KT ĐẦU GIỜ</th>
+                        <th style="text-align: center; width: 85px;">KT ĐỊNH KÌ</th>
+                        <th style="text-align: center; width: 80px;">TRẠNG THÁI</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- Row 1: Tuần 7 -->
+                    <tr>
+                        <td class="col-week">7</td>
+                        <td class="col-date">18/09</td>
+                        <td style="text-align: center;"><span class="subject-badge">Toán</span></td>
+                        <td class="topic-name">Ôn tập Đại số đầu năm</td>
+                        <td>
+                            <div class="tutor-comment-cell">
+                                <i class="fa-solid fa-comment-dots"></i>
+                                <span>Báo nghỉ có phép do bận việc gia đình.</span>
+                            </div>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="status-pill pill-hw-none">Không làm</span>
+                        </td>
+                        <td style="text-align: center;"><span class="score-none">Không có</span></td>
+                        <td style="text-align: center;"><span class="score-none">Không có</span></td>
+                        <td style="text-align: center;">
+                            <span class="status-pill pill-absent">Vắng</span>
+                        </td>
+                    </tr>
+
+                    <!-- Row 2: Tuần 8 -->
+                    <tr>
+                        <td class="col-week">8</td>
+                        <td class="col-date">23/09</td>
+                        <td style="text-align: center;"><span class="subject-badge">Toán</span></td>
+                        <td class="topic-name">Căn bậc hai & Hằng đẳng thức</td>
+                        <td>
+                            <div class="tutor-comment-cell">
+                                <i class="fa-solid fa-comment-dots"></i>
+                                <span>Nắm vững lý thuyết rút gọn biểu thức chứa căn.</span>
+                            </div>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="status-pill pill-hw-partial">Hoàn thành 75%</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="score-val score-blue">8.0</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="score-val score-purple">8.5</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="status-pill pill-present">Có mặt</span>
+                        </td>
+                    </tr>
+
+                    <!-- Row 3: Tuần 9 -->
+                    <tr>
+                        <td class="col-week">9</td>
+                        <td class="col-date">27/09</td>
+                        <td style="text-align: center;"><span class="subject-badge">Toán</span></td>
+                        <td class="topic-name">Tỉ số lượng giác của góc nhọn</td>
+                        <td>
+                            <div class="tutor-comment-cell">
+                                <i class="fa-solid fa-comment-dots"></i>
+                                <span>Hiểu bài nhanh, cần làm đủ phần bài tập nâng cao.</span>
+                            </div>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="status-pill pill-hw-partial" style="background:#E0F2FE; color:#0369A1;">Hoàn thành 90%</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="score-val score-blue">8.5</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="score-val score-purple">9.0</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="status-pill pill-present">Có mặt</span>
+                        </td>
+                    </tr>
+
+                    <!-- Row 4: Tuần 10 -->
+                    <tr>
+                        <td class="col-week">10</td>
+                        <td class="col-date">30/09</td>
+                        <td style="text-align: center;"><span class="subject-badge">Toán</span></td>
+                        <td class="topic-name">Hệ thức lượng trong tam giác vuông</td>
+                        <td>
+                            <div class="tutor-comment-cell">
+                                <i class="fa-solid fa-comment-dots"></i>
+                                <span>Làm bài rất tốt, nắm chắc các hệ thức và tỉ số lượng giác.</span>
+                            </div>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="status-pill pill-hw-done">Hoàn thành</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="score-val score-blue">9.0</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="score-val score-purple">9.0</span>
+                        </td>
+                        <td style="text-align: center;">
+                            <span class="status-pill pill-present">Có mặt</span>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Parent Feedback Card -->
+        <div class="feedback-card">
+            <div class="feedback-header">
+                <i class="fa-solid fa-comment-dots feedback-title-icon"></i>
+                <h2 class="feedback-title-text">Phản hồi từ Phụ huynh</h2>
+            </div>
+            
+            <textarea class="feedback-textarea" placeholder="Nhập ý kiến đóng góp hoặc phản hồi của phụ huynh gửi cho gia sư tại đây..."></textarea>
+            
+            <div class="feedback-bottom-row">
+                <button type="button" class="btn-submit-feedback">
+                    <span>Gửi phản hồi</span>
+                    <i class="fa-solid fa-paper-plane"></i>
+                </button>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Chart Configuration Script -->
+    <script>
+        var lineChart = null;
+
+        window.addEventListener('DOMContentLoaded', function() {
+            // 1. Line Chart
+            var ctxLine = document.getElementById('lineChartCanvas').getContext('2d');
+            
+            var gradientBlue = ctxLine.createLinearGradient(0, 0, 0, 220);
+            gradientBlue.addColorStop(0, 'rgba(37, 99, 235, 0.2)');
+            gradientBlue.addColorStop(1, 'rgba(37, 99, 235, 0.01)');
+
+            var gradientGold = ctxLine.createLinearGradient(0, 0, 0, 220);
+            gradientGold.addColorStop(0, 'rgba(245, 158, 11, 0.2)');
+            gradientGold.addColorStop(1, 'rgba(245, 158, 11, 0.01)');
+
+            lineChart = new Chart(ctxLine, {
+                type: 'line',
+                data: {
+                    labels: ['23/09', '27/09', '30/09'],
+                    datasets: [
+                        {
+                            label: 'Điểm đầu giờ',
+                            data: [8.0, 8.5, 9.0],
+                            borderColor: '#2563EB',
+                            backgroundColor: gradientBlue,
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.25,
+                            pointBackgroundColor: '#FFFFFF',
+                            pointBorderColor: '#2563EB',
+                            pointBorderWidth: 2.5,
+                            pointRadius: 5.5,
+                            pointHoverRadius: 7
+                        },
+                        {
+                            label: 'Điểm định kì',
+                            data: [8.5, 9.0, 9.0],
+                            borderColor: '#F59E0B',
+                            backgroundColor: gradientGold,
+                            borderWidth: 3,
+                            fill: true,
+                            tension: 0.25,
+                            pointBackgroundColor: '#FFFFFF',
+                            pointBorderColor: '#F59E0B',
+                            pointBorderWidth: 2.5,
+                            pointRadius: 5.5,
+                            pointHoverRadius: 7
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    animation: false,
+                    plugins: {
+                        legend: { display: false }
+                    },
+                    scales: {
+                        x: {
+                            grid: { display: false },
+                            ticks: {
+                                color: '#64748B',
+                                font: { family: 'Plus Jakarta Sans', size: 11.5, weight: '600' }
+                            }
+                        },
+                        y: {
+                            min: 6,
+                            max: 10,
+                            ticks: {
+                                stepSize: 1,
+                                color: '#94A3B8',
+                                font: { family: 'Plus Jakarta Sans', size: 11, weight: '600' }
+                            },
+                            grid: {
+                                color: '#F1F5F9',
+                                drawBorder: false
+                            }
+                        }
+                    }
+                }
+            });
+
+            // 2. Donut BTVN
+            var ctxBtvn = document.getElementById('donutBtvnCanvas').getContext('2d');
+            new Chart(ctxBtvn, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [3, 0],
+                        backgroundColor: ['#10B981', '#E2E8F0'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    animation: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    }
+                }
+            });
+
+            // 3. Donut Chuyên cần
+            var ctxCc = document.getElementById('donutCcCanvas').getContext('2d');
+            new Chart(ctxCc, {
+                type: 'doughnut',
+                data: {
+                    datasets: [{
+                        data: [3, 1],
+                        backgroundColor: ['#2563EB', '#EF4444'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    cutout: '75%',
+                    animation: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: { enabled: false }
+                    }
+                }
+            });
+        });
+
+        function toggleDataset(index) {
+            if (!lineChart) return;
+            var isVisible = lineChart.isDatasetVisible(index);
+            lineChart.setDatasetVisibility(index, !isVisible);
+            lineChart.update();
+
+            var btn = index === 0 ? document.getElementById('btnDauGio') : document.getElementById('btnDinhKi');
+            if (btn) {
+                var activeClass = index === 0 ? 'active-blue' : 'active-gold';
+                if (isVisible) {
+                    btn.classList.remove(activeClass);
+                } else {
+                    btn.classList.add(activeClass);
+                }
+            }
+        }
+    </script>
+</body>
+</html>

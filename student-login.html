@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Public Light Theme -->
-    <link rel="stylesheet" href="css/public-theme.css?v=20261002_scroll">
+    <link rel="stylesheet" href="css/public-theme.css?v=3.0.2">
 
     <script>
         tailwind.config = {
@@ -149,6 +149,7 @@
         
         <!-- SECTION: PH/HS -->
         <section id="page-ph-hs" class="page-transition page-visible">
+            <div id="sectionStudentLogin" class="hidden"></div>
             
             <div class="text-center max-w-3xl mx-auto mb-12 reveal">
                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-teal-100 border border-teal-200 mb-6 shadow-sm">
@@ -168,7 +169,7 @@
 
             <!-- Form Tra cứu PH/HS -->
             <div class="max-w-2xl mx-auto mb-20 reveal" style="transition-delay: 0.15s;">
-                <form id="formPhHs" class="bg-white p-2.5 rounded-full shadow-2xl shadow-teal-500/20 border border-gray-100 flex items-center transition-all duration-300 focus-within:ring-4 focus-within:ring-teal-100 hover:shadow-glow">
+                <form id="formPhHs" onsubmit="event.preventDefault(); xuLyTraCuu('student');" class="bg-white p-2.5 rounded-full shadow-2xl shadow-teal-500/20 border border-gray-100 flex items-center transition-all duration-300 focus-within:ring-4 focus-within:ring-teal-100 hover:shadow-glow">
                     
                     <div class="pl-5 pr-3 text-slate-400">
                         <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -179,7 +180,7 @@
                     <input 
                         type="text" id="maHocSinh"
                         class="flex-grow bg-transparent text-slate-800 text-base sm:text-lg px-2 py-3 focus:outline-none placeholder-slate-400 font-medium w-full"
-                        placeholder="Nhập mã học sinh để tra cứu..." required autocomplete="off"
+                        placeholder="Nhập mã HS hoặc SĐT phụ huynh..." required autocomplete="off"
                     >
                     
                     <button type="submit" id="btnSubmitPhHs" class="flex-shrink-0 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3.5 px-6 sm:px-8 rounded-full flex items-center gap-2 transition-all duration-200 active:scale-95">
@@ -194,29 +195,10 @@
                     </button>
                 </form>
 
-                <!-- Thanh Đăng Nhập Nhanh Xem Demo PH/HS (1 Chạm) -->
-                <div class="mt-5 p-4 bg-white/80 backdrop-blur-md rounded-2xl border border-teal-100 shadow-sm text-xs text-slate-600">
-                    <div class="mb-2.5 font-bold text-teal-800 flex items-center justify-between flex-wrap gap-2">
-                        <span class="flex items-center gap-1.5 text-xs sm:text-sm">
-                            <i class="fa-solid fa-bolt text-amber-500"></i>
-                            <span>Đăng nhập nhanh xem Demo (1 chạm):</span>
-                        </span>
-                        <a href="student-dashboard.html" class="text-teal-600 hover:text-teal-800 font-semibold underline text-xs">
-                            Vào thẳng Bảng điểm &rarr;
-                        </a>
-                    </div>
-                    <div class="flex gap-2 flex-wrap">
-                        <button type="button" onclick="fillQuickStudent('0912345678')" class="bg-teal-50 hover:bg-teal-600 hover:text-white border border-teal-200 text-teal-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95 cursor-pointer">
-                            👦 Nguyễn Hoàng Nam (0912345678)
-                        </button>
-                        <button type="button" onclick="fillQuickStudent('0987654321')" class="bg-emerald-50 hover:bg-emerald-600 hover:text-white border border-emerald-200 text-emerald-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95 cursor-pointer">
-                            👧 Lê Minh Thư (0987654321)
-                        </button>
-                        <button type="button" onclick="fillQuickStudent('0905123456')" class="bg-amber-50 hover:bg-amber-600 hover:text-white border border-amber-200 text-amber-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95 cursor-pointer">
-                            👦 Phạm Hải Đăng (0905123456)
-                        </button>
-                    </div>
-                </div>
+                <p id="thongBaoLoi" class="text-red-500 text-sm mt-3 text-center font-medium" style="display: none;"></p>
+                <p id="loadingText" class="text-teal-600 text-sm mt-3 text-center italic" style="display: none;">
+                    <i class="fa-solid fa-circle-notch fa-spin"></i> Hệ thống đang trích xuất dữ liệu học sinh...
+                </p>
             </div>
 
             <!-- 4 Thẻ tính năng -->
@@ -288,11 +270,11 @@
                     <input 
                         type="text" id="maBaiTap"
                         class="flex-grow bg-transparent text-slate-800 text-base sm:text-lg px-2 py-3 focus:outline-none placeholder-slate-400 font-medium w-full"
-                        placeholder="Nhập mã bài tập của bạn để đăng nhập (VD: BT101)..." required autocomplete="off"
+                        placeholder="Nhập mã bài tập (VD: BT101)..." required autocomplete="off"
                     >
                     
                     <button type="submit" id="btnSubmitBaiTap" class="flex-shrink-0 bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-6 sm:px-8 rounded-full flex items-center gap-2 transition-all duration-200 active:scale-95">
-                        <span class="btn-text">Đăng nhập cổng</span>
+                        <span class="btn-text">Đăng nhập<span class="btn-text-portal"> cổng</span></span>
                         <svg class="btn-icon h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>
@@ -408,11 +390,31 @@
             </div>
         </section>
 
+    <!-- Modal Thẻ chọn con khi Số điện thoại khớp nhiều Học sinh (BẮT BUỘC CHO PRODUCTION) -->
+    <div id="childSelectorModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.75); backdrop-filter: blur(8px); z-index: 9999; justify-content: center; align-items: center; padding: 20px;">
+        <div style="background: rgba(15, 11, 46, 0.98); border: 1px solid #8E4DFF; box-shadow: 0 0 40px rgba(142, 77, 255, 0.4); border-radius: 24px; padding: 30px 25px; max-width: 440px; width: 100%; text-align: center; color: #FFF;">
+            <div style="width: 60px; height: 60px; border-radius: 50%; background: rgba(142,77,255,0.15); border: 1px solid rgba(142,77,255,0.3); display: flex; align-items: center; justify-content: center; margin: 0 auto 15px auto; font-size: 26px; color: #FFD23F;">
+                <i class="fa-solid fa-users"></i>
+            </div>
+            <h3 style="font-size: 20px; font-weight: 800; color: #FFD23F; margin-bottom: 8px;">Vui lòng chọn học sinh</h3>
+            <p style="font-size: 13.5px; color: #A6ADCE; margin-bottom: 22px; line-height: 1.5;">Số điện thoại này đăng ký cho nhiều con. Hãy chọn tên học sinh bạn muốn xem kết quả học tập:</p>
+            
+            <div id="childrenBtnContainer" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 20px;">
+                <!-- Thẻ các nút tên con sẽ được render động từ navigation.js -->
+            </div>
+
+            <button type="button" onclick="document.getElementById('childSelectorModal').style.display='none'" style="background: transparent; border: 1px solid rgba(255,255,255,0.2); color: #A6ADCE; border-radius: 12px; padding: 10px 20px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s;">
+                Hủy bỏ
+            </button>
+        </div>
+    </div>
+
     </main>
 
-    <!-- Kết nối dữ liệu hệ thống Demo -->
-    <script src="js/demo-data.js"></script>
-    <script src="js/api.js?v=2.0.0"></script>
+    <!-- Kết nối dữ liệu hệ thống Chuẩn Production -->
+    <script src="js/api.js?v=20261003_sec1"></script>
+    <script src="js/navigation.js?v=20261003_sec1"></script>
+    <script src="js/pwa-install.js"></script>
 
     <script>
         // Hàm chuyển đổi giữa các trang (SPA Logic)
@@ -436,18 +438,6 @@
             if (targetPage) {
                 targetPage.classList.remove('page-hidden');
                 targetPage.classList.add('page-visible');
-            }
-        }
-
-        // Đăng nhập nhanh 1 chạm Demo PH/HS
-        function fillQuickStudent(phone) {
-            const input = document.getElementById('maHocSinh');
-            if (input) {
-                input.value = phone;
-                const form = document.getElementById('formPhHs');
-                if (form) {
-                    form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-                }
             }
         }
 
@@ -495,50 +485,9 @@
             if (formPhHs) {
                 formPhHs.addEventListener('submit', (e) => {
                     e.preventDefault();
-                    const btn = document.getElementById('btnSubmitPhHs');
-                    const maHocSinh = document.getElementById('maHocSinh').value.trim();
-
-                    btn.disabled = true;
-                    btn.querySelector('.btn-text').textContent = 'Đang tra cứu...';
-                    btn.querySelector('.btn-icon').classList.add('hidden');
-                    btn.querySelector('.loading-icon').classList.remove('hidden');
-
-                    google.script.run
-                        .withSuccessHandler(function(ketQua) {
-                            btn.disabled = false;
-                            btn.querySelector('.btn-text').textContent = 'Tra cứu';
-                            btn.querySelector('.btn-icon').classList.remove('hidden');
-                            btn.querySelector('.loading-icon').classList.add('hidden');
-
-                            if (ketQua.error) {
-                                showToast('error', 'Lỗi tra cứu', ketQua.error);
-                                return;
-                            }
-                            if (ketQua.requiresPin) {
-                                showToast('error', 'Thông báo', 'Số điện thoại này thuộc tài khoản Gia sư. Vui lòng chuyển sang tab GIA SƯ!');
-                                return;
-                            }
-                            if (ketQua.role === 'student' && ketQua.data && ketQua.data.timThay) {
-                                showToast('success', 'Tra cứu thành công', `Đang tải kết quả cho học sinh: ${ketQua.data.studentName || maHocSinh}`);
-                                sessionStorage.setItem('userRole', 'student');
-                                sessionStorage.setItem('userPhone', maHocSinh);
-                                sessionStorage.setItem('userPin', '');
-                                sessionStorage.setItem('dashboardData', JSON.stringify(ketQua.data));
-                                setTimeout(() => {
-                                    window.location.href = 'student-dashboard.html';
-                                }, 800);
-                            } else {
-                                showToast('error', 'Không tìm thấy', 'Không tìm thấy thông tin học sinh với mã/SĐT này!');
-                            }
-                        })
-                        .withFailureHandler(function(err) {
-                            btn.disabled = false;
-                            btn.querySelector('.btn-text').textContent = 'Tra cứu';
-                            btn.querySelector('.btn-icon').classList.remove('hidden');
-                            btn.querySelector('.loading-icon').classList.add('hidden');
-                            showToast('error', 'Lỗi hệ thống', 'Có lỗi kết nối: ' + err.toString());
-                        })
-                        .loginSystem(maHocSinh, '');
+                    if (typeof xuLyTraCuu === 'function') {
+                        xuLyTraCuu('student');
+                    }
                 });
             }
 
@@ -558,7 +507,7 @@
                     google.script.run
                         .withSuccessHandler(function(res) {
                             btn.disabled = false;
-                            btn.querySelector('.btn-text').textContent = 'Đang nhập cổng';
+                            btn.querySelector('.btn-text').innerHTML = 'Đăng nhập<span class="btn-text-portal"> cổng</span>';
                             btn.querySelector('.btn-icon').classList.remove('hidden');
                             btn.querySelector('.loading-icon').classList.add('hidden');
 
@@ -574,7 +523,7 @@
                         })
                         .withFailureHandler(function(err) {
                             btn.disabled = false;
-                            btn.querySelector('.btn-text').textContent = 'Đang nhập cổng';
+                            btn.querySelector('.btn-text').innerHTML = 'Đăng nhập<span class="btn-text-portal"> cổng</span>';
                             btn.querySelector('.btn-icon').classList.remove('hidden');
                             btn.querySelector('.loading-icon').classList.add('hidden');
                             showToast('error', 'Lỗi hệ thống', 'Có lỗi kết nối: ' + err.toString());
