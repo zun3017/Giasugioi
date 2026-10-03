@@ -12,7 +12,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Public Light Theme -->
-    <link rel="stylesheet" href="css/public-theme.css?v=3.0.2">
+    <link rel="stylesheet" href="css/public-theme.css?v=20261002_scroll">
 
     <script>
         tailwind.config = {
@@ -149,7 +149,6 @@
         
         <!-- SECTION: GIA SƯ (Mặc định hiển thị) -->
         <section id="page-gia-su" class="page-transition page-visible">
-            <div id="sectionTutorLogin" class="hidden"></div>
             
             <div class="text-center max-w-3xl mx-auto mb-10 reveal">
                 <div class="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-indigo-100 border border-indigo-200 mb-6 shadow-sm">
@@ -177,7 +176,7 @@
                         <h3 class="text-xl font-bold text-slate-800">Đăng nhập hệ thống</h3>
                     </div>
 
-                    <form id="formGiaSu" onsubmit="event.preventDefault(); xuLyTraCuu('tutor');" class="space-y-6">
+                    <form id="formGiaSu" class="space-y-6">
                         <!-- Input Số điện thoại -->
                         <div>
                             <label class="block text-xs font-bold text-slate-500 uppercase tracking-wider mb-2">Số điện thoại đăng nhập</label>
@@ -185,7 +184,7 @@
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z" /></svg>
                                 </div>
-                                <input type="tel" id="tutorPhone" name="tutorPhone" class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors placeholder-slate-400" placeholder="Nhập số điện thoại gia sư..." required>
+                                <input type="tel" id="gsPhone" class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors placeholder-slate-400" placeholder="Nhập số điện thoại gia sư..." required>
                             </div>
                         </div>
 
@@ -196,7 +195,7 @@
                                 <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-slate-400">
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><path stroke-linecap="round" stroke-linejoin="round" d="M15 7a2 2 0 012 2m4 0a6 6 0 01-7.743 5.743L11 17H9v2H7v2H4a1 1 0 01-1-1v-2.586a1 1 0 01.293-.707l5.964-5.964A6 6 0 1121 9z" /></svg>
                                 </div>
-                                <input type="password" id="tutorPin" name="tutorPin" maxlength="6" pattern="[0-9]{4,6}" class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors placeholder-slate-400 tracking-[0.2em]" placeholder="Nhập mã PIN gồm 4-6 số..." required>
+                                <input type="password" id="gsPin" maxlength="6" pattern="[0-9]{4,6}" class="block w-full pl-11 pr-4 py-3.5 bg-slate-50 border border-slate-200 rounded-xl text-slate-800 font-medium focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500 transition-colors placeholder-slate-400 tracking-[0.2em]" placeholder="Nhập mã PIN gồm 4-6 số..." required>
                             </div>
                         </div>
 
@@ -213,10 +212,21 @@
                         </button>
                     </form>
 
-                    <p id="tutorThongBaoLoi" class="text-red-500 text-sm mt-3 text-center font-medium" style="display: none;"></p>
-                    <p id="tutorLoadingText" class="text-indigo-600 text-sm mt-3 text-center italic" style="display: none;">
-                        <i class="fa-solid fa-circle-notch fa-spin"></i> Đang xác thực thông tin tài khoản...
-                    </p>
+                    <!-- Thanh Đăng Nhập Nhanh Xem Demo Gia Sư (1 Chạm) -->
+                    <div class="mt-5 pt-4 border-t border-dashed border-indigo-200 text-xs text-slate-600 text-left">
+                        <div class="mb-2.5 font-bold text-indigo-900 flex items-center justify-between flex-wrap gap-2">
+                            <span class="flex items-center gap-1.5 text-xs sm:text-sm">
+                                <i class="fa-solid fa-bolt text-amber-500"></i>
+                                <span>Đăng nhập nhanh xem Demo (1 chạm):</span>
+                            </span>
+                            <a href="tutor-dashboard.html" class="text-indigo-600 hover:text-indigo-800 font-semibold underline text-xs">
+                                Vào thẳng Quản lý &rarr;
+                            </a>
+                        </div>
+                        <button type="button" onclick="fillQuickTutor('0123456789', '1234')" class="w-full bg-indigo-50 hover:bg-indigo-600 hover:text-white border border-indigo-200 text-indigo-700 py-3 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm flex flex-wrap items-center justify-center gap-1.5 active:scale-95 cursor-pointer text-center break-words leading-snug">
+                            👨‍🏫 Thầy Trần Hoàng Nam (SĐT: 0123456789 - PIN: 1234)
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -289,7 +299,7 @@
                     <input 
                         type="text" id="maHocSinh"
                         class="flex-grow bg-transparent text-slate-800 text-base sm:text-lg px-2 py-3 focus:outline-none placeholder-slate-400 font-medium w-full"
-                        placeholder="Nhập mã HS hoặc SĐT phụ huynh..." required autocomplete="off"
+                        placeholder="Nhập mã học sinh để tra cứu..." required autocomplete="off"
                     >
                     
                     <button type="submit" id="btnSubmitPhHs" class="flex-shrink-0 bg-teal-500 hover:bg-teal-600 text-white font-bold py-3.5 px-6 sm:px-8 rounded-full flex items-center gap-2 transition-all duration-200 active:scale-95">
@@ -374,11 +384,11 @@
                     <input 
                         type="text" id="maBaiTap"
                         class="flex-grow bg-transparent text-slate-800 text-base sm:text-lg px-2 py-3 focus:outline-none placeholder-slate-400 font-medium w-full"
-                        placeholder="Nhập mã bài tập (VD: BT101)..." required autocomplete="off"
+                        placeholder="Nhập mã bài tập của bạn để đăng nhập (VD: BT101)..." required autocomplete="off"
                     >
                     
                     <button type="submit" id="btnSubmitBaiTap" class="flex-shrink-0 bg-primary-600 hover:bg-primary-700 text-white font-bold py-3.5 px-6 sm:px-8 rounded-full flex items-center gap-2 transition-all duration-200 active:scale-95">
-                        <span class="btn-text">Đăng nhập<span class="btn-text-portal"> cổng</span></span>
+                        <span class="btn-text">Đăng nhập cổng</span>
                         <svg class="btn-icon h-5 w-5 transition-transform group-hover:translate-x-1" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                             <path stroke-linecap="round" stroke-linejoin="round" d="M14 5l7 7m0 0l-7 7m7-7H3" />
                         </svg>
@@ -429,10 +439,9 @@
 
     </main>
 
-    <!-- Kết nối dữ liệu hệ thống Chuẩn Production -->
-    <script src="js/api.js?v=20261003_sec1"></script>
-    <script src="js/navigation.js?v=20261003_sec1"></script>
-    <script src="js/pwa-install.js"></script>
+    <!-- Kết nối dữ liệu hệ thống Demo -->
+    <script src="js/demo-data.js"></script>
+    <script src="js/api.js?v=2.0.0"></script>
 
     <script>
         // Hàm chuyển đổi giữa các trang (SPA Logic)
@@ -456,6 +465,18 @@
             if (targetPage) {
                 targetPage.classList.remove('page-hidden');
                 targetPage.classList.add('page-visible');
+            }
+        }
+
+        // Đăng nhập nhanh 1 chạm Demo Gia Sư
+        function fillQuickTutor(phone, pin) {
+            const pInput = document.getElementById('gsPhone');
+            const pinInput = document.getElementById('gsPin');
+            if (pInput) pInput.value = phone;
+            if (pinInput) pinInput.value = pin;
+            const form = document.getElementById('formGiaSu');
+            if (form) {
+                form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
             }
         }
 
@@ -503,9 +524,65 @@
             if (formGiaSu) {
                 formGiaSu.addEventListener('submit', (e) => {
                     e.preventDefault();
-                    if (typeof xuLyTraCuu === 'function') {
-                        xuLyTraCuu('tutor');
+                    const btn = document.getElementById('btnSubmitGiaSu');
+                    const phone = document.getElementById('gsPhone').value.trim();
+                    const pin = document.getElementById('gsPin').value.trim();
+
+                    if (!phone) {
+                        showToast('error', 'Lỗi nhập liệu', 'Vui lòng nhập số điện thoại gia sư!');
+                        return;
                     }
+                    if (pin.length < 4) {
+                        showToast('error', 'Lỗi xác thực', 'Mã PIN bảo mật phải bao gồm từ 4-6 chữ số!');
+                        return;
+                    }
+
+                    btn.disabled = true;
+                    btn.querySelector('.btn-text').textContent = 'Đang xác thực...';
+                    btn.querySelector('.btn-icon').classList.add('hidden');
+                    btn.querySelector('.loading-icon').classList.remove('hidden');
+
+                    google.script.run
+                        .withSuccessHandler(function(ketQua) {
+                            btn.disabled = false;
+                            btn.querySelector('.btn-text').textContent = 'Đăng nhập hệ thống';
+                            btn.querySelector('.btn-icon').classList.remove('hidden');
+                            btn.querySelector('.loading-icon').classList.add('hidden');
+
+                            if (ketQua.error) {
+                                showToast('error', 'Đăng nhập thất bại', ketQua.error);
+                                return;
+                            }
+                            if (ketQua.role === 'tutor') {
+                                showToast('success', 'Xác thực thành công', 'Đang chuyển hướng đến trang quản lý lớp học...');
+                                sessionStorage.setItem('userRole', 'tutor');
+                                sessionStorage.setItem('userPhone', phone);
+                                sessionStorage.setItem('userPin', pin);
+                                sessionStorage.setItem('dashboardData', JSON.stringify(ketQua.data));
+                                setTimeout(() => {
+                                    window.location.href = 'tutor-dashboard.html';
+                                }, 800);
+                            } else if (ketQua.role === 'admin') {
+                                showToast('success', 'Xác thực thành công', 'Đang chuyển hướng đến trang quản trị admin...');
+                                sessionStorage.setItem('userRole', 'admin');
+                                sessionStorage.setItem('userPhone', phone);
+                                sessionStorage.setItem('userPin', pin);
+                                sessionStorage.setItem('dashboardData', JSON.stringify(ketQua.data));
+                                setTimeout(() => {
+                                    window.location.href = 'admin-dashboard.html';
+                                }, 800);
+                            } else {
+                                showToast('error', 'Lỗi xác thực', 'Mã PIN hoặc số điện thoại không chính xác!');
+                            }
+                        })
+                        .withFailureHandler(function(err) {
+                            btn.disabled = false;
+                            btn.querySelector('.btn-text').textContent = 'Đăng nhập hệ thống';
+                            btn.querySelector('.btn-icon').classList.remove('hidden');
+                            btn.querySelector('.loading-icon').classList.add('hidden');
+                            showToast('error', 'Lỗi hệ thống', 'Có lỗi kết nối: ' + err.toString());
+                        })
+                        .loginSystem(phone, pin);
                 });
             }
 
@@ -577,7 +654,7 @@
                     google.script.run
                         .withSuccessHandler(function(res) {
                             btn.disabled = false;
-                            btn.querySelector('.btn-text').innerHTML = 'Đăng nhập<span class="btn-text-portal"> cổng</span>';
+                            btn.querySelector('.btn-text').textContent = 'Đang nhập cổng';
                             btn.querySelector('.btn-icon').classList.remove('hidden');
                             btn.querySelector('.loading-icon').classList.add('hidden');
 
@@ -593,7 +670,7 @@
                         })
                         .withFailureHandler(function(err) {
                             btn.disabled = false;
-                            btn.querySelector('.btn-text').innerHTML = 'Đăng nhập<span class="btn-text-portal"> cổng</span>';
+                            btn.querySelector('.btn-text').textContent = 'Đang nhập cổng';
                             btn.querySelector('.btn-icon').classList.remove('hidden');
                             btn.querySelector('.loading-icon').classList.add('hidden');
                             showToast('error', 'Lỗi hệ thống', 'Có lỗi kết nối: ' + err.toString());
