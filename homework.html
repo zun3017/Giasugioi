@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="vi">
 <head>
     <link rel="icon" type="image/png" href="https://i.postimg.cc/66rKbPmb/trinh-duyet.png">
@@ -1227,6 +1227,27 @@
                 </form>
                 <p id="error" class="text-red-500 text-sm mt-3 text-center font-medium" style="display: none;"></p>
                 <p id="loadingText" class="text-primary-600 text-sm mt-3 text-center italic" style="display: none;"><i class="fa-solid fa-circle-notch fa-spin"></i> Hệ thống đang xác thực tài khoản...</p>
+                <!-- Thanh Đăng Nhập Nhanh Xem Demo Bài Tập (1 Chạm) -->
+                <div class="mt-5 p-4 bg-white/80 backdrop-blur-md rounded-2xl border border-blue-100 shadow-sm text-xs text-slate-600">
+                    <div class="mb-2.5 font-bold text-primary-800 flex items-center justify-between flex-wrap gap-2">
+                        <span class="flex items-center gap-1.5 text-xs sm:text-sm">
+                            <i class="fa-solid fa-bolt text-amber-500"></i>
+                            <span>Mã bài tập đăng nhập nhanh xem Demo (1 chạm):</span>
+                        </span>
+                        <span class="text-xs text-slate-500 font-normal">Click để xem đề & nộp bài mẫu</span>
+                    </div>
+                    <div class="flex gap-2 flex-wrap">
+                        <button type="button" onclick="fillQuickHw('0987654321')" class="bg-emerald-50 hover:bg-emerald-600 hover:text-white border border-emerald-200 text-emerald-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95 cursor-pointer">
+                            👧 Lê Minh Thư (0987654321)
+                        </button>
+                        <button type="button" onclick="fillQuickHw('0912345678')" class="bg-blue-50 hover:bg-primary-600 hover:text-white border border-blue-200 text-blue-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95 cursor-pointer">
+                            👦 Nguyễn Hoàng Nam (0912345678)
+                        </button>
+                        <button type="button" onclick="fillQuickHw('BT101')" class="bg-amber-50 hover:bg-amber-600 hover:text-white border border-amber-200 text-amber-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95 cursor-pointer">
+                            📑 Mã Đề Mẫu (BT101)
+                        </button>
+                    </div>
+                </div>
 
             </div>
 
