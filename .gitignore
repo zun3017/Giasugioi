@@ -6,3 +6,6 @@ Data.xlsx
 lớp học/
 lớp học
 export-screenshots.html
+
+# B?o m?t: kh�ng commit file SQL (ch?a PIN/d? li?u th?t)
+*.sql
