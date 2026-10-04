@@ -451,6 +451,22 @@
                         </button>
                     </form>
 
+                    <!-- Thanh Đăng Nhập Nhanh Xem Demo Gia Sư (1 Chạm) -->
+                    <div class="mt-5 pt-4 border-t border-dashed border-indigo-200 text-xs text-slate-600 text-left">
+                        <div class="mb-2.5 font-bold text-indigo-900 flex items-center justify-between flex-wrap gap-2">
+                            <span class="flex items-center gap-1.5 text-xs sm:text-sm">
+                                <i class="fa-solid fa-bolt text-amber-500"></i>
+                                <span>Đăng nhập nhanh xem Demo (1 chạm):</span>
+                            </span>
+                            <a href="tutor-dashboard.html" onclick="prepareDemoSession()" class="text-indigo-600 hover:text-indigo-800 font-semibold underline text-xs">
+                                Vào thẳng Quản lý &rarr;
+                            </a>
+                        </div>
+                        <button type="button" id="btnQuickDemoTutor" onclick="fillQuickTutor('0123456789', '1234')" class="w-full bg-indigo-50 hover:bg-indigo-600 hover:text-white border border-indigo-200 text-indigo-700 py-3 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm flex flex-wrap items-center justify-center gap-1.5 active:scale-95 cursor-pointer text-center break-words leading-snug">
+                            👨‍🏫 Thầy Trần Hoàng Nam (SĐT: 0123456789 - PIN: 1234)
+                        </button>
+                    </div>
+
                     <p id="tutorLoadingText" class="text-indigo-600 text-sm mt-3 text-center italic" style="display: none;">
                         <i class="fa-solid fa-circle-notch fa-spin"></i> Đang xác thực thông tin tài khoản...
                     </p>
@@ -672,7 +688,8 @@
 
     </main>
 
-    <!-- Kết nối dữ liệu hệ thống Chuẩn Production -->
+    <!-- Kết nối dữ liệu hệ thống Chuẩn Production & Demo -->
+    <script src="js/demo-data.js"></script>
     <script src="js/api.js?v=20261004_utf8fix"></script>
     <script src="js/navigation.js?v=20261003_sec1"></script>
     <script src="js/pwa-install.js"></script>
@@ -1130,12 +1147,75 @@ function normPhone(p) {
     return p;
 }
 
+function prepareDemoSession() {
+    var demoData = {
+        tutorPhone: "0123456789",
+        tutorName: "Thầy Trần Hoàng Nam",
+        tutorPin: "1234",
+        qrCode: "https://i.postimg.cc/66rKbPmb/trinh-duyet.png",
+        accountType: "Gia sư dùng thử (15 ngày)",
+        nextDueDate: "18/10/2026",
+        registeredDate: "01/10/2026",
+        status: "Hoạt động",
+        students: [
+            {
+                phone: "0912345678",
+                name: "Nguyễn Hoàng Nam",
+                parentName: "Bác Nam",
+                tuition: 200000,
+                billing_type: "session",
+                maBaiTap: "0912345678",
+                thongBao: "Bài tập tuần này đã giao trên hệ thống."
+            },
+            {
+                phone: "0987654321",
+                name: "Lê Minh Thư",
+                parentName: "Cô Thư",
+                tuition: 200000,
+                billing_type: "session",
+                maBaiTap: "0987654321",
+                thongBao: "Nhớ nộp bài phiếu 05 trước thứ Năm."
+            },
+            {
+                phone: "0905123456",
+                name: "Phạm Hải Đăng",
+                parentName: "Chú Đăng",
+                tuition: 200000,
+                billing_type: "session",
+                maBaiTap: "0905123456",
+                thongBao: "Điểm kiểm tra định kỳ 9.5 rất tốt."
+            }
+        ],
+        deletedStudents: [],
+        totalUnpaidIncome: 600000,
+        classCount: 3,
+        marqueeAnnouncement: ""
+    };
+    sessionStorage.setItem('userRole', 'tutor');
+    sessionStorage.setItem('userPhone', '0123456789');
+    sessionStorage.setItem('userPin', '1234');
+    sessionStorage.setItem('dashboardData', JSON.stringify(demoData));
+}
+
+function fillQuickTutor(phone, pin) {
+    phone = phone || '0123456789';
+    pin = pin || '1234';
+    var pInput = document.getElementById('tutorPhone');
+    var pinInput = document.getElementById('tutorPin');
+    if (pInput) pInput.value = phone;
+    if (pinInput) pinInput.value = pin;
+    prepareDemoSession();
+    doTutorLogin();
+}
+window.prepareDemoSession = prepareDemoSession;
+window.fillQuickTutor = fillQuickTutor;
+
 function checkPhoneError(p) {
     if (!p) return 'Vui lòng nhập số điện thoại.';
-    if (p === '302001') return '';
+    if (p === '302001' || p === '0123456789') return '';
     if (!/^\d{10}$/.test(p)) return 'Số điện thoại phải gồm đúng 10 chữ số.';
     if (!/^0(3|5|7|8|9)/.test(p)) return 'Đầu số không hợp lệ (phải bắt đầu 03, 05, 07, 08 hoặc 09).';
-    if (/^0(\d)\1{8}$/.test(p) || p === '0123456789') {
+    if (/^0(\d)\1{8}$/.test(p)) {
         return 'Số điện thoại không hợp lệ, vui lòng kiểm tra lại.';
     }
     return '';
@@ -1163,6 +1243,13 @@ async function doTutorLogin() {
     const err = checkPhoneError(phone);
     if (err) return setTutorAlert(err);
     if (!rawPin || rawPin.length < 4) return setTutorAlert('Mã PIN gồm 4-6 chữ số.');
+
+    // Hỗ trợ đăng nhập tài khoản Demo trực tiếp
+    if (phone === '0123456789' && rawPin === '1234') {
+        prepareDemoSession();
+        window.location.href = 'tutor-dashboard.html';
+        return;
+    }
 
     if (loadingText) loadingText.style.display = 'block';
     if (btnSubmit) btnSubmit.disabled = true;

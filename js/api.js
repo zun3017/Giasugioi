@@ -670,6 +670,15 @@ class GoogleScriptRunInstance {
                             thongBao: "Đăng nhập với quyền Admin thành công!",
                             data: await getAdminDashboardDataInternal()
                         };
+                    } else if ((rawId === '0123456789' || norm === '123456789') && pinStr === '1234') {
+                        sessionStorage.setItem('userPhone', '0123456789');
+                        sessionStorage.setItem('userPin', '1234');
+                        sessionStorage.setItem('userRole', 'tutor');
+                        result = {
+                            role: 'tutor',
+                            thongBao: "Đăng nhập với quyền Gia sư (Demo) thành công!",
+                            data: getTutorDemoDashboardData()
+                        };
                     } else {
                         window.tempAuth = { phone: rawId, pin: pinStr, role: 'tutor' };
                         let tutors = (rawId && pinStr) ? await supaGet(APP_CONFIG.TABLES.TUTORS, `select=tutor_id,name,phone,status,deleted_date&${phoneOr('phone', 'tutor_id')}&pin=eq.${encodeURIComponent(pinStr)}`) : [];
@@ -792,7 +801,11 @@ class GoogleScriptRunInstance {
             // ==========================================
             else if (functionName === 'getTutorDashboardData') {
                 const phone = args[0];
-                result = await getTutorDashboardDataInternal(phone);
+                if (phone === '0123456789') {
+                    result = getTutorDemoDashboardData();
+                } else {
+                    result = await getTutorDashboardDataInternal(phone);
+                }
             }
             
             else if (functionName === 'getStudentDetailsForTutor') {
@@ -2215,7 +2228,54 @@ class GoogleScriptRunInstance {
             else if (self._successHandler) self._successHandler({ error: err.message || err.toString() });
         }
     }
+// HELPER DEMO: Dữ liệu mẫu dùng thử 1 chạm cho Thầy Trần Hoàng Nam
+function getTutorDemoDashboardData() {
+    return {
+        tutorPhone: "0123456789",
+        tutorName: "Thầy Trần Hoàng Nam",
+        tutorPin: "1234",
+        qrCode: "https://i.postimg.cc/66rKbPmb/trinh-duyet.png",
+        accountType: "Gia sư dùng thử (15 ngày)",
+        nextDueDate: "18/10/2026",
+        registeredDate: "01/10/2026",
+        status: "Hoạt động",
+        students: [
+            {
+                phone: "0912345678",
+                name: "Nguyễn Hoàng Nam",
+                parentName: "Bác Nam",
+                tuition: 200000,
+                billing_type: "session",
+                maBaiTap: "0912345678",
+                thongBao: "Bài tập tuần này đã giao trên hệ thống."
+            },
+            {
+                phone: "0987654321",
+                name: "Lê Minh Thư",
+                parentName: "Cô Thư",
+                tuition: 200000,
+                billing_type: "session",
+                maBaiTap: "0987654321",
+                thongBao: "Nhớ nộp bài phiếu 05 trước thứ Năm."
+            },
+            {
+                phone: "0905123456",
+                name: "Phạm Hải Đăng",
+                parentName: "Chú Đăng",
+                tuition: 200000,
+                billing_type: "session",
+                maBaiTap: "0905123456",
+                thongBao: "Điểm kiểm tra định kỳ 9.5 rất tốt."
+            }
+        ],
+        deletedStudents: [],
+        totalUnpaidIncome: 600000,
+        classCount: 3,
+        marqueeAnnouncement: "",
+        adminContact: { zalo: '0975546830', facebook: 'https://m.me/zuntutor', phone: '0975546830' }
+    };
 }
+if (typeof window !== 'undefined') window.getTutorDemoDashboardData = getTutorDemoDashboardData;
 
 // HELPER INTERNAL: Load Dashboard Gia Sư
 async function getTutorDashboardDataInternal(tutorPhone) {
