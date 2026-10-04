@@ -1,13 +1,13 @@
-﻿// Báº¢O Máº¬T: CHá»NG XSS (dÃ¹ng chung cho má»i trang cÃ³ náº¡p api.js)
+// BẢO MẬT: CHỐNG XSS (dùng chung cho mọi trang có nạp api.js)
 // ============================================================================
-// escapeHtml: dÃ¹ng cho Má»ŒI dá»¯ liá»‡u ngÆ°á»i dÃ¹ng chÃ¨n vÃ o innerHTML / thuá»™c tÃ­nh HTML
+// escapeHtml: dùng cho MỌI dữ liệu người dùng chèn vào innerHTML / thuộc tính HTML
 function escapeHtml(v) {
     if (v === null || v === undefined) return '';
     return String(v).replace(/[&<>"'`]/g, function (c) {
         return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '`': '&#96;' }[c];
     });
 }
-// safeUrl: chá»‰ cho phÃ©p http(s), blob, data:image, hoáº·c Ä‘Æ°á»ng dáº«n tÆ°Æ¡ng Ä‘á»‘i. Cháº·n javascript:, vbscript:, data:text/html...
+// safeUrl: chỉ cho phép http(s), blob, data:image, hoặc đường dẫn tương đối. Chặn javascript:, vbscript:, data:text/html...
 function safeUrl(u) {
     if (u === null || u === undefined) return '';
     var s = String(u).trim();
@@ -15,12 +15,12 @@ function safeUrl(u) {
     var probe = s.replace(/[\u0000-\u0020\u007f-\u009f]/g, '').toLowerCase();
     if (/^(https?:|blob:)/.test(probe)) return s;
     if (/^data:(image\/(png|jpe?g|gif|webp|bmp)|application\/pdf);base64,/.test(probe)) return s;
-    if (!/^[a-z][a-z0-9+.\-]*:/.test(probe)) return s; // tÆ°Æ¡ng Ä‘á»‘i
+    if (!/^[a-z][a-z0-9+.\-]*:/.test(probe)) return s; // tương đối
     return '#';
 }
-// safeUrlAttr: safeUrl + escape Ä‘á»ƒ Ä‘áº·t trong href="..." / src="..."
+// safeUrlAttr: safeUrl + escape để đặt trong href="..." / src="..."
 function safeUrlAttr(u) { return escapeHtml(safeUrl(u)); }
-// jsStr: chÃ¨n giÃ¡ trá»‹ vÃ o chuá»—i JS náº±m trong thuá»™c tÃ­nh onclick="fn('...')" hoáº·c onclick='fn("...")'
+// jsStr: chèn giá trị vào chuỗi JS nằm trong thuộc tính onclick="fn('...')" hoặc onclick='fn("...")'
 function jsStr(v) {
     var s = (v === null || v === undefined) ? '' : String(v);
     s = s.replace(/\\/g, '\\\\').replace(/'/g, "\\'").replace(/"/g, '\\"')
@@ -35,11 +35,11 @@ window.jsStr = jsStr;
 
 /**
  * ============================================================================
- * CLIENT-SIDE MOCK API GATEWAY CHO Há»† THá»NG GIA SÆ¯ 1-1 (DEMO GIA SÆ¯ GIá»ŽI)
+ * CLIENT-SIDE MOCK API GATEWAY CHO HỆ THỐNG GIA SƯ 1-1 (DEMO GIA SƯ GIỎI)
  * ============================================================================
- * - Hoáº¡t Ä‘á»™ng Ä‘á»™c láº­p 100%, khÃ´ng cáº§n káº¿t ná»‘i máº¡ng hay mÃ¡y chá»§ backend
- * - Tá»‘c Ä‘á»™ pháº£n há»“i tá»©c thÃ¬, giáº£ láº­p Ä‘áº§y Ä‘á»§ luá»“ng dá»¯ liá»‡u cá»§a Google Apps Script
- * - Äáº§y Ä‘á»§ phÃ¢n quyá»n: PH/HS (Tra cá»©u), BÃ€I Táº¬P (Ná»™p bÃ i), GIA SÆ¯ (Quáº£n lÃ½), ADMIN
+ * - Hoạt động độc lập 100%, không cần kết nối mạng hay máy chủ backend
+ * - Tốc độ phản hồi tức thì, giả lập đầy đủ luồng dữ liệu của Google Apps Script
+ * - Đầy đủ phân quyền: PH/HS (Tra cứu), BÀI TẬP (Nộp bài), GIA SƯ (Quản lý), ADMIN
  */
 
 (function() {
@@ -54,12 +54,12 @@ window.jsStr = jsStr;
 
         const initial = (typeof INITIAL_GIASU_DEMO_DATA !== 'undefined') ? JSON.parse(JSON.stringify(INITIAL_GIASU_DEMO_DATA)) : {
             tutors: [
-                { phone: "0123456789", pin: "1234", name: "Tháº§y Tráº§n HoÃ ng Nam", subject: "ToÃ¡n & Váº­t LÃ½" }
+                { phone: "0123456789", pin: "1234", name: "Thầy Trần Hoàng Nam", subject: "Toán & Vật Lý" }
             ],
             students: [
-                { phone: "0912345678", maBaiTap: "0912345678", name: "Nguyá»…n HoÃ ng Nam", classLevel: "Lá»›p 9", subject: "ToÃ¡n", gpa: "8.6", totalSessions: 10, absentSessions: 0, hwRate: "100%", logs: [] },
-                { phone: "0987654321", maBaiTap: "0987654321", name: "LÃª Minh ThÆ°", classLevel: "Lá»›p 12", subject: "ToÃ¡n & Váº­t LÃ½", gpa: "8.9", totalSessions: 10, absentSessions: 0, hwRate: "100%", logs: [] },
-                { phone: "0905123456", maBaiTap: "0905123456", name: "Pháº¡m Háº£i ÄÄƒng", classLevel: "Lá»›p 11", subject: "Váº­t LÃ½", gpa: "9.2", totalSessions: 10, absentSessions: 0, hwRate: "100%", logs: [] }
+                { phone: "0912345678", maBaiTap: "0912345678", name: "Nguyễn Hoàng Nam", classLevel: "Lớp 9", subject: "Toán", gpa: "8.6", totalSessions: 10, absentSessions: 0, hwRate: "100%", logs: [] },
+                { phone: "0987654321", maBaiTap: "0987654321", name: "Lê Minh Thư", classLevel: "Lớp 12", subject: "Toán & Vật Lý", gpa: "8.9", totalSessions: 10, absentSessions: 0, hwRate: "100%", logs: [] },
+                { phone: "0905123456", maBaiTap: "0905123456", name: "Phạm Hải Đăng", classLevel: "Lớp 11", subject: "Vật Lý", gpa: "9.2", totalSessions: 10, absentSessions: 0, hwRate: "100%", logs: [] }
             ],
             homework: [],
             assignedHomework: [],
@@ -98,11 +98,11 @@ window.jsStr = jsStr;
         return String(p).replace(/\D/g, '').replace(/^84/, '0').replace(/^0+/, '');
     }
 
-    // Äá»ŠNH Dáº NG NGÃ€Y KÃˆM THá»¨ (VÃ Dá»¤: "Thá»© 7, 08/08")
+    // ĐỊNH DẠNG NGÀY KÈM THỨ (VÍ DỤ: "Thứ 7, 08/08")
     window.formatDateWithDayOfWeek = function(dStr) {
         if (!dStr || dStr === "-" || dStr === "null") return "-";
         let s = String(dStr).trim();
-        if (/thá»©|chá»§ nháº­t|\bcn\b/i.test(s)) return s;
+        if (/thứ|chủ nhật|\bcn\b/i.test(s)) return s;
         let day = null, month = null, year = null;
         let mIso = s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
         if (mIso) {
@@ -128,16 +128,16 @@ window.jsStr = jsStr;
         let dateObj = new Date(year, month - 1, day);
         if (isNaN(dateObj.getTime())) return s;
         let dayOfWeek = dateObj.getDay();
-        let dayName = ['Chá»§ Nháº­t', 'Thá»© 2', 'Thá»© 3', 'Thá»© 4', 'Thá»© 5', 'Thá»© 6', 'Thá»© 7'][dayOfWeek];
+        let dayName = ['Chủ Nhật', 'Thứ 2', 'Thứ 3', 'Thứ 4', 'Thứ 5', 'Thứ 6', 'Thứ 7'][dayOfWeek];
         let dStrFormatted = String(day).padStart(2, '0') + '/' + String(month).padStart(2, '0');
         return dayName + ', ' + dStrFormatted;
     };
 
-    // Äá»ŠNH Dáº NG CHá»ˆ NGÃ€Y (VÃ Dá»¤: "22/09", Bá»Ž THá»¨)
+    // ĐỊNH DẠNG CHỈ NGÀY (VÍ DỤ: "22/09", BỎ THỨ)
     window.formatDateOnly = function(dStr) {
         if (!dStr || dStr === "-" || dStr === "null") return "-";
         let s = String(dStr).trim();
-        s = s.replace(/^(thá»©\s*\d+|chá»§ nháº­t|cn)\s*[,.-]?\s*/i, '').trim();
+        s = s.replace(/^(thứ\s*\d+|chủ nhật|cn)\s*[,.-]?\s*/i, '').trim();
         let day = null, month = null;
         let mIso = s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
         if (mIso) {
@@ -237,54 +237,54 @@ window.jsStr = jsStr;
             const self = this;
             let result = null;
 
-            // Äá»™ trá»… pháº£n há»“i nháº¹ 80ms
+            // Độ trễ phản hồi nhẹ 80ms
             await new Promise(r => setTimeout(r, 80));
 
             try {
                 let store = getDemoStore();
 
-                // 1. ÄÄ‚NG NHáº¬P & XÃC THá»°C Há»† THá»NG
+                // 1. ĐĂNG NHẬP & XÁC THỰC HỆ THỐNG
                 if (functionName === 'loginSystem') {
                     const phone = String(args[0] || "").trim();
                     const pin = String(args[1] || "").trim();
                     const childName = String(args[2] || "").trim();
                     const norm = normalizePhone(phone);
 
-                    // A. ÄÄƒng nháº­p Gia SÆ° hoáº·c Admin (CÃ³ MÃ£ PIN)
+                    // A. Đăng nhập Gia Sư hoặc Admin (Có Mã PIN)
                     if (pin && pin !== "") {
                         if (false) {
                             result = {
                                 role: 'admin',
-                                thongBao: "ÄÄƒng nháº­p vá»›i quyá»n Admin thÃ nh cÃ´ng!",
+                                thongBao: "Đăng nhập với quyền Admin thành công!",
                                 data: {
                                     tutors: store.tutors.map(t => ({
                                         name: t.name,
                                         phone: t.phone,
                                         pin: t.pin || "1234",
-                                        status: "Hoáº¡t Ä‘á»™ng",
+                                        status: "Hoạt động",
                                         createdDate: "18/07/2026",
                                         nextBillingDate: "18/09/2026",
-                                        lastActive: "Vá»«a xong",
-                                        accountType: "Gia sÆ° (1-1)"
+                                        lastActive: "Vừa xong",
+                                        accountType: "Gia sư (1-1)"
                                     })),
                                     students: store.students.map(s => ({
                                         name: s.name,
-                                        parentName: "Phá»¥ huynh em " + s.name,
+                                        parentName: "Phụ huynh em " + s.name,
                                         phone: s.phone,
                                         tutorPhone: "0123456789",
                                         tuition: s.tuition || 200000
                                     })),
                                     deletedTutors: [],
                                     incomeReports: {},
-                                    marqueeAnnouncement: "Báº£ng Quáº£n Trá»‹ Há»‡ Thá»‘ng Trung TÃ¢m Gia SÆ° 4.0"
+                                    marqueeAnnouncement: "Bảng Quản Trị Hệ Thống Trung Tâm Gia Sư 4.0"
                                 }
                             };
                         } else {
-                            // Gia sÆ° Tháº§y Nam
+                            // Gia sư Thầy Nam
                             let tutor = store.tutors[0];
                             result = {
                                 role: 'tutor',
-                                thongBao: "ÄÄƒng nháº­p vá»›i quyá»n Gia sÆ° thÃ nh cÃ´ng!",
+                                thongBao: "Đăng nhập với quyền Gia sư thành công!",
                                 data: {
                                     tutorPhone: tutor.phone,
                                     tutorName: tutor.name,
@@ -293,10 +293,10 @@ window.jsStr = jsStr;
                                     students: store.students.map(s => ({
                                         phone: s.phone,
                                         name: s.name,
-                                        parentName: "Phá»¥ huynh em " + s.name,
+                                        parentName: "Phụ huynh em " + s.name,
                                         tuition: s.tuition || 200000,
                                         maBaiTap: s.phone,
-                                        thongBao: "Em há»c táº­p ráº¥t chÄƒm chá»‰ vÃ  tiáº¿n bá»™."
+                                        thongBao: "Em học tập rất chăm chỉ và tiến bộ."
                                     })),
                                     deletedStudents: [],
                                     totalUnpaidIncome: 0,
@@ -306,11 +306,11 @@ window.jsStr = jsStr;
                             };
                         }
                     }
-                    // B. Tra cá»©u Phá»¥ Huynh & Há»c Sinh (KhÃ´ng cáº§n PIN)
+                    // B. Tra cứu Phụ Huynh & Học Sinh (Không cần PIN)
                     else {
                         let target = store.students.find(s => normalizePhone(s.phone) === norm || s.name.toLowerCase() === phone.toLowerCase());
                         if (!target && store.students.length > 0) {
-                            target = store.students[1] || store.students[0]; // Máº·c Ä‘á»‹nh LÃª Minh ThÆ°
+                            target = store.students[1] || store.students[0]; // Mặc định Lê Minh Thư
                         }
 
                         if (target) {
@@ -318,14 +318,14 @@ window.jsStr = jsStr;
                                 rowIndex: idx + 1,
                                 tuan: l.tuan || (idx + 1),
                                 ngay: l.ngay || (typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(idx * 3) : "15/08/2026"),
-                                mon: target.subject || "ToÃ¡n",
-                                noiDung: l.topic || l.noiDung || "Luyá»‡n táº­p chuyÃªn Ä‘á»",
-                                danhGiaBTVN: l.btvn || l.danhGiaBTVN || "HoÃ n thÃ nh",
-                                btvn: l.btvn || l.danhGiaBTVN || "HoÃ n thÃ nh",
+                                mon: target.subject || "Toán",
+                                noiDung: l.topic || l.noiDung || "Luyện tập chuyên đề",
+                                danhGiaBTVN: l.btvn || l.danhGiaBTVN || "Hoàn thành",
+                                btvn: l.btvn || l.danhGiaBTVN || "Hoàn thành",
                                 diemDauGio: l.diemDG || l.diemDauGio || "9.0",
                                 diemDinhKi: l.diemDK || l.diemDinhKi || "9.5",
-                                nhanXet: l.nhanXet || "Tiáº¿p thu bÃ i nhanh.",
-                                trangThai: l.chuyenCan || l.trangThai || "CÃ³ máº·t"
+                                nhanXet: l.nhanXet || "Tiếp thu bài nhanh.",
+                                trangThai: l.chuyenCan || l.trangThai || "Có mặt"
                             }));
 
                             result = {
@@ -335,17 +335,17 @@ window.jsStr = jsStr;
                                     tenHocSinh: target.name,
                                     sdt: target.phone,
                                     lop: target.classLevel + " - " + target.subject,
-                                    giaSu: target.tutorName || "Tháº§y Tráº§n HoÃ ng Nam",
+                                    giaSu: target.tutorName || "Thầy Trần Hoàng Nam",
                                     sdtGiaSu: "0123456789",
                                     gpa: target.gpa || "8.9",
                                     buoiHoc: target.totalSessions || 10,
                                     buoiNghi: target.absentSessions || 0,
                                     btvnRate: target.hwRate || "100%",
-                                    thongBaoHocSinh: "ChÃºc má»«ng em Ä‘áº¡t káº¿t quáº£ xuáº¥t sáº¯c trong buá»•i há»c vá»«a qua!",
+                                    thongBaoHocSinh: "Chúc mừng em đạt kết quả xuất sắc trong buổi học vừa qua!",
                                     lichSuHocTap: formattedLogs,
                                     danhSachNhatKy: formattedLogs,
                                     danhSachBaiTap: store.homework.map(h => ({
-                                        mon: target.subject || "Gia sÆ°",
+                                        mon: target.subject || "Gia sư",
                                         tenBai: h.title,
                                         link: h.file || ""
                                     })),
@@ -353,12 +353,12 @@ window.jsStr = jsStr;
                                 }
                             };
                         } else {
-                            result = { error: "KhÃ´ng tÃ¬m tháº¥y há»c sinh vá»›i sá»‘ Ä‘iá»‡n thoáº¡i nÃ y." };
+                            result = { error: "Không tìm thấy học sinh với số điện thoại này." };
                         }
                     }
                 }
 
-                // 2. CHI TIáº¾T Há»ŒC SINH CHO GIA SÆ¯ (BIá»‚U Äá»’, Lá»ŠCH Sá»¬ ÄÃNH GIÃ & HÃ“A ÄÆ N)
+                // 2. CHI TIẾT HỌC SINH CHO GIA SƯ (BIỂU ĐỒ, LỊCH SỬ ĐÁNH GIÁ & HÓA ĐƠN)
                 else if (functionName === 'getStudentDetailsForTutor' || functionName === 'getStudentDetails') {
                     const studentPhone = String(args[0] || "");
                     const studentName = String(args[1] || "");
@@ -370,15 +370,15 @@ window.jsStr = jsStr;
                         rowIndex: idx + 1,
                         tuan: l.tuan || (idx + 1),
                         ngay: l.ngay || (typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(idx * 3) : "15/08/2026"),
-                        mon: target.subject || "ToÃ¡n",
-                        noiDung: l.topic || l.noiDung || "Luyá»‡n táº­p cá»±c trá»‹ hÃ m sá»‘ & tÃ­ch phÃ¢n",
-                        danhGiaBTVN: l.btvn || l.danhGiaBTVN || "HoÃ n thÃ nh",
-                        btvn: l.btvn || l.danhGiaBTVN || "HoÃ n thÃ nh",
+                        mon: target.subject || "Toán",
+                        noiDung: l.topic || l.noiDung || "Luyện tập cực trị hàm số & tích phân",
+                        danhGiaBTVN: l.btvn || l.danhGiaBTVN || "Hoàn thành",
+                        btvn: l.btvn || l.danhGiaBTVN || "Hoàn thành",
                         diemDauGio: l.diemDG || l.diemDauGio || "9.0",
                         diemDinhKi: l.diemDK || l.diemDinhKi || "9.5",
-                        nhanXet: l.nhanXet || "TÆ° duy giáº£i toÃ¡n nhanh, lÃ m tá»‘t cÃ¡c cÃ¢u phÃ¢n loáº¡i 8.5+.",
-                        trangThai: l.chuyenCan || l.trangThai || "CÃ³ máº·t",
-                        tienDong: "ÄÃ£ Ä‘Ã³ng",
+                        nhanXet: l.nhanXet || "Tư duy giải toán nhanh, làm tốt các câu phân loại 8.5+.",
+                        trangThai: l.chuyenCan || l.trangThai || "Có mặt",
+                        tienDong: "Đã đóng",
                         ngayDongTien: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(10) : "05/08/2026"
                     }));
 
@@ -387,7 +387,7 @@ window.jsStr = jsStr;
                         student: {
                             name: target.name,
                             phone: target.phone,
-                            parentName: "Phá»¥ huynh em " + target.name,
+                            parentName: "Phụ huynh em " + target.name,
                             classLevel: target.classLevel,
                             subject: target.subject,
                             tuition: target.tuition || 200000,
@@ -397,7 +397,7 @@ window.jsStr = jsStr;
                     };
                 }
 
-                // 3. DASHBOARD GIA SÆ¯ Tá»”NG QUAN
+                // 3. DASHBOARD GIA SƯ TỔNG QUAN
                 else if (functionName === 'getTutorDashboardData') {
                     let tutor = store.tutors[0];
                     result = {
@@ -408,11 +408,11 @@ window.jsStr = jsStr;
                         students: store.students.map(s => ({
                             phone: s.phone,
                             name: s.name,
-                            parentName: s.parentName || ("Phá»¥ huynh em " + s.name),
+                            parentName: s.parentName || ("Phụ huynh em " + s.name),
                             tuition: s.tuition || 200000,
                             billing_type: s.billing_type || 'session',
                             maBaiTap: s.maBaiTap || s.phone,
-                            thongBao: s.thongBao || "Em há»c táº­p ráº¥t chÄƒm chá»‰ vÃ  tiáº¿n bá»™."
+                            thongBao: s.thongBao || "Em học tập rất chăm chỉ và tiến bộ."
                         })),
                         deletedStudents: [],
                         totalUnpaidIncome: 0,
@@ -421,17 +421,17 @@ window.jsStr = jsStr;
                     };
                 }
 
-                // 3.1 THÃŠM & Sá»¬A Há»ŒC SINH MOCK
+                // 3.1 THÊM & SỬA HỌC SINH MOCK
                 else if (functionName === 'themHocSinhMoi' || functionName === 'saveTutorStudent') {
                     const [tutorPhone, phuHuynhName, studentName, studentPhone, tuition, maBaiTap, thongBao, billingType] = args;
                     const newSt = {
                         phone: studentPhone || ("09" + Date.now().toString().slice(-8)),
                         maBaiTap: maBaiTap || studentPhone || ("09" + Date.now().toString().slice(-8)),
                         name: studentName,
-                        parentName: phuHuynhName || ("Phá»¥ huynh em " + studentName),
-                        classLevel: "Lá»›p 12",
-                        subject: "ToÃ¡n",
-                        tutorName: "Tháº§y Tráº§n HoÃ ng Nam",
+                        parentName: phuHuynhName || ("Phụ huynh em " + studentName),
+                        classLevel: "Lớp 12",
+                        subject: "Toán",
+                        tutorName: "Thầy Trần Hoàng Nam",
                         tutorPhone: tutorPhone || "0123456789",
                         gpa: "8.5",
                         totalSessions: 0,
@@ -439,7 +439,7 @@ window.jsStr = jsStr;
                         hwRate: "100%",
                         tuition: parseFloat(tuition) || 200000,
                         billing_type: billingType || 'session',
-                        thongBao: thongBao || "Em há»c táº­p ráº¥t chÄƒm chá»‰ vÃ  tiáº¿n bá»™.",
+                        thongBao: thongBao || "Em học tập rất chăm chỉ và tiến bộ.",
                         logs: []
                     };
                     store.students.push(newSt);
@@ -466,10 +466,10 @@ window.jsStr = jsStr;
                 else if (functionName === 'getStudentParentName') {
                     const studentPhone = args[0];
                     let target = store.students ? store.students.find(s => s.phone === studentPhone || normalizePhone(s.phone) === normalizePhone(studentPhone)) : null;
-                    result = (target && target.parentName) ? target.parentName : (target ? ("Phá»¥ huynh em " + target.name) : "");
+                    result = (target && target.parentName) ? target.parentName : (target ? ("Phụ huynh em " + target.name) : "");
                 }
 
-                // 3.2 Cáº¬P NHáº¬T THÃ”NG TIN GIA SÆ¯ & MÃƒ QR THANH TOÃN
+                // 3.2 CẬP NHẬT THÔNG TIN GIA SƯ & MÃ QR THANH TOÁN
                 else if (functionName === 'capNhatThongTinGiaSu' || functionName === 'updateTutorAccount') {
                     const [oldPhone, name, phone, pin, qrCode] = args;
                     let tutor = (store.tutors && store.tutors.length > 0) ? (store.tutors.find(t => t.phone === oldPhone || normalizePhone(t.phone) === normalizePhone(oldPhone)) || store.tutors[0]) : null;
@@ -483,37 +483,37 @@ window.jsStr = jsStr;
                         try { localStorage.setItem('tutor_qr_code', qrCode); } catch(e){}
                     }
                     if (typeof saveDemoStore === 'function') saveDemoStore(store);
-                    result = { success: true, message: "Cáº­p nháº­t tÃ i khoáº£n gia sÆ° thÃ nh cÃ´ng!" };
+                    result = { success: true, message: "Cập nhật tài khoản gia sư thành công!" };
                 }
 
-                // 4. DANH SÃCH Ã KIáº¾N PHáº¢N Há»’I Cá»¦A PHá»¤ HUYNH
+                // 4. DANH SÁCH Ý KIẾN PHẢN HỒI CỦA PHỤ HUYNH
                 else if (functionName === 'getTutorFeedback' || functionName === 'getFeedbacks') {
                     result = {
                         success: true,
                         feedbacks: [
                             {
-                                studentName: "LÃª Minh ThÆ°",
+                                studentName: "Lê Minh Thư",
                                 studentPhone: "0987654321",
-                                timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(1) + " 21:30" : "HÃ´m qua 21:30",
-                                content: "Gia Ä‘Ã¬nh ráº¥t cáº£m Æ¡n Tháº§y Nam, chÃ¡u ThÆ° tiáº¿n bá»™ mÃ´n ToÃ¡n vÃ  Váº­t LÃ½ ráº¥t nhiá»u sau khÃ³a há»c áº¡!"
+                                timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(1) + " 21:30" : "Hôm qua 21:30",
+                                content: "Gia đình rất cảm ơn Thầy Nam, cháu Thư tiến bộ môn Toán và Vật Lý rất nhiều sau khóa học ạ!"
                             },
                             {
-                                studentName: "Nguyá»…n HoÃ ng Nam",
+                                studentName: "Nguyễn Hoàng Nam",
                                 studentPhone: "0912345678",
-                                timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(2) + " 19:45" : "2 ngÃ y trÆ°á»›c",
-                                content: "Tháº§y giáº£ng bÃ i ráº¥t dá»… hiá»ƒu vÃ  táº­n tÃ¢m, chÃ¡u Nam Ä‘Ã£ tá»± tin lÃ m Ä‘á» kiá»ƒm tra trÃªn lá»›p."
+                                timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(2) + " 19:45" : "2 ngày trước",
+                                content: "Thầy giảng bài rất dễ hiểu và tận tâm, cháu Nam đã tự tin làm đề kiểm tra trên lớp."
                             },
                             {
-                                studentName: "Pháº¡m Háº£i ÄÄƒng",
+                                studentName: "Phạm Hải Đăng",
                                 studentPhone: "0905123456",
-                                timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(3) + " 20:10" : "3 ngÃ y trÆ°á»›c",
-                                content: "ChÃ¡u ÄÄƒng ráº¥t hÃ o há»©ng vá»›i cÃ¡c bÃ i mÃ´ phá»ng Váº­t LÃ½ 4K cá»§a Tháº§y."
+                                timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(3) + " 20:10" : "3 ngày trước",
+                                content: "Cháu Đăng rất hào hứng với các bài mô phỏng Vật Lý 4K của Thầy."
                             }
                         ]
                     };
                 }
 
-                // 5. THá»œI KHÃ“A BIá»‚U & Lá»ŠCH Dáº Y GIA SÆ¯
+                // 5. THỜI KHÓA BIỂU & LỊCH DẠY GIA SƯ
                 else if (functionName === 'getTutorSchedule') {
                     if (store.tutorSchedule && Array.isArray(store.tutorSchedule) && store.tutorSchedule.length > 0) {
                         result = store.tutorSchedule;
@@ -521,7 +521,7 @@ window.jsStr = jsStr;
                         result = [
                             {
                                 rowIndex: 1,
-                                studentName: "LÃª Minh ThÆ°",
+                                studentName: "Lê Minh Thư",
                                 color: "#8E4DFF",
                                 mon: "18:00 - 19:30",
                                 tue: "",
@@ -533,7 +533,7 @@ window.jsStr = jsStr;
                             },
                             {
                                 rowIndex: 2,
-                                studentName: "Nguyá»…n HoÃ ng Nam",
+                                studentName: "Nguyễn Hoàng Nam",
                                 color: "#10B981",
                                 mon: "",
                                 tue: "",
@@ -545,7 +545,7 @@ window.jsStr = jsStr;
                             },
                             {
                                 rowIndex: 3,
-                                studentName: "Pháº¡m Háº£i ÄÄƒng",
+                                studentName: "Phạm Hải Đăng",
                                 color: "#F59E0B",
                                 mon: "",
                                 tue: "18:00 - 19:30",
@@ -561,7 +561,7 @@ window.jsStr = jsStr;
                     }
                 }
 
-                // 6. QUáº¢N LÃ BÃ€I Táº¬P ÄÃƒ GIAO CHO Há»ŒC SINH
+                // 6. QUẢN LÝ BÀI TẬP ĐÃ GIAO CHO HỌC SINH
                 else if (functionName === 'getAssignedHomework' || functionName === 'getTutorHomeworkList') {
                     const studentName = String(args[0] || "").trim();
                     const tutorPhone = String(args[1] || "").trim();
@@ -629,7 +629,7 @@ window.jsStr = jsStr;
                         studentName: studentName || "",
                         tutorPhone: tutorPhone || "0123456789",
                         homework_code: maBaiTap || "",
-                        title: title || "BÃ i táº­p má»›i",
+                        title: title || "Bài tập mới",
                         releaseDate: relDate,
                         fileUrl: fileUrl,
                         fileName: fileName || (title ? `${title}.pdf` : "BaiTap.pdf"),
@@ -640,14 +640,14 @@ window.jsStr = jsStr;
 
                     store.assignedHomework.unshift(newHw);
 
-                    // Äá»“ng bá»™ sang store.homework Ä‘á»ƒ há»c sinh tra cá»©u bÃ i táº­p
+                    // Đồng bộ sang store.homework để học sinh tra cứu bài tập
                     store.homework = store.homework || [];
                     store.homework.unshift({
                         id: hwId,
                         title: newHw.title,
                         deadline: newHw.releaseDate,
                         file: newHw.fileUrl,
-                        status: "ChÆ°a ná»™p",
+                        status: "Chưa nộp",
                         score: "-",
                         submittedAt: "-",
                         comment: ""
@@ -672,7 +672,7 @@ window.jsStr = jsStr;
                             target.fileName = fileName || target.fileName;
                         }
                         
-                        // Äá»“ng bá»™ store.homework
+                        // Đồng bộ store.homework
                         if (store.homework) {
                             let hwTarget = store.homework.find(h => h.id === target.hwId || h.title === target.title);
                             if (hwTarget) {
@@ -710,7 +710,7 @@ window.jsStr = jsStr;
                     result = { success: true };
                 }
 
-                // 7. QUáº¢N LÃ BÃ€I Ná»˜P Cá»¦A Há»ŒC SINH
+                // 7. QUẢN LÝ BÀI NỘP CỦA HỌC SINH
                 else if (functionName === 'getStudentSubmissionsForTutor' || functionName === 'getSubmittedHomework' || functionName === 'getTutorSubmissions') {
                     const maBaiTap = String(args[0] || "");
                     const studentName = String(args[1] || "");
@@ -722,37 +722,37 @@ window.jsStr = jsStr;
                         {
                             subId: "SUB_01",
                             rowIndex: 1,
-                            studentName: "LÃª Minh ThÆ°",
+                            studentName: "Lê Minh Thư",
                             studentPhone: "0987654321",
-                            lessonName: "Phiáº¿u 01: 50 CÃ¢u Tráº¯c Nghiá»‡m Äáº¡o HÃ m & Cá»±c Trá»‹",
+                            lessonName: "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị",
                             timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(1) + " 21:15:30" : "16/08/2026 21:15:30",
                             submissionDate: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(1) : "16/08/2026",
                             fileName: "leminhthu_dao_ham_done.pdf",
                             fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
                             score: "9.5",
-                            comment: "BÃ i giáº£i ráº¥t chuáº©n xÃ¡c, trÃ¬nh bÃ y sáº¡ch Ä‘áº¹p. ChÃº Ã½ thÃªm cÃ¢u 48 cÃ³ thá»ƒ dÃ¹ng phÆ°Æ¡ng phÃ¡p loáº¡i trá»« nhanh hÆ¡n nhÃ©.",
+                            comment: "Bài giải rất chuẩn xác, trình bày sạch đẹp. Chú ý thêm câu 48 có thể dùng phương pháp loại trừ nhanh hơn nhé.",
                             status: "Active"
                         },
                         {
                             subId: "SUB_02",
                             rowIndex: 2,
-                            studentName: "Nguyá»…n HoÃ ng Nam",
+                            studentName: "Nguyễn Hoàng Nam",
                             studentPhone: "0912345678",
-                            lessonName: "ChuyÃªn Ä‘á»: Há»‡ thá»©c lÆ°á»£ng trong tam giÃ¡c",
+                            lessonName: "Chuyên đề: Hệ thức lượng trong tam giác",
                             timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(2) + " 22:00:15" : "15/08/2026 22:00:15",
                             submissionDate: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(2) : "15/08/2026",
                             fileName: "nguyenhoangnam_he_thuc.jpg",
                             fileUrl: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1200&auto=format&fit=crop",
                             score: "9.0",
-                            comment: "LÃ m bÃ i tá»‘t, nhá»› váº½ hÃ¬nh báº±ng thÆ°á»›c tháº³ng rÃµ nÃ©t.",
+                            comment: "Làm bài tốt, nhớ vẽ hình bằng thước thẳng rõ nét.",
                             status: "Active"
                         },
                         {
                             subId: "SUB_03",
                             rowIndex: 3,
-                            studentName: "Pháº¡m Háº£i ÄÄƒng",
+                            studentName: "Phạm Hải Đăng",
                             studentPhone: "0905123456",
-                            lessonName: "BÃ i táº­p 03: KhÃºc xáº¡ Ã¡nh sÃ¡ng & LÄƒng kÃ­nh",
+                            lessonName: "Bài tập 03: Khúc xạ ánh sáng & Lăng kính",
                             timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(0) + " 19:30:00" : "17/08/2026 19:30:00",
                             submissionDate: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(0) : "17/08/2026",
                             fileName: "phamhaidang_vatly.jpg",
@@ -818,13 +818,13 @@ window.jsStr = jsStr;
                     result = [
                         {
                             id: "img_01",
-                            name: "Trang 1 - BÃ i giáº£i chi tiáº¿t.jpg",
+                            name: "Trang 1 - Bài giải chi tiết.jpg",
                             isImage: true,
                             url: "https://images.unsplash.com/photo-1434030216411-0b793f4b4173?w=1600&auto=format&fit=crop"
                         },
                         {
                             id: "img_02",
-                            name: "Trang 2 - HÃ¬nh váº½ & ÄÃ¡p sá»‘.jpg",
+                            name: "Trang 2 - Hình vẽ & Đáp số.jpg",
                             isImage: true,
                             url: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1600&auto=format&fit=crop"
                         }
@@ -838,26 +838,26 @@ window.jsStr = jsStr;
                             name: t.name,
                             phone: t.phone,
                             pin: t.pin || "1234",
-                            status: "Hoáº¡t Ä‘á»™ng",
+                            status: "Hoạt động",
                             createdDate: "18/07/2026",
                             nextBillingDate: "18/09/2026",
-                            lastActive: "Vá»«a xong",
-                            accountType: "Gia sÆ° (1-1)"
+                            lastActive: "Vừa xong",
+                            accountType: "Gia sư (1-1)"
                         })),
                         students: store.students.map(s => ({
                             name: s.name,
-                            parentName: "Phá»¥ huynh em " + s.name,
+                            parentName: "Phụ huynh em " + s.name,
                             phone: s.phone,
                             tutorPhone: "0123456789",
                             tuition: s.tuition || 200000
                         })),
                         deletedTutors: [],
                         incomeReports: {},
-                        marqueeAnnouncement: "Báº£ng Quáº£n Trá»‹ Há»‡ Thá»‘ng Trung TÃ¢m Gia SÆ° 4.0"
+                        marqueeAnnouncement: "Bảng Quản Trị Hệ Thống Trung Tâm Gia Sư 4.0"
                     };
                 }
 
-                // 9. XÃC THá»°C MÃƒ BÃ€I Táº¬P (HOMEWORK GATEWAY)
+                // 9. XÁC THỰC MÃ BÀI TẬP (HOMEWORK GATEWAY)
                 else if (functionName === 'xacThucMaBaiTap' || functionName === 'checkHomework') {
                     const code = String(args[0] || "").trim();
                     const norm = normalizePhone(code);
@@ -915,7 +915,7 @@ window.jsStr = jsStr;
                             subId: s.subId || String(idx + 1),
                             rowIndex: s.rowIndex || (idx + 1),
                             studentName: s.studentName || target.name,
-                            lessonName: s.lessonName || "BÃ i táº­p rÃ¨n luyá»‡n",
+                            lessonName: s.lessonName || "Bài tập rèn luyện",
                             timestamp: s.timestamp || (typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(1) + " 21:15:30" : "16/08/2026 21:15:30"),
                             submissionDate: s.submissionDate || (typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(1) : "16/08/2026"),
                             fileUrl: s.fileUrl || "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
@@ -926,7 +926,7 @@ window.jsStr = jsStr;
                     };
                 }
 
-                // 10. NHáº¬T KÃ & GHI ÄIá»‚M
+                // 10. NHẬT KÝ & GHI ĐIỂM
                 else if (functionName === 'getStudentLogs') {
                     const studentPhone = String(args[0] || "");
                     const norm = normalizePhone(studentPhone);
@@ -945,7 +945,7 @@ window.jsStr = jsStr;
                     }));
                 }
 
-                // 11. CÃC TÃC Vá»¤ Ná»˜P BÃ€I Táº¬P & Sá»¬A XÃ“A TRÃŠN DEMO
+                // 11. CÁC TÁC VỤ NỘP BÀI TẬP & SỬA XÓA TRÊN DEMO
                 else if (functionName === 'uploadHomeworkFiles' || functionName === 'uploadHomeworkFile') {
                     const [ma, studentName, lessonName, filesList] = args;
                     if (!store.submissions) store.submissions = [];
@@ -959,11 +959,11 @@ window.jsStr = jsStr;
                                 fileUrl = "data:" + (filesList[0].mimeType || "image/jpeg") + ";base64," + filesList[0].fileBase64;
                             }
                         } else {
-                            fileName = filesList.length + " áº£nh bÃ i ná»™p";
+                            fileName = filesList.length + " ảnh bài nộp";
                             fileUrl = JSON.stringify(filesList.map((f, fIdx) => {
                                 const mime = f.mimeType || "image/jpeg";
                                 return {
-                                    name: f.fileName || (`áº¢nh ${fIdx + 1}`),
+                                    name: f.fileName || (`Ảnh ${fIdx + 1}`),
                                     url: f.url || `data:${mime};base64,${f.fileBase64}`,
                                     isImage: !mime.includes("pdf") && !mime.includes("zip")
                                 };
@@ -974,11 +974,11 @@ window.jsStr = jsStr;
                     const newSub = {
                         subId: "SUB_" + Date.now(),
                         rowIndex: store.submissions.length + 1,
-                        studentName: studentName || "Há»c sinh",
+                        studentName: studentName || "Học sinh",
                         studentPhone: ma || "0987654321",
-                        lessonName: lessonName || "BÃ i táº­p má»›i",
-                        timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(0) + " " + new Date().toTimeString().split(' ')[0] : "HÃ´m nay",
-                        submissionDate: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(0) : "HÃ´m nay",
+                        lessonName: lessonName || "Bài tập mới",
+                        timestamp: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(0) + " " + new Date().toTimeString().split(' ')[0] : "Hôm nay",
+                        submissionDate: typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(0) : "Hôm nay",
                         fileUrl: fileUrl,
                         fileName: fileName,
                         score: "",
@@ -1053,7 +1053,7 @@ window.jsStr = jsStr;
                 }
 
                 // ==========================================
-                // BÃ€I Táº¬P ÄÃƒ GIAO Cá»¦A GIA SÆ¯ (DEMO)
+                // BÀI TẬP ĐÃ GIAO CỦA GIA SƯ (DEMO)
                 // ==========================================
 
                 else if (functionName === 'getAssignedHomework') {
@@ -1099,7 +1099,7 @@ window.jsStr = jsStr;
                             let h = store.assignedHomework[i];
                             if (String(h.rowIndex) === String(rowIndex) || String(h.hwId) === String(rowIndex)) {
                                 h.status = "Trash";
-                                h.deletedDate = typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(0) : "HÃ´m nay";
+                                h.deletedDate = typeof getGiaSuDemoDate === 'function' ? getGiaSuDemoDate(0) : "Hôm nay";
                                 break;
                             }
                         }
@@ -1125,7 +1125,7 @@ window.jsStr = jsStr;
                 }
 
                 else if (functionName === 'saveEvaluation' || functionName === 'deleteEvaluation') {
-                    result = { success: true, thongBao: "Cáº­p nháº­t Ä‘Ã¡nh giÃ¡ buá»•i há»c thÃ nh cÃ´ng!" };
+                    result = { success: true, thongBao: "Cập nhật đánh giá buổi học thành công!" };
                 }
                 else if (functionName === 'saveScheduleToBackend' || functionName === 'capNhatThoiKhoaBieu') {
                     const studentName = String(args[1] || "").trim();
@@ -1139,9 +1139,9 @@ window.jsStr = jsStr;
                     
                     if (!store.tutorSchedule || !Array.isArray(store.tutorSchedule)) {
                         store.tutorSchedule = [
-                            { rowIndex: 1, studentName: "LÃª Minh ThÆ°", color: "#8E4DFF", mon: "18:00 - 19:30", tue: "", wed: "", thu: "", fri: "", sat: "", sun: "08:30 - 10:00" },
-                            { rowIndex: 2, studentName: "Nguyá»…n HoÃ ng Nam", color: "#10B981", mon: "", tue: "", wed: "19:30 - 21:00", thu: "", fri: "", sat: "18:00 - 19:30", sun: "" },
-                            { rowIndex: 3, studentName: "Pháº¡m Háº£i ÄÄƒng", color: "#F59E0B", mon: "", tue: "18:00 - 19:30", wed: "", thu: "", fri: "18:00 - 19:30", sat: "", sun: "" }
+                            { rowIndex: 1, studentName: "Lê Minh Thư", color: "#8E4DFF", mon: "18:00 - 19:30", tue: "", wed: "", thu: "", fri: "", sat: "", sun: "08:30 - 10:00" },
+                            { rowIndex: 2, studentName: "Nguyễn Hoàng Nam", color: "#10B981", mon: "", tue: "", wed: "19:30 - 21:00", thu: "", fri: "", sat: "18:00 - 19:30", sun: "" },
+                            { rowIndex: 3, studentName: "Phạm Hải Đăng", color: "#F59E0B", mon: "", tue: "18:00 - 19:30", wed: "", thu: "", fri: "18:00 - 19:30", sat: "", sun: "" }
                         ];
                     }
                     let item = store.tutorSchedule.find(s => s.studentName.trim() === studentName);
@@ -1156,29 +1156,29 @@ window.jsStr = jsStr;
                         });
                     }
                     saveDemoStore(store);
-                    result = { success: true, thongBao: "ÄÃ£ lÆ°u lá»‹ch dáº¡y thÃ nh cÃ´ng!" };
+                    result = { success: true, thongBao: "Đã lưu lịch dạy thành công!" };
                 }
                 else if (functionName === 'updateAnnouncement') {
-                    result = { success: true, thongBao: "Cáº­p nháº­t thÃ´ng bÃ¡o há»c sinh thÃ nh cÃ´ng!" };
+                    result = { success: true, thongBao: "Cập nhật thông báo học sinh thành công!" };
                 }
                 else if (functionName === 'updateStudentTuitionStatus') {
-                    result = { success: true, thongBao: "ÄÃ£ cáº­p nháº­t tráº¡ng thÃ¡i há»c phÃ­ thÃ nh cÃ´ng!" };
+                    result = { success: true, thongBao: "Đã cập nhật trạng thái học phí thành công!" };
                 }
                 else if (functionName === 'guiPhanHoiPhuHuynh') {
-                    result = { success: true, thongBao: "Cáº£m Æ¡n QuÃ½ Phá»¥ huynh Ä‘Ã£ gá»­i pháº£n há»“i! Gia sÆ° Ä‘Ã£ nháº­n Ä‘Æ°á»£c tin nháº¯n." };
+                    result = { success: true, thongBao: "Cảm ơn Quý Phụ huynh đã gửi phản hồi! Gia sư đã nhận được tin nhắn." };
                 }
                 else if (functionName === 'submitHomework' || functionName === 'uploadHomework') {
-                    result = { success: true, thongBao: "Ná»™p bÃ i táº­p thÃ nh cÃ´ng! Gia sÆ° sáº½ cháº¥m vÃ  pháº£n há»“i sá»›m nháº¥t." };
+                    result = { success: true, thongBao: "Nộp bài tập thành công! Gia sư sẽ chấm và phản hồi sớm nhất." };
                 }
 
                 // Default Fallback
                 else {
-                    result = { success: true, thongBao: "Thá»±c hiá»‡n tÃ¡c vá»¥ thÃ nh cÃ´ng!" };
+                    result = { success: true, thongBao: "Thực hiện tác vụ thành công!" };
                 }
 
             } catch (err) {
                 console.error("API Mock Error:", err);
-                result = { error: "Lá»—i xá»­ lÃ½: " + err.message };
+                result = { error: "Lỗi xử lý: " + err.message };
             }
 
             if (result && result.error && self._failureHandler) {
@@ -1194,7 +1194,7 @@ window.jsStr = jsStr;
     window.getGiaSuDemoStore = getDemoStore;
     window.saveGiaSuDemoStore = saveDemoStore;
 
-    // GÃ¡n Mock API vÃ o window.google.script.run
+    // Gán Mock API vào window.google.script.run
     window.google = {
         script: {
             get run() {
