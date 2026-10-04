@@ -1206,49 +1206,66 @@ function normPhone(p) {
 }
 
 function prepareDemoSession() {
-    var demoData = {
-        tutorPhone: "0123456789",
-        tutorName: "Thầy Trần Hoàng Nam",
-        tutorPin: "1234",
-        qrCode: "https://i.postimg.cc/66rKbPmb/trinh-duyet.png",
-        accountType: "Gia sư dùng thử (15 ngày)",
-        nextDueDate: "18/10/2026",
-        registeredDate: "01/10/2026",
-        status: "Hoạt động",
-        students: [
-            {
-                phone: "0912345678",
-                name: "Nguyễn Hoàng Nam",
-                parentName: "Bác Nam",
-                tuition: 200000,
-                billing_type: "session",
-                maBaiTap: "0912345678",
-                thongBao: "Bài tập tuần này đã giao trên hệ thống."
-            },
-            {
-                phone: "0987654321",
-                name: "Lê Minh Thư",
-                parentName: "Cô Thư",
-                tuition: 200000,
-                billing_type: "session",
-                maBaiTap: "0987654321",
-                thongBao: "Nhớ nộp bài phiếu 05 trước thứ Năm."
-            },
-            {
-                phone: "0905123456",
-                name: "Phạm Hải Đăng",
-                parentName: "Chú Đăng",
-                tuition: 200000,
-                billing_type: "session",
-                maBaiTap: "0905123456",
-                thongBao: "Điểm kiểm tra định kỳ 9.5 rất tốt."
-            }
-        ],
-        deletedStudents: [],
-        totalUnpaidIncome: 600000,
-        classCount: 3,
-        marqueeAnnouncement: ""
-    };
+    var demoData = (typeof getTutorDemoDashboardData === 'function')
+        ? getTutorDemoDashboardData()
+        : null;
+    if (!demoData) {
+        var s1Logs = (typeof getDemoStudentLogs === 'function') ? getDemoStudentLogs('0912345678') : [];
+        var s2Logs = (typeof getDemoStudentLogs === 'function') ? getDemoStudentLogs('0987654321') : [];
+        var s3Logs = (typeof getDemoStudentLogs === 'function') ? getDemoStudentLogs('0905123456') : [];
+        demoData = {
+            tutorPhone: "0123456789",
+            tutorName: "Thầy Trần Hoàng Nam",
+            tutorPin: "1234",
+            qrCode: "https://i.postimg.cc/66rKbPmb/trinh-duyet.png",
+            accountType: "Gia sư dùng thử (15 ngày)",
+            nextDueDate: "18/10/2026",
+            registeredDate: "01/10/2026",
+            status: "Hoạt động",
+            students: [
+                {
+                    phone: "0912345678",
+                    name: "Nguyễn Hoàng Nam",
+                    parentName: "Bác Nam",
+                    tuition: 200000,
+                    tuition_fee: 200000,
+                    billing_type: "session",
+                    billingType: "session",
+                    maBaiTap: "0912345678",
+                    thongBao: "Bài tập tuần này đã giao trên hệ thống.",
+                    logs: s1Logs
+                },
+                {
+                    phone: "0987654321",
+                    name: "Lê Minh Thư",
+                    parentName: "Cô Thư",
+                    tuition: 200000,
+                    tuition_fee: 200000,
+                    billing_type: "session",
+                    billingType: "session",
+                    maBaiTap: "0987654321",
+                    thongBao: "Nhớ nộp bài phiếu 05 trước thứ Năm.",
+                    logs: s2Logs
+                },
+                {
+                    phone: "0905123456",
+                    name: "Phạm Hải Đăng",
+                    parentName: "Chú Đăng",
+                    tuition: 200000,
+                    tuition_fee: 200000,
+                    billing_type: "session",
+                    billingType: "session",
+                    maBaiTap: "0905123456",
+                    thongBao: "Điểm kiểm tra định kỳ 9.5 rất tốt.",
+                    logs: s3Logs
+                }
+            ],
+            deletedStudents: [],
+            totalUnpaidIncome: 1800000,
+            classCount: 3,
+            marqueeAnnouncement: ""
+        };
+    }
     sessionStorage.setItem('userRole', 'tutor');
     sessionStorage.setItem('userPhone', '0123456789');
     sessionStorage.setItem('userPin', '1234');

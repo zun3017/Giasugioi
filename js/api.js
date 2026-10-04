@@ -816,74 +816,82 @@ class GoogleScriptRunInstance {
             else if (functionName === 'getStudentDetailsForTutor') {
                 const studentPhone = args[0];
                 const studentName = args[1];
-                
-                let studentsRaw = await supaGet(APP_CONFIG.TABLES.STUDENTS, `select=*`);
-                let stObj = studentsRaw.find(s => normalizePhone(s.parent_phone) === normalizePhone(studentPhone) || normalizePhone(s.student_id) === normalizePhone(studentPhone) || (studentName && s.student_name && s.student_name.toLowerCase() === studentName.toLowerCase()));
-                
-                let evalsRaw = await supaGet(APP_CONFIG.TABLES.EVALUATIONS, `select=*`);
-                let matched = evalsRaw.filter(e => !e.deleted_date && (
-                    normalizePhone(e.student_phone) === normalizePhone(studentPhone) ||
-                    (studentName && e.student_name && e.student_name.toLowerCase() === studentName.toLowerCase())
-                ));
-                
-                let rawLogs = matched.map((e, idx) => {
-                    let att = e.attendance_status || "Đã học";
-                    let content = e.lesson_content || "";
-                    let comment = (e.nhan_xet !== undefined && e.nhan_xet !== null) ? String(e.nhan_xet).trim() : 
-                                  ((e["nhận xét"] !== undefined && e["nhận xét"] !== null) ? String(e["nhận xét"]).trim() : 
-                                  ((e.tutor_comment !== undefined && e.tutor_comment !== null) ? String(e.tutor_comment).trim() : 
-                                  ((e.comment !== undefined && e.comment !== null) ? String(e.comment).trim() : "")));
-                    if (!comment && content.includes("---NHAN_XET---")) {
-                        let parts = content.split("---NHAN_XET---");
-                        content = parts[0].trim();
-                        comment = parts.slice(1).join("---NHAN_XET---").trim();
-                    }
-                    return {
-                        rowIndex: e.eval_id,
-                        evalId: e.eval_id,
-                        tuan: e.week_num || "-",
-                        ngay: formatShortDate(e.study_date),
-                        studyDate: e.study_date || "",
-                        mon: e.subject || "Toán học",
-                        noiDung: content,
-                        nhanXet: comment,
-                        danhGiaBTVN: (e.hw_eval && String(e.hw_eval).trim()) ? String(e.hw_eval).trim() : ((att.toLowerCase().indexOf('nghi') !== -1 || att.toLowerCase().indexOf('huy') !== -1 || att.toLowerCase().indexOf('vang') !== -1) ? "-" : "Hoàn thành"),
-                        btvn: (e.hw_eval && String(e.hw_eval).trim()) ? String(e.hw_eval).trim() : ((att.toLowerCase().indexOf('nghi') !== -1 || att.toLowerCase().indexOf('huy') !== -1 || att.toLowerCase().indexOf('vang') !== -1) ? "-" : "Hoàn thành"),
-                        diemDauGio: cleanScore(e.entry_test),
-                        diemDinhKi: cleanScore(e.term_test),
-                        trangThai: att,
-                        tienDong: e.paid_status || "",
-                        ngayDongTien: e.paid_date || ""
+                const norm = normalizePhone(studentPhone);
+                if (norm === '0912345678' || norm === '912345678' || norm === '0987654321' || norm === '987654321' || norm === '0905123456' || norm === '905123456' || (studentName && (studentName.includes('Hoàng Nam') || studentName.includes('Minh Thư') || studentName.includes('Hải Đăng')))) {
+                    result = getDemoStudentDetailsForTutor(studentPhone, studentName);
+                } else {
+                    let studentsRaw = await supaGet(APP_CONFIG.TABLES.STUDENTS, `select=*`);
+                    let stObj = studentsRaw.find(s => normalizePhone(s.parent_phone) === normalizePhone(studentPhone) || normalizePhone(s.student_id) === normalizePhone(studentPhone) || (studentName && s.student_name && s.student_name.toLowerCase() === studentName.toLowerCase()));
+                    
+                    let evalsRaw = await supaGet(APP_CONFIG.TABLES.EVALUATIONS, `select=*`);
+                    let matched = evalsRaw.filter(e => !e.deleted_date && (
+                        normalizePhone(e.student_phone) === normalizePhone(studentPhone) ||
+                        (studentName && e.student_name && e.student_name.toLowerCase() === studentName.toLowerCase())
+                    ));
+                    
+                    let rawLogs = matched.map((e, idx) => {
+                        let att = e.attendance_status || "Đã học";
+                        let content = e.lesson_content || "";
+                        let comment = (e.nhan_xet !== undefined && e.nhan_xet !== null) ? String(e.nhan_xet).trim() : 
+                                      ((e["nhận xét"] !== undefined && e["nhận xét"] !== null) ? String(e["nhận xét"]).trim() : 
+                                      ((e.tutor_comment !== undefined && e.tutor_comment !== null) ? String(e.tutor_comment).trim() : 
+                                      ((e.comment !== undefined && e.comment !== null) ? String(e.comment).trim() : "")));
+                        if (!comment && content.includes("---NHAN_XET---")) {
+                            let parts = content.split("---NHAN_XET---");
+                            content = parts[0].trim();
+                            comment = parts.slice(1).join("---NHAN_XET---").trim();
+                        }
+                        return {
+                            rowIndex: e.eval_id,
+                            evalId: e.eval_id,
+                            tuan: e.week_num || "-",
+                            ngay: formatShortDate(e.study_date),
+                            studyDate: e.study_date || "",
+                            mon: e.subject || "Toán học",
+                            noiDung: content,
+                            nhanXet: comment,
+                            danhGiaBTVN: (e.hw_eval && String(e.hw_eval).trim()) ? String(e.hw_eval).trim() : ((att.toLowerCase().indexOf('nghi') !== -1 || att.toLowerCase().indexOf('huy') !== -1 || att.toLowerCase().indexOf('vang') !== -1) ? "-" : "Hoàn thành"),
+                            btvn: (e.hw_eval && String(e.hw_eval).trim()) ? String(e.hw_eval).trim() : ((att.toLowerCase().indexOf('nghi') !== -1 || att.toLowerCase().indexOf('huy') !== -1 || att.toLowerCase().indexOf('vang') !== -1) ? "-" : "Hoàn thành"),
+                            diemDauGio: cleanScore(e.entry_test),
+                            diemDinhKi: cleanScore(e.term_test),
+                            trangThai: att,
+                            tienDong: e.paid_status || "",
+                            ngayDongTien: e.paid_date || ""
+                        };
+                    });
+                    
+                    let logs = sortLogsChronological(rawLogs);
+                    
+                    result = { 
+                        logs: logs,
+                        tuition: stObj ? (stObj.tuition_fee || 0) : 0,
+                        billing_type: stObj ? (stObj.billing_type || 'session') : 'session',
+                        parentName: stObj ? (stObj.parent_name || "") : "",
+                        announcement: stObj ? (stObj.announcement || "") : ""
                     };
-                });
-                
-                let logs = sortLogsChronological(rawLogs);
-                
-                result = { 
-                    logs: logs,
-                    tuition: stObj ? (stObj.tuition_fee || 0) : 0,
-                    billing_type: stObj ? (stObj.billing_type || 'session') : 'session',
-                    parentName: stObj ? (stObj.parent_name || "") : "",
-                    announcement: stObj ? (stObj.announcement || "") : ""
-                };
+                }
             }
             
             else if (functionName === 'getTutorSchedule') {
                 const tutorPhone = args[0];
-                let schedules = await supaGet(APP_CONFIG.TABLES.SCHEDULES, `select=*`);
-                let matched = schedules.filter(s => normalizePhone(s.tutor_phone) === normalizePhone(tutorPhone));
-                result = matched.map(s => ({
-                    tutorPhone: s.tutor_phone,
-                    tutorName: fixVietnameseMojibake(s.tutor_name),
-                    studentName: fixVietnameseMojibake(s.student_name),
-                    mon: s.mon || "",
-                    tue: s.tue || "",
-                    wed: s.wed || "",
-                    thu: s.thu || "",
-                    fri: s.fri || "",
-                    sat: s.sat || "",
-                    sun: s.sun || ""
-                }));
+                if (normalizePhone(tutorPhone) === '0123456789' || normalizePhone(tutorPhone) === '123456789' || !tutorPhone) {
+                    result = getDemoTutorSchedule();
+                } else {
+                    let schedules = await supaGet(APP_CONFIG.TABLES.SCHEDULES, `select=*`);
+                    let matched = schedules.filter(s => normalizePhone(s.tutor_phone) === normalizePhone(tutorPhone));
+                    result = matched.map(s => ({
+                        tutorPhone: s.tutor_phone,
+                        tutorName: fixVietnameseMojibake(s.tutor_name),
+                        studentName: fixVietnameseMojibake(s.student_name),
+                        mon: s.mon || "",
+                        tue: s.tue || "",
+                        wed: s.wed || "",
+                        thu: s.thu || "",
+                        fri: s.fri || "",
+                        sat: s.sat || "",
+                        sun: s.sun || ""
+                    }));
+                }
             }
             
             else if (functionName === 'capNhatThoiKhoaBieu' || functionName === 'saveTutorSchedule') {
@@ -1412,8 +1420,10 @@ class GoogleScriptRunInstance {
                 const maBaiTap = String(args[0] || "").trim();
                 const studentName = String(args[1] || "").trim();
                 const norm = normalizePhone(maBaiTap);
-                
-                let studentsRaw = await supaGet(APP_CONFIG.TABLES.STUDENTS, `select=*`);
+                if (norm === '0123456789' || norm === '123456789' || norm === '0912345678' || norm === '0987654321' || norm === '0905123456' || maBaiTap.toUpperCase() === 'BT101' || (studentName && (studentName.includes('Hoàng Nam') || studentName.includes('Minh Thư') || studentName.includes('Hải Đăng')))) {
+                    result = getDemoSubmissionsForTutor(maBaiTap, studentName);
+                } else {
+                    let studentsRaw = await supaGet(APP_CONFIG.TABLES.STUDENTS, `select=*`);
                 let matchedStudent = studentsRaw.find(s => {
                     let sNameMatch = studentName && s.student_name && s.student_name.trim().toLowerCase() === studentName.toLowerCase();
                     let sHwNorm = normalizePhone(s.homework_id);
@@ -1478,6 +1488,7 @@ class GoogleScriptRunInstance {
                     }))
                 };
             }
+        }
             
             else if (functionName === 'gradeSubmission') {
                 const [subId, score, comment] = args;
@@ -2240,8 +2251,1061 @@ class GoogleScriptRunInstance {
     }
 }
 
+// HELPER DEMO: Dữ liệu mẫu dùng thử 1 chạm cho Học sinh (10 buổi học chi tiết mỗi học sinh)
+function getDemoStudentLogs(identifier) {
+    const raw = String(identifier || '').trim();
+    const norm = normalizePhone(raw);
+    const isNam = (norm === '0912345678' || norm === '912345678' || raw.includes('Hoàng Nam') || raw.toLowerCase().includes('nam'));
+    const isDang = (norm === '0905123456' || norm === '905123456' || raw.includes('Hải Đăng') || raw.toLowerCase().includes('dang'));
+    const phoneKey = isNam ? '0912345678' : (isDang ? '0905123456' : '0987654321');
+
+    if (typeof sessionStorage !== 'undefined') {
+        try {
+            const cached = sessionStorage.getItem('DEMO_STUDENT_LOGS_' + phoneKey);
+            if (cached) {
+                const parsed = JSON.parse(cached);
+                if (Array.isArray(parsed) && parsed.length >= 8) {
+                    return parsed;
+                }
+            }
+        } catch(e) {}
+    }
+
+    let logs = [];
+    if (isNam) {
+        logs = [
+            {
+                rowIndex: 10,
+                evalId: "DEMO_EVAL_NAM_10",
+                buoiSo: 10,
+                tuan: "10",
+                ngay: "04/10/2026",
+                ngayHoc: "04/10/2026",
+                studyDate: "2026-10-04",
+                mon: "Toán",
+                topic: "Hệ thức lượng trong tam giác vuông nâng cao",
+                noiDung: "Hệ thức lượng trong tam giác vuông nâng cao",
+                nhanXet: "Làm bài rất tốt, tư duy hình học không gian và tam giác vuông rất nhanh nhẹn.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.0",
+                diemDauGio: 9.0,
+                entry_test: 9.0,
+                diemDK: "9.5",
+                diemDinhKi: 9.5,
+                term_test: 9.5,
+                tienDong: "Chưa đóng",
+                paid_status: "Chưa đóng",
+                ngayDongTien: "",
+                paid_date: ""
+            },
+            {
+                rowIndex: 9,
+                evalId: "DEMO_EVAL_NAM_9",
+                buoiSo: 9,
+                tuan: "9",
+                ngay: "01/10/2026",
+                ngayHoc: "01/10/2026",
+                studyDate: "2026-10-01",
+                mon: "Toán",
+                topic: "Tỉ số lượng giác góc nhọn và bảng lượng giác",
+                noiDung: "Tỉ số lượng giác góc nhọn và bảng lượng giác",
+                nhanXet: "Nắm chắc lý thuyết sin, cos, tan, cotan. Cần chú ý cách bấm máy tính Casio chính xác.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành 100%",
+                danhGiaBTVN: "Hoàn thành 100%",
+                hw_eval: "Hoàn thành 100%",
+                diemDG: "8.5",
+                diemDauGio: 8.5,
+                entry_test: 8.5,
+                diemDK: "9.0",
+                diemDinhKi: 9.0,
+                term_test: 9.0,
+                tienDong: "Chưa đóng",
+                paid_status: "Chưa đóng",
+                ngayDongTien: "",
+                paid_date: ""
+            },
+            {
+                rowIndex: 8,
+                evalId: "DEMO_EVAL_NAM_8",
+                buoiSo: 8,
+                tuan: "8",
+                ngay: "27/09/2026",
+                ngayHoc: "27/09/2026",
+                studyDate: "2026-09-27",
+                mon: "Toán",
+                topic: "Rút gọn biểu thức chứa căn bậc hai (Dạng thi vào 10)",
+                noiDung: "Rút gọn biểu thức chứa căn bậc hai (Dạng thi vào 10)",
+                nhanXet: "Kỹ năng biến đổi đại số vững, không bị nhầm dấu ở các bước phân tích nhân tử.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.0",
+                diemDauGio: 9.0,
+                entry_test: 9.0,
+                diemDK: "8.5",
+                diemDinhKi: 8.5,
+                term_test: 8.5,
+                tienDong: "Chưa đóng",
+                paid_status: "Chưa đóng",
+                ngayDongTien: "",
+                paid_date: ""
+            },
+            {
+                rowIndex: 7,
+                evalId: "DEMO_EVAL_NAM_7",
+                buoiSo: 7,
+                tuan: "7",
+                ngay: "23/09/2026",
+                ngayHoc: "23/09/2026",
+                studyDate: "2026-09-23",
+                mon: "Toán",
+                topic: "Liên hệ giữa phép nhân, phép chia và phép khai phương",
+                noiDung: "Liên hệ giữa phép nhân, phép chia và phép khai phương",
+                nhanXet: "Hiểu bài nhanh, hoàn thành đủ phần bài tập nâng cao.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành 90%",
+                danhGiaBTVN: "Hoàn thành 90%",
+                hw_eval: "Hoàn thành 90%",
+                diemDG: "8.0",
+                diemDauGio: 8.0,
+                entry_test: 8.0,
+                diemDK: "8.5",
+                diemDinhKi: 8.5,
+                term_test: 8.5,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "24/09/2026",
+                paid_date: "24/09/2026"
+            },
+            {
+                rowIndex: 6,
+                evalId: "DEMO_EVAL_NAM_6",
+                buoiSo: 6,
+                tuan: "6",
+                ngay: "20/09/2026",
+                ngayHoc: "20/09/2026",
+                studyDate: "2026-09-20",
+                mon: "Toán",
+                topic: "Căn bậc hai và hằng đẳng thức căn(A^2) = |A|",
+                noiDung: "Căn bậc hai và hằng đẳng thức căn(A^2) = |A|",
+                nhanXet: "Làm tốt bài tập đặt điều kiện xác định và phá dấu giá trị tuyệt đối.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "8.5",
+                diemDauGio: 8.5,
+                entry_test: 8.5,
+                diemDK: "9.0",
+                diemDinhKi: 9.0,
+                term_test: 9.0,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "24/09/2026",
+                paid_date: "24/09/2026"
+            },
+            {
+                rowIndex: 5,
+                evalId: "DEMO_EVAL_NAM_5",
+                buoiSo: 5,
+                tuan: "5",
+                ngay: "16/09/2026",
+                ngayHoc: "16/09/2026",
+                studyDate: "2026-09-16",
+                mon: "Toán",
+                topic: "Luyện đề khảo sát chất lượng đầu năm môn Toán 9",
+                noiDung: "Luyện đề khảo sát chất lượng đầu năm môn Toán 9",
+                nhanXet: "Bài làm điểm cao, phần hình học làm trọn vẹn 3 ý đầu.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "8.5",
+                diemDauGio: 8.5,
+                entry_test: 8.5,
+                diemDK: "8.8",
+                diemDinhKi: 8.8,
+                term_test: 8.8,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "24/09/2026",
+                paid_date: "24/09/2026"
+            },
+            {
+                rowIndex: 4,
+                evalId: "DEMO_EVAL_NAM_4",
+                buoiSo: 4,
+                tuan: "4",
+                ngay: "13/09/2026",
+                ngayHoc: "13/09/2026",
+                studyDate: "2026-09-13",
+                mon: "Toán",
+                topic: "Ôn tập Phương trình bậc nhất một ẩn & Bất phương trình",
+                noiDung: "Ôn tập Phương trình bậc nhất một ẩn & Bất phương trình",
+                nhanXet: "Nắm vững quy tắc chuyển vế đổi dấu, bài tập cơ bản làm rất tốt.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành 80%",
+                danhGiaBTVN: "Hoàn thành 80%",
+                hw_eval: "Hoàn thành 80%",
+                diemDG: "8.0",
+                diemDauGio: 8.0,
+                entry_test: 8.0,
+                diemDK: "8.0",
+                diemDinhKi: 8.0,
+                term_test: 8.0,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "14/09/2026",
+                paid_date: "14/09/2026"
+            },
+            {
+                rowIndex: 3,
+                evalId: "DEMO_EVAL_NAM_3",
+                buoiSo: 3,
+                tuan: "3",
+                ngay: "09/09/2026",
+                ngayHoc: "09/09/2026",
+                studyDate: "2026-09-09",
+                mon: "Toán",
+                topic: "Hình học: Định lý Talet và Tam giác đồng dạng",
+                noiDung: "Hình học: Định lý Talet và Tam giác đồng dạng",
+                nhanXet: "Nhớ tốt các trường hợp đồng dạng của tam giác, trình bày lời giải rõ ràng.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.0",
+                diemDauGio: 9.0,
+                entry_test: 9.0,
+                diemDK: "8.5",
+                diemDinhKi: 8.5,
+                term_test: 8.5,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "14/09/2026",
+                paid_date: "14/09/2026"
+            },
+            {
+                rowIndex: 2,
+                evalId: "DEMO_EVAL_NAM_2",
+                buoiSo: 2,
+                tuan: "2",
+                ngay: "06/09/2026",
+                ngayHoc: "06/09/2026",
+                studyDate: "2026-09-06",
+                mon: "Toán",
+                topic: "Phân tích đa thức thành nhân tử & Bất đẳng thức Cô-si",
+                noiDung: "Phân tích đa thức thành nhân tử & Bất đẳng thức Cô-si",
+                nhanXet: "Biết áp dụng BĐT Cô-si cho 2 số dương tìm GTNN, GTLN cơ bản.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "8.5",
+                diemDauGio: 8.5,
+                entry_test: 8.5,
+                diemDK: "8.5",
+                diemDinhKi: 8.5,
+                term_test: 8.5,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "14/09/2026",
+                paid_date: "14/09/2026"
+            },
+            {
+                rowIndex: 1,
+                evalId: "DEMO_EVAL_NAM_1",
+                buoiSo: 1,
+                tuan: "1",
+                ngay: "02/09/2026",
+                ngayHoc: "02/09/2026",
+                studyDate: "2026-09-02",
+                mon: "Toán",
+                topic: "Khảo sát năng lực đầu vào & Lập lộ trình ôn thi vào 10",
+                noiDung: "Khảo sát năng lực đầu vào & Lập lộ trình ôn thi vào 10",
+                nhanXet: "Nền tảng kiến thức lớp 8 tốt, tiếp thu nhanh, thái độ học tập tích cực.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "8.0",
+                diemDauGio: 8.0,
+                entry_test: 8.0,
+                diemDK: "8.5",
+                diemDinhKi: 8.5,
+                term_test: 8.5,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "14/09/2026",
+                paid_date: "14/09/2026"
+            }
+        ];
+    } else if (isDang) {
+        logs = [
+            {
+                rowIndex: 9,
+                evalId: "DEMO_EVAL_DANG_9",
+                buoiSo: 9,
+                tuan: "9",
+                ngay: "04/10/2026",
+                ngayHoc: "04/10/2026",
+                studyDate: "2026-10-04",
+                mon: "Vật Lý",
+                topic: "Tụ điện & Ghép bộ tụ điện song song, nối tiếp nâng cao",
+                noiDung: "Tụ điện & Ghép bộ tụ điện song song, nối tiếp nâng cao",
+                nhanXet: "Giải đề chuyên nhanh và chuẩn xác. Tính toán điện dung bộ tụ rất thông minh.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.5",
+                diemDauGio: 9.5,
+                entry_test: 9.5,
+                diemDK: "9.5",
+                diemDinhKi: 9.5,
+                term_test: 9.5,
+                tienDong: "Chưa đóng",
+                paid_status: "Chưa đóng",
+                ngayDongTien: "",
+                paid_date: ""
+            },
+            {
+                rowIndex: 8,
+                evalId: "DEMO_EVAL_DANG_8",
+                buoiSo: 8,
+                tuan: "8",
+                ngay: "02/10/2026",
+                ngayHoc: "02/10/2026",
+                studyDate: "2026-10-02",
+                mon: "Vật Lý",
+                topic: "Điện thế, Hiệu điện thế & Công của lực điện trường",
+                noiDung: "Điện thế, Hiệu điện thế & Công của lực điện trường",
+                nhanXet: "Nắm vững công thức A = qEd, phân biệt rõ điện thế và thế năng tĩnh điện.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành 100%",
+                danhGiaBTVN: "Hoàn thành 100%",
+                hw_eval: "Hoàn thành 100%",
+                diemDG: "9.0",
+                diemDauGio: 9.0,
+                entry_test: 9.0,
+                diemDK: "9.0",
+                diemDinhKi: 9.0,
+                term_test: 9.0,
+                tienDong: "Chưa đóng",
+                paid_status: "Chưa đóng",
+                ngayDongTien: "",
+                paid_date: ""
+            },
+            {
+                rowIndex: 7,
+                evalId: "DEMO_EVAL_DANG_7",
+                buoiSo: 7,
+                tuan: "7",
+                ngay: "25/09/2026",
+                ngayHoc: "25/09/2026",
+                studyDate: "2026-09-25",
+                mon: "Vật Lý",
+                topic: "Điện trường đều & Bài toán chuyển động của hạt mang điện",
+                noiDung: "Điện trường đều & Bài toán chuyển động của hạt mang điện",
+                nhanXet: "Áp dụng định lý động năng và phân tích quỹ đạo parabol hạt điện tích xuất sắc.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.0",
+                diemDauGio: 9.0,
+                entry_test: 9.0,
+                diemDK: "9.5",
+                diemDinhKi: 9.5,
+                term_test: 9.5,
+                tienDong: "Chưa đóng",
+                paid_status: "Chưa đóng",
+                ngayDongTien: "",
+                paid_date: ""
+            },
+            {
+                rowIndex: 6,
+                evalId: "DEMO_EVAL_DANG_6",
+                buoiSo: 6,
+                tuan: "6",
+                ngay: "22/09/2026",
+                ngayHoc: "22/09/2026",
+                studyDate: "2026-09-22",
+                mon: "Vật Lý",
+                topic: "Cường độ điện trường & Nguyên lý chồng chất điện trường",
+                noiDung: "Cường độ điện trường & Nguyên lý chồng chất điện trường",
+                nhanXet: "Kỹ năng cộng vector điện trường rất tốt, nắm chắc phương pháp hình học.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.0",
+                diemDauGio: 9.0,
+                entry_test: 9.0,
+                diemDK: "9.0",
+                diemDinhKi: 9.0,
+                term_test: 9.0,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "23/09/2026",
+                paid_date: "23/09/2026"
+            },
+            {
+                rowIndex: 5,
+                evalId: "DEMO_EVAL_DANG_5",
+                buoiSo: 5,
+                tuan: "5",
+                ngay: "18/09/2026",
+                ngayHoc: "18/09/2026",
+                studyDate: "2026-09-18",
+                mon: "Vật Lý",
+                topic: "Thuyết electron & Định luật bảo toàn điện tích",
+                noiDung: "Thuyết electron & Định luật bảo toàn điện tích",
+                nhanXet: "Hiểu sâu sắc các hiện tượng nhiễm điện do cọ xát, tiếp xúc và hưởng ứng.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.5",
+                diemDauGio: 9.5,
+                entry_test: 9.5,
+                diemDK: "9.0",
+                diemDinhKi: 9.0,
+                term_test: 9.0,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "23/09/2026",
+                paid_date: "23/09/2026"
+            },
+            {
+                rowIndex: 4,
+                evalId: "DEMO_EVAL_DANG_4",
+                buoiSo: 4,
+                tuan: "4",
+                ngay: "15/09/2026",
+                ngayHoc: "15/09/2026",
+                studyDate: "2026-09-15",
+                mon: "Vật Lý",
+                topic: "Định luật Cu-lông và Cân bằng của hệ điện tích điểm",
+                noiDung: "Định luật Cu-lông và Cân bằng của hệ điện tích điểm",
+                nhanXet: "Làm bài nhanh, biết cách xét cân bằng lực cho hệ 3 điện tích tự do.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.0",
+                diemDauGio: 9.0,
+                entry_test: 9.0,
+                diemDK: "9.0",
+                diemDinhKi: 9.0,
+                term_test: 9.0,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "23/09/2026",
+                paid_date: "23/09/2026"
+            },
+            {
+                rowIndex: 3,
+                evalId: "DEMO_EVAL_DANG_3",
+                buoiSo: 3,
+                tuan: "3",
+                ngay: "11/09/2026",
+                ngayHoc: "11/09/2026",
+                studyDate: "2026-09-11",
+                mon: "Vật Lý",
+                topic: "Luyện tập: Lực tương tác tĩnh điện giữa các quả cầu nhỏ",
+                noiDung: "Luyện tập: Lực tương tác tĩnh điện giữa các quả cầu nhỏ",
+                nhanXet: "Chăm chỉ, chủ động tìm kiếm các bài tập nâng cao.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "8.5",
+                diemDauGio: 8.5,
+                entry_test: 8.5,
+                diemDK: "9.0",
+                diemDinhKi: 9.0,
+                term_test: 9.0,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "12/09/2026",
+                paid_date: "12/09/2026"
+            },
+            {
+                rowIndex: 2,
+                evalId: "DEMO_EVAL_DANG_2",
+                buoiSo: 2,
+                tuan: "2",
+                ngay: "08/09/2026",
+                ngayHoc: "08/09/2026",
+                studyDate: "2026-09-08",
+                mon: "Vật Lý",
+                topic: "Tổng ôn tập cơ học lớp 10: Động lượng và Năng lượng",
+                noiDung: "Tổng ôn tập cơ học lớp 10: Động lượng và Năng lượng",
+                nhanXet: "Nền tảng Vật lý 10 rất vững, sẵn sàng học tốt chương trình 11.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.0",
+                diemDauGio: 9.0,
+                entry_test: 9.0,
+                diemDK: "9.0",
+                diemDinhKi: 9.0,
+                term_test: 9.0,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "12/09/2026",
+                paid_date: "12/09/2026"
+            },
+            {
+                rowIndex: 1,
+                evalId: "DEMO_EVAL_DANG_1",
+                buoiSo: 1,
+                tuan: "1",
+                ngay: "04/09/2026",
+                ngayHoc: "04/09/2026",
+                studyDate: "2026-09-04",
+                mon: "Vật Lý",
+                topic: "Khởi động năm học: Phương pháp học Vật Lý 11 theo SGK mới",
+                noiDung: "Khởi động năm học: Phương pháp học Vật Lý 11 theo SGK mới",
+                nhanXet: "Ý thức học tập tự giác cao, tiếp thu bài nhanh chóng.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.0",
+                diemDauGio: 9.0,
+                entry_test: 9.0,
+                diemDK: "9.0",
+                diemDinhKi: 9.0,
+                term_test: 9.0,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "12/09/2026",
+                paid_date: "12/09/2026"
+            }
+        ];
+    } else {
+        // Lê Minh Thư
+        logs = [
+            {
+                rowIndex: 10,
+                evalId: "DEMO_EVAL_THU_10",
+                buoiSo: 10,
+                tuan: "10",
+                ngay: "04/10/2026",
+                ngayHoc: "04/10/2026",
+                studyDate: "2026-10-04",
+                mon: "Toán",
+                topic: "Cực trị hàm số chứa dấu giá trị tuyệt đối (Vận dụng cao 9+)",
+                noiDung: "Cực trị hàm số chứa dấu giá trị tuyệt đối (Vận dụng cao 9+)",
+                nhanXet: "Tư duy giải toán cực nhanh, giải quyết tốt các bài toán tương giao đồ thị phức tạp.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.5",
+                diemDauGio: 9.5,
+                entry_test: 9.5,
+                diemDK: "9.5",
+                diemDinhKi: 9.5,
+                term_test: 9.5,
+                tienDong: "Chưa đóng",
+                paid_status: "Chưa đóng",
+                ngayDongTien: "",
+                paid_date: ""
+            },
+            {
+                rowIndex: 9,
+                evalId: "DEMO_EVAL_THU_9",
+                buoiSo: 9,
+                tuan: "9",
+                ngay: "01/10/2026",
+                ngayHoc: "01/10/2026",
+                studyDate: "2026-10-01",
+                mon: "Vật Lý",
+                topic: "Giao thoa sóng cơ học: Tìm số điểm cực đại, cực tiểu",
+                noiDung: "Giao thoa sóng cơ học: Tìm số điểm cực đại, cực tiểu",
+                nhanXet: "Nắm bản chất hình học của hypebol cực đại cực tiểu rất xuất sắc.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành 100%",
+                danhGiaBTVN: "Hoàn thành 100%",
+                hw_eval: "Hoàn thành 100%",
+                diemDG: "9.0",
+                diemDauGio: 9.0,
+                entry_test: 9.0,
+                diemDK: "9.5",
+                diemDinhKi: 9.5,
+                term_test: 9.5,
+                tienDong: "Chưa đóng",
+                paid_status: "Chưa đóng",
+                ngayDongTien: "",
+                paid_date: ""
+            },
+            {
+                rowIndex: 8,
+                evalId: "DEMO_EVAL_THU_8",
+                buoiSo: 8,
+                tuan: "8",
+                ngay: "27/09/2026",
+                ngayHoc: "27/09/2026",
+                studyDate: "2026-09-27",
+                mon: "Toán",
+                topic: "Khảo sát sự biến thiên và Đồ thị hàm hợp f(u(x))",
+                noiDung: "Khảo sát sự biến thiên và Đồ thị hàm hợp f(u(x))",
+                nhanXet: "Phương pháp ghép trục và sơ đồ V được áp dụng rất thuần thục.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.0",
+                diemDauGio: 9.0,
+                entry_test: 9.0,
+                diemDK: "9.0",
+                diemDinhKi: 9.0,
+                term_test: 9.0,
+                tienDong: "Chưa đóng",
+                paid_status: "Chưa đóng",
+                ngayDongTien: "",
+                paid_date: ""
+            },
+            {
+                rowIndex: 7,
+                evalId: "DEMO_EVAL_THU_7",
+                buoiSo: 7,
+                tuan: "7",
+                ngay: "24/09/2026",
+                ngayHoc: "24/09/2026",
+                studyDate: "2026-09-24",
+                mon: "Vật Lý",
+                topic: "Sóng dừng: Điều kiện 2 đầu cố định & 1 đầu tự do",
+                noiDung: "Sóng dừng: Điều kiện 2 đầu cố định & 1 đầu tự do",
+                nhanXet: "Hiểu sâu về bụng sóng, nút sóng và độ lệch pha giữa các phần tử môi trường.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành 90%",
+                danhGiaBTVN: "Hoàn thành 90%",
+                hw_eval: "Hoàn thành 90%",
+                diemDG: "8.5",
+                diemDauGio: 8.5,
+                entry_test: 8.5,
+                diemDK: "9.0",
+                diemDinhKi: 9.0,
+                term_test: 9.0,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "25/09/2026",
+                paid_date: "25/09/2026"
+            },
+            {
+                rowIndex: 6,
+                evalId: "DEMO_EVAL_THU_6",
+                buoiSo: 6,
+                tuan: "6",
+                ngay: "20/09/2026",
+                ngayHoc: "20/09/2026",
+                studyDate: "2026-09-20",
+                mon: "Toán",
+                topic: "Tiệm cận đứng, tiệm cận ngang của đồ thị hàm phân thức",
+                noiDung: "Tiệm cận đứng, tiệm cận ngang của đồ thị hàm phân thức",
+                nhanXet: "Làm bài cẩn thận, không bị bẫy ở các bài toán tìm m để hàm số có đúng k tiệm cận.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.0",
+                diemDauGio: 9.0,
+                entry_test: 9.0,
+                diemDK: "9.5",
+                diemDinhKi: 9.5,
+                term_test: 9.5,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "25/09/2026",
+                paid_date: "25/09/2026"
+            },
+            {
+                rowIndex: 5,
+                evalId: "DEMO_EVAL_THU_5",
+                buoiSo: 5,
+                tuan: "5",
+                ngay: "17/09/2026",
+                ngayHoc: "17/09/2026",
+                studyDate: "2026-09-17",
+                mon: "Vật Lý",
+                topic: "Con lắc đơn & Sự phụ thuộc chu kỳ vào nhiệt độ, độ cao",
+                noiDung: "Con lắc đơn & Sự phụ thuộc chu kỳ vào nhiệt độ, độ cao",
+                nhanXet: "Bài làm chỉn chu, đã khắc phục được lỗi nhầm lẫn đơn vị ở công thức gia tốc g.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "8.5",
+                diemDauGio: 8.5,
+                entry_test: 8.5,
+                diemDK: "8.5",
+                diemDinhKi: 8.5,
+                term_test: 8.5,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "25/09/2026",
+                paid_date: "25/09/2026"
+            },
+            {
+                rowIndex: 4,
+                evalId: "DEMO_EVAL_THU_4",
+                buoiSo: 4,
+                tuan: "4",
+                ngay: "13/09/2026",
+                ngayHoc: "13/09/2026",
+                studyDate: "2026-09-13",
+                mon: "Toán",
+                topic: "Giá trị lớn nhất, nhỏ nhất của hàm số trên đoạn [a; b]",
+                noiDung: "Giá trị lớn nhất, nhỏ nhất của hàm số trên đoạn [a; b]",
+                nhanXet: "Tốc độ tính đạo hàm và lập bảng biến thiên rất nhanh.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.0",
+                diemDauGio: 9.0,
+                entry_test: 9.0,
+                diemDK: "9.0",
+                diemDinhKi: 9.0,
+                term_test: 9.0,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "15/09/2026",
+                paid_date: "15/09/2026"
+            },
+            {
+                rowIndex: 3,
+                evalId: "DEMO_EVAL_THU_3",
+                buoiSo: 3,
+                tuan: "3",
+                ngay: "10/09/2026",
+                ngayHoc: "10/09/2026",
+                studyDate: "2026-09-10",
+                mon: "Vật Lý",
+                topic: "Con lắc lò xo: Lực đàn hồi, Lực phục hồi và Đồ thị năng lượng",
+                noiDung: "Con lắc lò xo: Lực đàn hồi, Lực phục hồi và Đồ thị năng lượng",
+                nhanXet: "Phân biệt rạch ròi giữa lực hồi phục và lực đàn hồi. Kỹ năng đọc đồ thị rất tốt.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.0",
+                diemDauGio: 9.0,
+                entry_test: 9.0,
+                diemDK: "8.8",
+                diemDinhKi: 8.8,
+                term_test: 8.8,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "15/09/2026",
+                paid_date: "15/09/2026"
+            },
+            {
+                rowIndex: 2,
+                evalId: "DEMO_EVAL_THU_2",
+                buoiSo: 2,
+                tuan: "2",
+                ngay: "06/09/2026",
+                ngayHoc: "06/09/2026",
+                studyDate: "2026-09-06",
+                mon: "Toán",
+                topic: "Tính đơn điệu của hàm số: Tìm tham số m để hàm đơn điệu",
+                noiDung: "Tính đơn điệu của hàm số: Tìm tham số m để hàm đơn điệu",
+                nhanXet: "Làm tốt bài toán cô lập m và bài toán tam thức bậc hai.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "8.5",
+                diemDauGio: 8.5,
+                entry_test: 8.5,
+                diemDK: "9.0",
+                diemDinhKi: 9.0,
+                term_test: 9.0,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "15/09/2026",
+                paid_date: "15/09/2026"
+            },
+            {
+                rowIndex: 1,
+                evalId: "DEMO_EVAL_THU_1",
+                buoiSo: 1,
+                tuan: "1",
+                ngay: "03/09/2026",
+                ngayHoc: "03/09/2026",
+                studyDate: "2026-09-03",
+                mon: "Vật Lý",
+                topic: "Đại cương Dao động điều hòa: Li độ, Vận tốc, Gia tốc và Vòng tròn lượng giác",
+                noiDung: "Đại cương Dao động điều hòa: Li độ, Vận tốc, Gia tốc và Vòng tròn lượng giác",
+                nhanXet: "Khởi động năm học mới rất hứng khởi, kỹ năng quét trục thời gian vòng tròn lượng giác tốt.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.0",
+                diemDauGio: 9.0,
+                entry_test: 9.0,
+                diemDK: "9.0",
+                diemDinhKi: 9.0,
+                term_test: 9.0,
+                tienDong: "Đã đóng",
+                paid_status: "Đã đóng",
+                ngayDongTien: "15/09/2026",
+                paid_date: "15/09/2026"
+            }
+        ];
+    }
+    return logs;
+}
+if (typeof window !== 'undefined') window.getDemoStudentLogs = getDemoStudentLogs;
+
+// HELPER DEMO: Dữ liệu chi tiết học sinh cho Gia Sư (tránh trả về rỗng từ Supabase)
+function getDemoStudentDetailsForTutor(studentPhone, studentName) {
+    const norm = normalizePhone(studentPhone);
+    const isNam = (norm === '0912345678' || norm === '912345678' || (studentName && studentName.includes('Hoàng Nam')));
+    const isDang = (norm === '0905123456' || norm === '905123456' || (studentName && studentName.includes('Hải Đăng')));
+    const name = isNam ? "Nguyễn Hoàng Nam" : (isDang ? "Phạm Hải Đăng" : "Lê Minh Thư");
+    const p = isNam ? "0912345678" : (isDang ? "0905123456" : "0987654321");
+    const parent = isNam ? "Bác Nam" : (isDang ? "Chú Đăng" : "Cô Thư");
+    const sub = isNam ? "Toán" : (isDang ? "Vật Lý" : "Toán & Vật Lý");
+    const logs = getDemoStudentLogs(p);
+
+    const stObj = {
+        student_id: p,
+        student_name: name,
+        parent_phone: p,
+        parent_name: parent,
+        tuition_fee: 200000,
+        tuition: 200000,
+        billing_type: "session",
+        billingType: "session",
+        subject: sub,
+        tutor_phone: "0123456789",
+        announcement: isNam ? "Bài tập tuần này đã giao trên hệ thống." : (isDang ? "Điểm kiểm tra định kỳ 9.5 rất tốt." : "Nhớ nộp bài phiếu 05 trước thứ Năm.")
+    };
+
+    return {
+        logs: logs,
+        student: stObj,
+        tuition: 200000,
+        billing_type: "session",
+        parentName: parent,
+        announcement: stObj.announcement
+    };
+}
+if (typeof window !== 'undefined') window.getDemoStudentDetailsForTutor = getDemoStudentDetailsForTutor;
+
+// HELPER DEMO: Thời khóa biểu dùng thử cho Thầy Trần Hoàng Nam
+function getDemoTutorSchedule() {
+    return [
+        {
+            tutorPhone: "0123456789",
+            tutorName: "Thầy Trần Hoàng Nam",
+            studentName: "Nguyễn Hoàng Nam",
+            mon: "",
+            tue: "",
+            wed: "18:00 - 19:30",
+            thu: "",
+            fri: "",
+            sat: "",
+            sun: "14:30 - 16:00"
+        },
+        {
+            tutorPhone: "0123456789",
+            tutorName: "Thầy Trần Hoàng Nam",
+            studentName: "Lê Minh Thư",
+            mon: "",
+            tue: "",
+            wed: "",
+            thu: "19:30 - 21:00",
+            fri: "",
+            sat: "",
+            sun: "08:30 - 10:00"
+        },
+        {
+            tutorPhone: "0123456789",
+            tutorName: "Thầy Trần Hoàng Nam",
+            studentName: "Phạm Hải Đăng",
+            mon: "",
+            tue: "18:30 - 20:00",
+            wed: "",
+            thu: "",
+            fri: "18:30 - 20:00",
+            sat: "",
+            sun: ""
+        }
+    ];
+}
+if (typeof window !== 'undefined') window.getDemoTutorSchedule = getDemoTutorSchedule;
+
+// HELPER DEMO: Danh sách bài nộp của học sinh dùng thử
+function getDemoSubmissionsForTutor(maBaiTap, studentName) {
+    const rawUpper = String(maBaiTap || '').toUpperCase();
+    const sName = String(studentName || '').trim().toLowerCase();
+    const all = [
+        {
+            subId: "SUB_01",
+            rowIndex: 1,
+            studentName: "Lê Minh Thư",
+            studentPhone: "0987654321",
+            lessonName: "Phiếu 05: Đề thi thử Tốt nghiệp THPT 2026 - Môn Toán (Lần 1)",
+            timestamp: "04/10/2026 21:30:00",
+            submissionDate: "04/10/2026",
+            fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
+            fileName: "leminhthu_de_thi_thu_toan.pdf",
+            score: "9.5",
+            comment: "Bài làm rất xuất sắc, câu 48 và 50 tư duy cực kỳ nhanh nhạy. Phát huy tốt nhé em!",
+            status: "Active"
+        },
+        {
+            subId: "SUB_02",
+            rowIndex: 2,
+            studentName: "Lê Minh Thư",
+            studentPhone: "0987654321",
+            lessonName: "Chuyên đề: Ứng dụng tích phân tính diện tích hình phẳng",
+            timestamp: "01/10/2026 20:15:00",
+            submissionDate: "01/10/2026",
+            fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
+            fileName: "leminhthu_tich_phan.pdf",
+            score: "9.0",
+            comment: "Làm đúng các dạng bài cơ bản và nâng cao, vẽ hình trực quan.",
+            status: "Active"
+        },
+        {
+            subId: "SUB_03",
+            rowIndex: 3,
+            studentName: "Nguyễn Hoàng Nam",
+            studentPhone: "0912345678",
+            lessonName: "Phiếu 01: Hệ thức lượng trong tam giác vuông",
+            timestamp: "03/10/2026 19:45:00",
+            submissionDate: "03/10/2026",
+            fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
+            fileName: "nguyenhoangnam_he_thuc_luong.pdf",
+            score: "9.0",
+            comment: "Áp dụng định lý đúng, trình bày các bước chứng minh hình học sạch sẽ.",
+            status: "Active"
+        },
+        {
+            subId: "SUB_04",
+            rowIndex: 4,
+            studentName: "Nguyễn Hoàng Nam",
+            studentPhone: "0912345678",
+            lessonName: "Đề ôn tập căn bậc hai và rút gọn biểu thức chứa căn",
+            timestamp: "30/09/2026 21:00:00",
+            submissionDate: "30/09/2026",
+            fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
+            fileName: "nguyenhoangnam_can_bac_hai.pdf",
+            score: "8.5",
+            comment: "Tốt, cần chú ý điều kiện xác định của mẫu thức trước khi quy đồng.",
+            status: "Active"
+        },
+        {
+            subId: "SUB_05",
+            rowIndex: 5,
+            studentName: "Phạm Hải Đăng",
+            studentPhone: "0905123456",
+            lessonName: "Phiếu 02: Bài tập định luật Cu-lông nâng cao",
+            timestamp: "02/10/2026 20:30:00",
+            submissionDate: "02/10/2026",
+            fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
+            fileName: "phamhaidang_dinh_luat_coulomb.pdf",
+            score: "9.5",
+            comment: "Giải quyết bài toán 3 điện tích cân bằng rất xuất sắc!",
+            status: "Active"
+        }
+    ];
+
+    if (sName) {
+        return all.filter(s => s.studentName.toLowerCase().includes(sName));
+    }
+    if (rawUpper.includes('0912345678') || rawUpper.includes('NAM')) {
+        return all.filter(s => s.studentPhone === '0912345678');
+    }
+    if (rawUpper.includes('0987654321') || rawUpper.includes('THU')) {
+        return all.filter(s => s.studentPhone === '0987654321');
+    }
+    if (rawUpper.includes('0905123456') || rawUpper.includes('DANG')) {
+        return all.filter(s => s.studentPhone === '0905123456');
+    }
+    return all;
+}
+if (typeof window !== 'undefined') window.getDemoSubmissionsForTutor = getDemoSubmissionsForTutor;
+
 // HELPER DEMO: Dữ liệu mẫu dùng thử 1 chạm cho Thầy Trần Hoàng Nam
 function getTutorDemoDashboardData() {
+    const s1Logs = getDemoStudentLogs('0912345678');
+    const s2Logs = getDemoStudentLogs('0987654321');
+    const s3Logs = getDemoStudentLogs('0905123456');
+
     return {
         tutorPhone: "0123456789",
         tutorName: "Thầy Trần Hoàng Nam",
@@ -2257,31 +3321,40 @@ function getTutorDemoDashboardData() {
                 name: "Nguyễn Hoàng Nam",
                 parentName: "Bác Nam",
                 tuition: 200000,
+                tuition_fee: 200000,
                 billing_type: "session",
+                billingType: "session",
                 maBaiTap: "0912345678",
-                thongBao: "Bài tập tuần này đã giao trên hệ thống."
+                thongBao: "Bài tập tuần này đã giao trên hệ thống.",
+                logs: s1Logs
             },
             {
                 phone: "0987654321",
                 name: "Lê Minh Thư",
                 parentName: "Cô Thư",
                 tuition: 200000,
+                tuition_fee: 200000,
                 billing_type: "session",
+                billingType: "session",
                 maBaiTap: "0987654321",
-                thongBao: "Nhớ nộp bài phiếu 05 trước thứ Năm."
+                thongBao: "Nhớ nộp bài phiếu 05 trước thứ Năm.",
+                logs: s2Logs
             },
             {
                 phone: "0905123456",
                 name: "Phạm Hải Đăng",
                 parentName: "Chú Đăng",
                 tuition: 200000,
+                tuition_fee: 200000,
                 billing_type: "session",
+                billingType: "session",
                 maBaiTap: "0905123456",
-                thongBao: "Điểm kiểm tra định kỳ 9.5 rất tốt."
+                thongBao: "Điểm kiểm tra định kỳ 9.5 rất tốt.",
+                logs: s3Logs
             }
         ],
         deletedStudents: [],
-        totalUnpaidIncome: 600000,
+        totalUnpaidIncome: 1800000,
         classCount: 3,
         marqueeAnnouncement: "",
         adminContact: { zalo: '0975546830', facebook: 'https://m.me/zuntutor', phone: '0975546830' }
@@ -2296,6 +3369,8 @@ function getDemoStudentLoginResult(phone) {
     const isDang = (norm === '0905123456' || norm === '905123456');
     const name = isNam ? "Nguyễn Hoàng Nam" : (isDang ? "Phạm Hải Đăng" : "Lê Minh Thư");
     const p = isNam ? "0912345678" : (isDang ? "0905123456" : "0987654321");
+    const logs = getDemoStudentLogs(p);
+
     return {
         role: 'student',
         thongBao: "Đăng nhập thành công (Tài khoản Demo)",
@@ -2305,51 +3380,11 @@ function getDemoStudentLoginResult(phone) {
             tenHocSinh: name,
             tenGiaSu: "Thầy Trần Hoàng Nam (0123456789)",
             thongBaoHocSinh: "Chào mừng bạn đến với Cổng tra cứu tiến trình học tập ZunTutor!",
-            lichSuHocTap: [
-                {
-                    buoiSo: 10,
-                    ngayHoc: "03/10/2026",
-                    noiDung: "Cực trị Hàm số & Tích phân ứng dụng",
-                    nhanXet: "Tư duy giải toán nhanh, làm tốt các câu phân loại 8.5+.",
-                    danhGiaBTVN: "Hoàn thành",
-                    btvn: "Hoàn thành",
-                    diemDauGio: 9.0,
-                    diemDinhKi: 9.5,
-                    trangThai: "Có mặt",
-                    tienDong: "Đã đóng",
-                    ngayDongTien: "01/10/2026"
-                },
-                {
-                    buoiSo: 9,
-                    ngayHoc: "30/09/2026",
-                    noiDung: "Giao thoa sóng & Sóng dừng trên dây",
-                    nhanXet: "Nắm vững bản chất hiện tượng giao thoa 2 nguồn cùng pha.",
-                    danhGiaBTVN: "Hoàn thành 90%",
-                    btvn: "Hoàn thành 90%",
-                    diemDauGio: 8.5,
-                    diemDinhKi: 9.0,
-                    trangThai: "Có mặt",
-                    tienDong: "Đã đóng",
-                    ngayDongTien: "01/10/2026"
-                },
-                {
-                    buoiSo: 8,
-                    ngayHoc: "26/09/2026",
-                    noiDung: "Đại cương Dao động cơ & Con lắc lò xo",
-                    nhanXet: "Chăm chỉ, hoàn thành bài tập về nhà ở mức khá.",
-                    danhGiaBTVN: "Hoàn thành",
-                    btvn: "Hoàn thành",
-                    diemDauGio: 8.0,
-                    diemDinhKi: 8.5,
-                    trangThai: "Có mặt",
-                    tienDong: "Đã đóng",
-                    ngayDongTien: "01/10/2026"
-                }
-            ],
+            lichSuHocTap: logs,
             baiTap: [
                 {
-                    mon: "Toán & Vật Lý",
-                    tenBai: "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị",
+                    mon: isNam ? "Toán" : (isDang ? "Vật Lý" : "Toán & Vật Lý"),
+                    tenBai: isNam ? "Phiếu 01: Hệ thức lượng trong tam giác vuông" : (isDang ? "Phiếu 02: Bài tập định luật Cu-lông nâng cao" : "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị"),
                     link: "homework.html?code=" + p
                 }
             ]

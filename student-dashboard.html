@@ -1031,6 +1031,15 @@
                 console.error("Lỗi parse dashboardData:", e);
             }
 
+            var isDemoStudent = (phone === '0912345678' || phone === '0987654321' || phone === '0905123456');
+            if (isDemoStudent && typeof getDemoStudentLoginResult === 'function' && (!data || !data.lichSuHocTap || data.lichSuHocTap.length < 8)) {
+                var dRes = getDemoStudentLoginResult(phone);
+                if (dRes && dRes.data) {
+                    data = dRes.data;
+                    sessionStorage.setItem('dashboardData', JSON.stringify(data));
+                }
+            }
+
             if (data && role === 'student') {
                 renderStudentView(data);
             } else if (!phone) {

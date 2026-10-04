@@ -4134,18 +4134,23 @@
                 data = JSON.parse(sessionStorage.getItem('dashboardData'));
             } catch(e) {}
 
-            if ((!data || !data.students) && role === 'tutor' && phone) {
-                try {
-                    if (typeof google !== 'undefined' && google.script && google.script.run) {
-                        data = await new Promise(resolve => {
-                            google.script.run.withSuccessHandler(res => resolve(res)).getTutorDashboardData(phone);
-                        });
-                        if (data && !data.error) {
-                            sessionStorage.setItem('dashboardData', JSON.stringify(data));
+            if (role === 'tutor' && (!data || !data.students || (phone === '0123456789' && (!data.students[0] || !data.students[0].logs || data.students[0].logs.length < 8)))) {
+                if (phone === '0123456789' && typeof getTutorDemoDashboardData === 'function') {
+                    data = getTutorDemoDashboardData();
+                    sessionStorage.setItem('dashboardData', JSON.stringify(data));
+                } else if (phone) {
+                    try {
+                        if (typeof google !== 'undefined' && google.script && google.script.run) {
+                            data = await new Promise(resolve => {
+                                google.script.run.withSuccessHandler(res => resolve(res)).getTutorDashboardData(phone);
+                            });
+                            if (data && !data.error) {
+                                sessionStorage.setItem('dashboardData', JSON.stringify(data));
+                            }
                         }
+                    } catch(err) {
+                        console.warn('Fallback load dashboard error:', err);
                     }
-                } catch(err) {
-                    console.warn('Fallback load dashboard error:', err);
                 }
             }
 
