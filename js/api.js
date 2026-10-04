@@ -717,7 +717,12 @@ class GoogleScriptRunInstance {
                     });
                     
                     if (matches.length === 0) {
-                        result = { error: 'Số điện thoại hoặc Mã học sinh không tồn tại trên hệ thống.' };
+                        const isDemoStudent = (norm === '0912345678' || norm === '912345678' || norm === '0987654321' || norm === '987654321' || norm === '0905123456' || norm === '905123456');
+                        if (isDemoStudent) {
+                            result = getDemoStudentLoginResult(phone);
+                        } else {
+                            result = { error: 'Số điện thoại hoặc Mã học sinh không tồn tại trên hệ thống.' };
+                        }
                     } else if (matches.length > 1 && !childName) {
                         result = {
                             role: 'student',
@@ -1535,7 +1540,12 @@ class GoogleScriptRunInstance {
                 });
                 
                 if (!target) {
-                    result = { timThay: false, thongBao: "Mã bài tập không hợp lệ!" };
+                    const isDemoCode = (rawCode.toUpperCase() === 'BT101' || rawCode.toUpperCase() === 'DEMO' || norm === '0987654321' || norm === '987654321' || norm === '0912345678' || norm === '912345678' || norm === '0905123456' || norm === '905123456');
+                    if (isDemoCode) {
+                        result = getDemoHomeworkResult(rawCode);
+                    } else {
+                        result = { timThay: false, thongBao: "Mã bài tập không hợp lệ!" };
+                    }
                 } else {
                     let codesToMatch = new Set();
                     codesToMatch.add(rawCode.toLowerCase());
@@ -2228,6 +2238,8 @@ class GoogleScriptRunInstance {
             else if (self._successHandler) self._successHandler({ error: err.message || err.toString() });
         }
     }
+}
+
 // HELPER DEMO: Dữ liệu mẫu dùng thử 1 chạm cho Thầy Trần Hoàng Nam
 function getTutorDemoDashboardData() {
     return {
@@ -2276,6 +2288,128 @@ function getTutorDemoDashboardData() {
     };
 }
 if (typeof window !== 'undefined') window.getTutorDemoDashboardData = getTutorDemoDashboardData;
+
+// HELPER DEMO: Dữ liệu mẫu dùng thử 1 chạm cho Học sinh / Phụ huynh (Nam, Thư, Đăng)
+function getDemoStudentLoginResult(phone) {
+    const norm = normalizePhone(phone);
+    const isNam = (norm === '0912345678' || norm === '912345678');
+    const isDang = (norm === '0905123456' || norm === '905123456');
+    const name = isNam ? "Nguyễn Hoàng Nam" : (isDang ? "Phạm Hải Đăng" : "Lê Minh Thư");
+    const p = isNam ? "0912345678" : (isDang ? "0905123456" : "0987654321");
+    return {
+        role: 'student',
+        thongBao: "Đăng nhập thành công (Tài khoản Demo)",
+        data: {
+            timThay: true,
+            studentId: p,
+            tenHocSinh: name,
+            tenGiaSu: "Thầy Trần Hoàng Nam (0123456789)",
+            thongBaoHocSinh: "Chào mừng bạn đến với Cổng tra cứu tiến trình học tập ZunTutor!",
+            lichSuHocTap: [
+                {
+                    buoiSo: 10,
+                    ngayHoc: "03/10/2026",
+                    noiDung: "Cực trị Hàm số & Tích phân ứng dụng",
+                    nhanXet: "Tư duy giải toán nhanh, làm tốt các câu phân loại 8.5+.",
+                    danhGiaBTVN: "Hoàn thành",
+                    btvn: "Hoàn thành",
+                    diemDauGio: 9.0,
+                    diemDinhKi: 9.5,
+                    trangThai: "Có mặt",
+                    tienDong: "Đã đóng",
+                    ngayDongTien: "01/10/2026"
+                },
+                {
+                    buoiSo: 9,
+                    ngayHoc: "30/09/2026",
+                    noiDung: "Giao thoa sóng & Sóng dừng trên dây",
+                    nhanXet: "Nắm vững bản chất hiện tượng giao thoa 2 nguồn cùng pha.",
+                    danhGiaBTVN: "Hoàn thành 90%",
+                    btvn: "Hoàn thành 90%",
+                    diemDauGio: 8.5,
+                    diemDinhKi: 9.0,
+                    trangThai: "Có mặt",
+                    tienDong: "Đã đóng",
+                    ngayDongTien: "01/10/2026"
+                },
+                {
+                    buoiSo: 8,
+                    ngayHoc: "26/09/2026",
+                    noiDung: "Đại cương Dao động cơ & Con lắc lò xo",
+                    nhanXet: "Chăm chỉ, hoàn thành bài tập về nhà ở mức khá.",
+                    danhGiaBTVN: "Hoàn thành",
+                    btvn: "Hoàn thành",
+                    diemDauGio: 8.0,
+                    diemDinhKi: 8.5,
+                    trangThai: "Có mặt",
+                    tienDong: "Đã đóng",
+                    ngayDongTien: "01/10/2026"
+                }
+            ],
+            baiTap: [
+                {
+                    mon: "Toán & Vật Lý",
+                    tenBai: "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị",
+                    link: "homework.html?code=" + p
+                }
+            ]
+        }
+    };
+}
+if (typeof window !== 'undefined') window.getDemoStudentLoginResult = getDemoStudentLoginResult;
+
+// HELPER DEMO: Dữ liệu mẫu dùng thử 1 chạm cho Nộp bài / Xem đề Bài tập (BT101, Lê Minh Thư, Hoàng Nam)
+function getDemoHomeworkResult(rawCode) {
+    const rawUpper = String(rawCode || '').toUpperCase();
+    const isNam = (rawUpper.includes('0912345678') || rawUpper.includes('912345678'));
+    const isDang = (rawUpper.includes('0905123456') || rawUpper.includes('905123456'));
+    const studentName = isNam ? "Nguyễn Hoàng Nam" : (isDang ? "Phạm Hải Đăng" : "Lê Minh Thư");
+    const code = rawUpper === 'BT101' ? 'BT101' : (isNam ? '0912345678' : (isDang ? '0905123456' : '0987654321'));
+
+    return {
+        timThay: true,
+        ma: code,
+        studentName: studentName,
+        assignedList: [
+            {
+                hwId: "HW_01",
+                rowIndex: 1,
+                studentName: studentName,
+                title: "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị",
+                deadline: "20/10/2026",
+                fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
+                fileName: "phieu_01_dao_ham_cuc_tri.pdf",
+                externalLink: ""
+            },
+            {
+                hwId: "HW_02",
+                rowIndex: 2,
+                studentName: studentName,
+                title: "Chuyên đề: Giao thoa sóng cơ học nâng cao (40 câu)",
+                deadline: "22/10/2026",
+                fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
+                fileName: "giao_thoa_song_nang_cao.pdf",
+                externalLink: ""
+            }
+        ],
+        submissions: [
+            {
+                subId: "SUB_01",
+                studentName: studentName,
+                lessonName: "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị",
+                fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
+                timestamp: "03/10/2026 21:15:30",
+                submissionDate: "03/10/2026",
+                status: "Đã chấm",
+                score: "9.5",
+                comment: "Bài giải rất chuẩn xác, trình bày sạch đẹp. Chú ý thêm câu 48.",
+                rowIndex: 1
+            }
+        ],
+        isClassStudent: false
+    };
+}
+if (typeof window !== 'undefined') window.getDemoHomeworkResult = getDemoHomeworkResult;
 
 // HELPER INTERNAL: Load Dashboard Gia Sư
 async function getTutorDashboardDataInternal(tutorPhone) {

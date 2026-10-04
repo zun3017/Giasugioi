@@ -302,6 +302,28 @@
                         </svg>
                     </button>
                 </form>
+
+                <!-- Thanh Đăng Nhập Nhanh Xem Demo Bài Tập (1 Chạm) -->
+                <div class="mt-5 p-4 bg-white/80 backdrop-blur-md rounded-2xl border border-blue-100 shadow-sm text-xs text-slate-600">
+                    <div class="mb-2.5 font-bold text-primary-800 flex items-center justify-between flex-wrap gap-2">
+                        <span class="flex items-center gap-1.5 text-xs sm:text-sm">
+                            <i class="fa-solid fa-bolt text-amber-500"></i>
+                            <span>Mã bài tập đăng nhập nhanh xem Demo (1 chạm):</span>
+                        </span>
+                        <span class="text-xs text-slate-500 font-normal">Click để xem đề & nộp bài mẫu</span>
+                    </div>
+                    <div class="flex gap-2 flex-wrap">
+                        <button type="button" onclick="fillQuickHw('0987654321')" class="bg-emerald-50 hover:bg-emerald-600 hover:text-white border border-emerald-200 text-emerald-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95 cursor-pointer">
+                            👧 Lê Minh Thư (0987654321)
+                        </button>
+                        <button type="button" onclick="fillQuickHw('0912345678')" class="bg-blue-50 hover:bg-primary-600 hover:text-white border border-blue-200 text-blue-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95 cursor-pointer">
+                            👦 Nguyễn Hoàng Nam (0912345678)
+                        </button>
+                        <button type="button" onclick="fillQuickHw('BT101')" class="bg-amber-50 hover:bg-amber-600 hover:text-white border border-amber-200 text-amber-700 px-3.5 py-2 rounded-xl text-xs sm:text-sm font-semibold transition-all shadow-sm active:scale-95 cursor-pointer">
+                            📑 Mã Đề Mẫu (BT101)
+                        </button>
+                    </div>
+                </div>
             </div>
 
             <!-- 4 Thẻ tính năng -->
@@ -404,6 +426,22 @@
                             </svg>
                         </button>
                     </form>
+
+                    <!-- Thanh Đăng Nhập Nhanh Xem Demo Gia Sư (1 Chạm) -->
+                    <div class="mt-5 pt-4 border-t border-dashed border-indigo-200 text-xs text-slate-600 text-left">
+                        <div class="mb-2.5 font-bold text-indigo-900 flex items-center justify-between flex-wrap gap-2">
+                            <span class="flex items-center gap-1.5 text-xs sm:text-sm">
+                                <i class="fa-solid fa-bolt text-amber-500"></i>
+                                <span>Đăng nhập nhanh xem Demo (1 chạm):</span>
+                            </span>
+                            <a href="tutor-dashboard.html" class="text-indigo-600 hover:text-indigo-800 font-semibold underline text-xs">
+                                Vào thẳng Quản lý &rarr;
+                            </a>
+                        </div>
+                        <button type="button" onclick="fillQuickTutor('0123456789', '1234')" class="w-full bg-indigo-50 hover:bg-indigo-600 hover:text-white border border-indigo-200 text-indigo-700 py-3 px-2 sm:px-3 rounded-xl text-xs sm:text-sm font-bold transition-all shadow-sm flex flex-wrap items-center justify-center gap-1.5 active:scale-95 cursor-pointer text-center break-words leading-snug">
+                            👨‍🏫 Thầy Trần Hoàng Nam (SĐT: 0123456789 - PIN: 1234)
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
@@ -450,6 +488,35 @@
                 }
             }
         }
+        window.fillQuickStudent = fillQuickStudent;
+
+        // Đăng nhập nhanh 1 chạm Demo Bài tập
+        function fillQuickHw(code) {
+            const input = document.getElementById('maBaiTap');
+            if (input) {
+                input.value = code;
+                const form = document.getElementById('formBaiTap');
+                if (form) {
+                    form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+                    return;
+                }
+            }
+            window.location.href = 'homework.html?code=' + encodeURIComponent(code);
+        }
+        window.fillQuickHw = fillQuickHw;
+
+        // Đăng nhập nhanh 1 chạm Demo Gia Sư
+        function fillQuickTutor(phone, pin) {
+            const pInput = document.getElementById('gsPhone');
+            const pinInput = document.getElementById('gsPin');
+            if (pInput) pInput.value = phone;
+            if (pinInput) pinInput.value = pin;
+            const form = document.getElementById('formGiaSu');
+            if (form) {
+                form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+            }
+        }
+        window.fillQuickTutor = fillQuickTutor;
 
         document.addEventListener('DOMContentLoaded', () => {
             // Mobile Menu Toggle
