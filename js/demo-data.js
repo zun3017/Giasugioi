@@ -400,6 +400,55 @@ function generateInitialGiaSuDemoData() {
             { day: "Chủ Nhật (" + getGiaSuDemoShortDate(-4) + ")", time: "08:30 - 10:00", student: "Lê Minh Thư", subject: "Vật Lý 12", topic: "Giao thoa sóng cơ", status: "Sắp tới" }
         ],
 
+        // 5.1 Thời khóa biểu tuần của Gia sư (chuẩn cho Lịch dạy & FullCalendar)
+        tutorSchedule: [
+            {
+                tutorPhone: "0123456789",
+                tutorName: "Thầy Trần Hoàng Nam",
+                studentName: "Lê Minh Thư",
+                subject: "Toán 12",
+                color: "#8E4DFF",
+                fee: 200000,
+                mon: "18:00 - 19:30",
+                tue: "",
+                wed: "",
+                thu: "19:30 - 21:00",
+                fri: "",
+                sat: "",
+                sun: "08:30 - 10:00"
+            },
+            {
+                tutorPhone: "0123456789",
+                tutorName: "Thầy Trần Hoàng Nam",
+                studentName: "Nguyễn Hoàng Nam",
+                subject: "Toán 9",
+                color: "#10B981",
+                fee: 200000,
+                mon: "",
+                tue: "",
+                wed: "18:00 - 19:30",
+                thu: "",
+                fri: "",
+                sat: "",
+                sun: "14:30 - 16:00"
+            },
+            {
+                tutorPhone: "0123456789",
+                tutorName: "Thầy Trần Hoàng Nam",
+                studentName: "Phạm Hải Đăng",
+                subject: "Vật Lý 11",
+                color: "#F59E0B",
+                fee: 200000,
+                mon: "",
+                tue: "18:30 - 20:00",
+                wed: "",
+                thu: "",
+                fri: "18:30 - 20:00",
+                sat: "",
+                sun: ""
+            }
+        ],
+
         // 6. Bài tập đã giao cho từng học sinh (Assigned Homework của Gia sư)
         assignedHomework: [
             {
@@ -507,6 +556,11 @@ function getGiaSuDemoStore() {
         if (!parsed.submissions || !Array.isArray(parsed.submissions) || parsed.submissions.length < 5) {
             var freshData3 = generateInitialGiaSuDemoData();
             parsed.submissions = freshData3.submissions;
+            sessionStorage.setItem(key, JSON.stringify(parsed));
+        }
+        if (!parsed.tutorSchedule || !Array.isArray(parsed.tutorSchedule) || parsed.tutorSchedule.length === 0) {
+            var freshDataSched = generateInitialGiaSuDemoData();
+            parsed.tutorSchedule = freshDataSched.tutorSchedule;
             sessionStorage.setItem(key, JSON.stringify(parsed));
         }
         return parsed;

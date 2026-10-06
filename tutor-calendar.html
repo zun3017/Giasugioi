@@ -36,6 +36,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Apps Script API Client -->
     <script src="js/api.js?v=20261005_v4"></script>
+    <!-- Demo Data Store -->
+    <script src="js/demo-data.js?v=20261006"></script>
     <!-- FullCalendar JS v6 -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     
@@ -3450,8 +3452,13 @@
         // Safe helpers for cross-origin / file:/// parent window access
         function getSafeParentStore() {
             try {
-                if (window.parent && window.parent !== window && typeof null === 'function') {
-                    return null();
+                if (window.parent && window.parent !== window) {
+                    if (typeof window.parent.getGiaSuDemoStore === 'function') {
+                        return window.parent.getGiaSuDemoStore();
+                    }
+                    if (typeof window.parent.getDemoStoreSafe === 'function') {
+                        return window.parent.getDemoStoreSafe();
+                    }
                 }
             } catch(e) {}
             return null;
@@ -3468,8 +3475,12 @@
 
         function safeSaveParentStore(store) {
             try {
-                if (window.parent && window.parent !== window && typeof null === 'function') {
-                    null(store);
+                if (window.parent && window.parent !== window) {
+                    if (typeof window.parent.saveDemoStoreSafe === 'function') {
+                        window.parent.saveDemoStoreSafe(store);
+                    } else if (typeof window.parent.saveDemoStore === 'function') {
+                        window.parent.saveDemoStore(store);
+                    }
                 }
             } catch(e) {}
         }
@@ -3568,9 +3579,16 @@ function fixVietnameseMojibake(str) {
 if (typeof window !== 'undefined') window.fixVietnameseMojibake = fixVietnameseMojibake;
 
         function loadTutorScheduleFromBackend(onSuccess) {
-            var store = (false) ? null : null;
+            var store = (typeof getGiaSuDemoStore === 'function') ? getGiaSuDemoStore() : 
+                        ((typeof getDemoStoreSafe === 'function') ? getDemoStoreSafe() : null);
             if (!store) {
                 store = getSafeParentStore();
+            }
+            if (!store) {
+                try {
+                    var sRaw = sessionStorage.getItem("DEMO_GIASU_DATA_V6");
+                    if (sRaw) store = JSON.parse(sRaw);
+                } catch(e) {}
             }
             if (!tutorDataGlobal && store && store.students) {
                 tutorDataGlobal = { students: store.students };
@@ -3585,21 +3603,29 @@ if (typeof window !== 'undefined') window.fixVietnameseMojibake = fixVietnameseM
                     var pStore = getSafeParentStore();
                     if (pStore && pStore.tutorSchedule && pStore.tutorSchedule.length > 0) sched = pStore.tutorSchedule;
                 }
+                // Nếu chưa có trong store, tự động nạp từ getDemoTutorSchedule
+                if (!sched || sched.length === 0) {
+                    if (typeof getDemoTutorSchedule === 'function') {
+                        sched = getDemoTutorSchedule();
+                    } else if (window.parent && typeof window.parent.getDemoTutorSchedule === 'function') {
+                        sched = window.parent.getDemoTutorSchedule();
+                    }
+                    if (sched && store) {
+                        store.tutorSchedule = sched;
+                        safeSaveParentStore(store);
+                    }
+                }
 
                 if (sched && sched.length > 0) {
                     var schedMap = {};
                     sched.forEach(function(s) {
                         if (s && s.studentName) {
-                            var k = s.studentName.trim().toLowerCase();
-                            if (!schedMap[k]) {
-                                schedMap[k] = s;
-                            } else {
-                                allDayKeys.forEach(function(dk) {
-                                    if (s[dk] && String(s[dk]).trim() && (!schedMap[k][dk] || !String(schedMap[k][dk]).trim())) {
-                                        schedMap[k][dk] = String(s[dk]).trim();
-                                    }
-                                });
-                            }
+                            var rawName = String(s.studentName).trim();
+                            var cleanName = fixVietnameseMojibake(rawName);
+                            schedMap[cleanName.toLowerCase()] = s;
+                            schedMap[cleanName] = s;
+                            schedMap[rawName.toLowerCase()] = s;
+                            schedMap[rawName] = s;
                         }
                     });
 
@@ -3638,7 +3664,7 @@ if (typeof window !== 'undefined') window.fixVietnameseMojibake = fixVietnameseM
                     if (sched && sched.length > 0) {
                         sched.forEach(function(s) {
                             if (s && s.studentName) {
-                                var sName = s.studentName.trim();
+                                var sName = fixVietnameseMojibake(s.studentName.trim());
                                 var sKey = sName.toLowerCase();
                                 if (!processedDemoNames.has(sKey)) {
                                     let hasActiveSlot = allDayKeys.some(function(dk) {
@@ -3672,6 +3698,14 @@ if (typeof window !== 'undefined') window.fixVietnameseMojibake = fixVietnameseM
 
                 loadStudentOptions();
                 renderSheetTable();
+                if (calendar) {
+                    calendar.refetchEvents();
+                    if (calendar.view && calendar.view.type === 'dayGridMonth') {
+                        setTimeout(function() {
+                            updateMonthBottomBar(calendar.view);
+                        }, 50);
+                    }
+                }
                 if (window.parent && window.parent !== window) {
                     try {
                         window.parent.postMessage({
@@ -3798,7 +3832,15 @@ if (typeof window !== 'undefined') window.fixVietnameseMojibake = fixVietnameseM
         function saveScheduleToBackend(studentName, onDone) {
             if (isDemoMode) {
                 try {
-                    var store = getSafeParentStore();
+                    var store = (typeof getGiaSuDemoStore === 'function') ? getGiaSuDemoStore() : 
+                                ((typeof getDemoStoreSafe === 'function') ? getDemoStoreSafe() : null);
+                    if (!store) store = getSafeParentStore();
+                    if (!store) {
+                        try {
+                            var sRaw = sessionStorage.getItem("DEMO_GIASU_DATA_V6");
+                            if (sRaw) store = JSON.parse(sRaw);
+                        } catch(e) {}
+                    }
                     if (store && store.tutorSchedule) {
                         let row = tutorScheduleSheetData.find(r => (r.studentName || '').trim().toLowerCase() === (studentName || '').trim().toLowerCase());
                         if (row) {
@@ -3818,6 +3860,11 @@ if (typeof window !== 'undefined') window.fixVietnameseMojibake = fixVietnameseM
                                     allDayKeys.forEach(k => item[k] = '');
                                 }
                             }
+                        }
+                        if (typeof saveDemoStoreSafe === 'function') {
+                            saveDemoStoreSafe(store);
+                        } else {
+                            try { sessionStorage.setItem("DEMO_GIASU_DATA_V6", JSON.stringify(store)); } catch(e) {}
                         }
                         safeSaveParentStore(store);
                     }
@@ -5150,7 +5197,12 @@ if (typeof window !== 'undefined') window.fixVietnameseMojibake = fixVietnameseM
                     updateMonthBottomBar(dateInfo.view);
                 },
                 eventsSet: function() {
-                    if (calendar && calendar.view) updateCalendarHeaderTitle(calendar.view);
+                    if (calendar && calendar.view) {
+                        updateCalendarHeaderTitle(calendar.view);
+                        if (calendar.view.type === 'dayGridMonth') {
+                            updateMonthBottomBar(calendar.view);
+                        }
+                    }
                 },
                 dayCellDidMount: function(arg) {
                     if (arg.view.type !== 'dayGridMonth') return;

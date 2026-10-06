@@ -330,7 +330,25 @@ function getDemoStoreSafe() {
     if (typeof getGiaSuDemoStore === 'function') {
         return getGiaSuDemoStore();
     }
-    return { tutors: [], students: [], assignedHomework: [], submissions: [], tutorSchedule: [] };
+    try {
+        var s = sessionStorage.getItem("DEMO_GIASU_DATA_V6");
+        if (s) {
+            var p = JSON.parse(s);
+            if (p) {
+                if (!p.tutorSchedule || !Array.isArray(p.tutorSchedule) || p.tutorSchedule.length === 0) {
+                    p.tutorSchedule = (typeof getDemoTutorSchedule === 'function') ? getDemoTutorSchedule() : [];
+                }
+                return p;
+            }
+        }
+    } catch(e) {}
+    return { 
+        tutors: [], 
+        students: [], 
+        assignedHomework: [], 
+        submissions: [], 
+        tutorSchedule: (typeof getDemoTutorSchedule === 'function' ? getDemoTutorSchedule() : []) 
+    };
 }
 
 function saveDemoStoreSafe(store) {
@@ -3206,7 +3224,25 @@ function getDemoTutorSchedule() {
         {
             tutorPhone: "0123456789",
             tutorName: "Thầy Trần Hoàng Nam",
+            studentName: "Lê Minh Thư",
+            subject: "Toán 12",
+            color: "#8E4DFF",
+            fee: 200000,
+            mon: "18:00 - 19:30",
+            tue: "",
+            wed: "",
+            thu: "19:30 - 21:00",
+            fri: "",
+            sat: "",
+            sun: "08:30 - 10:00"
+        },
+        {
+            tutorPhone: "0123456789",
+            tutorName: "Thầy Trần Hoàng Nam",
             studentName: "Nguyễn Hoàng Nam",
+            subject: "Toán 9",
+            color: "#10B981",
+            fee: 200000,
             mon: "",
             tue: "",
             wed: "18:00 - 19:30",
@@ -3218,19 +3254,10 @@ function getDemoTutorSchedule() {
         {
             tutorPhone: "0123456789",
             tutorName: "Thầy Trần Hoàng Nam",
-            studentName: "Lê Minh Thư",
-            mon: "",
-            tue: "",
-            wed: "",
-            thu: "19:30 - 21:00",
-            fri: "",
-            sat: "",
-            sun: "08:30 - 10:00"
-        },
-        {
-            tutorPhone: "0123456789",
-            tutorName: "Thầy Trần Hoàng Nam",
             studentName: "Phạm Hải Đăng",
+            subject: "Vật Lý 11",
+            color: "#F59E0B",
+            fee: 200000,
             mon: "",
             tue: "18:30 - 20:00",
             wed: "",
@@ -3410,6 +3437,7 @@ function getTutorDemoDashboardData() {
             }
         ],
         deletedStudents: [],
+        schedules: getDemoTutorSchedule(),
         totalUnpaidIncome: 1800000,
         classCount: 3,
         marqueeAnnouncement: "",

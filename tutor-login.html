@@ -854,6 +854,9 @@
             sessionStorage.setItem('userRole', 'tutor');
             sessionStorage.setItem('userPhone', phone);
             sessionStorage.setItem('userPin', pin);
+            if (typeof getGiaSuDemoStore === 'function') {
+                getGiaSuDemoStore();
+            }
             if (typeof getTutorDemoDashboardData === 'function') {
                 var dData = getTutorDemoDashboardData();
                 sessionStorage.setItem('dashboardData', JSON.stringify(dData));
@@ -1595,6 +1598,9 @@ async function doTutorLogin() {
         sessionStorage.setItem('userRole', 'tutor');
         sessionStorage.setItem('userPhone', '0123456789');
         sessionStorage.setItem('userPin', '1234');
+        if (typeof getGiaSuDemoStore === 'function') {
+            getGiaSuDemoStore();
+        }
         if (typeof getTutorDemoDashboardData === 'function') {
             sessionStorage.setItem('dashboardData', JSON.stringify(getTutorDemoDashboardData()));
         }
