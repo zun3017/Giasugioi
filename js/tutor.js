@@ -12264,20 +12264,7 @@ function syncThemeToCalendarIframe() {
   var isCustom = curTheme.startsWith('custom:');
   var customHex = isCustom ? curTheme.split(':')[1] : null;
 
-  // 1. Gửi qua postMessage (luôn hoạt động ổn định giữa các frame)
-  try {
-    if (calFrame.contentWindow) {
-      if (isCustom) {
-        calFrame.contentWindow.postMessage({ type: 'setCustomTheme', hex: customHex }, window.location.origin);
-        calFrame.contentWindow.postMessage('custom:' + customHex, window.location.origin);
-      } else {
-        calFrame.contentWindow.postMessage({ type: 'setTheme', themeId: curTheme }, window.location.origin);
-        calFrame.contentWindow.postMessage(curTheme, window.location.origin);
-      }
-    }
-  } catch(e) {}
-
-  // 2. Gọi trực tiếp hàm nếu iframe cùng origin và đã tải xong
+  // 1. Gọi trực tiếp hàm nếu iframe cùng origin và đã tải xong (nhanh nhất & đồng bộ tức thì)
   try {
     if (calFrame.contentWindow) {
       if (isCustom) {
@@ -12288,7 +12275,27 @@ function syncThemeToCalendarIframe() {
         }
       } else {
         if (typeof calFrame.contentWindow.applyTheme === 'function') {
-          calFrame.contentWindow.applyTheme(curTheme);
+          calFrame.contentWindow.applyTheme(curTheme, true);
+        }
+      }
+    }
+  } catch(e) {}
+
+  // 2. Gửi qua postMessage với fallback '*' an toàn cho mọi môi trường (file://, https://, subdomain, iframe)
+  try {
+    if (calFrame.contentWindow) {
+      var targetOrigin = (window.location.origin && window.location.origin !== 'null') ? window.location.origin : '*';
+      if (isCustom) {
+        calFrame.contentWindow.postMessage({ type: 'setCustomTheme', hex: customHex }, targetOrigin);
+        calFrame.contentWindow.postMessage('custom:' + customHex, targetOrigin);
+        if (targetOrigin !== '*') {
+          try { calFrame.contentWindow.postMessage({ type: 'setCustomTheme', hex: customHex }, '*'); } catch(e) {}
+        }
+      } else {
+        calFrame.contentWindow.postMessage({ type: 'setTheme', themeId: curTheme }, targetOrigin);
+        calFrame.contentWindow.postMessage(curTheme, targetOrigin);
+        if (targetOrigin !== '*') {
+          try { calFrame.contentWindow.postMessage({ type: 'setTheme', themeId: curTheme }, '*'); } catch(e) {}
         }
       }
     }
@@ -12723,8 +12730,8 @@ window.applyCustomTheme = applyCustomTheme;
 
 // Lắng nghe tín hiệu yêu cầu đồng bộ theme và cập nhật lịch từ iframe lịch
 window.addEventListener('message', function(e) {
-  // BẢO MẬT: chỉ nhận tin nhắn cùng origin, và (nếu có iframe lịch) chỉ từ chính iframe lịch
-  if (e.origin !== window.location.origin) return;
+  // BẢO MẬT: chỉ nhận tin nhắn hợp lệ, và (nếu có iframe lịch) chỉ từ chính iframe lịch
+  if (window.location.origin && window.location.origin !== 'null' && e.origin && e.origin !== 'null' && e.origin !== window.location.origin) return;
   var calFrameEl = document.getElementById('tutorCalendarIframe');
   if (calFrameEl && calFrameEl.contentWindow && e.source !== calFrameEl.contentWindow) return;
   if (e.data && (e.data.type === 'calendarReady' || e.data.type === 'requestTheme')) {

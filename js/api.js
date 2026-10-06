@@ -3440,6 +3440,7 @@ function getTutorDemoDashboardData() {
         schedules: getDemoTutorSchedule(),
         totalUnpaidIncome: 1800000,
         classCount: 3,
+        theme: "theme-azure-mist-minimal",
         marqueeAnnouncement: "",
         adminContact: { zalo: '0975546830', facebook: 'https://m.me/zuntutor', phone: '0975546830' }
     };

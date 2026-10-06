@@ -68,6 +68,7 @@
           try { t = localStorage.getItem(themeKey); } catch(e) {}
         }
         if (!t) t = 'theme-azure-mist-minimal';
+        try { localStorage.setItem(themeKey, t); } catch(e) {}
         if (t.startsWith('custom:')) {
           var hex = t.split(':')[1];
           if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
