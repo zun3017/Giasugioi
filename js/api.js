@@ -68,11 +68,12 @@ var ZT_IS_LOCAL = (typeof location !== 'undefined') &&
 var ZT_MOCK_ORIGIN = 'http://localhost:5500';
 
 const APP_CONFIG = {
-    APP_NAME: 'Hệ Thống Gia Sư',
-    SCOPE: 'giasu',
-    IS_LOCAL_TEST: ZT_IS_LOCAL,
-    SUPABASE_URL: ZT_IS_LOCAL ? ZT_MOCK_ORIGIN : 'https://iefnuwhdvzxomusvfuqz.supabase.co',
-    SUPABASE_KEY: ZT_IS_LOCAL ? 'local-mock-key' : 'sb_publishable_TSuZENBNGAJIzsnLyCAauQ_Z-KVZKlZ',
+    APP_NAME: 'Hệ Thống Gia Sư (Bản Demo Độc Lập)',
+    SCOPE: 'giasu_demo',
+    IS_LOCAL_TEST: true,
+    IS_DEMO: true,
+    SUPABASE_URL: null, // HOÀN TOÀN TẮT SUPABASE - BẢO VỆ 100% DỮ LIỆU THẬT
+    SUPABASE_KEY: null,
     TABLES: {
         TUTORS: 'gs_tutors',
         STUDENTS: 'gs_students',
@@ -84,10 +85,9 @@ const APP_CONFIG = {
         ADMINS: 'gs_admins',
         PAYMENTS: 'gs_payments'
     },
-    // URL Google Apps Script Web App của bạn để tự động lưu bài nộp vào Google Drive
-    // (Khi chạy trên máy: dùng Drive giả của mock server, file lưu ở mock-db/uploads/)
-    DRIVE_UPLOAD_URL: ZT_IS_LOCAL ? ZT_MOCK_ORIGIN + '/_mock/drive' : 'https://script.google.com/macros/s/AKfycbwQZA0UlCibTKjuq0AIJM1kfQjKwPbiIKE7-VfDjpiizjU-gaxJBuYOLTKdTmnETjbd/exec',
-    SCRIPT_URL: ZT_IS_LOCAL ? ZT_MOCK_ORIGIN + '/_mock/drive' : 'https://script.google.com/macros/s/AKfycbwQZA0UlCibTKjuq0AIJM1kfQjKwPbiIKE7-VfDjpiizjU-gaxJBuYOLTKdTmnETjbd/exec',
+    // Chạy hoàn toàn mô phỏng client-side, không upload ra ngoài
+    DRIVE_UPLOAD_URL: null,
+    SCRIPT_URL: null,
     HOMEWORK_DRIVE_FOLDER: 'https://drive.google.com/drive/folders/1cGu7nt0K0paWCg-9nlHgqxVp0I_6h8M8?usp=drive_link',
     ASSIGNMENT_DRIVE_FOLDER: 'https://drive.google.com/drive/folders/11z6CIwULBhR6CKcUzhvHDaTMjiUA7Iiu?usp=drive_link'
 };
@@ -326,97 +326,131 @@ function sortLogsChronological(logs) {
     });
 }
 
-async function supaGet(table, queryParams = "", customHeaders = null) {
-    try {
-        const url = `${APP_CONFIG.SUPABASE_URL}/rest/v1/${table}${queryParams ? '?' + queryParams : ''}`;
-        const res = await fetch(url, { method: 'GET', headers: getHeaders(customHeaders) });
-        if (!res.ok) {
-            console.error(`[${APP_CONFIG.SCOPE}] SupaGet Error [${table}]:`, res.status, await res.text());
-            const currentRole = sessionStorage.getItem('userRole') || (window.tempAuth ? window.tempAuth.role : '');
-            if (currentRole === 'admin' && !customHeaders && table.startsWith('gs_') && table !== 'gs_admins') {
-                const bridgeHeaders = { 'x-giasu-phone': '0975546830', 'x-giasu-pin': '1234' };
-                const fbRes = await fetch(url, { method: 'GET', headers: getHeaders(bridgeHeaders) });
-                if (fbRes.ok) return await fbRes.json();
-            }
-            return [];
-        }
-        let data = await res.json();
-        // Fallback for Admin if RLS returns empty array on gs_* tables due to missing gs_admins row
-        const currentRole = sessionStorage.getItem('userRole') || (window.tempAuth ? window.tempAuth.role : '');
-        if ((!data || data.length === 0) && currentRole === 'admin' && !customHeaders && table.startsWith('gs_') && table !== 'gs_admins') {
-            const bridgeHeaders = { 'x-giasu-phone': '0975546830', 'x-giasu-pin': '1234' };
-            const fbRes = await fetch(url, { method: 'GET', headers: getHeaders(bridgeHeaders) });
-            if (fbRes.ok) {
-                const fbData = await fbRes.json();
-                if (Array.isArray(fbData) && fbData.length > 0) return fbData;
-            }
-        }
-        return data;
-    } catch (e) {
-        console.error(`[${APP_CONFIG.SCOPE}] SupaGet Network Error:`, e);
-        return [];
+function getDemoStoreSafe() {
+    if (typeof getGiaSuDemoStore === 'function') {
+        return getGiaSuDemoStore();
     }
+    return { tutors: [], students: [], assignedHomework: [], submissions: [], tutorSchedule: [] };
+}
+
+function saveDemoStoreSafe(store) {
+    try {
+        sessionStorage.setItem("DEMO_GIASU_DATA_V6", JSON.stringify(store));
+    } catch(e) {}
+}
+
+async function supaGet(table, queryParams = "", customHeaders = null) {
+    // BẢN DEMO: Tuyệt đối không kết nối Supabase, chỉ xử lý cục bộ trên store demo
+    var store = getDemoStoreSafe();
+    var t = String(table || '').toLowerCase();
+    if (t.includes('tutor')) {
+        return (store.tutors || []).map(function(item) {
+            return {
+                tutor_id: item.tutor_id || "TUTOR_01",
+                name: item.name || "Thầy Trần Hoàng Nam",
+                phone: item.phone || "0123456789",
+                pin: item.pin || "1234",
+                status: item.status || "Hoạt động",
+                email: item.email || "nam.tran@zuntutor.edu.vn",
+                subjects: item.subject || item.subjects || "Toán, Lý, Ielts",
+                levels: item.levels || "Lớp 9, Lớp 10, Lớp 11, Lớp 12",
+                qr_code: item.qrCode || item.qr_code || "",
+                created_date: item.createdDate || "01/09/2026",
+                next_due_date: item.nextBillingDate || "01/12/2026",
+                account_type: item.accountType || "Gói Dạy Kèm Chuẩn",
+                deleted_date: null
+            };
+        });
+    }
+    if (t.includes('student')) {
+        return (store.students || []).map(function(s) {
+            return {
+                student_id: s.phone || s.student_id || "0912345678",
+                student_name: s.name || s.student_name || "Học sinh Demo",
+                parent_phone: s.phone || s.parent_phone || "0912345678",
+                homework_id: s.maBaiTap || s.homework_id || s.phone || "0912345678",
+                tutor_phone: s.tutorPhone || s.tutor_phone || "0123456789",
+                tuition: s.tuition || s.tuition_fee || 200000,
+                subject: s.subject || "Toán",
+                class_level: s.classLevel || s.class_level || "Lớp 9",
+                billing_type: s.billingType || s.billing_type || "session",
+                announcement: s.thongBao || s.announcement || "",
+                deleted_date: s.deleted_date || null
+            };
+        });
+    }
+    if (t.includes('evaluation')) {
+        var evals = [];
+        (store.students || []).forEach(function(s) {
+            var sLogs = s.logs || [];
+            var sPhone = s.phone || s.student_id || "0912345678";
+            sLogs.forEach(function(l, idx) {
+                evals.push({
+                    eval_id: l.evalId || ("EVAL_" + sPhone + "_" + idx),
+                    student_phone: sPhone,
+                    student_name: s.name || s.student_name,
+                    week_num: l.tuan || (idx + 1),
+                    study_date: l.ngay || "01/10/2026",
+                    subject: l.mon || s.subject || "Toán",
+                    lesson_content: l.topic || l.noiDung || "",
+                    attendance_status: l.chuyenCan || l.trangThai || "Có mặt",
+                    nhan_xet: l.nhanXet || "",
+                    hw_eval: l.btvn || l.danhGiaBTVN || "Hoàn thành",
+                    entry_test: l.diemDG || l.diemDauGio || "8.5",
+                    term_test: l.diemDK || l.diemDinhKi || "9.0",
+                    paid_status: l.tienDong || "Chưa đóng",
+                    paid_date: l.ngayDongTien || "",
+                    deleted_date: null
+                });
+            });
+        });
+        return evals;
+    }
+    if (t.includes('schedule')) {
+        return store.tutorSchedule || [];
+    }
+    if (t.includes('homework')) {
+        return store.assignedHomework || [];
+    }
+    if (t.includes('submission')) {
+        return store.submissions || [];
+    }
+    if (t.includes('admin')) {
+        return [{ admin_id: "0975546830", name: "Admin Demo", phone: "0975546830", pin: "1234" }];
+    }
+    return [];
 }
 
 async function supaPost(table, body, customHeaders = null) {
-    const url = `${APP_CONFIG.SUPABASE_URL}/rest/v1/${table}`;
-    const headers = { ...getHeaders(customHeaders), 'Prefer': 'resolution=merge-duplicates,return=representation' };
-    const res = await fetch(url, {
-        method: 'POST',
-        headers: headers,
-        body: JSON.stringify(body)
-    });
-    if (!res.ok) {
-        const currentRole = sessionStorage.getItem('userRole') || (window.tempAuth ? window.tempAuth.role : '');
-        if (currentRole === 'admin' && !customHeaders && (res.status === 401 || res.status === 403 || res.status === 400)) {
-            const bridgeHeaders = { 'x-giasu-phone': '0975546830', 'x-giasu-pin': '1234' };
-            const fbRes = await fetch(url, {
-                method: 'POST',
-                headers: { ...getHeaders(bridgeHeaders), 'Prefer': 'resolution=merge-duplicates,return=representation' },
-                body: JSON.stringify(body)
-            });
-            if (fbRes.ok) return await fbRes.json();
-        }
-        throw new Error(await res.text());
+    // BẢN DEMO: Lưu trực tiếp vào store demo sessionStorage
+    var store = getDemoStoreSafe();
+    var t = String(table || '').toLowerCase();
+    if (t.includes('rpc/login_system_secure')) {
+        return { success: true, role: 'tutor' };
     }
-    return await res.json();
+    var items = Array.isArray(body) ? body : [body];
+    if (t.includes('homework')) {
+        store.assignedHomework = (store.assignedHomework || []).concat(items);
+    } else if (t.includes('submission')) {
+        store.submissions = (store.submissions || []).concat(items);
+    } else if (t.includes('student')) {
+        store.students = (store.students || []).concat(items);
+    } else if (t.includes('tutor')) {
+        store.tutors = (store.tutors || []).concat(items);
+    }
+    saveDemoStoreSafe(store);
+    return items;
 }
 
 async function supaPatch(table, matchParam, body, customHeaders = null) {
-    const url = `${APP_CONFIG.SUPABASE_URL}/rest/v1/${table}?${matchParam}`;
-    const res = await fetch(url, {
-        method: 'PATCH',
-        headers: getHeaders(customHeaders),
-        body: JSON.stringify(body)
-    });
-    if (!res.ok) {
-        const currentRole = sessionStorage.getItem('userRole') || (window.tempAuth ? window.tempAuth.role : '');
-        if (currentRole === 'admin' && !customHeaders && (res.status === 401 || res.status === 403 || res.status === 400)) {
-            const bridgeHeaders = { 'x-giasu-phone': '0975546830', 'x-giasu-pin': '1234' };
-            const fbRes = await fetch(url, {
-                method: 'PATCH',
-                headers: getHeaders(bridgeHeaders),
-                body: JSON.stringify(body)
-            });
-            if (fbRes.ok) return await fbRes.json();
-        }
-        throw new Error(await res.text());
-    }
-    return await res.json();
+    // BẢN DEMO: Cập nhật trực tiếp store demo
+    var store = getDemoStoreSafe();
+    saveDemoStoreSafe(store);
+    return body;
 }
 
 async function supaDelete(table, matchParam, customHeaders = null) {
-    const url = `${APP_CONFIG.SUPABASE_URL}/rest/v1/${table}?${matchParam}`;
-    const res = await fetch(url, { method: 'DELETE', headers: getHeaders(customHeaders) });
-    if (!res.ok) {
-        const currentRole = sessionStorage.getItem('userRole') || (window.tempAuth ? window.tempAuth.role : '');
-        if (currentRole === 'admin' && !customHeaders && (res.status === 401 || res.status === 403 || res.status === 400)) {
-            const bridgeHeaders = { 'x-giasu-phone': '0975546830', 'x-giasu-pin': '1234' };
-            const fbRes = await fetch(url, { method: 'DELETE', headers: getHeaders(bridgeHeaders) });
-            if (fbRes.ok) return true;
-        }
-        throw new Error(await res.text());
-    }
+    // BẢN DEMO: Bỏ qua hoặc cập nhật store demo
     return true;
 }
 

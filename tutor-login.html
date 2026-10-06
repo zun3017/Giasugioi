@@ -22,25 +22,12 @@
     <link rel="apple-touch-icon" sizes="192x192" href="img/zuntutor_app_icon_192.png">
     <link rel="apple-touch-icon" sizes="512x512" href="img/zuntutor_app_icon_512.png">
 <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Public Light Theme -->
     <link rel="stylesheet" href="css/public-theme.css?v=3.0.5">
-
-    <script>
-        (function() {
-            var hasHash = window.location.hash && (window.location.hash.includes('access_token=') || window.location.hash.includes('error='));
-            var hasCode = window.location.search && window.location.search.includes('code=');
-            var hasAction = false;
-            try { hasAction = !!sessionStorage.getItem('zt_oauth_action'); } catch(e) {}
-            if (hasHash || hasCode || hasAction) {
-                document.documentElement.classList.add('oauth-loading');
-            }
-        })();
-    </script>
 
     <script>
         tailwind.config = {
@@ -1621,37 +1608,27 @@ async function doTutorLogin() {
     if (btnSubmit) btnSubmit.disabled = true;
 
     try {
-        // 1. Xác thực bảo mật và lấy JWT token từ Edge Function login-phone
-        let authRes = null;
-        try {
-            const edgeRes = await fetch(`${APP_CONFIG.SUPABASE_URL}/functions/v1/login-phone`, {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ phone: phone, password: rawPin })
-            });
-            authRes = await edgeRes.json();
-            if (edgeRes.ok && authRes && authRes.session && authRes.session.access_token) {
-                sessionStorage.setItem('supabase_token', authRes.session.access_token);
-                sessionStorage.setItem('supabase_refresh_token', authRes.session.refresh_token);
-                sessionStorage.setItem('userSession', JSON.stringify(authRes.session));
-            }
-        } catch(e) {
-            console.warn('Login edge function warning:', e);
+        // BẢN DEMO: Xác thực trực tiếp trên dữ liệu mẫu offline (sessionStorage)
+        const store = (typeof getGiaSuDemoStore === 'function') ? getGiaSuDemoStore() : 
+                      ((typeof getDemoStoreSafe === 'function') ? getDemoStoreSafe() : null);
+        
+        let matchedTutor = null;
+        if (store && Array.isArray(store.tutors)) {
+            matchedTutor = store.tutors.find(t => String(t.phone).replace(/\s+/g, '') === phone);
         }
 
-        // 2. Xác thực database: Quyền hạn được quyết định hoàn toàn từ máy chủ cơ sở dữ liệu
-        let role = (authRes && authRes.role) ? authRes.role : '';
-        if (!authRes || authRes.error) {
-            let loginRes = await supaPost('rpc/login_system_secure', {
-                p_phone: phone,
-                p_pin: rawPin
-            });
-            if (!loginRes || !loginRes.success) {
+        if (matchedTutor) {
+            if (matchedTutor.pin && String(matchedTutor.pin) !== String(rawPin) && String(rawPin) !== '1234') {
                 if (loadingText) loadingText.style.display = 'none';
                 if (btnSubmit) btnSubmit.disabled = false;
-                return setTutorAlert((authRes && authRes.error) || (loginRes && loginRes.message) || 'Số điện thoại hoặc mã PIN không đúng!');
+                return setTutorAlert('Mã PIN không đúng! Mã PIN mẫu mặc định là: 1234');
             }
-            role = loginRes.role || 'tutor';
+        } else if (phone !== '0123456789' && phone !== '123456789') {
+            if (String(rawPin) !== '1234') {
+                if (loadingText) loadingText.style.display = 'none';
+                if (btnSubmit) btnSubmit.disabled = false;
+                return setTutorAlert('Số điện thoại chưa có trên hệ thống demo! Hãy dùng tài khoản mẫu 0123456789 (PIN: 1234) hoặc đăng ký thử nghiệm.');
+            }
         }
 
         if (loadingText) loadingText.style.display = 'none';
@@ -1663,6 +1640,7 @@ async function doTutorLogin() {
             localStorage.removeItem('zt_remember_phone');
         }
 
+        const role = (matchedTutor && matchedTutor.role) ? matchedTutor.role : 'tutor';
         sessionStorage.setItem('userRole', role);
         sessionStorage.setItem('userPhone', phone);
         sessionStorage.setItem('userPin', rawPin);
@@ -1677,7 +1655,9 @@ async function doTutorLogin() {
             window.location.href = 'admin-dashboard.html';
         } else {
             try {
-                if (typeof getTutorDashboardDataInternal === 'function') {
+                if (typeof getTutorDemoDashboardData === 'function') {
+                    sessionStorage.setItem('dashboardData', JSON.stringify(getTutorDemoDashboardData()));
+                } else if (typeof getTutorDashboardDataInternal === 'function') {
                     const dData = await getTutorDashboardDataInternal(phone);
                     sessionStorage.setItem('dashboardData', JSON.stringify(dData));
                     if (dData && dData.email) {
@@ -1935,40 +1915,32 @@ async function doActivateAccount() {
 
     try {
         const googleAvatar = sessionStorage.getItem('zt_oauth_avatar') || '';
-        const regRes = await fetch(`${APP_CONFIG.SUPABASE_URL}/functions/v1/register-tutor`, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({
-                name: name,
-                email: email,
-                phone: phone,
-                password: pin,
-                avatar_url: googleAvatar,
-                subjects: (profilePicked && profilePicked.subjects) ? profilePicked.subjects.join(', ') : '',
-                levels: (profilePicked && profilePicked.levels) ? profilePicked.levels.join(', ') : '',
-                center: (typeof CENTERS_MAP !== 'undefined' && CENTERS_MAP[center]) ? CENTERS_MAP[center] : (center ? 'MÃ: ' + center : 'Tự đăng ký')
-            })
-        });
-
-        let regData = {};
-        try {
-            regData = await regRes.json();
-        } catch (_) {}
-
-        if (!regRes.ok || regData.error) {
-            if (btn) {
-                btn.disabled = false;
-                btn.innerHTML = 'Kích hoạt tài khoản dùng thử (15 ngày) <i class="fa-solid fa-arrow-right"></i>';
+        // BẢN DEMO: Lưu hồ sơ gia sư mới vào demo store trong sessionStorage
+        const store = (typeof getGiaSuDemoStore === 'function') ? getGiaSuDemoStore() : 
+                      ((typeof getDemoStoreSafe === 'function') ? getDemoStoreSafe() : null);
+        if (store && Array.isArray(store.tutors)) {
+            const existing = store.tutors.find(t => String(t.phone).replace(/\s+/g, '') === phone);
+            if (!existing) {
+                store.tutors.push({
+                    tutor_id: 'tutor_' + Date.now(),
+                    id: 'tutor_' + Date.now(),
+                    name: name,
+                    email: email,
+                    phone: phone,
+                    pin: pin,
+                    role: 'tutor',
+                    status: 'Hoạt động',
+                    subjects: (profilePicked && profilePicked.subjects) ? profilePicked.subjects.join(', ') : '',
+                    levels: (profilePicked && profilePicked.levels) ? profilePicked.levels.join(', ') : '',
+                    referral_center: (typeof CENTERS_MAP !== 'undefined' && CENTERS_MAP[center]) ? CENTERS_MAP[center] : (center ? 'MÃ: ' + center : 'Tự đăng ký'),
+                    registered_date: new Date().toLocaleDateString('vi-VN')
+                });
+                if (typeof saveDemoStoreSafe === 'function') {
+                    saveDemoStoreSafe(store);
+                } else {
+                    sessionStorage.setItem("DEMO_GIASU_DATA_V6", JSON.stringify(store));
+                }
             }
-            alertText.textContent = regData.error || ('Lỗi máy chủ (' + regRes.status + ') khi kích hoạt tài khoản!');
-            alertBox.classList.add('show');
-            return;
-        }
-
-        if (regData.session) {
-            sessionStorage.setItem('supabase_token', regData.session.access_token);
-            sessionStorage.setItem('supabase_refresh_token', regData.session.refresh_token);
-            sessionStorage.setItem('userSession', JSON.stringify(regData.session));
         }
 
         if (googleAvatar) {
@@ -2075,11 +2047,7 @@ async function goToDashboardAfterSignup() {
     window.location.href = 'tutor-dashboard.html';
 }
 
-/* ================= GOOGLE OAUTH 2.0 & FORGOT PASSWORD ================= */
-const supabaseAuth = (typeof supabase !== 'undefined' && typeof APP_CONFIG !== 'undefined' && APP_CONFIG.SUPABASE_URL) 
-    ? supabase.createClient(APP_CONFIG.SUPABASE_URL, APP_CONFIG.SUPABASE_KEY) 
-    : null;
-
+/* ================= GOOGLE OAUTH & FORGOT PASSWORD (BẢN DEMO NỘI BỘ) ================= */
 let verifiedResetTutor = null;
 let oauthHandled = false;
 
@@ -2099,151 +2067,28 @@ function hideOAuthOverlay() {
     if (overlay) overlay.style.display = 'none';
 }
 
-// Hàm xử lý chung khi nhận được phiên đăng nhập từ Google OAuth
-async function handleOAuthSession(session) {
-    if (!session || !session.user || !session.user.email || oauthHandled) return;
-    
-    // Chỉ xử lý khi có cờ hành động hoặc khi URL chứa token từ OAuth redirect
-    const hasHash = window.location.hash && (window.location.hash.includes('access_token=') || window.location.hash.includes('error='));
-    const hasCode = window.location.search && window.location.search.includes('code=');
-    const storedAction = sessionStorage.getItem('zt_oauth_action');
-
-    if (!hasHash && !hasCode && !storedAction) return;
-
-    showOAuthOverlay('Đang xác thực Google...', 'Đang nạp dữ liệu hồ sơ và chuẩn bị vào hệ thống...');
-    oauthHandled = true;
-    sessionStorage.removeItem('zt_oauth_action');
-
-    // Dọn sạch URL hash / search để thanh địa chỉ gọn gàng, tránh lặp lại xử lý khi F5
-    if (hasHash || hasCode) {
-        window.history.replaceState({}, document.title, window.location.pathname);
-    }
-
-    if (session.access_token) {
-        sessionStorage.setItem('supabase_token', session.access_token);
-        if (session.refresh_token) {
-            sessionStorage.setItem('supabase_refresh_token', session.refresh_token);
-        }
-        sessionStorage.setItem('userSession', JSON.stringify(session));
-        try {
-            localStorage.setItem('userSession', JSON.stringify(session));
-        } catch(e) {}
-    }
-
-    const email = session.user.email.toLowerCase();
-    const name = (session.user.user_metadata && (session.user.user_metadata.name || session.user.user_metadata.full_name)) || '';
-    const avatarUrl = (session.user.user_metadata && (session.user.user_metadata.avatar_url || session.user.user_metadata.picture)) || '';
-    if (avatarUrl) {
-        sessionStorage.setItem('zt_oauth_avatar', avatarUrl);
-    }
-
-    if (storedAction === 'reset') {
-        await verifyGoogleEmailDirectly(email);
-    } else if (storedAction === 'login') {
-        await handleGoogleLoginSuccess(email, name);
-    } else {
-        // Mặc định hoặc signup
-        await handleGoogleSignupSuccess(email, name);
-    }
-}
-
-// Lắng nghe sự kiện xác thực Google OAuth
-if (supabaseAuth) {
-    supabaseAuth.auth.onAuthStateChange(async (event, session) => {
-        if ((event === 'SIGNED_IN' || event === 'INITIAL_SESSION') && session) {
-            await handleOAuthSession(session);
-        }
-    });
-
-    document.addEventListener('DOMContentLoaded', async () => {
-        try {
-            const { data: { session } } = await supabaseAuth.auth.getSession();
-            if (session) {
-                await handleOAuthSession(session);
-            }
-        } catch(e) {
-            console.warn('OAuth redirect check:', e);
-        }
-    });
-
-    // Dự phòng an toàn: Ẩn overlay sau 7s nếu không có phiên đăng nhập hợp lệ
-    setTimeout(function() {
-        if (!oauthHandled && !sessionStorage.getItem('userPhone')) {
-            hideOAuthOverlay();
-            resetOAuthButtons();
-        }
-    }, 7000);
-}
-
-// 1. Đăng nhập nhanh bằng Google
+// 1. Đăng nhập nhanh bằng Google trong bản Demo
 async function startGoogleLogin() {
-    sessionStorage.setItem('zt_oauth_action', 'login');
-    showOAuthOverlay('Đang mở Google...', 'Đang kết nối tới dịch vụ xác thực tài khoản Google...');
-    const btn = document.getElementById('btnGoogleLogin');
-    const btnText = document.getElementById('btnGoogleLoginText');
-    if (btn) btn.disabled = true;
-    if (btnText) btnText.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang mở Google...';
-    await triggerGoogleOAuth('login');
+    await showWebAlert({
+        type: 'info',
+        title: 'Bản Demo Trải Nghiệm',
+        message: 'Bản Demo đang hoạt động với dữ liệu mô phỏng độc lập hoàn toàn. Bạn hãy bấm vào nút <b>⚡ Thầy Trần Hoàng Nam</b> ở trên để đăng nhập nhanh chỉ với 1 chạm!'
+    });
 }
 
-// 2. Đăng ký dùng thử bằng Google
+// 2. Đăng ký dùng thử bằng Google trong bản Demo
 async function startGoogleSignUp() {
-    sessionStorage.setItem('zt_oauth_action', 'signup');
-    showOAuthOverlay('Đang mở Google...', 'Đang kết nối tới dịch vụ đăng ký tài khoản Google...');
-    const btn = document.getElementById('btnMainGoogleSignup');
-    const btnText = document.getElementById('btnMainGoogleSignupText');
-    if (btn) btn.disabled = true;
-    if (btnText) btnText.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang mở Google...';
-    await triggerGoogleOAuth('signup');
+    openRegisterModal();
 }
 
-// 3. Xác minh Google để Quên mật khẩu / đổi PIN
+// 3. Quên mật khẩu / đổi PIN trong bản Demo
 async function startGoogleAuthForReset() {
-    sessionStorage.setItem('zt_oauth_action', 'reset');
-    showOAuthOverlay('Đang mở Google...', 'Đang mở xác thực Google để đổi mật khẩu...');
-    const btnReset = document.getElementById('btnVerifyGoogle');
-    const btnResetText = document.getElementById('btnVerifyGoogleText');
-    if (btnReset) btnReset.disabled = true;
-    if (btnResetText) btnResetText.innerHTML = '<i class="fa-solid fa-circle-notch fa-spin"></i> Đang mở xác thực Google...';
-    await triggerGoogleOAuth('reset');
-}
-
-async function triggerGoogleOAuth(action) {
-    if (!supabaseAuth) {
-        hideOAuthOverlay();
-        await showWebAlert({
-            type: 'error',
-            title: 'Chưa thể kết nối',
-            message: 'Chưa kết nối được với dịch vụ xác thực Supabase. Vui lòng thử lại sau.'
-        });
-        resetOAuthButtons();
-        return;
-    }
-    try {
-        const { data, error } = await supabaseAuth.auth.signInWithOAuth({
-            provider: 'google',
-            options: {
-                redirectTo: window.location.origin + window.location.pathname
-            }
-        });
-        if (error) {
-            hideOAuthOverlay();
-            await showWebAlert({
-                type: 'error',
-                title: 'Lỗi đăng nhập Google',
-                message: 'Lỗi khởi tạo đăng nhập Google: ' + (error.message || error)
-            });
-            resetOAuthButtons();
-        }
-    } catch (err) {
-        hideOAuthOverlay();
-        await showWebAlert({
-            type: 'error',
-            title: 'Lỗi kết nối',
-            message: 'Lỗi kết nối: ' + (err.message || err)
-        });
-        resetOAuthButtons();
-    }
+    closeGoogleForgotModal();
+    await showWebAlert({
+        type: 'info',
+        title: 'Mật khẩu Bản Demo',
+        message: 'Ở bản Demo, mã PIN mặc định là <b>1234</b>. Bạn có thể sử dụng SĐT <b>0123456789</b> và PIN <b>1234</b> để đăng nhập!'
+    });
 }
 
 function resetOAuthButtons() {
@@ -2534,44 +2379,20 @@ async function doResetPin() {
     try {
         // Lấy Token xác thực Google hiện tại để gửi kèm request
         let authToken = '';
-        if (supabaseAuth) {
-            try {
-                const { data: { session } } = await supabaseAuth.auth.getSession();
-                if (session && session.access_token) {
-                    authToken = session.access_token;
+    try {
+        // BẢN DEMO: Cập nhật trực tiếp vào mock store trong sessionStorage
+        const store = (typeof getGiaSuDemoStore === 'function') ? getGiaSuDemoStore() : 
+                      ((typeof getDemoStoreSafe === 'function') ? getDemoStoreSafe() : null);
+        if (store && Array.isArray(store.tutors)) {
+            const tObj = store.tutors.find(t => (verifiedResetTutor.email && t.email === verifiedResetTutor.email) || t.phone === verifiedResetTutor.phone);
+            if (tObj) {
+                tObj.pin = pin;
+                if (typeof saveDemoStoreSafe === 'function') {
+                    saveDemoStoreSafe(store);
+                } else {
+                    sessionStorage.setItem("DEMO_GIASU_DATA_V6", JSON.stringify(store));
                 }
-            } catch (e) {}
-        }
-
-        const headers = { 'Content-Type': 'application/json' };
-        if (authToken) {
-            headers['Authorization'] = 'Bearer ' + authToken;
-        }
-
-        const resp = await fetch(`${APP_CONFIG.SUPABASE_URL}/functions/v1/reset-password`, {
-            method: 'POST',
-            headers: headers,
-            body: JSON.stringify({
-                email: verifiedResetTutor.email,
-                password: pin
-            })
-        });
-
-        const resData = await resp.json();
-        if (!resp.ok || resData.error) {
-            h.textContent = resData.error || 'Lỗi khi cập nhật mật khẩu!';
-            if (btn) {
-                btn.disabled = false;
-                btn.innerHTML = '<i class="fa-solid fa-floppy-disk"></i> Lưu mật khẩu mới & Đăng nhập';
             }
-            return;
-        }
-
-        // Lưu session nếu có
-        if (resData.session) {
-            sessionStorage.setItem('supabase_token', resData.session.access_token);
-            sessionStorage.setItem('supabase_refresh_token', resData.session.refresh_token);
-            sessionStorage.setItem('userSession', JSON.stringify(resData.session));
         }
 
         // Đồng bộ trực tiếp vào gs_tutors.pin
