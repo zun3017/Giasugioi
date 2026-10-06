@@ -29,12 +29,12 @@ function generateInitialGiaSuDemoData() {
                 phone: "0123456789",
                 pin: "1234",
                 name: "Thầy Trần Hoàng Nam",
-                subject: "Toán & Vật Lý",
+                subject: "Toán, Lý, Ielts",
                 avatar: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?w=500&auto=format&fit=crop&q=80",
                 qrCode: "https://i.postimg.cc/66rKbPmb/trinh-duyet.png",
                 totalStudents: 3,
                 totalEarnings: 6000000,
-                activeClasses: ["Toán 9 Ôn Vào 10", "Toán 12 & Vật Lý 12", "Vật Lý 11 Nâng Cao"]
+                activeClasses: ["Toán 9 Ôn Vào 10", "Lý 12 Ôn Thi THPT", "Ielts 6.5+ Cấp Tốc"]
             }
         ],
 
@@ -78,7 +78,7 @@ function generateInitialGiaSuDemoData() {
                 maBaiTap: "0987654321",
                 name: "Lê Minh Thư",
                 classLevel: "Lớp 12",
-                subject: "Toán & Vật Lý",
+                subject: "Lý",
                 tutorName: "Thầy Trần Hoàng Nam",
                 tutorPhone: "0123456789",
                 parentName: "Cô Thư",
@@ -111,7 +111,7 @@ function generateInitialGiaSuDemoData() {
                 maBaiTap: "0905123456",
                 name: "Phạm Hải Đăng",
                 classLevel: "Lớp 11",
-                subject: "Vật Lý",
+                subject: "Ielts",
                 tutorName: "Thầy Trần Hoàng Nam",
                 tutorPhone: "0123456789",
                 parentName: "Chú Đăng",

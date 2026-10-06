@@ -1,21 +1,29 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <link rel="icon" type="image/png" href="img/zuntutor_avatar_blue.png">
-
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ZunTutor - Hệ Thống Tra Cứu Học Tập</title>
-    <!-- PWA Settings -->
+    <!-- Browser Favicon (Logo Tab Trình Duyệt - Ảnh 2) -->
+    <link rel="shortcut icon" href="favicon.ico?v=4">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png?v=4">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png?v=4">
+    <link rel="icon" type="image/png" sizes="48x48" href="img/favicon-48x48.png?v=4">
+
+    <!-- App / PWA Icons (Logo App) -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#3B82F6">
+    <meta name="theme-color" content="#2563EB">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="ZunTutor">
-    <link rel="apple-touch-icon" href="img/zuntutor_avatar_blue.png">
+    <link rel="apple-touch-icon" href="img/zuntutor_app_icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/zuntutor_app_icon_192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="img/zuntutor_app_icon_192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="img/zuntutor_app_icon_512.png">
     <script>
         window.onerror = function(message, source, lineno, colno, error) {
-            alert("JS Error: " + message + " at " + source + ":" + lineno + ":" + colno);
+            console.error("JS Error: " + message + " at " + source + ":" + lineno + ":" + colno, error);
             return false;
         };
     </script>
@@ -24,12 +32,13 @@
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Global CSS -->
-    <link rel="stylesheet" href="css/style.css?v=20261002_scroll">
+    <link rel="stylesheet" href="css/style.css?v=3.0.5">
     <!-- Public Light Theme -->
-    <link rel="stylesheet" href="css/public-theme.css?v=20261002_scroll">
+    <link rel="stylesheet" href="css/public-theme.css?v=3.0.5">
 
     <!-- Mobile Responsive Optimizations -->
     <style>
+        body.logged-in .header { display: none !important; }
         /* ===== PHASE 15: STUDENT HERO PROFILE CARD ===== */
         .student-hero-card {
             display: flex;
@@ -612,7 +621,7 @@
         /* ===== STUDENT DASHBOARD MOBILE ===== */
         @media (max-width: 768px) {
             #resultBox, .main-container {
-                padding: 16px 12px 60px !important;
+                padding: 16px 12px 85px !important;
                 margin: 10px auto !important;
                 border-radius: 16px !important;
                 width: 100% !important;
@@ -825,10 +834,14 @@
     </div>
 
     <div id="resultBox">
-        <div class="result-top-bar">
+        <div class="result-top-bar" style="display: flex; justify-content: space-between; align-items: center; gap: 10px; flex-wrap: wrap;">
             <button type="button" onclick="quayLai()" class="btn-back-compact" title="Trở về màn hình chính">
                 <i class="fa-solid fa-arrow-left"></i>
                 <span>Trở về màn hình chính</span>
+            </button>
+            <button type="button" onclick="lamMoiLichSuHocTap()" class="btn-back-compact" title="Làm mới dữ liệu học tập" style="color: #2563EB; border-color: #BFDBFE;">
+                <i class="fa-solid fa-rotate-right"></i>
+                <span>Làm mới dữ liệu</span>
             </button>
         </div>
         <div id="loiChao"></div>
@@ -1013,8 +1026,9 @@
 
     <!-- Thư viện Chart.js -->
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="js/demo-data.js"></script>
     <!-- Core API kết nối Supabase và Apps Script -->
-    <script src="js/api.js?v=20261004_utf8fix"></script>
+    <script src="js/api.js?v=20261005_v4"></script>
     <!-- Logic hiển thị Học sinh -->
     <script src="js/student.js?v=20261003_sec1"></script>
     <script>
@@ -1024,6 +1038,7 @@
             var dataStr = sessionStorage.getItem('dashboardData') || localStorage.getItem('dashboardData');
             var role = sessionStorage.getItem('userRole') || localStorage.getItem('userRole');
             var phone = sessionStorage.getItem('userPhone') || localStorage.getItem('userPhone');
+            var selectedChild = sessionStorage.getItem('selectedChild') || '';
 
             try {
                 if (dataStr) data = JSON.parse(dataStr);
@@ -1031,8 +1046,12 @@
                 console.error("Lỗi parse dashboardData:", e);
             }
 
-            var isDemoStudent = (phone === '0912345678' || phone === '0987654321' || phone === '0905123456');
+            var isDemoStudent = (!phone || phone === '0912345678' || phone === '0987654321' || phone === '0905123456');
             if (isDemoStudent && typeof getDemoStudentLoginResult === 'function' && (!data || !data.lichSuHocTap || data.lichSuHocTap.length < 8)) {
+                if (!phone) phone = '0912345678';
+                role = 'student';
+                sessionStorage.setItem('userPhone', phone);
+                sessionStorage.setItem('userRole', role);
                 var dRes = getDemoStudentLoginResult(phone);
                 if (dRes && dRes.data) {
                     data = dRes.data;
@@ -1046,25 +1065,57 @@
                 // Không có phiên đăng nhập -> chuyển về màn hình đăng nhập học sinh
                 window.location.href = 'student-login.html';
                 return;
+            } else {
+                // Chưa có cache nhưng có phone -> hiển thị skeleton loader
+                var skSt = document.getElementById('skeletonStudent');
+                if (skSt) skSt.style.display = 'block';
+                var resBox = document.getElementById('resultBox');
+                if (resBox) resBox.style.display = 'none';
             }
 
             // Đồng bộ dữ liệu mới nhất từ backend nếu có số điện thoại
             if (phone && typeof google !== 'undefined' && google.script && google.script.run && google.script.run.loginSystem) {
-                google.script.run.withSuccessHandler(function(res) {
-                    if (res && res.role === 'student' && res.data && res.data.timThay) {
-                        sessionStorage.setItem('userRole', 'student');
-                        sessionStorage.setItem('dashboardData', JSON.stringify(res.data));
-                        renderStudentView(res.data);
-                    }
-                }).loginSystem(phone, '');
+                google.script.run
+                    .withSuccessHandler(function(res) {
+                        var skSt = document.getElementById('skeletonStudent');
+                        if (skSt) skSt.style.display = 'none';
+                        var studentData = (res && res.role === 'student' && res.data && res.data.timThay) 
+                            ? res.data 
+                            : (res && res.timThay ? res : null);
+                        if (studentData) {
+                            sessionStorage.setItem('userRole', 'student');
+                            sessionStorage.setItem('dashboardData', JSON.stringify(studentData));
+                            renderStudentView(studentData);
+                        } else if (!data) {
+                            window.location.href = 'student-login.html';
+                        }
+                    })
+                    .withFailureHandler(function(err) {
+                        console.error('Lỗi đồng bộ dữ liệu học sinh:', err);
+                        var skSt = document.getElementById('skeletonStudent');
+                        if (skSt) skSt.style.display = 'none';
+                        if (!data) {
+                            window.location.href = 'student-login.html';
+                        }
+                    })
+                    .loginSystem(phone, '', selectedChild);
             }
         });
 
         // Hàm điều hướng sang trang Bài tập của học sinh
         function goToHomeworkPortal() {
             var phone = sessionStorage.getItem('userPhone') || localStorage.getItem('userPhone') || '';
-            if (phone) {
-                window.location.href = 'homework.html?code=' + encodeURIComponent(phone);
+            var dataStr = sessionStorage.getItem('dashboardData') || localStorage.getItem('dashboardData');
+            var hwCode = '';
+            try {
+                if (dataStr) {
+                    var parsed = JSON.parse(dataStr);
+                    hwCode = parsed.studentId || parsed.student_id || '';
+                }
+            } catch(e) {}
+            var code = hwCode || phone;
+            if (code) {
+                window.location.href = 'homework.html?code=' + encodeURIComponent(code);
             } else {
                 window.location.href = 'homework.html?new=1';
             }
@@ -1072,7 +1123,7 @@
     </script>
 
     <!-- PWA Install Script -->
-    <script src="js/pwa-install.js"></script>
+    <script src="js/pwa-install.js?v=3.0.5"></script>
 
     <!-- Mobile Nav Script -->
     <script>
@@ -1112,6 +1163,14 @@
             }
         })();
     </script>
+
+    <!-- Bottom Navigation Bar (Mobile Only) -->
+    <nav class="bottom-nav">
+      <a href="index.html" class="bottom-nav-item"><i class="fa-solid fa-house"></i><span>Trang chủ</span></a>
+      <a href="student-login.html" class="bottom-nav-item active"><i class="fa-solid fa-graduation-cap"></i><span>PH/HS</span></a>
+      <a href="homework.html" class="bottom-nav-item"><i class="fa-solid fa-file-arrow-up"></i><span>Bài tập</span></a>
+      <a href="tutor-login.html" class="bottom-nav-item"><i class="fa-solid fa-chalkboard-user"></i><span>Gia sư</span></a>
+    </nav>
 
     <!-- Scroll Animation Engine -->
     <script src="js/scroll-animations.js"></script>

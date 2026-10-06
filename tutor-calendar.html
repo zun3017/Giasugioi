@@ -12,21 +12,30 @@
             return false;
         };
     </script>
-    <link rel="icon" type="image/png" href="img/zuntutor_avatar_blue.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>Google Calendar style for Tutors - Recurrence Timetable</title>
-    <!-- PWA Settings -->
+    <!-- Browser Favicon (Logo Tab Trình Duyệt - Ảnh 2) -->
+    <link rel="shortcut icon" href="favicon.ico?v=4">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png?v=4">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png?v=4">
+    <link rel="icon" type="image/png" sizes="48x48" href="img/favicon-48x48.png?v=4">
+
+    <!-- App / PWA Icons (Logo App) -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#F8F3EC">
+    <meta name="theme-color" content="#2563EB">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="ZunTutor">
-    <link rel="apple-touch-icon" href="img/zuntutor_avatar_blue.png">
-    <!-- Google Fonts -->
+    <link rel="apple-touch-icon" href="img/zuntutor_app_icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/zuntutor_app_icon_192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="img/zuntutor_app_icon_192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="img/zuntutor_app_icon_512.png">
+<!-- Google Fonts -->
     <!-- FontAwesome Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <!-- Google Apps Script API Client -->
-    <script src="js/api.js?v=20261004_utf8fix"></script>
+    <script src="js/api.js?v=20261005_v4"></script>
     <!-- FullCalendar JS v6 -->
     <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.8/index.global.min.js"></script>
     
@@ -189,6 +198,43 @@
         }
       }
 
+      function showToast(msg, type) {
+        type = type || 'info';
+        if (window.parent && window.parent !== window && typeof window.parent.showToast === 'function') {
+          window.parent.showToast(msg, type);
+          return;
+        }
+        var toast = document.getElementById('inCalendarToast');
+        if (!toast) {
+          toast = document.createElement('div');
+          toast.id = 'inCalendarToast';
+          toast.style.cssText = 'position:fixed;bottom:24px;left:50%;transform:translateX(-50%);padding:10px 18px;border-radius:10px;font-size:13px;font-weight:600;z-index:999999;box-shadow:0 8px 24px rgba(0,0,0,0.25);transition:all 0.3s ease;display:flex;align-items:center;gap:8px;pointer-events:none;color:#fff;';
+          document.body.appendChild(toast);
+        }
+        var bgMap = {
+          success: 'linear-gradient(135deg, #10B981, #059669)',
+          error: 'linear-gradient(135deg, #EF4444, #DC2626)',
+          warning: 'linear-gradient(135deg, #F59E0B, #D97706)',
+          info: 'linear-gradient(135deg, #3B82F6, #2563EB)'
+        };
+        var iconMap = {
+          success: '<i class="fa-solid fa-circle-check"></i>',
+          error: '<i class="fa-solid fa-circle-xmark"></i>',
+          warning: '<i class="fa-solid fa-triangle-exclamation"></i>',
+          info: '<i class="fa-solid fa-circle-info"></i>'
+        };
+        toast.style.background = bgMap[type] || bgMap.info;
+        toast.innerHTML = (iconMap[type] || iconMap.info) + ' <span>' + msg + '</span>';
+        toast.style.opacity = '1';
+        toast.style.display = 'flex';
+        clearTimeout(toast._timer);
+        toast._timer = setTimeout(function() {
+          toast.style.opacity = '0';
+          setTimeout(function() { toast.style.display = 'none'; }, 300);
+        }, 3000);
+      }
+      window.showToast = showToast;
+
       function applyCustomTheme(silent, explicitHex) {
         var hex = explicitHex;
         if (!hex) {
@@ -204,8 +250,7 @@
         var vars = hex ? computeCustomThemeVars(hex) : null;
         if (!vars) {
           if (!silent) {
-            if (typeof showToast === 'function') showToast('Mã màu không hợp lệ. Vui lòng nhập đúng #RRGGBB', 'error');
-            else alert('Mã màu không hợp lệ. Vui lòng nhập đúng #RRGGBB');
+            showToast('Mã màu không hợp lệ. Vui lòng nhập đúng #RRGGBB', 'error');
           }
           return;
         }
@@ -2932,9 +2977,24 @@
             color: var(--text-primary) !important;
             color-scheme: dark;
         }
-        [data-theme="dark"] .form-control::placeholder { color: var(--text-muted) !important; }
-        [data-theme="dark"] .form-control:focus { border-color: var(--color-primary) !important; box-shadow: 0 0 0 3px rgba(var(--color-primary-rgb), 0.25) !important; }
-        [data-theme="dark"] select.form-control option { background: var(--bg-page); color: var(--text-primary); }
+        [data-theme="dark"] select,
+        [data-theme="dark"] select.form-control {
+            color-scheme: dark !important;
+        }
+        select option {
+            background-color: var(--bg-card, #1A163A);
+            color: var(--text-primary, #FFFFFF);
+        }
+        [data-theme="dark"] select option,
+        [data-theme="dark"] select.form-control option {
+            background-color: #161233 !important;
+            color: #FFFFFF !important;
+        }
+        [data-theme="light"] select option,
+        [data-theme="light"] select.form-control option {
+            background-color: #FFFFFF !important;
+            color: #0F172A !important;
+        }
         [data-theme="dark"] .day-checkbox-label,
         [data-theme="dark"] .color-scope-btn,
         [data-theme="dark"] .color-preview-badge,
@@ -3339,10 +3399,42 @@
             };
         }
 
-        const userPhone = sessionStorage.getItem('userPhone');
+        const urlParams = new URLSearchParams(window.location.search);
+        let userPhone = urlParams.get('phone') || sessionStorage.getItem('userPhone') || '';
+        if (!userPhone) {
+            try {
+                if (window.parent && window.parent !== window) {
+                    userPhone = window.parent.sessionStorage.getItem('userPhone')
+                        || (window.parent.tutorDataGlobal && window.parent.tutorDataGlobal.tutorPhone)
+                        || window.parent.currentTutorPhone || '';
+                }
+            } catch(e) {}
+        }
+        if (!userPhone) {
+            try {
+                const dashStr = sessionStorage.getItem('dashboardData');
+                if (dashStr) {
+                    const d = JSON.parse(dashStr);
+                    userPhone = (d && (d.tutorPhone || d.phone)) || '';
+                }
+            } catch(e) {}
+        }
+
         const dashDataStr = sessionStorage.getItem('dashboardData');
         let tutorDataGlobal = dashDataStr ? JSON.parse(dashDataStr) : null;
-        const isDemoMode = Boolean(location.href.toLowerCase().includes('demo') || sessionStorage.getItem('isDemoMode') === 'true' || userPhone === '0123456789' || !userPhone);
+        if (!tutorDataGlobal) {
+            var pTutorData = getSafeParentTutorData();
+            if (pTutorData) tutorDataGlobal = pTutorData;
+        }
+
+        const isEmbedded = Boolean(urlParams.get('embedded') === '1' || (window.parent && window.parent !== window));
+        const hasAuthSession = Boolean(userPhone || (tutorDataGlobal && (tutorDataGlobal.tutorPhone || tutorDataGlobal.phone || tutorDataGlobal.tutorName)) || sessionStorage.getItem('userRole') === 'tutor');
+        const isDemoMode = Boolean(
+            location.href.toLowerCase().includes('demo') || 
+            sessionStorage.getItem('isDemoMode') === 'true' || 
+            userPhone === '0123456789' || 
+            (!hasAuthSession && !isEmbedded)
+        );
 
         const PRESET_COLORS = [
             '#8E4DFF', '#10B981', '#F59E0B', '#3B82F6', '#EC4899', '#6366F1',
@@ -3350,54 +3442,10 @@
             '#4D9EFF', '#00D2FC', '#4DFFC3', '#4CAF50', '#AEEA00', '#FFD23F'
         ];
 
-        const STUDENT_DEFAULT_COLORS = {
-            "Lê Minh Thư": "#8E4DFF",
-            "Nguyễn Hoàng Nam": "#10B981",
-            "Phạm Hải Đăng": "#F59E0B"
-        };
+        const STUDENT_DEFAULT_COLORS = {};
 
-        // Dữ liệu thời khóa biểu chuẩn của hệ thống Gia Sư (3 học sinh thực tế)
-        let tutorScheduleSheetData = [
-            {
-                studentName: "Lê Minh Thư",
-                subject: "Toán & Vật Lý",
-                color: localStorage.getItem('student_color_Lê Minh Thư') || "#8E4DFF",
-                fee: 200000,
-                mon: "18:00 - 19:30",
-                tue: "",
-                wed: "",
-                thu: "",
-                fri: "",
-                sat: "",
-                sun: "08:30 - 10:00"
-            },
-            {
-                studentName: "Nguyễn Hoàng Nam",
-                subject: "Toán 9",
-                color: localStorage.getItem('student_color_Nguyễn Hoàng Nam') || "#10B981",
-                fee: 200000,
-                mon: "",
-                tue: "",
-                wed: "19:30 - 21:00",
-                thu: "",
-                fri: "",
-                sat: "18:00 - 19:30",
-                sun: ""
-            },
-            {
-                studentName: "Phạm Hải Đăng",
-                subject: "Vật Lý 11",
-                color: localStorage.getItem('student_color_Phạm Hải Đăng') || "#F59E0B",
-                fee: 200000,
-                mon: "",
-                tue: "18:00 - 19:30",
-                wed: "",
-                thu: "",
-                fri: "18:00 - 19:30",
-                sat: "",
-                sun: ""
-            }
-        ];
+        // Dữ liệu thời khóa biểu của hệ thống Gia Sư (Khởi tạo mảng rỗng)
+        let tutorScheduleSheetData = [];
 
         // Safe helpers for cross-origin / file:/// parent window access
         function getSafeParentStore() {
@@ -3557,11 +3605,7 @@ if (typeof window !== 'undefined') window.fixVietnameseMojibake = fixVietnameseM
 
                     var stList = (tutorDataGlobal && tutorDataGlobal.students && tutorDataGlobal.students.length > 0)
                         ? tutorDataGlobal.students
-                        : (store && store.students && store.students.length > 0 ? store.students : [
-                            { name: "Lê Minh Thư", subject: "Toán & Vật Lý", tuition: 200000 },
-                            { name: "Nguyễn Hoàng Nam", subject: "Toán 9", tuition: 200000 },
-                            { name: "Phạm Hải Đăng", subject: "Vật Lý 11", tuition: 200000 }
-                        ]);
+                        : (store && store.students && store.students.length > 0 ? store.students : []);
 
                     tutorScheduleSheetData = [];
                     var processedDemoNames = new Set();
@@ -3726,33 +3770,7 @@ if (typeof window !== 'undefined') window.fixVietnameseMojibake = fixVietnameseM
                             }
                         });
                     }
-                    
-                    
-                    if (!tutorScheduleSheetData || tutorScheduleSheetData.length === 0) {
-                        tutorScheduleSheetData = [
-                            {
-                                studentName: "Lê Minh Thư",
-                                subject: "Toán & Vật Lý Lớp 12",
-                                color: localStorage.getItem('student_color_Lê Minh Thư') || "#8E4DFF",
-                                fee: 200000,
-                                mon: "18:00 - 19:30", tue: "", wed: "", thu: "", fri: "", sat: "", sun: "08:30 - 10:00"
-                            },
-                            {
-                                studentName: "Nguyễn Hoàng Nam",
-                                subject: "Toán Lớp 9",
-                                color: localStorage.getItem('student_color_Nguyễn Hoàng Nam') || "#10B981",
-                                fee: 200000,
-                                mon: "", tue: "", wed: "19:30 - 21:00", thu: "", fri: "", sat: "18:00 - 19:30", sun: ""
-                            },
-                            {
-                                studentName: "Phạm Hải Đăng",
-                                subject: "Vật Lý Lớp 11",
-                                color: localStorage.getItem('student_color_Phạm Hải Đăng') || "#F59E0B",
-                                fee: 200000,
-                                mon: "", tue: "18:00 - 19:30", wed: "", thu: "", fri: "18:00 - 19:30", sat: "", sun: ""
-                            }
-                        ];
-                    }
+
 
                     loadStudentOptions();
                     renderSheetTable();
@@ -4379,6 +4397,10 @@ if (typeof window !== 'undefined') window.fixVietnameseMojibake = fixVietnameseM
             let tbody = document.getElementById("sheetDataTableBody");
             if (!tbody) return;
             tbody.innerHTML = "";
+            if (!tutorScheduleSheetData || tutorScheduleSheetData.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; color: var(--text-muted, #8E95BE); padding: 25px; font-weight: 500;">Chưa có học sinh nào trong thời khóa biểu</td></tr>';
+                return;
+            }
             tutorScheduleSheetData.forEach(row => {
                 let tr = document.createElement("tr");
                 
@@ -5896,7 +5918,7 @@ if (typeof window !== 'undefined') window.fixVietnameseMojibake = fixVietnameseM
                 if (studentSelectValue === "other") {
                     let customName = document.getElementById("eventCustomStudentName").value.trim();
                     if (!customName) {
-                        alert("Vui lòng nhập tên học sinh mới!");
+                        showToast("Vui lòng nhập tên học sinh mới!", "warning");
                         return;
                     }
                     
@@ -6241,7 +6263,9 @@ function applyTheme(themeId) {
     'theme-mystic-blue-minimal', 'theme-blossom-noir-full', 'theme-blossom-noir-minimal',
     'theme-violet-planet-full', 'theme-violet-planet-minimal'
   ];
-  root.setAttribute('data-theme', darkThemes.indexOf(themeId) !== -1 ? 'dark' : 'light');
+  var isDark = darkThemes.indexOf(themeId) !== -1;
+  root.setAttribute('data-theme', isDark ? 'dark' : 'light');
+  root.style.colorScheme = isDark ? 'dark' : 'light';
 
   // 4. Đồng bộ active state trong switcher panel
   document.querySelectorAll('#themeSwitcherPanel [data-theme]').forEach(function(el) {
@@ -6266,6 +6290,11 @@ function applyTheme(themeId) {
       calendar.render();
     }
   }
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: 'themeChangedFromCalendar', theme: themeId }, '*');
+    }
+  } catch(e) {}
 }
 
 function openThemeSwitcher() {
@@ -6421,11 +6450,7 @@ function applyCustomTheme(silent, explicitHex) {
   var vars = hex ? computeCustomThemeVars(hex) : null;
   if (!vars) {
     if (!silent) {
-      if (typeof showToast === 'function') {
-        showToast('Mã màu không hợp lệ. Vui lòng nhập đúng #RRGGBB (ví dụ: #2563EB)', 'error');
-      } else {
-        alert('Mã màu không hợp lệ. Vui lòng nhập đúng #RRGGBB (ví dụ: #2563EB)');
-      }
+      showToast('Mã màu không hợp lệ. Vui lòng nhập đúng #RRGGBB (ví dụ: #2563EB)', 'error');
     }
     return;
   }
@@ -6443,6 +6468,7 @@ function applyCustomTheme(silent, explicitHex) {
     root.style.setProperty(prop, vars[prop]);
   });
   root.setAttribute('data-theme', 'light');
+  root.style.colorScheme = 'light';
 
   try { localStorage.setItem(window.__tutorThemeKey(), 'custom:' + hex); } catch(e) {}
 
@@ -6463,6 +6489,11 @@ function applyCustomTheme(silent, explicitHex) {
     if (typeof calendar.refetchEvents === 'function') calendar.refetchEvents();
     if (typeof calendar.render === 'function') calendar.render();
   }
+  try {
+    if (window.parent && window.parent !== window) {
+      window.parent.postMessage({ type: 'themeChangedFromCalendar', theme: 'custom:' + hex }, '*');
+    }
+  } catch(e) {}
   if (!silent && typeof showToast === 'function') showToast('Đã áp dụng màu tùy chỉnh!', 'success');
 }
 

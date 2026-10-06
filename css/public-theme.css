@@ -528,15 +528,44 @@ html { scroll-behavior: smooth; }
 }
 
 /* Prevent horizontal overflow */
-html, body {
-  overflow-x: hidden !important;
+html {
+  overflow-x: clip !important;
+  overflow-y: auto !important;
   max-width: 100vw !important;
   width: 100% !important;
-  touch-action: pan-y;
+  -webkit-overflow-scrolling: touch;
+}
+body {
+  overflow-x: clip !important;
+  overflow-y: visible !important;
+  max-width: 100% !important;
+  width: 100% !important;
   position: relative;
+  -webkit-overflow-scrolling: touch;
 }
 
-/* Better tap experience */
+/* Better tap experience & 0ms tap delay (Universal cho mọi màn hình) */
+*, *::before, *::after {
+  touch-action: manipulation;
+}
+
+button, a, input, select, textarea, [onclick], label, [role="button"], .btn-cta, .btn-cta-big-demo, .nav-btn, .bottom-nav-item, .zt-btn-primary {
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+
+button:active,
+a.btn-cta:active,
+a.btn-cta-big-demo:active,
+.zt-btn-primary:active,
+.hw-kpi-card:active,
+.summary-card:active,
+.hw-assigned-card:active,
+.bottom-nav-item:active {
+  transform: scale(0.95) !important;
+  transition: transform 0.05s ease !important;
+}
+
 @media (max-width: 768px) {
   button, a, [onclick], label {
     -webkit-tap-highlight-color: transparent;

@@ -166,6 +166,26 @@ function parseInputDate(str) {
 }
 window.parseInputDate = parseInputDate;
 
+// Helper định dạng ngày chỉ lấy ngày/tháng (DD/MM) chuẩn xác từ mọi định dạng
+function formatDateOnly(dStr) {
+    if (!dStr || dStr === "-" || dStr === "null" || dStr === "—") return "-";
+    var d = parseInputDate(dStr);
+    if (d && !isNaN(d.getTime())) {
+        return String(d.getDate()).padStart(2, '0') + '/' + String(d.getMonth() + 1).padStart(2, '0');
+    }
+    return String(dStr);
+}
+window.formatDateOnly = formatDateOnly;
+
+if (typeof window.escapeHtml !== 'function') {
+    window.escapeHtml = function(v) {
+        if (v === null || v === undefined) return '';
+        return String(v).replace(/[&<>"'`]/g, function (c) {
+            return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;', '`': '&#96;' }[c];
+        });
+    };
+}
+
 // Helper phân tích ngày học linh hoạt từ mọi định dạng
 function parseLessonDate(rawStr) {
     if (!rawStr) return null;
@@ -222,8 +242,11 @@ function renderStudentView(ketQua) {
         studentPhone = '0' + studentPhone;
     }
     
-    var lopHoc = ketQua.lop || "Đang cập nhật";
-    if ((lopHoc === "Đang cập nhật" || !lopHoc) && lichSu.length > 0) {
+    var lopHoc = (ketQua.monHoc && ketQua.monHoc.trim()) 
+        || (ketQua.thongTinHocSinh && (ketQua.thongTinHocSinh.monHoc || ketQua.thongTinHocSinh.subjects)) 
+        || ketQua.lop 
+        || "";
+    if (!lopHoc && lichSu.length > 0) {
         for (var k = 0; k < lichSu.length; k++) {
             if (lichSu[k].mon) {
                 lopHoc = lichSu[k].mon;
@@ -231,6 +254,7 @@ function renderStudentView(ketQua) {
             }
         }
     }
+    if (!lopHoc) lopHoc = "Đang cập nhật";
     
     var loiChaoEl = document.getElementById('loiChao');
     if (loiChaoEl) {
@@ -400,7 +424,29 @@ function renderStudentView(ketQua) {
     });
 
     var chartCanvas = document.getElementById('diemChart');
-    if (chartCanvas && labels.length > 0) {
+    var chartLegendWrap = document.querySelector('.chart-legend-wrapper');
+    var chartInstruction = document.querySelector('.chart-instruction');
+    var emptyChartEl = document.getElementById('diemChartEmptyState');
+
+    if (!chartCanvas || labels.length === 0) {
+        if (chartCanvas) chartCanvas.style.display = 'none';
+        if (chartLegendWrap) chartLegendWrap.style.display = 'none';
+        if (chartInstruction) chartInstruction.style.display = 'none';
+        if (!emptyChartEl && chartCanvas && chartCanvas.parentElement) {
+            emptyChartEl = document.createElement('div');
+            emptyChartEl.id = 'diemChartEmptyState';
+            emptyChartEl.style.cssText = 'padding: 40px 16px; text-align: center; color: #94A3B8; font-size: 13.5px; display: flex; flex-direction: column; align-items: center; justify-content: center; min-height: 180px;';
+            emptyChartEl.innerHTML = '<i class="fa-solid fa-chart-line" style="font-size: 32px; color: #CBD5E1; margin-bottom: 10px;"></i><span>Chưa có dữ liệu điểm kiểm tra để hiển thị biểu đồ</span>';
+            chartCanvas.parentElement.appendChild(emptyChartEl);
+        } else if (emptyChartEl) {
+            emptyChartEl.style.display = 'flex';
+        }
+    } else {
+        if (chartCanvas) chartCanvas.style.display = 'block';
+        if (chartLegendWrap) chartLegendWrap.style.display = 'flex';
+        if (chartInstruction) chartInstruction.style.display = 'block';
+        if (emptyChartEl) emptyChartEl.style.display = 'none';
+
         var ctx = chartCanvas.getContext('2d');
 
         // 1. Tạo linear gradient fill chuyển sắc mượt mà chuẩn phong cách Hình 1
@@ -591,36 +637,6 @@ function renderStudentView(ketQua) {
             return '<span class="status-badge badge-hoanthanh">' + escapeHtml(raw) + '</span>';
         };
 
-        // Helper định dạng ngày chỉ lấy ngày/tháng, bỏ thứ (Ví dụ: "22/09")
-        function formatDateOnly(dStr) {
-            if (typeof window.formatDateOnly === 'function') return window.formatDateOnly(dStr);
-            if (!dStr || dStr === "-" || dStr === "null") return "-";
-            var s = String(dStr).trim();
-            s = s.replace(/^(thứ\s*\d+|chủ nhật|cn)\s*[,.-]?\s*/i, '').trim();
-            var day = null, month = null;
-            var mIso = s.match(/^(\d{4})[-/.](\d{1,2})[-/.](\d{1,2})/);
-            if (mIso) {
-                month = parseInt(mIso[2], 10);
-                day = parseInt(mIso[3], 10);
-            } else {
-                var mDmy = s.match(/^(\d{1,2})[-/.](\d{1,2})[-/.](\d{4})/);
-                if (mDmy) {
-                    day = parseInt(mDmy[1], 10);
-                    month = parseInt(mDmy[2], 10);
-                } else {
-                    var mDm = s.match(/^(\d{1,2})[-/.](\d{1,2})/);
-                    if (mDm) {
-                        day = parseInt(mDm[1], 10);
-                        month = parseInt(mDm[2], 10);
-                    }
-                }
-            }
-            if (day && month) {
-                return String(day).padStart(2, '0') + '/' + String(month).padStart(2, '0');
-            }
-            return s;
-        }
-
         // 1. Desktop View (Bảng Table)
         htmlLichSu += "<div class='table-wrapper desktop-table-view'>";
         htmlLichSu += "<table class='history-table'>";
@@ -636,7 +652,7 @@ function renderStudentView(ketQua) {
             "<th style='width: 78px; text-align: center;'>Trạng thái</th>" +
             "</tr></thead><tbody>";
 
-        // 2. Mobile View (Thẻ Accordion Cards y hệt Gia sư)
+        // 2. Mobile View (Thẻ Accordion Cards)
         htmlMobile = "<div class='mobile-cards-view' id='studentHistoryMobile'>";
 
         var reversedList = lichSu.slice().reverse();
@@ -648,11 +664,12 @@ function renderStudentView(ketQua) {
             var btvnValue = isAbsent ? "-" : (item.danhGiaBTVN || item.btvn || "");
             var diemDau = item.diemDauGio !== undefined && item.diemDauGio !== null ? item.diemDauGio : item.diemDG;
             var diemDinh = item.diemDinhKi !== undefined && item.diemDinhKi !== null ? item.diemDinhKi : item.diemDK;
-            var tuanVal = item.tuan !== undefined && item.tuan !== null && item.tuan !== '' ? item.tuan : (item.buoi || item.rowIndex || (idx + 1));
+            var rawTuan = (item.tuan !== undefined && item.tuan !== null && String(item.tuan).trim() !== '' && String(item.tuan).trim() !== '-' && String(item.tuan).trim() !== '—') 
+                ? String(item.tuan).trim() 
+                : (item.buoi || item.rowIndex || (reversedList.length - idx));
+            var tuanDisplay = isNaN(rawTuan) ? rawTuan : ('Tuần ' + rawTuan);
             
-            var rawDateOnly = (typeof window.formatDateOnly === 'function') 
-                ? window.formatDateOnly(item.ngay) 
-                : (typeof formatDateOnly === 'function' ? formatDateOnly(item.ngay) : (item.ngay || "—"));
+            var rawDateOnly = formatDateOnly(item.ngay || item.studyDate);
 
             var parsedContent = item.noiDung || item.topic || '-';
             var parsedNhanXet = (item.nhanXet || item.nhan_xet || item["nhận xét"] || item.tutor_comment || item.comment || "").trim();
@@ -677,7 +694,8 @@ function renderStudentView(ketQua) {
             var ktDauGioColor = (ktDauGioText === 'Không có' || ktDauGioText === '—' || ktDauGioText === '-') ? 'var(--text-secondary)' : scoreColor(diemDau);
             var ktDinhKiColor = hasDiemDinh ? scoreColor(rawDinhStr) : 'var(--text-secondary)';
 
-            var tuanValH = escapeHtml(tuanVal);
+            var tuanValH = escapeHtml(rawTuan);
+            var tuanDisplayH = escapeHtml(tuanDisplay);
             var rawDateOnlyH = escapeHtml(rawDateOnly);
             var ktDauGioTextH = escapeHtml(ktDauGioText);
             var ktDinhKiTextH = escapeHtml(ktDinhKiText);
@@ -696,13 +714,13 @@ function renderStudentView(ketQua) {
                     '<td style="text-align: center;">' + getStatusBadge(item.trangThai || item.chuyenCan, isAbsent) + '</td>' +
                 '</tr>';
 
-            // --- Mobile Accordion Card (Theo đúng mẫu ảnh media_1790923332447.png) ---
+            // --- Mobile Accordion Card ---
             var mobileStyleStr = isHidden ? 'style="display: none;" class="accordion-item student-history-row student-hidden-row"' : 'class="accordion-item student-history-row"';
             htmlMobile += '<div ' + mobileStyleStr + '>';
             htmlMobile += '  <div class="accordion-header" onclick="toggleStudentAccordion(' + idx + ')">';
             htmlMobile += '    <div style="display: flex; align-items: center;">';
             htmlMobile += '      <div class="accordion-header-title">';
-            htmlMobile += '        <span style="font-size: 15px; font-weight: 700; color: var(--text-primary);">' + tuanValH + '</span>';
+            htmlMobile += '        <span style="font-size: 15px; font-weight: 700; color: var(--text-primary);">' + tuanDisplayH + '</span>';
             htmlMobile += '        <span class="accordion-header-date">' + rawDateOnlyH + '</span>';
             htmlMobile += '      </div>';
             htmlMobile += '    </div>';
@@ -1230,14 +1248,19 @@ function lamMoiLichSuHocTap() {
     var icon = btn ? btn.querySelector('i') : null;
     if (icon) icon.classList.add('fa-spin');
     
-    if (typeof google !== 'undefined' && google.script && google.script.run && google.script.run.traCuuThongTin) {
-        var studentPhone = sessionStorage.getItem('userPhone') || localStorage.getItem('userPhone') || "";
+    var studentPhone = sessionStorage.getItem('userPhone') || localStorage.getItem('userPhone') || "";
+    var selectedChild = sessionStorage.getItem('selectedChild') || "";
+    
+    if (typeof google !== 'undefined' && google.script && google.script.run) {
         google.script.run
             .withSuccessHandler(function(res) {
                 if (icon) icon.classList.remove('fa-spin');
-                if (res && res.timThay) {
-                    sessionStorage.setItem('dashboardData', JSON.stringify(res));
-                    renderStudentView(res);
+                var studentData = (res && res.role === 'student' && res.data && res.data.timThay) 
+                    ? res.data 
+                    : (res && res.data && res.data.timThay ? res.data : (res && res.timThay ? res : null));
+                if (studentData) {
+                    sessionStorage.setItem('dashboardData', JSON.stringify(studentData));
+                    renderStudentView(studentData);
                     showToast('Đã làm mới dữ liệu học tập!', 'success');
                 } else {
                     showToast('Không có dữ liệu mới.', 'info');
@@ -1245,9 +1268,9 @@ function lamMoiLichSuHocTap() {
             })
             .withFailureHandler(function(err) {
                 if (icon) icon.classList.remove('fa-spin');
-                showToast('Lỗi khi tải dữ liệu: ' + err.toString(), 'error');
+                showToast('Lỗi khi tải dữ liệu: ' + (err.message || err.toString()), 'error');
             })
-            .traCuuThongTin(studentPhone);
+            .loginSystem(studentPhone, '', selectedChild);
     } else {
         setTimeout(function() {
             if (icon) icon.classList.remove('fa-spin');
@@ -1288,8 +1311,16 @@ function guiPhanHoiPhuHuynh() {
         return;
     }
     
-    var maHS = sessionStorage.getItem('userPhone') || "";
+    var maHS = sessionStorage.getItem('userPhone') || localStorage.getItem('userPhone') || "";
     var tenHocSinh = currentStudentName;
+    if (!tenHocSinh || !maHS) {
+        try {
+            var cached = JSON.parse(sessionStorage.getItem('dashboardData') || localStorage.getItem('dashboardData') || '{}');
+            if (!tenHocSinh) tenHocSinh = cached.tenHocSinh || cached.studentName || '';
+            if (!maHS) maHS = cached.studentId || cached.sdt || '';
+        } catch(e) {}
+    }
+    if (!tenHocSinh) tenHocSinh = "Phụ huynh";
     
     btn.disabled = true;
     btn.innerHTML = 'Đang gửi... <i class="fa-solid fa-circle-notch fa-spin"></i>';
@@ -1301,26 +1332,29 @@ function guiPhanHoiPhuHuynh() {
             .withSuccessHandler(function(response) {
                 btn.disabled = false;
                 btn.innerHTML = 'Gửi phản hồi <i class="fa-regular fa-paper-plane"></i>';
-                if (response && response.thanhCong) {
+                if (response && (response.thanhCong || response.success)) {
                     textarea.value = "";
                     msg.innerText = "Gửi phản hồi thành công! Cảm ơn ý kiến đóng góp của phụ huynh.";
                     msg.className = "feedback-message-status success";
                     msg.style.display = "block";
+                    showToast('Gửi phản hồi thành công!', 'success');
                     setTimeout(function() {
                         msg.style.display = "none";
                     }, 5000);
                 } else {
-                    msg.innerText = "Lỗi khi gửi: " + (response.thongBao || "Không rõ nguyên nhân.");
+                    msg.innerText = "Lỗi khi gửi: " + (response && (response.thongBao || response.error) ? (response.thongBao || response.error) : "Không rõ nguyên nhân.");
                     msg.className = "feedback-message-status error";
                     msg.style.display = "block";
+                    showToast('Lỗi khi gửi phản hồi', 'error');
                 }
             })
             .withFailureHandler(function(err) {
                 btn.disabled = false;
                 btn.innerHTML = 'Gửi phản hồi <i class="fa-regular fa-paper-plane"></i>';
-                msg.innerText = "Lỗi hệ thống: " + err.toString();
+                msg.innerText = "Lỗi hệ thống: " + (err.message || err.toString());
                 msg.className = "feedback-message-status error";
                 msg.style.display = "block";
+                showToast('Lỗi hệ thống khi gửi', 'error');
             })
             .guiPhanHoi(maHS, tenHocSinh, content);
     } else {

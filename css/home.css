@@ -3,18 +3,52 @@
    Hệ thống Quản lý Gia sư 1-1 & Tra cứu Học tập - Space Dark Theme 4.0
    ========================================================================== */
 
-/* Cố định khung hình tuyệt đối trên điện thoại di động - Chống rung lắc trái phải khi cuộn */
-html, body {
-    overflow-x: hidden !important;
-    max-width: 100vw !important;
+/* Cố định khung hình chuẩn hiện đại - Chống rung lắc ngang mà không làm kẹt cuộn trên điện thoại */
+html {
+    overflow-x: clip !important;
+    overflow-y: auto !important;
     width: 100% !important;
-    touch-action: pan-y;
+    max-width: 100vw !important;
+    -webkit-overflow-scrolling: touch;
+    touch-action: manipulation;
+}
+
+body {
+    overflow-x: clip !important;
+    overflow-y: visible !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    min-height: 100vh;
+    -webkit-overflow-scrolling: touch;
+    touch-action: manipulation;
+}
+
+/* Triệt tiêu 300ms tap delay trên toàn bộ các nút bấm và liên kết */
+*, *::before, *::after {
+    touch-action: manipulation;
+}
+
+button, a, input, select, textarea, [role="button"], .btn-cta, .btn-cta-big-demo, .nav-btn, .bottom-nav-item, .nav-install-btn {
+    touch-action: manipulation;
+    -webkit-tap-highlight-color: transparent;
+    -webkit-touch-callout: none;
+}
+
+/* Phản hồi cảm ứng vật lý tức thì (0ms) khi nhấn ngón tay trên điện thoại */
+.btn-cta:active,
+.btn-cta-big-demo:active,
+.nav-btn:active,
+.nav-install-btn:active,
+.bottom-nav-item:active,
+button:active {
+    transform: scale(0.96) !important;
+    transition: transform 0.05s ease-out !important;
 }
 
 .main-container {
     width: 100% !important;
     max-width: 100% !important;
-    overflow-x: hidden !important;
+    overflow: visible !important;
     box-sizing: border-box !important;
 }
 
@@ -29,7 +63,7 @@ html, body {
     flex-direction: column;
     align-items: center;
     position: relative;
-    overflow: hidden;
+    overflow: visible;
     box-sizing: border-box;
     z-index: 10;
 }
@@ -143,6 +177,56 @@ html, body {
     background: rgba(255, 255, 255, 0.1);
     transform: translateY(-3px);
 }
+
+/* Nút Trải Nghiệm Web Demo Lớn */
+.btn-cta-big-demo {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 16px 38px;
+    font-size: 16.5px;
+    font-weight: 800;
+    color: #FFFFFF !important;
+    background: linear-gradient(135deg, #7C3AED 0%, #4F46E5 50%, #2563EB 100%) !important;
+    border-radius: 50px;
+    text-decoration: none !important;
+    box-shadow: 0 10px 25px -4px rgba(79, 70, 229, 0.45), 0 4px 10px rgba(124, 58, 237, 0.3) !important;
+    border: 2px solid rgba(255, 255, 255, 0.4) !important;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    letter-spacing: 0.3px;
+    cursor: pointer;
+}
+.btn-cta-big-demo:hover {
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 16px 36px -4px rgba(79, 70, 229, 0.65), 0 6px 14px rgba(124, 58, 237, 0.4) !important;
+    filter: brightness(1.06);
+}
+.btn-cta-big-demo:active {
+    transform: scale(0.96) !important;
+    box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4) !important;
+    transition: transform 0.05s ease-out !important;
+}
+.btn-cta-big-demo .demo-icon-badge {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.22);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+}
+@media (max-width: 640px) {
+    .btn-cta-big-demo {
+        width: 100%;
+        max-width: 380px;
+        padding: 14px 22px;
+        font-size: 15px;
+    }
+}
+
+
 
 /* 2. Impact Metrics Grid */
 .metrics-grid {
@@ -1138,7 +1222,7 @@ html, body {
 }
 
 /* ===== PHASE 18 — HERO UPGRADE ===== */
-.hero-section { position: relative; overflow: hidden; width: 100%; max-width: 100%; box-sizing: border-box; }
+.hero-section { position: relative; overflow: visible; width: 100%; max-width: 100%; box-sizing: border-box; }
 .hero-section::before {
   content: ''; position: absolute;
   top: -60px; left: 50%; transform: translateX(-50%);
@@ -1182,14 +1266,7 @@ html, body {
 }
 .btn-cta-primary:hover { background: #EFF6FF !important; border-color: #3B82F6 !important; transform: translateY(-3px) !important; }
 
-/* Quick demo bar upgrade */
-.hero-quick-demo {
-  background: #FFFFFF !important;
-  border: 1px solid #DBEAFE !important;
-  border-radius: 18px !important;
-  box-shadow: 0 4px 16px rgba(59,130,246,0.08) !important;
-  padding: 14px 22px !important;
-}
+
 
 /* ===== PHASE 18 — PILLARS GLASSMORPHISM ===== */
 .pillar-card {

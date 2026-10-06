@@ -9,7 +9,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        html, body, button, a, input, select, textarea, [role="button"], .nav-btn, .btn-submit, .action-btn-hw {
+        button, a, input, select, textarea, [role="button"], .nav-btn, .btn-submit, .action-btn-hw {
             touch-action: manipulation;
             -webkit-tap-highlight-color: transparent;
         }
@@ -26,11 +26,12 @@
             transition: transform 0.05s ease !important;
         }
 
-        html, body {
-            overflow-x: hidden !important;
+        html {
+            overflow-x: clip !important;
+            overflow-y: auto !important;
             max-width: 100vw !important;
             width: 100% !important;
-            touch-action: pan-y;
+            -webkit-overflow-scrolling: touch;
         }
 
         body {
@@ -43,8 +44,100 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            overflow-x: hidden !important;
+            overflow-x: clip !important;
+            overflow-y: visible !important;
+            width: 100% !important;
+            max-width: 100% !important;
             position: relative;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* ================= DARK THEME & FORM CONTROLS COLOR SCHEME ================= */
+        html[data-theme="dark"],
+        :root[data-theme="dark"],
+        body[data-theme="dark"],
+        .theme-dark-purple,
+        .theme-dreamy-cosmic-full,
+        .theme-dreamy-cosmic-minimal,
+        .theme-neon-seoul-full,
+        .theme-neon-seoul-minimal,
+        .theme-mystic-blue-full,
+        .theme-mystic-blue-minimal,
+        .theme-blossom-noir-full,
+        .theme-blossom-noir-minimal,
+        .theme-violet-planet-full,
+        .theme-violet-planet-minimal {
+            color-scheme: dark !important;
+        }
+
+        html[data-theme="light"],
+        :root[data-theme="light"],
+        body[data-theme="light"] {
+            color-scheme: light !important;
+        }
+
+        /* Thẻ select & option toàn cục */
+        select {
+            color-scheme: inherit;
+        }
+
+        select option,
+        select optgroup {
+            background-color: var(--bg-card, #1A163A);
+            color: var(--text-primary, #FFFFFF);
+            padding: 8px 12px;
+        }
+
+        /* Nền tối: select & option hiển thị màu tối đặc, chữ trắng rõ nét */
+        [data-theme="dark"] select,
+        .theme-dark-purple select,
+        .theme-dreamy-cosmic-full select,
+        .theme-dreamy-cosmic-minimal select,
+        .theme-neon-seoul-full select,
+        .theme-neon-seoul-minimal select,
+        .theme-mystic-blue-full select,
+        .theme-mystic-blue-minimal select,
+        .theme-blossom-noir-full select,
+        .theme-blossom-noir-minimal select,
+        .theme-violet-planet-full select,
+        .theme-violet-planet-minimal select {
+            color-scheme: dark !important;
+            background-color: var(--bg-input, rgba(255, 255, 255, 0.06));
+            color: var(--text-primary, #FFFFFF) !important;
+            border-color: var(--border-color, rgba(255, 255, 255, 0.15));
+        }
+
+        [data-theme="dark"] select option,
+        [data-theme="dark"] select optgroup,
+        .theme-dark-purple select option,
+        .theme-dreamy-cosmic-full select option,
+        .theme-dreamy-cosmic-minimal select option,
+        .theme-neon-seoul-full select option,
+        .theme-neon-seoul-minimal select option,
+        .theme-mystic-blue-full select option,
+        .theme-mystic-blue-minimal select option,
+        .theme-blossom-noir-full select option,
+        .theme-blossom-noir-minimal select option,
+        .theme-violet-planet-full select option,
+        .theme-violet-planet-minimal select option {
+            background-color: #161233 !important;
+            color: #FFFFFF !important;
+        }
+
+        /* Nền sáng: select & option hiển thị màu sáng */
+        [data-theme="light"] select option,
+        [data-theme="light"] select optgroup,
+        html[data-theme="light"] select option {
+            background-color: #FFFFFF !important;
+            color: #0F172A !important;
+        }
+
+        /* Hỗ trợ trường chọn ngày/tháng/giờ trên nền tối */
+        [data-theme="dark"] input[type="date"],
+        [data-theme="dark"] input[type="time"],
+        [data-theme="dark"] input[type="month"],
+        [data-theme="dark"] input[type="datetime-local"] {
+            color-scheme: dark !important;
         }
 
         /* ================= HEADER ================= */
@@ -1717,6 +1810,8 @@
             margin: 0 !important;
             padding: 0 !important;
             box-sizing: border-box;
+            position: static !important;
+            z-index: auto !important;
         }
 
         .tutor-sidebar {
@@ -2181,8 +2276,16 @@
         }
 
         @media (max-width: 768px) {
+            #tutorDashboardBox {
+                position: static !important;
+                z-index: auto !important;
+            }
+
             .tutor-mobile-header {
                 display: flex !important;
+                position: sticky !important;
+                top: 0 !important;
+                z-index: 10005 !important;
             }
 
             .sidebar-overlay {
@@ -2192,7 +2295,7 @@
                 background: rgba(15, 23, 42, 0.65) !important;
                 backdrop-filter: blur(4px) !important;
                 -webkit-backdrop-filter: blur(4px) !important;
-                z-index: 1050 !important;
+                z-index: 10010 !important;
                 opacity: 0 !important;
                 visibility: hidden !important;
                 transition: opacity 0.25s ease, visibility 0.25s ease !important;
@@ -2222,7 +2325,7 @@
                 justify-content: space-between !important;
                 align-items: stretch !important;
                 padding: 16px 14px 20px 14px !important;
-                z-index: 1060 !important;
+                z-index: 10020 !important;
                 box-shadow: 10px 0 35px rgba(0, 0, 0, 0.45) !important;
                 transition: left 0.28s cubic-bezier(0.4, 0, 0.2, 1) !important;
                 overflow-y: auto !important;
@@ -2543,7 +2646,7 @@
         .kpi-value {
             font-size: 26px;
             font-weight: 800;
-            font-family: 'Space Grotesk', 'Inter', sans-serif;
+            font-family: 'Plus Jakarta Sans', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
             letter-spacing: -0.5px;
             margin: 12px 0 6px 0;
             line-height: 1.1;
@@ -3412,7 +3515,40 @@
                 justify-content: flex-start;
             }
             .students-cards-grid {
-                grid-template-columns: 1fr;
+                grid-template-columns: minmax(0, 1fr) !important;
+                width: 100% !important;
+            }
+            .student-profile-card {
+                min-width: 0 !important;
+                max-width: 100% !important;
+                box-sizing: border-box !important;
+                padding: 16px 14px !important;
+            }
+            .student-card-metrics {
+                grid-template-columns: repeat(3, minmax(0, 1fr)) !important;
+                gap: 6px !important;
+            }
+            .card-metric-box {
+                min-width: 0 !important;
+                overflow: hidden !important;
+                padding: 6px 2px !important;
+            }
+            .card-metric-val, .card-metric-lbl {
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                white-space: nowrap !important;
+            }
+            .student-card-actions {
+                min-width: 0 !important;
+                gap: 6px !important;
+            }
+            .btn-card-detail, .btn-card-diary {
+                min-width: 0 !important;
+                white-space: nowrap !important;
+                overflow: hidden !important;
+                text-overflow: ellipsis !important;
+                padding: 8px 8px !important;
+                font-size: 11.5px !important;
             }
         }
 
@@ -3641,6 +3777,93 @@
             border-color: var(--color-primary);
             color: var(--btn-text);
             box-shadow: var(--shadow-primary);
+        }
+
+        /* Student Subject Pills (Add/Edit Student Modal) */
+        .student-subject-pills {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            width: 100%;
+        }
+        .student-sub-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 14px;
+            border-radius: 10px;
+            background: var(--bg-input);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 13px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+        .student-sub-pill:hover {
+            background: var(--nav-hover-bg);
+            border-color: var(--color-primary);
+            color: var(--text-primary);
+        }
+        .student-sub-pill.active {
+            background: var(--btn-bg);
+            border-color: var(--color-primary);
+            color: var(--btn-text);
+            box-shadow: var(--shadow-primary);
+        }
+        .student-sub-pill-add {
+            border-style: dashed;
+            background: transparent;
+            color: var(--color-primary);
+        }
+
+        /* 1-Click Diary Subject Buttons (Add/Edit Lesson Modal) */
+        .lesson-sub-group {
+            display: flex;
+            gap: 8px;
+            width: 100%;
+        }
+        .lesson-sub-btn {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 10px 14px;
+            border-radius: 10px;
+            background: var(--bg-input);
+            border: 1.5px solid var(--border-color);
+            color: var(--text-secondary);
+            font-size: 13.5px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+            outline: none;
+        }
+        .lesson-sub-btn:hover {
+            background: var(--nav-hover-bg);
+            border-color: var(--color-primary);
+            color: var(--text-primary);
+        }
+        .lesson-sub-btn.active {
+            background: var(--btn-bg);
+            border-color: var(--color-primary);
+            color: var(--btn-text);
+            box-shadow: var(--shadow-primary);
+        }
+        .lesson-sub-fixed {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 14px;
+            background: var(--nav-active-bg);
+            border: 1.5px solid var(--border-color);
+            border-radius: 10px;
+            font-weight: 600;
+            color: var(--color-primary);
+            font-size: 13.5px;
         }
 
         /* Tuition Section Styles */
@@ -4127,7 +4350,7 @@
         }
 
         .report-date-input {
-            color-scheme: dark;
+            color-scheme: inherit;
             min-width: 140px;
         }
 
@@ -4184,7 +4407,7 @@
             margin: 0;
             border: none;
             background: transparent;
-            color-scheme: dark;
+            color-scheme: inherit;
         }
 
         .report-select {
@@ -4857,13 +5080,37 @@
             box-sizing: border-box;
         }
 
-        @media (max-width: 480px) {
+        @media (max-width: 768px) {
             .modal-overlay {
-                padding: 12px 10px;
+                padding: 12px 10px !important;
+                align-items: flex-start !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
             }
             .modal-content {
                 padding: 20px 16px !important;
                 border-radius: 16px !important;
+                max-height: calc(100vh - 24px) !important;
+                overflow-y: auto !important;
+                -webkit-overflow-scrolling: touch !important;
+                margin: auto !important;
+                width: 100% !important;
+            }
+            .modal-footer {
+                position: sticky !important;
+                bottom: -20px !important;
+                background: var(--glass-bg, var(--bg-card, #ffffff)) !important;
+                padding-top: 12px !important;
+                padding-bottom: 8px !important;
+                margin-top: 20px !important;
+                z-index: 15 !important;
+                box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.06) !important;
+                backdrop-filter: blur(12px) !important;
+                -webkit-backdrop-filter: blur(12px) !important;
+            }
+            .modal-btn {
+                padding: 10px 16px !important;
+                font-size: 13.5px !important;
             }
             .invoice-container {
                 padding: 18px 14px !important;
@@ -4930,6 +5177,23 @@
             font-size: 14px;
             line-height: 1.5;
             box-sizing: border-box;
+        }
+        .modal-form-group select {
+            color-scheme: inherit;
+            cursor: pointer;
+        }
+        .modal-form-group select option {
+            background-color: var(--bg-card, #161233);
+            color: var(--text-primary, #FFFFFF);
+            padding: 8px 12px;
+        }
+        [data-theme="dark"] .modal-form-group select option {
+            background-color: #161233 !important;
+            color: #FFFFFF !important;
+        }
+        [data-theme="light"] .modal-form-group select option {
+            background-color: #FFFFFF !important;
+            color: #0F172A !important;
         }
         .modal-form-group input:focus, .modal-form-group select:focus, .modal-form-group textarea:focus {
             border-color: var(--color-primary);
@@ -5518,6 +5782,61 @@
             display: block !important;
         }
 
+        /* Tối ưu riêng tab Lịch trên điện thoại di động - Header luôn nổi, không bao giờ bị trôi hoặc kẹt */
+        @media (max-width: 768px) {
+            #tutorDashboardBox {
+                position: static !important;
+                z-index: auto !important;
+            }
+
+            body.calendar-tab-active .tutor-main-content {
+                padding: 0 !important;
+                height: 100vh !important;
+                height: 100dvh !important;
+                max-height: 100vh !important;
+                max-height: 100dvh !important;
+            }
+
+            .tutor-mobile-header {
+                z-index: 10005 !important;
+                position: sticky !important;
+                top: 0 !important;
+                flex-shrink: 0 !important;
+                width: 100% !important;
+            }
+
+            .sidebar-overlay {
+                z-index: 10010 !important;
+            }
+
+            .tutor-sidebar {
+                z-index: 10020 !important;
+            }
+
+            body.calendar-tab-active #tutorSectionCalendar {
+                height: calc(100vh - 56px) !important;
+                height: calc(100dvh - 56px) !important;
+                max-height: calc(100vh - 56px) !important;
+                max-height: calc(100dvh - 56px) !important;
+                flex: 1 !important;
+                min-height: 0 !important;
+                border-radius: 0 !important;
+            }
+
+            body.calendar-tab-active .calendar-embed-wrapper {
+                min-height: 0 !important;
+                border-radius: 0 !important;
+                border-left: none !important;
+                border-right: none !important;
+                border-bottom: none !important;
+            }
+
+            body.calendar-tab-active #tutorCalendarIframe {
+                min-height: 0 !important;
+            }
+
+        }
+
         /* ===========================
            PHASE 14 — GLOBAL MOBILE POLISH
            =========================== */
@@ -5714,8 +6033,19 @@ body.logged-in .bottom-nav,
   .mobile-nav-dropdown  { display: none !important; }
 
   /* Padding bottom để content không bị bottom nav che */
-  body { padding-bottom: calc(68px + env(safe-area-inset-bottom, 0px)) !important; }
+  body { padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px)) !important; }
   body.logged-in { padding-bottom: 24px !important; }
+
+  /* iOS Auto-zoom prevention on inputs */
+  input[type="text"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="email"],
+  select,
+  textarea {
+    font-size: 16px !important;
+  }
 }
 
 /* ===== PHASE 17 — HEADER COMPACT ===== */
@@ -6614,6 +6944,12 @@ body {
     background: transparent;
     z-index: 9997;
     pointer-events: auto;
+}
+
+@media (max-width: 768px) {
+    .onboarding-backdrop {
+        top: max(56px, calc(env(safe-area-inset-top, 0px) + 56px)) !important;
+    }
 }
 
 .onboarding-spotlight {

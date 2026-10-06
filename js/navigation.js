@@ -86,10 +86,40 @@
             
             loiHienThi.style.display = "none";
             loadingText.style.display = 'block';
+
+            var btnSubmit = (role === 'tutor') ? document.getElementById('btnSubmitGiaSu') : document.getElementById('btnSubmitPhHs');
+            if (btnSubmit) {
+                btnSubmit.disabled = true;
+                var bIcon = btnSubmit.querySelector('.btn-icon');
+                var lIcon = btnSubmit.querySelector('.loading-icon');
+                if (bIcon) bIcon.classList.add('hidden');
+                if (lIcon) lIcon.classList.remove('hidden');
+            }
             
-            google.script.run.withSuccessHandler(function(ketQua) {
-                hienThiKetQua(ketQua, role, phone, pin);
-            }).loginSystem(phone, pin);
+            function resetBtnState() {
+                if (loadingText) loadingText.style.display = 'none';
+                if (btnSubmit) {
+                    btnSubmit.disabled = false;
+                    var bIcon = btnSubmit.querySelector('.btn-icon');
+                    var lIcon = btnSubmit.querySelector('.loading-icon');
+                    if (bIcon) bIcon.classList.remove('hidden');
+                    if (lIcon) lIcon.classList.add('hidden');
+                }
+            }
+
+            google.script.run
+                .withSuccessHandler(function(ketQua) {
+                    resetBtnState();
+                    hienThiKetQua(ketQua, role, phone, pin);
+                })
+                .withFailureHandler(function(err) {
+                    resetBtnState();
+                    if (loiHienThi) {
+                        loiHienThi.innerText = 'Lỗi kết nối máy chủ: ' + (err.message || err.toString());
+                        loiHienThi.style.display = 'block';
+                    }
+                })
+                .loginSystem(phone, pin);
         }
 
         function isSinglePageApp() {
@@ -196,17 +226,27 @@
             var modal = document.getElementById('childSelectorModal');
             var container = document.getElementById('childrenBtnContainer');
             if (!modal || !container) {
-                var names = childrenList.map(function(c) { return c.name; }).join(', ');
-                alert('Tìm thấy các học sinh: ' + names + '. Vui lòng chọn con.');
-                return;
+                modal = document.createElement('div');
+                modal.id = 'childSelectorModal';
+                modal.style.cssText = 'position: fixed; inset: 0; background: rgba(0,0,0,0.65); backdrop-filter: blur(6px); z-index: 99999; display: flex; align-items: center; justify-content: center; padding: 20px;';
+                modal.innerHTML = 
+                    '<div style="background: #FFFFFF; border-radius: 20px; padding: 24px; max-width: 420px; width: 100%; box-shadow: 0 20px 40px rgba(0,0,0,0.15); text-align: center; color: #1E293B;">' +
+                        '<div style="width: 50px; height: 50px; border-radius: 50%; background: #EFF6FF; color: #2563EB; font-size: 22px; display: flex; align-items: center; justify-content: center; margin: 0 auto 12px;"><i class="fa-solid fa-users"></i></div>' +
+                        '<h3 style="font-size: 18px; font-weight: 700; color: #1E293B; margin-bottom: 6px;">Chọn học sinh</h3>' +
+                        '<p style="font-size: 13px; color: #64748B; margin-bottom: 18px;">Số điện thoại này liên kết với nhiều con. Vui lòng chọn con bạn muốn tra cứu:</p>' +
+                        '<div id="childrenBtnContainer" style="display: flex; flex-direction: column; gap: 10px; margin-bottom: 16px;"></div>' +
+                        '<button type="button" onclick="this.closest(\'#childSelectorModal\').style.display=\'none\'" style="background: #F1F5F9; border: none; border-radius: 10px; padding: 10px 20px; font-weight: 600; font-size: 13px; color: #64748B; cursor: pointer;">Hủy bỏ</button>' +
+                    '</div>';
+                document.body.appendChild(modal);
+                container = modal.querySelector('#childrenBtnContainer');
             }
             
             container.innerHTML = '';
             childrenList.forEach(function(child) {
                 var btn = document.createElement('button');
                 btn.className = 'btn-child-select';
-                btn.style.cssText = 'width: 100%; padding: 14px 20px; margin-bottom: 10px; background: linear-gradient(135deg, #8E4DFF, #5B2EFF); border: none; border-radius: 14px; color: #FFF; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(142,77,255,0.3);';
-                btn.innerHTML = '<span><i class="fa-solid fa-user-graduate" style="margin-right:10px; color:#FFD23F;"></i>' + escapeHtml(child.name) + '</span> <i class="fa-solid fa-chevron-right" style="font-size:12px; opacity:0.8;"></i>';
+                btn.style.cssText = 'width: 100%; padding: 14px 20px; margin-bottom: 10px; background: linear-gradient(135deg, #2563EB, #1D4ED8); border: none; border-radius: 14px; color: #FFF; font-weight: 700; font-size: 15px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.2s ease; box-shadow: 0 4px 15px rgba(37,99,235,0.25);';
+                btn.innerHTML = '<span><i class="fa-solid fa-user-graduate" style="margin-right:10px; color:#93C5FD;"></i>' + (typeof escapeHtml === 'function' ? escapeHtml(child.name) : child.name) + '</span> <i class="fa-solid fa-chevron-right" style="font-size:12px; opacity:0.8;"></i>';
                 btn.onclick = function() {
                     chonConVaDangNhap(phone, child.name);
                 };
@@ -222,8 +262,23 @@
             var loadingText = document.getElementById('loadingText');
             if (loadingText) loadingText.style.display = 'block';
             
-            google.script.run.withSuccessHandler(function(ketQua) {
-                hienThiKetQua(ketQua, 'student', phone, '');
-            }).loginSystem(phone, '', childName);
+            try {
+                sessionStorage.setItem('selectedChild', childName);
+            } catch(e) {}
+            
+            google.script.run
+                .withSuccessHandler(function(ketQua) {
+                    if (loadingText) loadingText.style.display = 'none';
+                    hienThiKetQua(ketQua, 'student', phone, '');
+                })
+                .withFailureHandler(function(err) {
+                    if (loadingText) loadingText.style.display = 'none';
+                    var loiHienThi = document.getElementById('thongBaoLoi');
+                    if (loiHienThi) {
+                        loiHienThi.innerText = 'Lỗi kết nối khi chọn học sinh: ' + (err.message || err.toString());
+                        loiHienThi.style.display = 'block';
+                    }
+                })
+                .loginSystem(phone, '', childName);
         }
         

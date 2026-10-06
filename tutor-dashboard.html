@@ -3,20 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <script>window.__tutorThemeKey = window.__tutorThemeKey || function () { var p = ''; try { p = sessionStorage.getItem('userPhone') || ''; } catch (e) {} if (!p) { try { var d = JSON.parse(sessionStorage.getItem('dashboardData') || 'null'); p = (d && (d.tutorPhone || d.phone)) || ''; } catch (e) {} } var dir = (location.pathname || '/').replace(/[^\/]*$/, ''); return 'tutorTheme::' + dir + '::' + (p || 'guest'); };</script>
-    <link rel="icon" type="image/png" href="img/zuntutor_avatar_blue.png">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Hệ thống Tra cứu Học tập</title>
-    <!-- PWA Settings -->
+    <!-- Browser Favicon (Logo Tab Trình Duyệt - Ảnh 2) -->
+    <link rel="shortcut icon" href="favicon.ico?v=4">
+    <link rel="icon" type="image/png" sizes="32x32" href="img/favicon-32x32.png?v=4">
+    <link rel="icon" type="image/png" sizes="16x16" href="img/favicon-16x16.png?v=4">
+    <link rel="icon" type="image/png" sizes="48x48" href="img/favicon-48x48.png?v=4">
+
+    <!-- App / PWA Icons (Logo App) -->
     <link rel="manifest" href="manifest.json">
-    <meta name="theme-color" content="#0B0826">
+    <meta name="theme-color" content="#2563EB">
+    <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
     <meta name="apple-mobile-web-app-title" content="ZunTutor">
-    <link rel="apple-touch-icon" href="img/zuntutor_avatar_blue.png">
-    <script>
+    <link rel="apple-touch-icon" href="img/zuntutor_app_icon.png">
+    <link rel="apple-touch-icon" sizes="180x180" href="img/zuntutor_app_icon_192.png">
+    <link rel="apple-touch-icon" sizes="192x192" href="img/zuntutor_app_icon_192.png">
+    <link rel="apple-touch-icon" sizes="512x512" href="img/zuntutor_app_icon_512.png">
+<script>
         window.onerror = function(message, source, lineno, colno, error) {
             console.error("JS Error: " + message + " at " + source + ":" + lineno + ":" + colno);
             return false;
+        };
+        window.togglePinInputVisibility = function(inputId, btn, ev) {
+            if (ev) {
+                try { ev.preventDefault(); ev.stopPropagation(); } catch (e) {}
+            }
+            var inp = document.getElementById(inputId);
+            if (!inp) return;
+            var isPw = (inp.type === 'password');
+            inp.type = isPw ? 'text' : 'password';
+            if (btn) {
+                btn.innerHTML = isPw ? '<i class="fa-solid fa-eye-slash"></i>' : '<i class="fa-solid fa-eye"></i>';
+                btn.setAttribute('aria-label', isPw ? 'Ẩn mã PIN' : 'Hiện mã PIN');
+                btn.setAttribute('title', isPw ? 'Ẩn mã PIN' : 'Hiện mã PIN');
+            }
+            try {
+                var len = inp.value ? inp.value.length : 0;
+                inp.focus();
+                if (inp.setSelectionRange) inp.setSelectionRange(len, len);
+            } catch (e) {}
         };
     </script>
     <!-- Google Fonts -->
@@ -27,7 +55,19 @@
     <link rel="stylesheet" href="css/themes.css">
     <script>
       (function() {
-        var t = localStorage.getItem(window.__tutorThemeKey()) || 'theme-azure-mist-minimal';
+        var themeKey = (typeof window.__tutorThemeKey === 'function') ? window.__tutorThemeKey() : 'tutorTheme::guest';
+        var t = '';
+        try {
+          var d = JSON.parse(sessionStorage.getItem('dashboardData') || 'null');
+          if (d && d.theme) {
+            t = d.theme;
+            try { localStorage.setItem(themeKey, t); } catch(e) {}
+          }
+        } catch(e) {}
+        if (!t) {
+          try { t = localStorage.getItem(themeKey); } catch(e) {}
+        }
+        if (!t) t = 'theme-azure-mist-minimal';
         if (t.startsWith('custom:')) {
           var hex = t.split(':')[1];
           if (/^#[0-9A-Fa-f]{6}$/.test(hex)) {
@@ -85,19 +125,23 @@
             root.style.setProperty('--glass-inner-border', 'rgba(255,255,255,0.8)');
             root.style.setProperty('--is-dark-theme', '0');
             root.setAttribute('data-theme', 'light');
+            root.style.colorScheme = 'light';
           } else {
             document.documentElement.className = 'theme-azure-mist-minimal';
             document.documentElement.setAttribute('data-theme', 'light');
+            document.documentElement.style.colorScheme = 'light';
           }
         } else {
           document.documentElement.className = t;
           var darkThemes = ['theme-dark-purple', 'theme-dreamy-cosmic-full', 'theme-dreamy-cosmic-minimal', 'theme-neon-seoul-full', 'theme-neon-seoul-minimal', 'theme-mystic-blue-full', 'theme-mystic-blue-minimal', 'theme-blossom-noir-full', 'theme-blossom-noir-minimal', 'theme-violet-planet-full', 'theme-violet-planet-minimal'];
-          document.documentElement.setAttribute('data-theme', darkThemes.indexOf(t) !== -1 ? 'dark' : 'light');
+          var isDark = darkThemes.indexOf(t) !== -1;
+          document.documentElement.setAttribute('data-theme', isDark ? 'dark' : 'light');
+          document.documentElement.style.colorScheme = isDark ? 'dark' : 'light';
         }
       })();
     </script>
     <!-- Global CSS -->
-    <link rel="stylesheet" href="css/style.css?v=20261002_v5">
+    <link rel="stylesheet" href="css/style.css?v=3.0.5">
     <!-- Cropper.js (Cắt ảnh đại diện kiểu Facebook) -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.6.2/cropper.min.js"></script>
@@ -782,7 +826,7 @@
           .tutor-sidebar {
             position: fixed !important;
             left: -280px !important; top: 0 !important; bottom: 0 !important;
-            width: 260px !important; z-index: 1050 !important;
+            width: 260px !important; z-index: 10020 !important;
             transition: left 0.3s cubic-bezier(0.4,0,0.2,1) !important;
             overflow-y: auto; overflow-x: hidden;
             box-shadow: 4px 0 20px rgba(0,0,0,0.15);
@@ -798,7 +842,7 @@
             background: rgba(15, 23, 42, 0.65) !important;
             backdrop-filter: blur(4px) !important;
             -webkit-backdrop-filter: blur(4px) !important;
-            z-index: 1050 !important;
+            z-index: 10010 !important;
             opacity: 0 !important;
             pointer-events: none !important;
           }
@@ -1235,14 +1279,6 @@
                 <div style="text-align: center; color: var(--text-muted); padding: 15px;">Đang tải thời khóa biểu...</div>
             </div>
         </div>
-
-        <!-- Section Ý kiến phụ huynh -->
-        <div class="schedule-section" id="tutorFeedbackContainer" style="margin-top: 25px;">
-            <h3 style="display: flex; align-items: center; gap: 8px;"><i class="fa-regular fa-comment-dots" style="color: var(--color-primary);"></i> Ý kiến phản hồi của Phụ huynh (10 ngày gần nhất)</h3>
-            <div id="tutorFeedbackList" class="mobile-cards-view" style="display: flex; flex-direction: column; gap: 12px; max-height: 350px; overflow-y: auto; padding-right: 5px; margin-top: 15px;">
-                <div style="text-align: center; color: var(--text-muted); font-style: italic; padding: 20px;">Đang tải ý kiến...</div>
-            </div>
-        </div>
         </div> <!-- End #tutorSectionOverview -->
 
         <!-- SECTION BÁO CÁO (XUẤT ẢNH) -->
@@ -1368,6 +1404,23 @@
                 <div style="display: flex; gap: 10px; flex-wrap: wrap; width: 100%;">
                     <input type="text" id="quickAnnouncementInput" placeholder="Ví dụ: Hôm nay nghỉ học nhé phụ huynh ơi..." style="flex: 1; min-width: 250px; padding: 10px 15px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-primary); font-size: 13.5px; outline: none; transition: border 0.3s;" onfocus="this.style.borderColor='var(--color-primary)'" onblur="this.style.borderColor='var(--border-color)'">
                     <button onclick="saveQuickAnnouncement()" id="btnSaveQuickAnnouncement" class="modal-btn modal-btn-primary" style="width: auto; padding: 10px 20px; margin: 0; background: var(--btn-bg); color: var(--btn-text); display: inline-flex; align-items: center; gap: 8px; justify-content: center; font-size: 13.5px; font-weight: bold; border-radius: 8px; box-shadow: var(--shadow-primary);"><i class="fa-solid fa-paper-plane"></i> Gửi thông báo</button> <button type="button" onclick="clearQuickAnnouncement()" id="btnClearQuickAnnouncement" style="padding: 10px 16px; font-size: 13px; font-weight: bold; border-radius: 8px; cursor: pointer; white-space: nowrap; background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.4); color: #EF4444;"><i class="fa-solid fa-eraser"></i> Xóa</button>
+                </div>
+            </div>
+
+            <!-- Section Ý kiến phản hồi của Phụ huynh -->
+            <div id="tutorFeedbackContainer" class="reveal" style="background: var(--bg-card); border: 1px solid var(--border-color); border-radius: 14px; padding: 16px 20px; margin-bottom: 25px;">
+                <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; flex-wrap: wrap; gap: 8px;">
+                    <h4 style="display: flex; align-items: center; gap: 8px; margin: 0; font-size: 14.5px; color: var(--text-primary); font-weight: 700;">
+                        <i class="fa-regular fa-comment-dots" style="color: var(--color-primary);"></i> Ý kiến phản hồi của Phụ huynh (10 ngày gần nhất)
+                    </h4>
+                    <div style="display: flex; align-items: center; gap: 8px; flex-wrap: wrap;">
+                        <button type="button" id="btnFbFilterAll" onclick="setTutorFeedbackFilter('all')" style="padding: 4px 10px; font-size: 12px; font-weight: 600; border-radius: 6px; cursor: pointer; background: var(--btn-bg); color: var(--btn-text); border: 1px solid transparent; transition: all 0.2s;">Tất cả</button>
+                        <button type="button" id="btnFbFilterCurrent" onclick="setTutorFeedbackFilter('current')" style="padding: 4px 10px; font-size: 12px; font-weight: 600; border-radius: 6px; cursor: pointer; background: transparent; color: var(--text-secondary); border: 1px solid var(--border-color); transition: all 0.2s;">Học sinh này</button>
+                        <button type="button" onclick="loadTutorFeedbacks()" style="background: transparent; border: 1px solid var(--border-color); color: var(--text-secondary); cursor: pointer; font-size: 12px; padding: 4px 10px; border-radius: 6px; display: inline-flex; align-items: center; gap: 5px; transition: all 0.2s;" title="Tải lại ý kiến"><i class="fa-solid fa-arrows-rotate"></i> Làm mới</button>
+                    </div>
+                </div>
+                <div id="tutorFeedbackList" class="mobile-cards-view" style="display: flex; flex-direction: column; gap: 10px; max-height: 280px; overflow-y: auto; padding-right: 5px;">
+                    <div style="text-align: center; color: var(--text-muted); font-style: italic; padding: 15px;">Đang tải ý kiến...</div>
                 </div>
             </div>
 
@@ -1656,9 +1709,14 @@
     <!-- 1. Modal Quản lý Tài khoản (Account Modal) -->
     <div id="tutorAccountModal" class="modal-overlay">
         <div class="modal-content">
-            <div class="modal-header">
-                <h3><i class="fa-solid fa-user-gear"></i> Tài khoản của tôi</h3>
-                <button onclick="closeTutorAccountModal()" class="modal-close">&times;</button>
+            <div class="modal-header" style="display: flex; align-items: center; justify-content: space-between;">
+                <div style="display: flex; align-items: center; gap: 10px; flex-wrap: wrap;">
+                    <h3 style="margin: 0;"><i class="fa-solid fa-user-gear"></i> Tài khoản của tôi</h3>
+                    <span id="accAutoSaveStatus" style="font-size: 12px; color: #10B981; font-weight: 600; display: inline-flex; align-items: center; gap: 5px; opacity: 0; transition: opacity 0.3s; background: rgba(16, 185, 129, 0.1); padding: 2px 8px; border-radius: 6px;">
+                        <i class="fa-solid fa-circle-check"></i> Đã tự động lưu
+                    </span>
+                </div>
+                <button onclick="closeTutorAccountModal()" class="modal-close" title="Đóng">&times;</button>
             </div>
 
             <!-- AVATAR GIA SƯ -->
@@ -1680,11 +1738,25 @@
 
             <div class="modal-form-group">
                 <label>Họ và tên gia sư</label>
-                <input type="text" id="accTutorName">
+                <input type="text" id="accTutorName" oninput="triggerTutorAccountAutoSave()">
             </div>
             <div class="modal-form-group">
                 <label>Số điện thoại</label>
-                <input type="text" id="accTutorPhone">
+                <input type="text" id="accTutorPhone" oninput="triggerTutorAccountAutoSave()">
+            </div>
+            <div class="modal-form-group">
+                <label style="display: flex; align-items: center; justify-content: space-between;">
+                    <span><i class="fa-solid fa-building-columns" style="color: var(--color-primary); margin-right: 4px;"></i> Mã giới thiệu trung tâm (nếu có)</span>
+                </label>
+                <div style="position: relative;">
+                    <input type="text" id="accReferralCenter" placeholder="Nhập mã giới thiệu (nếu có)" oninput="this.value = this.value.toUpperCase(); checkTutorAccountCenterInput(); triggerTutorAccountAutoSave();" style="text-transform: uppercase;">
+                </div>
+                <div id="accCenterHint" style="display: none; align-items: center; gap: 6px; font-size: 12px; color: #0284C7; background: rgba(2, 132, 199, 0.08); padding: 6px 10px; border-radius: 8px; margin-top: 6px; border: 1px solid rgba(2, 132, 199, 0.2);">
+                    <i class="fa-solid fa-circle-check"></i> <span id="accCenterHintText"></span>
+                </div>
+                <small style="font-size: 11.5px; color: var(--text-secondary); margin-top: 4px; display: block;">
+                    Nhập mã trung tâm / đối tác giới thiệu bạn để được liên kết quyền lợi và hỗ trợ.
+                </small>
             </div>
             <!-- BẢO MẬT & ĐỔI MÃ PIN ĐĂNG NHẬP -->
             <div class="account-security-card" style="background: var(--bg-card-alt, rgba(255,255,255,0.03)); border: 1px solid var(--border-color); border-radius: 14px; padding: 14px 16px; margin: 14px 0;">
@@ -1701,8 +1773,8 @@
                 <div class="modal-form-group" style="margin-bottom: 10px;">
                     <label style="font-size: 12px; font-weight: 600;">Mã PIN hiện tại</label>
                     <div style="position: relative;">
-                        <input type="password" id="settingsCurrentPin" placeholder="Nhập mã PIN hiện tại" maxlength="6" style="padding-right: 44px;">
-                        <button type="button" class="pin-toggle-btn" onclick="togglePinInputVisibility('settingsCurrentPin', this)" title="Hiện / Ẩn mã PIN" aria-label="Hiện hoặc ẩn mã PIN">
+                        <input type="password" id="settingsCurrentPin" placeholder="Nhập mã PIN hiện tại" maxlength="6" autocomplete="current-password" style="padding-right: 44px;">
+                        <button type="button" class="pin-toggle-btn" onclick="togglePinInputVisibility('settingsCurrentPin', this, event)" onmousedown="event.preventDefault();" title="Hiện / Ẩn mã PIN" aria-label="Hiện hoặc ẩn mã PIN">
                             <i class="fa-solid fa-eye"></i>
                         </button>
                     </div>
@@ -1712,8 +1784,8 @@
                     <div class="modal-form-group" style="margin-bottom: 0;">
                         <label style="font-size: 12px; font-weight: 600;">Mã PIN mới (tối thiểu 4 số)</label>
                         <div style="position: relative;">
-                            <input type="password" id="settingsNewPin" placeholder="Nhập mã PIN mới" maxlength="6" style="padding-right: 44px;">
-                            <button type="button" class="pin-toggle-btn" onclick="togglePinInputVisibility('settingsNewPin', this)" title="Hiện / Ẩn mã PIN" aria-label="Hiện hoặc ẩn mã PIN">
+                            <input type="password" id="settingsNewPin" placeholder="Nhập mã PIN mới" maxlength="6" autocomplete="new-password" style="padding-right: 44px;">
+                            <button type="button" class="pin-toggle-btn" onclick="togglePinInputVisibility('settingsNewPin', this, event)" onmousedown="event.preventDefault();" title="Hiện / Ẩn mã PIN" aria-label="Hiện hoặc ẩn mã PIN">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                         </div>
@@ -1721,8 +1793,8 @@
                     <div class="modal-form-group" style="margin-bottom: 0;">
                         <label style="font-size: 12px; font-weight: 600;">Xác nhận mã PIN mới</label>
                         <div style="position: relative;">
-                            <input type="password" id="settingsConfirmPin" placeholder="Nhập lại mã PIN mới" maxlength="6" style="padding-right: 44px;">
-                            <button type="button" class="pin-toggle-btn" onclick="togglePinInputVisibility('settingsConfirmPin', this)" title="Hiện / Ẩn mã PIN" aria-label="Hiện hoặc ẩn mã PIN">
+                            <input type="password" id="settingsConfirmPin" placeholder="Nhập lại mã PIN mới" maxlength="6" autocomplete="new-password" style="padding-right: 44px;">
+                            <button type="button" class="pin-toggle-btn" onclick="togglePinInputVisibility('settingsConfirmPin', this, event)" onmousedown="event.preventDefault();" title="Hiện / Ẩn mã PIN" aria-label="Hiện hoặc ẩn mã PIN">
                                 <i class="fa-solid fa-eye"></i>
                             </button>
                         </div>
@@ -1740,15 +1812,21 @@
             </div>
             <div class="modal-form-group">
                 <label>Email liên hệ</label>
-                <input type="email" id="accTutorEmail" placeholder="email@example.com">
+                <input type="email" id="accTutorEmail" placeholder="email@example.com" oninput="triggerTutorAccountAutoSave()">
             </div>
             <div class="modal-form-group">
-                <label>Môn dạy chính</label>
-                <input type="text" id="accTutorSubjects" placeholder="VD: Toán, Lý, Tiếng Anh...">
+                <label style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-weight: 600;">Môn dạy chính <span style="color: #EF4444;">*</span></span>
+                    <span style="font-size: 11.5px; color: var(--text-secondary); font-weight: normal;">Nhấp để chọn môn bạn dạy</span>
+                </label>
+                <div class="student-subject-pills" id="accTutorSubjectsChips">
+                    <!-- Danh sách môn trong hệ thống được nạp tự động -->
+                </div>
+                <input type="hidden" id="accTutorSubjects" value="">
             </div>
             <div class="modal-form-group">
                 <label>Kinh nghiệm giảng dạy & giới thiệu</label>
-                <textarea id="accTutorExperience" rows="2" placeholder="VD: 5 năm kinh nghiệm luyện thi, tốt nghiệp ĐH Sư Phạm..." style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-primary); font-size: 13.5px; resize: vertical; font-family: Inter, sans-serif; box-sizing: border-box;"></textarea>
+                <textarea id="accTutorExperience" rows="2" placeholder="VD: 5 năm kinh nghiệm luyện thi, tốt nghiệp ĐH Sư Phạm..." style="width: 100%; padding: 10px 14px; border-radius: 10px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-primary); font-size: 13.5px; resize: vertical; font-family: Inter, sans-serif; box-sizing: border-box;" oninput="triggerTutorAccountAutoSave()"></textarea>
             </div>
             <div class="modal-grid-2">
                 <div class="modal-form-group">
@@ -1794,7 +1872,7 @@
                         <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">
                             <i class="fa-solid fa-landmark"></i> Ngân hàng thụ hưởng <span style="color:#EF4444">*</span>
                         </label>
-                        <select id="accBankSelect" onchange="generateAutoVietQr()" style="width: 100%; padding: 8px 12px; font-size: 13px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-primary); outline: none; box-sizing: border-box;">
+                        <select id="accBankSelect" onchange="generateAutoVietQr(); triggerTutorAccountAutoSave();" style="width: 100%; padding: 8px 12px; font-size: 13px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-primary); outline: none; box-sizing: border-box; color-scheme: inherit;">
                             <option value="">-- Chọn ngân hàng thụ hưởng --</option>
                             <option value="MB">MBBank - Ngân hàng Quân Đội</option>
                             <option value="VCB">Vietcombank - Ngân hàng Ngoại Thương</option>
@@ -1836,13 +1914,13 @@
                             <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">
                                 <i class="fa-solid fa-credit-card"></i> Số tài khoản (STK) <span style="color:#EF4444">*</span>
                             </label>
-                            <input type="text" id="accBankNumber" placeholder="Nhập số tài khoản..." oninput="generateAutoVietQr()" style="width: 100%; padding: 8px 12px; font-size: 13px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-primary); outline: none; box-sizing: border-box;">
+                            <input type="text" id="accBankNumber" placeholder="Nhập số tài khoản..." oninput="generateAutoVietQr(); triggerTutorAccountAutoSave();" style="width: 100%; padding: 8px 12px; font-size: 13px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-primary); outline: none; box-sizing: border-box;">
                         </div>
                         <div style="flex: 1; min-width: 140px;">
                             <label style="display: block; font-size: 12px; font-weight: 600; color: var(--text-primary); margin-bottom: 4px;">
                                 <i class="fa-solid fa-user-tag"></i> Tên chủ tài khoản
                             </label>
-                            <input type="text" id="accBankHolder" placeholder="NGUYEN VAN A" oninput="this.value = this.value.toUpperCase(); generateAutoVietQr()" style="width: 100%; padding: 8px 12px; font-size: 13px; text-transform: uppercase; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-primary); outline: none; box-sizing: border-box;">
+                            <input type="text" id="accBankHolder" placeholder="NGUYEN VAN A" oninput="this.value = this.value.toUpperCase(); generateAutoVietQr(); triggerTutorAccountAutoSave();" style="width: 100%; padding: 8px 12px; font-size: 13px; text-transform: uppercase; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-primary); outline: none; box-sizing: border-box;">
                         </div>
                     </div>
                     <div style="font-size: 11.5px; color: var(--text-secondary); display: flex; align-items: center; gap: 6px; margin-top: 2px;">
@@ -1862,7 +1940,7 @@
                     </div>
                     <!-- Ô dán link ảnh nếu muốn -->
                     <div style="width: 100%; display: flex; align-items: center; gap: 6px;">
-                        <input type="text" id="accQrUrlInput" placeholder="Hoặc dán liên kết ảnh mã QR (URL)..." style="flex: 1; padding: 8px 12px; font-size: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-primary); outline: none; box-sizing: border-box;" oninput="handleTutorQrUrlInput(this.value)">
+                        <input type="text" id="accQrUrlInput" placeholder="Hoặc dán liên kết ảnh mã QR (URL)..." style="flex: 1; padding: 8px 12px; font-size: 12px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-primary); outline: none; box-sizing: border-box;" oninput="handleTutorQrUrlInput(this.value); triggerTutorAccountAutoSave();">
                     </div>
                 </div>
 
@@ -1878,9 +1956,13 @@
                     </button>
                 </div>
             </div>
-            <div class="modal-footer">
-                <button onclick="closeTutorAccountModal()" class="modal-btn modal-btn-secondary">Đóng</button>
-                <button onclick="saveTutorAccount()" class="modal-btn modal-btn-primary">Cập nhật tài khoản</button>
+
+            <!-- MODAL FOOTER: LƯU THAY ĐỔI / ĐÓNG -->
+            <div class="modal-footer" style="margin-top: 20px; display: flex; justify-content: flex-end; gap: 10px; padding-top: 14px; border-top: 1px solid var(--border-color);">
+                <button type="button" onclick="closeTutorAccountModal()" class="modal-btn modal-btn-secondary" style="width: auto; padding: 9px 18px; font-size: 13.5px; border-radius: 9px;">Đóng</button>
+                <button type="button" onclick="saveTutorAccount(false)" class="modal-btn modal-btn-primary" style="width: auto; padding: 9px 24px; font-size: 13.5px; border-radius: 9px; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fa-solid fa-floppy-disk"></i> Lưu thay đổi
+                </button>
             </div>
         </div>
     </div>
@@ -2010,18 +2092,21 @@
                 </div>
             </div>
 
-            <!-- 3. HƯỚNG DẪN SỬ DỤNG -->
+            <!-- 3. HƯỚNG DẪN SỬ DỤNG & TRỢ GIÚP -->
             <div class="settings-section">
                 <h4 class="settings-section-title">
                     <i class="fa-solid fa-circle-question"></i> Hướng dẫn & Trợ giúp
                 </h4>
                 <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                    <button type="button" class="settings-action-btn" onclick="restartOnboarding(false)" style="flex: 1; min-width: 170px; background: var(--nav-active-bg); color: var(--color-primary); border: 1px solid var(--border-color); font-weight: 600; justify-content: center;">
+                    <button type="button" class="settings-action-btn" onclick="restartOnboarding(false)" style="flex: 1; min-width: 160px; background: var(--nav-active-bg); color: var(--color-primary); border: 1px solid var(--border-color); font-weight: 600; justify-content: center;">
                         <i class="fa-solid fa-play"></i> Hướng dẫn mục hiện tại
                     </button>
-                    <button type="button" class="settings-action-btn" onclick="restartOnboarding(true)" style="flex: 1; min-width: 170px; background: var(--bg-card-alt); color: var(--text-primary); border: 1px solid var(--border-color); justify-content: center;">
+                    <button type="button" class="settings-action-btn" onclick="restartOnboarding(true)" style="flex: 1; min-width: 160px; background: var(--bg-card-alt); color: var(--text-primary); border: 1px solid var(--border-color); justify-content: center;">
                         <i class="fa-solid fa-rotate-right"></i> Xem lại tất cả các mục
                     </button>
+                    <a href="https://zalo.me/0975546830" target="_blank" rel="noopener noreferrer" class="settings-action-btn" id="btnContactAdminHelp" style="flex: 1; min-width: 100%; margin-top: 4px; background: #0068FF; color: #ffffff; border: none; font-weight: 700; justify-content: center; text-decoration: none; padding: 10px 16px; border-radius: 9px; display: inline-flex; align-items: center; gap: 8px; box-shadow: 0 4px 14px rgba(0, 104, 255, 0.22); transition: all 0.2s;">
+                        <i class="fa-solid fa-headset" style="font-size: 15px;"></i> Liên hệ Admin để hỗ trợ (Zalo: 0975 546 830)
+                    </a>
                 </div>
             </div>
 
@@ -2049,6 +2134,25 @@
             <div class="modal-form-group">
                 <label>Số điện thoại của phụ huynh</label>
                 <input type="text" id="addStudentPhone" placeholder="SĐT phụ huynh làm mã tra cứu">
+            </div>
+            <div class="modal-form-group">
+                <label style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-weight: 600;">Môn học sinh theo học <span style="color: #EF4444;">*</span></span>
+                    <span style="font-size: 11.5px; color: var(--text-secondary); font-weight: normal;">Nhấp để chọn môn</span>
+                </label>
+                <div class="student-subject-pills" id="addStudentSubjectsPills">
+                    <!-- Tự động nạp danh sách môn của gia sư -->
+                </div>
+                <div id="addOtherSubjectsDrawer" style="display: none; margin-top: 10px; padding: 10px 12px; background: var(--bg-card); border: 1px dashed var(--border-color); border-radius: 12px;">
+                    <div style="font-size: 11.5px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                        <span><i class="fa-solid fa-list-check" style="margin-right: 5px; color: var(--color-primary);"></i>Chọn thêm môn khác từ hệ thống:</span>
+                        <button type="button" onclick="toggleOtherSubjectsDrawer('add')" style="background: none; border: none; font-size: 12px; color: var(--text-secondary); cursor: pointer;"><i class="fa-solid fa-xmark"></i> Đóng</button>
+                    </div>
+                    <div class="student-subject-pills" id="addOtherSubjectsList">
+                        <!-- Danh sách các môn còn lại trong hệ thống -->
+                    </div>
+                </div>
+                <input type="hidden" id="addStudentSubjects" value="">
             </div>
             <div class="modal-form-group">
                 <label style="display: block; margin-bottom: 8px;">Hình thức thu học phí <span style="color: #EF4444;">*</span></label>
@@ -2093,7 +2197,7 @@
                 <!-- Khung giờ học -->
                 <div style="display: flex; gap: 8px; align-items: center; margin-top: 10px; flex-wrap: wrap;">
                     <div style="flex: 1; min-width: 140px;">
-                        <select id="addScheduleTimeSelect" onchange="handleScheduleTimeSelectChange('add')" style="width: 100%; padding: 9px 12px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 13px;">
+                        <select id="addScheduleTimeSelect" onchange="handleScheduleTimeSelectChange('add')" style="width: 100%; padding: 9px 12px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 13px; color-scheme: inherit;">
                             <option value="18:00 - 19:30">18:00 - 19:30 (Tối ca 1)</option>
                             <option value="19:00 - 20:30" selected>19:00 - 20:30 (Tối ca 2)</option>
                             <option value="19:30 - 21:00">19:30 - 21:00 (Tối ca 3)</option>
@@ -2111,8 +2215,8 @@
 
                 <!-- Tóm tắt lịch đã chọn -->
                 <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
-                    <div id="addScheduleSummary" style="font-size: 12px; color: #6EE7B7; font-weight: 500;"><i class="fa-solid fa-calendar-check"></i> Chưa chọn ngày học</div>
-                    <button type="button" onclick="toggleDetailedSchedule('add')" style="background:none; border:none; color:var(--color-primary-light); font-size:11.5px; cursor:pointer; padding:0; text-decoration:underline;"><i class="fa-solid fa-sliders"></i> Chỉnh giờ riêng từng ngày</button>
+                    <div id="addScheduleSummary" style="font-size: 12px; color: var(--color-primary); font-weight: 600;"><i class="fa-solid fa-calendar-check"></i> Chưa chọn ngày học</div>
+                    <button type="button" onclick="toggleDetailedSchedule('add')" style="background:none; border:none; color:var(--color-primary); font-size:11.5px; cursor:pointer; padding:0; text-decoration:underline; font-weight:600;"><i class="fa-solid fa-sliders"></i> Chỉnh giờ riêng từng ngày</button>
                 </div>
 
                 <!-- Chi tiết từng ngày (mặc định ẩn) -->
@@ -2158,6 +2262,25 @@
                 <input type="text" id="editStudentPhone">
             </div>
             <div class="modal-form-group">
+                <label style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 8px;">
+                    <span style="font-weight: 600;">Môn học sinh theo học <span style="color: #EF4444;">*</span></span>
+                    <span style="font-size: 11.5px; color: var(--text-secondary); font-weight: normal;">Nhấp để chọn môn</span>
+                </label>
+                <div class="student-subject-pills" id="editStudentSubjectsPills">
+                    <!-- Tự động nạp danh sách môn của gia sư -->
+                </div>
+                <div id="editOtherSubjectsDrawer" style="display: none; margin-top: 10px; padding: 10px 12px; background: var(--bg-card); border: 1px dashed var(--border-color); border-radius: 12px;">
+                    <div style="font-size: 11.5px; font-weight: 600; color: var(--text-secondary); margin-bottom: 8px; display: flex; align-items: center; justify-content: space-between;">
+                        <span><i class="fa-solid fa-list-check" style="margin-right: 5px; color: var(--color-primary);"></i>Chọn thêm môn khác từ hệ thống:</span>
+                        <button type="button" onclick="toggleOtherSubjectsDrawer('edit')" style="background: none; border: none; font-size: 12px; color: var(--text-secondary); cursor: pointer;"><i class="fa-solid fa-xmark"></i> Đóng</button>
+                    </div>
+                    <div class="student-subject-pills" id="editOtherSubjectsList">
+                        <!-- Danh sách các môn còn lại trong hệ thống -->
+                    </div>
+                </div>
+                <input type="hidden" id="editStudentSubjects" value="">
+            </div>
+            <div class="modal-form-group">
                 <label style="display: block; margin-bottom: 8px;">Hình thức thu học phí <span style="color: #EF4444;">*</span></label>
                 <div style="display: flex; gap: 10px;">
                     <label style="flex: 1; display: flex; align-items: center; gap: 8px; padding: 9px 12px; background: var(--nav-active-bg); border: 1px solid var(--border-color); border-radius: 12px; cursor: pointer; color: var(--text-primary); font-size: 13px; margin: 0;">
@@ -2200,7 +2323,7 @@
                 <!-- Khung giờ học -->
                 <div style="display: flex; gap: 8px; align-items: center; margin-top: 10px; flex-wrap: wrap;">
                     <div style="flex: 1; min-width: 140px;">
-                        <select id="editScheduleTimeSelect" onchange="handleScheduleTimeSelectChange('edit')" style="width: 100%; padding: 9px 12px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 13px;">
+                        <select id="editScheduleTimeSelect" onchange="handleScheduleTimeSelectChange('edit')" style="width: 100%; padding: 9px 12px; background: var(--bg-input); border: 1px solid var(--border-color); border-radius: 8px; color: var(--text-primary); font-size: 13px; color-scheme: inherit;">
                             <option value="18:00 - 19:30">18:00 - 19:30 (Tối ca 1)</option>
                             <option value="19:00 - 20:30" selected>19:00 - 20:30 (Tối ca 2)</option>
                             <option value="19:30 - 21:00">19:30 - 21:00 (Tối ca 3)</option>
@@ -2218,8 +2341,8 @@
 
                 <!-- Tóm tắt lịch đã chọn -->
                 <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 6px; margin-top: 8px;">
-                    <div id="editScheduleSummary" style="font-size: 12px; color: #6EE7B7; font-weight: 500;"><i class="fa-solid fa-calendar-check"></i> Chưa chọn ngày học</div>
-                    <button type="button" onclick="toggleDetailedSchedule('edit')" style="background:none; border:none; color:var(--color-primary-light); font-size:11.5px; cursor:pointer; padding:0; text-decoration:underline;"><i class="fa-solid fa-sliders"></i> Chỉnh giờ riêng từng ngày</button>
+                    <div id="editScheduleSummary" style="font-size: 12px; color: var(--color-primary); font-weight: 600;"><i class="fa-solid fa-calendar-check"></i> Chưa chọn ngày học</div>
+                    <button type="button" onclick="toggleDetailedSchedule('edit')" style="background:none; border:none; color:var(--color-primary); font-size:11.5px; cursor:pointer; padding:0; text-decoration:underline; font-weight:600;"><i class="fa-solid fa-sliders"></i> Chỉnh giờ riêng từng ngày</button>
                 </div>
 
                 <!-- Chi tiết từng ngày (mặc định ẩn) -->
@@ -2253,7 +2376,7 @@
             <div style="font-size: 40px; color: #EF4444; margin-bottom: 15px;"><i class="fa-solid fa-shield-halved"></i></div>
             <h3 style="color: var(--text-primary); margin: 0 0 10px; font-size: 18px;">Xác thực mã PIN</h3>
             <p style="color: var(--text-secondary); font-size: 14px; margin: 0 0 15px; text-align: center;">Vui lòng nhập mã PIN đăng nhập để xác nhận xóa học sinh.</p>
-            <input type="password" id="confirmTutorPinInput" placeholder="Nhập mã PIN của bạn" style="text-align: center; font-size: 18px; letter-spacing: 5px; text-indent: 5px; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-primary); margin-bottom: 20px; outline: none;">
+            <input type="password" id="confirmTutorPinInput" placeholder="Nhập mã PIN của bạn" autocomplete="off" style="text-align: center; font-size: 18px; letter-spacing: 5px; text-indent: 5px; width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--border-color); background: var(--bg-input); color: var(--text-primary); margin-bottom: 20px; outline: none;">
             <div style="display: flex; justify-content: center; gap: 10px;">
                 <button onclick="closePinConfirmModal()" class="modal-btn modal-btn-secondary" style="width: 100px;">Hủy</button>
                 <button onclick="submitPinVerifyForDelete()" class="modal-btn modal-btn-primary" style="width: 100px; background: #EF4444; border-color: #EF4444;">Xác nhận</button>
@@ -2381,15 +2504,11 @@
             </div>
             <div class="modal-grid-2">
                 <div class="modal-form-group">
-                    <label>Môn học</label>
-                    <select id="lesMon" onchange="toggleMonCustomInput('lesMon', 'lesMonCustomWrap', 'lesMonCustom')">
-                        <option value="Toán">Toán</option>
-                        <option value="Lý">Lý</option>
-                        <option value="Anh">Anh</option>
-                        <option value="Văn">Văn</option>
-                        <option value="Hóa">Hóa</option>
-                        <option value="Khác">Khác</option>
-                    </select>
+                    <label style="display: block; margin-bottom: 8px;">Môn học</label>
+                    <div id="lesMonContainer">
+                        <!-- Tự động hiển thị cố định nếu 1 môn hoặc 2 nút chọn nhanh 1-click nếu 2 môn -->
+                    </div>
+                    <input type="hidden" id="lesMon" value="Toán">
                     <div id="lesMonCustomWrap" style="display: none; margin-top: 8px;">
                         <input type="text" id="lesMonCustom" placeholder="Nhập tên môn học khác...">
                     </div>
@@ -2523,15 +2642,11 @@
                 </div>
                 <div class="modal-grid-2">
                     <div class="modal-form-group">
-                        <label>Môn học</label>
-                        <select id="editLesMon" onchange="toggleMonCustomInput('editLesMon', 'editLesMonCustomWrap', 'editLesMonCustom')">
-                            <option value="Toán">Toán</option>
-                            <option value="Lý">Lý</option>
-                            <option value="Anh">Anh</option>
-                            <option value="Văn">Văn</option>
-                            <option value="Hóa">Hóa</option>
-                            <option value="Khác">Khác</option>
-                        </select>
+                        <label style="display: block; margin-bottom: 8px;">Môn học</label>
+                        <div id="editLesMonContainer">
+                            <!-- Tự động hiển thị cố định nếu 1 môn hoặc 2 nút chọn nhanh 1-click nếu 2 môn -->
+                        </div>
+                        <input type="hidden" id="editLesMon" value="Toán">
                         <div id="editLesMonCustomWrap" style="display: none; margin-top: 8px;">
                             <input type="text" id="editLesMonCustom" placeholder="Nhập tên môn học khác...">
                         </div>
@@ -2853,6 +2968,13 @@
             top: 0; left: 0; right: 0;
             height: 6px;
         }
+        /* Hide native browser password reveal/clear buttons (Edge, IE) */
+        input::-ms-reveal,
+        input::-ms-clear {
+            display: none !important;
+            width: 0 !important;
+            height: 0 !important;
+        }
         .pin-toggle-btn {
             position: absolute !important;
             right: 4px !important;
@@ -2868,11 +2990,13 @@
             border-radius: 8px !important;
             color: var(--text-secondary) !important;
             cursor: pointer !important;
-            z-index: 5 !important;
+            z-index: 15 !important;
             padding: 0 !important;
             font-size: 15px !important;
             touch-action: manipulation !important;
+            -webkit-tap-highlight-color: transparent !important;
             user-select: none !important;
+            pointer-events: auto !important;
             transition: color 0.15s ease, background 0.15s ease, transform 0.1s ease !important;
         }
         .pin-toggle-btn:hover {
@@ -3760,23 +3884,23 @@
     
     <!-- MODAL: Xem Bài Tập Nộp Trực Tiếp Trong Web (In-App Preview) -->
     <div id="previewSubmissionModal" class="modal-overlay" style="z-index: 1050;">
-        <div class="modal-card" style="max-width: 920px; width: 95%; height: 86vh; padding: 20px; border-radius: 22px; background: #0D0826; border: 1px solid rgba(142, 77, 255, 0.4); box-shadow: 0 15px 50px rgba(0,0,0,0.9); display: flex; flex-direction: column;">
-            <div class="modal-header" style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 12px;">
+        <div class="modal-card" style="max-width: 920px; width: 95%; height: 86vh; padding: 20px; border-radius: 22px; background: var(--bg-card); border: 1px solid var(--border-card); box-shadow: var(--shadow-card); display: flex; flex-direction: column;">
+            <div class="modal-header" style="margin-bottom: 12px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--border-card); padding-bottom: 12px;">
                 <h3 style="color: var(--text-heading); font-size: 18px; font-weight: 800; display: flex; align-items: center; gap: 8px; margin: 0;">
                     <i class="fa-solid fa-file-lines" style="color: var(--color-primary);"></i> Xem bài làm: <span id="previewStudentNameTitle" style="color: var(--text-primary);"></span>
                 </h3>
                 <div style="display: flex; align-items: center; gap: 10px;">
-                    <button id="btnPreviewGradeDirect" onclick="openGradeModalFromPreview()" style="background: var(--nav-active-bg); border: 1px solid var(--border-color); color: var(--text-primary); padding: 6px 14px; border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
+                    <button id="btnPreviewGradeDirect" onclick="openGradeModalFromPreview()" style="background: var(--nav-active-bg); border: 1px solid var(--border-color); color: var(--color-primary); padding: 6px 14px; border-radius: 10px; font-weight: 700; font-size: 12px; cursor: pointer; display: flex; align-items: center; gap: 6px;">
                         <i class="fa-solid fa-pen"></i> Chấm điểm ngay
                     </button>
-                    <a id="btnPreviewExternalLink" href="" target="_blank" rel="noopener noreferrer" style="background: var(--bg-input); border: 1px solid var(--border-card); color: var(--text-primary); padding: 6px 12px; border-radius: 10px; font-size: 12px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 5px;">
+                    <a id="btnPreviewExternalLink" href="" target="_blank" rel="noopener noreferrer" style="background: var(--nav-hover-bg, var(--bg-input)); border: 1px solid var(--border-card); color: var(--text-primary); padding: 6px 12px; border-radius: 10px; font-size: 12px; text-decoration: none; font-weight: 600; display: flex; align-items: center; gap: 5px;">
                         <i class="fa-solid fa-arrow-up-right-from-square"></i> Mở tab mới
                     </a>
                     <button class="btn-close-modal" onclick="closeSubmissionPreviewModal()" style="background: none; border: none; color: var(--text-secondary); font-size: 24px; cursor: pointer; padding: 0 5px; line-height: 1;">&times;</button>
                 </div>
             </div>
-            <div style="flex: 1; position: relative; background: #050314; border-radius: 12px; overflow: hidden; border: 1px solid rgba(255,255,255,0.05); display: flex; flex-direction: column;">
-                <div id="previewLoadingSpinner" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: #A5B4FC; text-align: center; z-index: 1;">
+            <div style="flex: 1; position: relative; background: var(--bg-card-alt); border-radius: 12px; overflow: hidden; border: 1px solid var(--border-card); display: flex; flex-direction: column;">
+                <div id="previewLoadingSpinner" style="position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); color: var(--color-primary); text-align: center; z-index: 1;">
                     <i class="fa-solid fa-circle-notch fa-spin" style="font-size: 32px; margin-bottom: 10px; color: var(--color-primary);"></i>
                     <div style="font-size: 13px; color: var(--text-secondary);">Đang tải bản xem trước bài làm...</div>
                 </div>
@@ -3878,31 +4002,43 @@
             </div>
         </div>
     </div>
-<div style="display: none;">
-        <input type="text" id="maHocSinh">
-        <input type="password" id="maPin" placeholder="Hidden PIN field">
+    <div style="display: none;">
+        <input type="hidden" id="maHocSinh">
+        <input type="hidden" id="maPin" placeholder="Hidden PIN field">
         <div id="pinContainer"></div>
-        <button id="btnMainSubmit">Hidden Submit button</button>
+        <button type="button" id="btnMainSubmit">Hidden Submit button</button>
     </div>
 
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="js/api.js?v=20261004_utf8fix"></script>
+    <script src="js/demo-data.js"></script>
+    <script src="js/api.js?v=20261005_v4"></script>
     <script src="js/tutor.js?v=20261003_sec1"></script>
     <script>
         function toggleTutorMobileSidebar(force) {
             var sidebar = document.getElementById('tutorSidebar');
             var overlay = document.getElementById('tutorSidebarOverlay');
+            var calFrame = document.getElementById('tutorCalendarIframe');
             if (!sidebar) return;
             var isOpen = typeof force === 'boolean' ? force : !sidebar.classList.contains('mobile-open');
             if (isOpen) {
+                var obOverlay = document.getElementById('onboardingOverlay');
+                if (obOverlay && typeof finishOnboarding === 'function') {
+                    try { finishOnboarding(true); } catch(e) {}
+                }
                 sidebar.classList.add('mobile-open');
+                sidebar.classList.add('open');
                 if (overlay) overlay.classList.add('active');
+                if (calFrame) calFrame.style.pointerEvents = 'none'; // Iframe không chặn sự kiện click vào Sidebar/Overlay
                 document.body.style.overflow = 'hidden';
             } else {
                 sidebar.classList.remove('mobile-open');
+                sidebar.classList.remove('open');
+                sidebar.classList.remove('sidebar-open');
                 if (overlay) overlay.classList.remove('active');
-                document.body.style.overflow = '';
+                if (calFrame) calFrame.style.pointerEvents = 'auto'; // Khôi phục tương tác lịch khi đóng menu
+                var isCal = document.body && document.body.classList.contains('calendar-tab-active');
+                document.body.style.overflow = isCal ? 'hidden' : '';
             }
         }
         window.toggleTutorMobileSidebar = toggleTutorMobileSidebar;
@@ -3964,6 +4100,12 @@
             var nextDue = String((data && data.nextDueDate) || '').trim();
             var sCount = (data && data.students && data.students.length) || 0;
             var adminContact = (data && data.adminContact) || { zalo: '0975546830', facebook: 'https://m.me/zuntutor', phone: '0975546830' };
+            var helpBtn = document.getElementById('btnContactAdminHelp');
+            if (helpBtn) {
+                var helpZalo = adminContact.zalo || '0975546830';
+                helpBtn.href = 'https://zalo.me/' + String(helpZalo).replace(/\D/g, '');
+                helpBtn.innerHTML = '<i class="fa-solid fa-headset" style="font-size: 15px;"></i> Liên hệ Admin để hỗ trợ (Zalo: ' + helpZalo + ')';
+            }
 
             var dueDate = ztDashboardParseDate(nextDue);
             var daysRemaining = null;
@@ -4134,24 +4276,40 @@
                 data = JSON.parse(sessionStorage.getItem('dashboardData'));
             } catch(e) {}
 
-            if (role === 'tutor' && (!data || !data.students || (phone === '0123456789' && (!data.students[0] || !data.students[0].logs || data.students[0].logs.length < 8)))) {
-                if (phone === '0123456789' && typeof getTutorDemoDashboardData === 'function') {
-                    data = getTutorDemoDashboardData();
-                    sessionStorage.setItem('dashboardData', JSON.stringify(data));
-                } else if (phone) {
-                    try {
-                        if (typeof google !== 'undefined' && google.script && google.script.run) {
-                            data = await new Promise(resolve => {
-                                google.script.run.withSuccessHandler(res => resolve(res)).getTutorDashboardData(phone);
-                            });
-                            if (data && !data.error) {
-                                sessionStorage.setItem('dashboardData', JSON.stringify(data));
-                            }
+            var normLoggedPhone = (typeof normalizePhone === 'function' ? normalizePhone(phone) : phone) || '';
+            var normDataPhone = (data && data.tutorPhone && (typeof normalizePhone === 'function' ? normalizePhone(data.tutorPhone) : data.tutorPhone)) || '';
+            var isDataStaleOrMismatch = !data || !data.students || (Array.isArray(data.students) && data.students.length === 0) || (normLoggedPhone && normDataPhone && normLoggedPhone !== normDataPhone) || !data.email || !data.subjects;
+
+            if (isDataStaleOrMismatch && role === 'tutor' && phone) {
+                try {
+                    if (typeof getTutorDashboardDataInternal === 'function') {
+                        data = await getTutorDashboardDataInternal(phone);
+                        if (data && !data.error) {
+                            sessionStorage.setItem('dashboardData', JSON.stringify(data));
                         }
-                    } catch(err) {
-                        console.warn('Fallback load dashboard error:', err);
+                    } else if (typeof google !== 'undefined' && google.script && google.script.run) {
+                        data = await new Promise(resolve => {
+                            google.script.run.withSuccessHandler(res => resolve(res)).getTutorDashboardData(phone);
+                        });
+                        if (data && !data.error) {
+                            sessionStorage.setItem('dashboardData', JSON.stringify(data));
+                        }
                     }
+                } catch(err) {
+                    console.warn('Fallback load dashboard error:', err);
                 }
+            }
+
+            // Chế độ Demo: Tự động khởi tạo dữ liệu mẫu nếu chưa có phiên hoặc là tài khoản demo Thầy Nam
+            if ((!data || !data.students || role !== 'tutor' || !phone || phone === '0123456789' || (data.students[0] && (!data.students[0].logs || data.students[0].logs.length < 8))) && typeof getTutorDemoDashboardData === 'function') {
+                phone = '0123456789';
+                role = 'tutor';
+                pin = '1234';
+                sessionStorage.setItem('userPhone', phone);
+                sessionStorage.setItem('userRole', role);
+                sessionStorage.setItem('userPin', pin);
+                data = getTutorDemoDashboardData();
+                sessionStorage.setItem('dashboardData', JSON.stringify(data));
             }
 
             if (!data || role !== 'tutor') {
@@ -4166,6 +4324,11 @@
             renderTutorView(data);
             if (typeof renderTutorAccountStatusBanner === 'function') {
                 renderTutorAccountStatusBanner(data);
+            }
+
+            // Đồng bộ theme từ Supabase Cloud để nếu đổi trên trình duyệt khác thì trình duyệt này cập nhật ngay
+            if (typeof syncServerTheme === 'function') {
+                syncServerTheme(true);
             }
 
             var mobName = document.getElementById('mobileHeaderTutorName');
@@ -4194,7 +4357,7 @@
         });
     </script>
     <!-- PWA Install Script -->
-    <script src="js/pwa-install.js"></script>
+    <script src="js/pwa-install.js?v=3.0.5"></script>
 
 <!-- ================= THEME SWITCHER MODAL (TASK 12.5) ================= -->
 <div id="themeSwitcherPanel" class="theme-switcher-panel" style="display:none;">
