@@ -836,20 +836,44 @@
 
         // Đăng nhập nhanh 1 chạm Demo PH/HS
         function fillQuickStudent(phone) {
-            window.location.href = 'student-login.html?phone=' + encodeURIComponent(phone);
+            phone = phone || '0912345678';
+            sessionStorage.setItem('userRole', 'student');
+            sessionStorage.setItem('userPhone', phone);
+            sessionStorage.setItem('userPin', '');
+            if (typeof getDemoStudentLoginResult === 'function') {
+                var d = getDemoStudentLoginResult(phone);
+                if (d && d.data) {
+                    sessionStorage.setItem('dashboardData', JSON.stringify(d.data));
+                }
+            }
+            window.location.href = 'student-dashboard.html';
         }
         window.fillQuickStudent = fillQuickStudent;
 
         // Đăng nhập nhanh 1 chạm Demo Gia Sư
         function fillQuickTutor(phone, pin) {
-            const pInput = document.getElementById('gsPhone');
-            const pinInput = document.getElementById('gsPin');
+            phone = phone || '0123456789';
+            pin = pin || '1234';
+            const pInput = document.getElementById('tutorPhone') || document.getElementById('gsPhone');
+            const pinInput = document.getElementById('tutorPin') || document.getElementById('gsPin');
             if (pInput) pInput.value = phone;
             if (pinInput) pinInput.value = pin;
-            const form = document.getElementById('formGiaSu');
-            if (form) {
-                form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
+            
+            var loadingText = document.getElementById('tutorLoadingText');
+            if (loadingText) loadingText.style.display = 'block';
+            var btnSubmit = document.getElementById('btnSubmitGiaSu');
+            if (btnSubmit) btnSubmit.disabled = true;
+
+            sessionStorage.setItem('userRole', 'tutor');
+            sessionStorage.setItem('userPhone', phone);
+            sessionStorage.setItem('userPin', pin);
+            if (typeof getTutorDemoDashboardData === 'function') {
+                var dData = getTutorDemoDashboardData();
+                sessionStorage.setItem('dashboardData', JSON.stringify(dData));
             }
+            setTimeout(function() {
+                window.location.href = 'tutor-dashboard.html';
+            }, 180);
         }
         window.fillQuickTutor = fillQuickTutor;
 
@@ -1572,6 +1596,26 @@ async function doTutorLogin() {
     const err = checkPhoneError(phone);
     if (err) return setTutorAlert(err);
     if (!rawPin || rawPin.length < 4) return setTutorAlert('Mã PIN/Mật khẩu phải từ 4 ký tự trở lên.');
+
+    // Hỗ trợ đăng nhập trực tiếp tài khoản Demo Thầy Nam
+    const isDemoTutor = (phone === '0123456789' || phone === '123456789' || rawPhone === '0123456789') && String(rawPin).trim() === '1234';
+    if (isDemoTutor) {
+        if (loadingText) loadingText.style.display = 'block';
+        if (btnSubmit) btnSubmit.disabled = true;
+        if (rememberChk && rememberChk.checked) {
+            localStorage.setItem('zt_remember_phone', '0123456789');
+        }
+        sessionStorage.setItem('userRole', 'tutor');
+        sessionStorage.setItem('userPhone', '0123456789');
+        sessionStorage.setItem('userPin', '1234');
+        if (typeof getTutorDemoDashboardData === 'function') {
+            sessionStorage.setItem('dashboardData', JSON.stringify(getTutorDemoDashboardData()));
+        }
+        setTimeout(function() {
+            window.location.href = 'tutor-dashboard.html';
+        }, 180);
+        return;
+    }
 
     if (loadingText) loadingText.style.display = 'block';
     if (btnSubmit) btnSubmit.disabled = true;

@@ -497,60 +497,62 @@
     <script>
         // Đăng nhập nhanh 1 chạm Demo Học sinh
         function fillQuickStudent(phone) {
-            const pInput = document.getElementById('studentPhone');
-            if (pInput) {
-                pInput.value = phone;
-                const form = document.getElementById('formPhHs');
-                if (form) {
-                    if (typeof xuLyTraCuu === 'function') {
-                        xuLyTraCuu('student');
-                    } else {
-                        form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-                    }
-                    return;
+            phone = phone || '0912345678';
+            const pInput = document.getElementById('maHocSinh') || document.getElementById('studentPhone');
+            if (pInput) pInput.value = phone;
+
+            var loadingText = document.getElementById('loadingText');
+            if (loadingText) loadingText.style.display = 'block';
+            var btnSubmit = document.getElementById('btnSubmitPhHs');
+            if (btnSubmit) btnSubmit.disabled = true;
+
+            sessionStorage.setItem('userRole', 'student');
+            sessionStorage.setItem('userPhone', phone);
+            sessionStorage.setItem('userPin', '');
+            if (typeof getDemoStudentLoginResult === 'function') {
+                var dRes = getDemoStudentLoginResult(phone);
+                if (dRes && dRes.data) {
+                    sessionStorage.setItem('dashboardData', JSON.stringify(dRes.data));
                 }
             }
-            window.location.href = 'student-login.html?phone=' + encodeURIComponent(phone);
+            setTimeout(function() {
+                window.location.href = 'student-dashboard.html';
+            }, 180);
         }
         window.fillQuickStudent = fillQuickStudent;
 
         // Đăng nhập nhanh 1 chạm Demo Bài tập
         function fillQuickHw(code) {
             const input = document.getElementById('maBaiTap') || document.getElementById('maInput');
-            if (input) {
-                input.value = code;
-                const form = document.getElementById('formBaiTap');
-                if (form) {
-                    if (typeof xuLyTraCuu === 'function') {
-                        xuLyTraCuu('homework');
-                    } else {
-                        form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-                    }
-                    return;
-                }
-            }
+            if (input) input.value = code;
             window.location.href = 'homework.html?code=' + encodeURIComponent(code);
         }
         window.fillQuickHw = fillQuickHw;
 
         // Đăng nhập nhanh 1 chạm Demo Gia Sư
         function fillQuickTutor(phone, pin) {
-            const pInput = document.getElementById('gsPhone');
-            const pinInput = document.getElementById('gsPin');
-            if (pInput) pInput.value = phone;
-            if (pinInput) pinInput.value = pin;
-            const form = document.getElementById('formGiaSu');
-            if (form) {
-                if (typeof xuLyDangNhapGiaSu === 'function') {
-                    xuLyDangNhapGiaSu();
-                } else {
-                    form.dispatchEvent(new Event('submit', { cancelable: true, bubbles: true }));
-                }
-            } else {
-                window.location.href = 'tutor-login.html';
+            phone = phone || '0123456789';
+            pin = pin || '1234';
+            sessionStorage.setItem('userRole', 'tutor');
+            sessionStorage.setItem('userPhone', phone);
+            sessionStorage.setItem('userPin', pin);
+            if (typeof getTutorDemoDashboardData === 'function') {
+                var dData = getTutorDemoDashboardData();
+                sessionStorage.setItem('dashboardData', JSON.stringify(dData));
             }
+            window.location.href = 'tutor-dashboard.html';
         }
         window.fillQuickTutor = fillQuickTutor;
+
+        window.addEventListener('DOMContentLoaded', function() {
+            try {
+                var urlParams = new URLSearchParams(window.location.search);
+                var qPhone = urlParams.get('phone');
+                if (qPhone) {
+                    fillQuickStudent(qPhone);
+                }
+            } catch(e) {}
+        });
 
         // Hàm chuyển đổi giữa các trang (SPA Logic)
         function switchTab(pageId) {

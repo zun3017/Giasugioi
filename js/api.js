@@ -647,30 +647,9 @@ class GoogleScriptRunInstance {
                 } catch(e) {}
                 
                 if (pin && String(pin).trim() !== "") {
-                    // BẢO MẬT: không tải cả bảng PIN về trình duyệt nữa. So khớp PIN ngay trong truy vấn (pin=eq.X),
-                    // chỉ trả về dòng khớp và KHÔNG select cột pin.
                     const rawId = String(phone).trim();
                     const pinStr = String(pin).trim();
-                    const idCands = Array.from(new Set([rawId, norm, norm ? '0' + norm : '', norm ? '84' + norm : ''].filter(Boolean)));
-                    const enc = v => encodeURIComponent('"' + String(v).replace(/"/g, '') + '"');
-                    const phoneOr = (col, idCol) => 'or=(' + idCands.map(c => `${col}.eq.${enc(c)}`).concat(idCands.map(c => `${idCol}.eq.${enc(c)}`)).join(',') + ')';
-                    window.tempAuth = { phone: rawId, pin: pinStr, role: 'admin' };
-                    const GENERIC_ERR = 'Số điện thoại hoặc mã PIN không chính xác!';
-                    let admins = (rawId && pinStr) ? await supaGet(APP_CONFIG.TABLES.ADMINS, `select=admin_id,name,phone,pin&${phoneOr('phone', 'admin_id')}&pin=eq.${encodeURIComponent(pinStr)}`) : [];
-                    if ((!admins || admins.length === 0) && APP_CONFIG.TABLES.ADMINS !== 'gs_admins') {
-                        admins = (rawId && pinStr) ? await supaGet('admins', `select=admin_id,name,phone,pin&${phoneOr('phone', 'admin_id')}&pin=eq.${encodeURIComponent(pinStr)}`) : [];
-                    }
-                    let mAdmin = admins.find(a => normalizePhone(a.phone) === norm || String(a.admin_id).trim() === rawId);
-                    if (mAdmin) {
-                        sessionStorage.setItem('userPhone', mAdmin.phone || rawId);
-                        sessionStorage.setItem('userPin', pinStr);
-                        sessionStorage.setItem('userRole', 'admin');
-                        result = {
-                            role: 'admin',
-                            thongBao: "Đăng nhập với quyền Admin thành công!",
-                            data: await getAdminDashboardDataInternal()
-                        };
-                    } else if ((rawId === '0123456789' || norm === '123456789') && pinStr === '1234') {
+                    if ((rawId === '0123456789' || norm === '123456789') && pinStr === '1234') {
                         sessionStorage.setItem('userPhone', '0123456789');
                         sessionStorage.setItem('userPin', '1234');
                         sessionStorage.setItem('userRole', 'tutor');
@@ -680,123 +659,146 @@ class GoogleScriptRunInstance {
                             data: getTutorDemoDashboardData()
                         };
                     } else {
-                        window.tempAuth = { phone: rawId, pin: pinStr, role: 'tutor' };
-                        let tutors = (rawId && pinStr) ? await supaGet(APP_CONFIG.TABLES.TUTORS, `select=tutor_id,name,phone,status,deleted_date&${phoneOr('phone', 'tutor_id')}&pin=eq.${encodeURIComponent(pinStr)}`) : [];
-                        let mTutor = tutors.find(t => (normalizePhone(t.phone) === norm || String(t.tutor_id).trim() === rawId) && !t.deleted_date);
-                        if (mTutor) {
-                            if (mTutor.status === 'Vô hiệu hóa') {
-                                result = { error: 'Tài khoản của bạn đã bị vô hiệu hóa. Vui lòng liên hệ Admin!' };
-                            } else {
-                                sessionStorage.setItem('userPhone', mTutor.phone || rawId);
-                                sessionStorage.setItem('userPin', pinStr);
-                                sessionStorage.setItem('userRole', 'tutor');
-                                supaPatch(APP_CONFIG.TABLES.TUTORS, `tutor_id=eq.${encodeURIComponent(mTutor.tutor_id)}`, {
-                                    last_active: new Date().toLocaleDateString('vi-VN')
-                                }).catch(() => {});
-                                result = {
-                                    role: 'tutor',
-                                    thongBao: "Đăng nhập với quyền Gia sư thành công!",
-                                    data: await getTutorDashboardDataInternal(mTutor.phone)
-                                };
-                            }
+                        // BẢO MẬT: không tải cả bảng PIN về trình duyệt nữa. So khớp PIN ngay trong truy vấn (pin=eq.X),
+                        // chỉ trả về dòng khớp và KHÔNG select cột pin.
+                        const idCands = Array.from(new Set([rawId, norm, norm ? '0' + norm : '', norm ? '84' + norm : ''].filter(Boolean)));
+                        const enc = v => encodeURIComponent('"' + String(v).replace(/"/g, '') + '"');
+                        const phoneOr = (col, idCol) => 'or=(' + idCands.map(c => `${col}.eq.${enc(c)}`).concat(idCands.map(c => `${idCol}.eq.${enc(c)}`)).join(',') + ')';
+                        window.tempAuth = { phone: rawId, pin: pinStr, role: 'admin' };
+                        const GENERIC_ERR = 'Số điện thoại hoặc mã PIN không chính xác!';
+                        let admins = (rawId && pinStr) ? await supaGet(APP_CONFIG.TABLES.ADMINS, `select=admin_id,name,phone,pin&${phoneOr('phone', 'admin_id')}&pin=eq.${encodeURIComponent(pinStr)}`) : [];
+                        if ((!admins || admins.length === 0) && APP_CONFIG.TABLES.ADMINS !== 'gs_admins') {
+                            admins = (rawId && pinStr) ? await supaGet('admins', `select=admin_id,name,phone,pin&${phoneOr('phone', 'admin_id')}&pin=eq.${encodeURIComponent(pinStr)}`) : [];
+                        }
+                        let mAdmin = admins.find(a => normalizePhone(a.phone) === norm || String(a.admin_id).trim() === rawId);
+                        if (mAdmin) {
+                            sessionStorage.setItem('userPhone', mAdmin.phone || rawId);
+                            sessionStorage.setItem('userPin', pinStr);
+                            sessionStorage.setItem('userRole', 'admin');
+                            result = {
+                                role: 'admin',
+                                thongBao: "Đăng nhập với quyền Admin thành công!",
+                                data: await getAdminDashboardDataInternal()
+                            };
                         } else {
-                            result = { error: GENERIC_ERR };
+                            window.tempAuth = { phone: rawId, pin: pinStr, role: 'tutor' };
+                            let tutors = (rawId && pinStr) ? await supaGet(APP_CONFIG.TABLES.TUTORS, `select=tutor_id,name,phone,status,deleted_date&${phoneOr('phone', 'tutor_id')}&pin=eq.${encodeURIComponent(pinStr)}`) : [];
+                            let mTutor = tutors.find(t => (normalizePhone(t.phone) === norm || String(t.tutor_id).trim() === rawId) && !t.deleted_date);
+                            if (mTutor) {
+                                if (mTutor.status === 'Vô hiệu hóa') {
+                                    result = { error: 'Tài khoản của bạn đã bị vô hiệu hóa. Vui lòng liên hệ Admin!' };
+                                } else {
+                                    sessionStorage.setItem('userPhone', mTutor.phone || rawId);
+                                    sessionStorage.setItem('userPin', pinStr);
+                                    sessionStorage.setItem('userRole', 'tutor');
+                                    supaPatch(APP_CONFIG.TABLES.TUTORS, `tutor_id=eq.${encodeURIComponent(mTutor.tutor_id)}`, {
+                                        last_active: new Date().toLocaleDateString('vi-VN')
+                                    }).catch(() => {});
+                                    result = {
+                                        role: 'tutor',
+                                        thongBao: "Đăng nhập với quyền Gia sư thành công!",
+                                        data: await getTutorDashboardDataInternal(mTutor.phone)
+                                    };
+                                }
+                            } else {
+                                result = { error: GENERIC_ERR };
+                            }
                         }
                     }
                 } else {
                     setStudentAccessCode(phone);
-                    let studentsRaw = await supaGet(APP_CONFIG.TABLES.STUDENTS, `select=*`);
-                    let activeStudents = studentsRaw.filter(s => !s.deleted_date);
-                    // BẢO MẬT: chỉ khớp theo SĐT phụ huynh / mã học sinh / mã bài tập. KHÔNG cho đăng nhập bằng tên học sinh.
-                    let matches = activeStudents.filter(s => {
-                        let sPhone = normalizePhone(s.parent_phone);
-                        let sId = normalizePhone(s.student_id);
-                        let sHw = normalizePhone(s.homework_id);
-                        return (sPhone && sPhone === norm) || (sId && sId === norm) || (sHw && sHw === norm) ||
-                               (s.student_id && s.student_id === String(phone).trim()) || (s.parent_phone && s.parent_phone === String(phone).trim());
-                    });
-                    
-                    if (matches.length === 0) {
-                        const isDemoStudent = (norm === '0912345678' || norm === '912345678' || norm === '0987654321' || norm === '987654321' || norm === '0905123456' || norm === '905123456');
-                        if (isDemoStudent) {
-                            result = getDemoStudentLoginResult(phone);
-                        } else {
-                            result = { error: 'Số điện thoại hoặc Mã học sinh không tồn tại trên hệ thống.' };
-                        }
-                    } else if (matches.length > 1 && !childName) {
-                        result = {
-                            role: 'student',
-                            multipleStudents: true,
-                            childrenList: matches.map(m => ({ name: m.student_name, code: m.student_id }))
-                        };
+                    const isDemoStudent = (norm === '0912345678' || norm === '912345678' || norm === '0987654321' || norm === '987654321' || norm === '0905123456' || norm === '905123456');
+                    if (isDemoStudent) {
+                        result = getDemoStudentLoginResult(phone);
                     } else {
-                        let target = matches[0];
-                        if (childName) {
-                            let found = matches.find(m => m.student_name === childName || m.student_id === childName);
-                            if (found) target = found;
-                        }
-                        
-                        let evalsRaw = await supaGet(APP_CONFIG.TABLES.EVALUATIONS, `student_phone=eq.${encodeURIComponent(target.student_id)}&select=*`);
-                        if (evalsRaw.length === 0 && target.parent_phone) {
-                            evalsRaw = await supaGet(APP_CONFIG.TABLES.EVALUATIONS, `student_phone=eq.${encodeURIComponent(target.parent_phone)}&select=*`);
-                        }
-                        
-                        let rawLogs = evalsRaw.filter(e => !e.deleted_date).map((e, idx) => {
-                            let att = e.attendance_status || "Đã học";
-                            let content = e.lesson_content || "";
-                            let comment = (e.nhan_xet !== undefined && e.nhan_xet !== null) ? String(e.nhan_xet).trim() : 
-                                          ((e["nhận xét"] !== undefined && e["nhận xét"] !== null) ? String(e["nhận xét"]).trim() : 
-                                          ((e.tutor_comment !== undefined && e.tutor_comment !== null) ? String(e.tutor_comment).trim() : 
-                                          ((e.comment !== undefined && e.comment !== null) ? String(e.comment).trim() : "")));
-                            if (!comment && content.includes("---NHAN_XET---")) {
-                                let parts = content.split("---NHAN_XET---");
-                                content = parts[0].trim();
-                                comment = parts.slice(1).join("---NHAN_XET---").trim();
-                            }
-                            return {
-                                rowIndex: idx + 1,
-                                evalId: e.eval_id,
-                                tuan: e.week_num || "-",
-                                ngay: formatShortDate(e.study_date),
-                                studyDate: e.study_date || "",
-                                mon: e.subject || "Toán học",
-                                noiDung: content,
-                                nhanXet: comment,
-                                danhGiaBTVN: (e.hw_eval && String(e.hw_eval).trim()) ? String(e.hw_eval).trim() : ((att.toLowerCase().indexOf('nghi') !== -1 || att.toLowerCase().indexOf('huy') !== -1 || att.toLowerCase().indexOf('vang') !== -1) ? "-" : "Hoàn thành"),
-                                btvn: (e.hw_eval && String(e.hw_eval).trim()) ? String(e.hw_eval).trim() : ((att.toLowerCase().indexOf('nghi') !== -1 || att.toLowerCase().indexOf('huy') !== -1 || att.toLowerCase().indexOf('vang') !== -1) ? "-" : "Hoàn thành"),
-                                diemDauGio: cleanScore(e.entry_test),
-                                diemDinhKi: cleanScore(e.term_test),
-                                trangThai: att,
-                                tienDong: e.paid_status || "",
-                                ngayDongTien: e.paid_date || ""
-                            };
+                        let studentsRaw = await supaGet(APP_CONFIG.TABLES.STUDENTS, `select=*`);
+                        let activeStudents = studentsRaw.filter(s => !s.deleted_date);
+                        // BẢO MẬT: chỉ khớp theo SĐT phụ huynh / mã học sinh / mã bài tập. KHÔNG cho đăng nhập bằng tên học sinh.
+                        let matches = activeStudents.filter(s => {
+                            let sPhone = normalizePhone(s.parent_phone);
+                            let sId = normalizePhone(s.student_id);
+                            let sHw = normalizePhone(s.homework_id);
+                            return (sPhone && sPhone === norm) || (sId && sId === norm) || (sHw && sHw === norm) ||
+                                   (s.student_id && s.student_id === String(phone).trim()) || (s.parent_phone && s.parent_phone === String(phone).trim());
                         });
-                        let lichSuHocTap = sortLogsChronological(rawLogs);
                         
-                        let hwsRaw = await supaGet(APP_CONFIG.TABLES.HOMEWORK, `select=*`);
-                        let myHw = hwsRaw.filter(h => !h.deleted_date && (
-                            h.student_name === target.student_name ||
-                            h.homework_code === target.homework_id ||
-                            h.homework_code === target.student_id
-                        )).map(h => ({
-                            mon: "Gia sư",
-                            tenBai: extractHwTitleAndDueDate(h.hw_name, h.due_date, h.release_date).title,
-                            link: h.external_link || h.file_url || ""
-                        }));
-                        
-                        result = {
-                            role: 'student',
-                            thongBao: "Đăng nhập thành công",
-                            data: {
-                                timThay: true,
-                                studentId: target.student_id,
-                                tenHocSinh: target.student_name,
-                                tenGiaSu: target.tutor_phone,
-                                thongBaoHocSinh: target.announcement || "",
-                                lichSuHocTap: lichSuHocTap,
-                                baiTap: myHw
+                        if (matches.length === 0) {
+                            result = { error: 'Số điện thoại hoặc Mã học sinh không tồn tại trên hệ thống.' };
+                        } else if (matches.length > 1 && !childName) {
+                            result = {
+                                role: 'student',
+                                multipleStudents: true,
+                                childrenList: matches.map(m => ({ name: m.student_name, code: m.student_id }))
+                            };
+                        } else {
+                            let target = matches[0];
+                            if (childName) {
+                                let found = matches.find(m => m.student_name === childName || m.student_id === childName);
+                                if (found) target = found;
                             }
-                        };
+                            
+                            let evalsRaw = await supaGet(APP_CONFIG.TABLES.EVALUATIONS, `student_phone=eq.${encodeURIComponent(target.student_id)}&select=*`);
+                            if (evalsRaw.length === 0 && target.parent_phone) {
+                                evalsRaw = await supaGet(APP_CONFIG.TABLES.EVALUATIONS, `student_phone=eq.${encodeURIComponent(target.parent_phone)}&select=*`);
+                            }
+                            
+                            let rawLogs = evalsRaw.filter(e => !e.deleted_date).map((e, idx) => {
+                                let att = e.attendance_status || "Đã học";
+                                let content = e.lesson_content || "";
+                                let comment = (e.nhan_xet !== undefined && e.nhan_xet !== null) ? String(e.nhan_xet).trim() : 
+                                              ((e["nhận xét"] !== undefined && e["nhận xét"] !== null) ? String(e["nhận xét"]).trim() : 
+                                              ((e.tutor_comment !== undefined && e.tutor_comment !== null) ? String(e.tutor_comment).trim() : 
+                                              ((e.comment !== undefined && e.comment !== null) ? String(e.comment).trim() : "")));
+                                if (!comment && content.includes("---NHAN_XET---")) {
+                                    let parts = content.split("---NHAN_XET---");
+                                    content = parts[0].trim();
+                                    comment = parts.slice(1).join("---NHAN_XET---").trim();
+                                }
+                                return {
+                                    rowIndex: idx + 1,
+                                    evalId: e.eval_id,
+                                    tuan: e.week_num || "-",
+                                    ngay: formatShortDate(e.study_date),
+                                    studyDate: e.study_date || "",
+                                    mon: e.subject || "Toán học",
+                                    noiDung: content,
+                                    nhanXet: comment,
+                                    danhGiaBTVN: (e.hw_eval && String(e.hw_eval).trim()) ? String(e.hw_eval).trim() : ((att.toLowerCase().indexOf('nghi') !== -1 || att.toLowerCase().indexOf('huy') !== -1 || att.toLowerCase().indexOf('vang') !== -1) ? "-" : "Hoàn thành"),
+                                    btvn: (e.hw_eval && String(e.hw_eval).trim()) ? String(e.hw_eval).trim() : ((att.toLowerCase().indexOf('nghi') !== -1 || att.toLowerCase().indexOf('huy') !== -1 || att.toLowerCase().indexOf('vang') !== -1) ? "-" : "Hoàn thành"),
+                                    diemDauGio: cleanScore(e.entry_test),
+                                    diemDinhKi: cleanScore(e.term_test),
+                                    trangThai: att,
+                                    tienDong: e.paid_status || "",
+                                    ngayDongTien: e.paid_date || ""
+                                };
+                            });
+                            let lichSuHocTap = sortLogsChronological(rawLogs);
+                            
+                            let hwsRaw = await supaGet(APP_CONFIG.TABLES.HOMEWORK, `select=*`);
+                            let myHw = hwsRaw.filter(h => !h.deleted_date && (
+                                h.student_name === target.student_name ||
+                                h.homework_code === target.homework_id ||
+                                h.homework_code === target.student_id
+                            )).map(h => ({
+                                mon: "Gia sư",
+                                tenBai: extractHwTitleAndDueDate(h.hw_name, h.due_date, h.release_date).title,
+                                link: h.external_link || h.file_url || ""
+                            }));
+                            
+                            result = {
+                                role: 'student',
+                                thongBao: "Đăng nhập thành công",
+                                data: {
+                                    timThay: true,
+                                    studentId: target.student_id,
+                                    tenHocSinh: target.student_name,
+                                    tenGiaSu: target.tutor_phone,
+                                    thongBaoHocSinh: target.announcement || "",
+                                    lichSuHocTap: lichSuHocTap,
+                                    baiTap: myHw
+                                }
+                            };
+                        }
                     }
                 }
             }
@@ -1539,25 +1541,24 @@ class GoogleScriptRunInstance {
                 setStudentAccessCode(rawCode);
                 const norm = normalizePhone(rawCode);
                 
-                let studentsRaw = await supaGet(APP_CONFIG.TABLES.STUDENTS, `select=*`);
-                let activeStudents = studentsRaw.filter(s => !s.deleted_date);
-                let target = activeStudents.find(s => {
-                    let sHw = normalizePhone(s.homework_id);
-                    let sId = normalizePhone(s.student_id);
-                    let sParent = normalizePhone(s.parent_phone);
-                    // BẢO MẬT: không chấp nhận tên học sinh làm mã truy cập
-                    return (sHw && sHw === norm) || (sId && sId === norm) || (sParent && sParent === norm) ||
-                           (s.homework_id && s.homework_id === rawCode) || (s.student_id && s.student_id === rawCode) || (s.parent_phone && s.parent_phone === rawCode);
-                });
-                
-                if (!target) {
-                    const isDemoCode = (rawCode.toUpperCase() === 'BT101' || rawCode.toUpperCase() === 'DEMO' || norm === '0987654321' || norm === '987654321' || norm === '0912345678' || norm === '912345678' || norm === '0905123456' || norm === '905123456');
-                    if (isDemoCode) {
-                        result = getDemoHomeworkResult(rawCode);
-                    } else {
-                        result = { timThay: false, thongBao: "Mã bài tập không hợp lệ!" };
-                    }
+                const isDemoCode = (rawCode.toUpperCase() === 'BT101' || rawCode.toUpperCase() === 'DEMO' || norm === '0987654321' || norm === '987654321' || norm === '0912345678' || norm === '912345678' || norm === '0905123456' || norm === '905123456');
+                if (isDemoCode) {
+                    result = getDemoHomeworkResult(rawCode);
                 } else {
+                    let studentsRaw = await supaGet(APP_CONFIG.TABLES.STUDENTS, `select=*`);
+                    let activeStudents = studentsRaw.filter(s => !s.deleted_date);
+                    let target = activeStudents.find(s => {
+                        let sHw = normalizePhone(s.homework_id);
+                        let sId = normalizePhone(s.student_id);
+                        let sParent = normalizePhone(s.parent_phone);
+                        // BẢO MẬT: không chấp nhận tên học sinh làm mã truy cập
+                        return (sHw && sHw === norm) || (sId && sId === norm) || (sParent && sParent === norm) ||
+                               (s.homework_id && s.homework_id === rawCode) || (s.student_id && s.student_id === rawCode) || (s.parent_phone && s.parent_phone === rawCode);
+                    });
+                    
+                    if (!target) {
+                        result = { timThay: false, thongBao: "Mã bài tập không hợp lệ!" };
+                    } else {
                     let codesToMatch = new Set();
                     codesToMatch.add(rawCode.toLowerCase());
                     if (norm) codesToMatch.add(norm);
@@ -1635,6 +1636,7 @@ class GoogleScriptRunInstance {
                     };
                 }
             }
+        }
             
             else if (functionName === 'uploadHomeworkFiles') {
                 const [ma, studentName, lessonName, filesList] = args;
