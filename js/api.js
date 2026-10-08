@@ -2315,7 +2315,7 @@ function getDemoStudentLogs(identifier) {
 
     if (typeof sessionStorage !== 'undefined') {
         try {
-            const cached = sessionStorage.getItem('DEMO_STUDENT_LOGS_' + phoneKey);
+            const cached = sessionStorage.getItem('DEMO_STUDENT_LOGS_V2_' + phoneKey);
             if (cached) {
                 const parsed = JSON.parse(cached);
                 if (Array.isArray(parsed) && parsed.length >= 8) {
@@ -2622,17 +2622,17 @@ function getDemoStudentLogs(identifier) {
     } else if (isDang) {
         logs = [
             {
-                rowIndex: 9,
-                evalId: "DEMO_EVAL_DANG_9",
-                buoiSo: 9,
-                tuan: "9",
+                rowIndex: 10,
+                evalId: "DEMO_EVAL_DANG_10",
+                buoiSo: 10,
+                tuan: "10",
                 ngay: "04/10/2026",
                 ngayHoc: "04/10/2026",
                 studyDate: "2026-10-04",
-                mon: "Vật Lý",
-                topic: "Tụ điện & Ghép bộ tụ điện song song, nối tiếp nâng cao",
-                noiDung: "Tụ điện & Ghép bộ tụ điện song song, nối tiếp nâng cao",
-                nhanXet: "Giải đề chuyên nhanh và chuẩn xác. Tính toán điện dung bộ tụ rất thông minh.",
+                mon: "Ielts",
+                topic: "IELTS Speaking Part 2: Chiến lược ghi chú 1 phút và làm chủ bài nói 2 phút chủ đề Person & Event",
+                noiDung: "IELTS Speaking Part 2: Chiến lược ghi chú 1 phút và làm chủ bài nói 2 phút chủ đề Person & Event",
+                nhanXet: "Phát âm chuẩn IPA, biết dùng linking words mượt mà, phản xạ tự nhiên đạt Band 7.0+ Speaking.",
                 chuyenCan: "Có mặt",
                 trangThai: "Có mặt",
                 attendance_status: "Có mặt",
@@ -2651,17 +2651,17 @@ function getDemoStudentLogs(identifier) {
                 paid_date: ""
             },
             {
-                rowIndex: 8,
-                evalId: "DEMO_EVAL_DANG_8",
-                buoiSo: 8,
-                tuan: "8",
+                rowIndex: 9,
+                evalId: "DEMO_EVAL_DANG_9",
+                buoiSo: 9,
+                tuan: "9",
                 ngay: "02/10/2026",
                 ngayHoc: "02/10/2026",
                 studyDate: "2026-10-02",
-                mon: "Vật Lý",
-                topic: "Điện thế, Hiệu điện thế & Công của lực điện trường",
-                noiDung: "Điện thế, Hiệu điện thế & Công của lực điện trường",
-                nhanXet: "Nắm vững công thức A = qEd, phân biệt rõ điện thế và thế năng tĩnh điện.",
+                mon: "Ielts",
+                topic: "IELTS Writing Task 1: Phân tích biểu đồ cột (Bar Chart) & Kỹ thuật so sánh số liệu tĩnh/động",
+                noiDung: "IELTS Writing Task 1: Phân tích biểu đồ cột (Bar Chart) & Kỹ thuật so sánh số liệu tĩnh/động",
+                nhanXet: "Overview viết rất sắc bén, nhóm thông tin logic và dùng từ vựng tăng giảm (fluctuate, plateau) chuẩn xác.",
                 chuyenCan: "Có mặt",
                 trangThai: "Có mặt",
                 attendance_status: "Có mặt",
@@ -2680,6 +2680,35 @@ function getDemoStudentLogs(identifier) {
                 paid_date: ""
             },
             {
+                rowIndex: 8,
+                evalId: "DEMO_EVAL_DANG_8",
+                buoiSo: 8,
+                tuan: "8",
+                ngay: "29/09/2026",
+                ngayHoc: "29/09/2026",
+                studyDate: "2026-09-29",
+                mon: "Ielts",
+                topic: "IELTS Reading: Dạng bài Matching Headings (Nối tiêu đề đoạn văn) & Summary Completion",
+                noiDung: "IELTS Reading: Dạng bài Matching Headings (Nối tiêu đề đoạn văn) & Summary Completion",
+                nhanXet: "Nắm vững kỹ thuật Skim & Scan, không bị phân tâm bởi từ gây nhiễu trong đoạn văn học thuật.",
+                chuyenCan: "Có mặt",
+                trangThai: "Có mặt",
+                attendance_status: "Có mặt",
+                btvn: "Hoàn thành",
+                danhGiaBTVN: "Hoàn thành",
+                hw_eval: "Hoàn thành",
+                diemDG: "9.0",
+                diemDauGio: 9.0,
+                entry_test: 9.0,
+                diemDK: "9.5",
+                diemDinhKi: 9.5,
+                term_test: 9.5,
+                tienDong: "Chưa đóng",
+                paid_status: "Chưa đóng",
+                ngayDongTien: "",
+                paid_date: ""
+            },
+            {
                 rowIndex: 7,
                 evalId: "DEMO_EVAL_DANG_7",
                 buoiSo: 7,
@@ -2687,10 +2716,10 @@ function getDemoStudentLogs(identifier) {
                 ngay: "25/09/2026",
                 ngayHoc: "25/09/2026",
                 studyDate: "2026-09-25",
-                mon: "Vật Lý",
-                topic: "Điện trường đều & Bài toán chuyển động của hạt mang điện",
-                noiDung: "Điện trường đều & Bài toán chuyển động của hạt mang điện",
-                nhanXet: "Áp dụng định lý động năng và phân tích quỹ đạo parabol hạt điện tích xuất sắc.",
+                mon: "Ielts",
+                topic: "IELTS Listening Section 3: Bẫy đánh lạc hướng trong hội thoại học thuật và bắt từ khóa paraphrasing",
+                noiDung: "IELTS Listening Section 3: Bẫy đánh lạc hướng trong hội thoại học thuật và bắt từ khóa paraphrasing",
+                nhanXet: "Nghe bắt keyword tốt, nhận diện chính xác các từ đồng nghĩa và cấu trúc đảo ngữ.",
                 chuyenCan: "Có mặt",
                 trangThai: "Có mặt",
                 attendance_status: "Có mặt",
@@ -2716,10 +2745,10 @@ function getDemoStudentLogs(identifier) {
                 ngay: "22/09/2026",
                 ngayHoc: "22/09/2026",
                 studyDate: "2026-09-22",
-                mon: "Vật Lý",
-                topic: "Cường độ điện trường & Nguyên lý chồng chất điện trường",
-                noiDung: "Cường độ điện trường & Nguyên lý chồng chất điện trường",
-                nhanXet: "Kỹ năng cộng vector điện trường rất tốt, nắm chắc phương pháp hình học.",
+                mon: "Ielts",
+                topic: "IELTS Writing Task 2: Dạng bài Opinion Essay (Agree or Disagree) - Lập dàn ý & Luận điểm phản biện",
+                noiDung: "IELTS Writing Task 2: Dạng bài Opinion Essay (Agree or Disagree) - Lập dàn ý & Luận điểm phản biện",
+                nhanXet: "Cấu trúc bài viết chặt chẽ, luận điểm rõ ràng, dùng tốt các cụm từ học thuật C1 (academic collocations).",
                 chuyenCan: "Có mặt",
                 trangThai: "Có mặt",
                 attendance_status: "Có mặt",
@@ -2745,10 +2774,10 @@ function getDemoStudentLogs(identifier) {
                 ngay: "18/09/2026",
                 ngayHoc: "18/09/2026",
                 studyDate: "2026-09-18",
-                mon: "Vật Lý",
-                topic: "Thuyết electron & Định luật bảo toàn điện tích",
-                noiDung: "Thuyết electron & Định luật bảo toàn điện tích",
-                nhanXet: "Hiểu sâu sắc các hiện tượng nhiễm điện do cọ xát, tiếp xúc và hưởng ứng.",
+                mon: "Ielts",
+                topic: "IELTS Speaking Part 1: Phát triển câu trả lời theo công thức AREA (Answer - Reason - Example)",
+                noiDung: "IELTS Speaking Part 1: Phát triển câu trả lời theo công thức AREA (Answer - Reason - Example)",
+                nhanXet: "Ngữ điệu tự nhiên, mở rộng câu trả lời đầy đủ, làm chủ thì hoàn thành và câu điều kiện loại 2.",
                 chuyenCan: "Có mặt",
                 trangThai: "Có mặt",
                 attendance_status: "Có mặt",
@@ -2774,10 +2803,10 @@ function getDemoStudentLogs(identifier) {
                 ngay: "15/09/2026",
                 ngayHoc: "15/09/2026",
                 studyDate: "2026-09-15",
-                mon: "Vật Lý",
-                topic: "Định luật Cu-lông và Cân bằng của hệ điện tích điểm",
-                noiDung: "Định luật Cu-lông và Cân bằng của hệ điện tích điểm",
-                nhanXet: "Làm bài nhanh, biết cách xét cân bằng lực cho hệ 3 điện tích tự do.",
+                mon: "Ielts",
+                topic: "IELTS Reading: Chiến thuật xử lý dạng bài True / False / Not Given & Yes / No / Not Given",
+                noiDung: "IELTS Reading: Chiến thuật xử lý dạng bài True / False / Not Given & Yes / No / Not Given",
+                nhanXet: "Phân biệt rạch ròi giữa False và Not Given, tốc độ đọc hiểu cải thiện vượt bậc.",
                 chuyenCan: "Có mặt",
                 trangThai: "Có mặt",
                 attendance_status: "Có mặt",
@@ -2803,10 +2832,10 @@ function getDemoStudentLogs(identifier) {
                 ngay: "11/09/2026",
                 ngayHoc: "11/09/2026",
                 studyDate: "2026-09-11",
-                mon: "Vật Lý",
-                topic: "Luyện tập: Lực tương tác tĩnh điện giữa các quả cầu nhỏ",
-                noiDung: "Luyện tập: Lực tương tác tĩnh điện giữa các quả cầu nhỏ",
-                nhanXet: "Chăm chỉ, chủ động tìm kiếm các bài tập nâng cao.",
+                mon: "Ielts",
+                topic: "IELTS Writing Task 1: Cấu trúc Overview và cách nhóm thông tin biểu đồ đường (Line Graph)",
+                noiDung: "IELTS Writing Task 1: Cấu trúc Overview và cách nhóm thông tin biểu đồ đường (Line Graph)",
+                nhanXet: "Viết câu phức rất chuẩn, từ vựng mô tả xu hướng đa dạng (soared, plummeted, leveled off).",
                 chuyenCan: "Có mặt",
                 trangThai: "Có mặt",
                 attendance_status: "Có mặt",
@@ -2832,10 +2861,10 @@ function getDemoStudentLogs(identifier) {
                 ngay: "08/09/2026",
                 ngayHoc: "08/09/2026",
                 studyDate: "2026-09-08",
-                mon: "Vật Lý",
-                topic: "Tổng ôn tập cơ học lớp 10: Động lượng và Năng lượng",
-                noiDung: "Tổng ôn tập cơ học lớp 10: Động lượng và Năng lượng",
-                nhanXet: "Nền tảng Vật lý 10 rất vững, sẵn sàng học tốt chương trình 11.",
+                mon: "Ielts",
+                topic: "IELTS Listening Section 1 & 2: Dạng Form Completion, bắt số điện thoại, ngày tháng và tên riêng",
+                noiDung: "IELTS Listening Section 1 & 2: Dạng Form Completion, bắt số điện thoại, ngày tháng và tên riêng",
+                nhanXet: "Không mắc lỗi chính tả (spelling) hay số nhiều (-s/-es), phản xạ nghe âm đuôi rất tốt.",
                 chuyenCan: "Có mặt",
                 trangThai: "Có mặt",
                 attendance_status: "Có mặt",
@@ -2861,10 +2890,10 @@ function getDemoStudentLogs(identifier) {
                 ngay: "04/09/2026",
                 ngayHoc: "04/09/2026",
                 studyDate: "2026-09-04",
-                mon: "Vật Lý",
-                topic: "Khởi động năm học: Phương pháp học Vật Lý 11 theo SGK mới",
-                noiDung: "Khởi động năm học: Phương pháp học Vật Lý 11 theo SGK mới",
-                nhanXet: "Ý thức học tập tự giác cao, tiếp thu bài nhanh chóng.",
+                mon: "Ielts",
+                topic: "Khảo sát trình độ đầu vào & Lập lộ trình mục tiêu IELTS 6.5+ (4 kỹ năng)",
+                noiDung: "Khảo sát trình độ đầu vào & Lập lộ trình mục tiêu IELTS 6.5+ (4 kỹ năng)",
+                nhanXet: "Nền tảng ngữ pháp và từ vựng B2 rất vững, phát âm tự nhiên, quyết tâm học tập cao.",
                 chuyenCan: "Có mặt",
                 trangThai: "Có mặt",
                 attendance_status: "Có mặt",
@@ -3190,7 +3219,7 @@ function getDemoStudentDetailsForTutor(studentPhone, studentName) {
     const name = isNam ? "Nguyễn Hoàng Nam" : (isDang ? "Phạm Hải Đăng" : "Lê Minh Thư");
     const p = isNam ? "0912345678" : (isDang ? "0905123456" : "0987654321");
     const parent = isNam ? "Bác Nam" : (isDang ? "Chú Đăng" : "Cô Thư");
-    const sub = isNam ? "Toán" : (isDang ? "Vật Lý" : "Toán & Vật Lý");
+    const sub = isNam ? "Toán" : (isDang ? "Ielts" : "Toán & Lý");
     const logs = getDemoStudentLogs(p);
 
     const stObj = {
@@ -3204,7 +3233,7 @@ function getDemoStudentDetailsForTutor(studentPhone, studentName) {
         billingType: "session",
         subject: sub,
         tutor_phone: "0123456789",
-        announcement: isNam ? "Bài tập tuần này đã giao trên hệ thống." : (isDang ? "Điểm kiểm tra định kỳ 9.5 rất tốt." : "Nhớ nộp bài phiếu 05 trước thứ Năm.")
+        announcement: isNam ? "Bài tập tuần này đã giao trên hệ thống." : (isDang ? "Bài tập IELTS Writing Task 1 tuần này đã chấm xong (Band 7.5)." : "Nhớ nộp bài phiếu 05 trước thứ Năm.")
     };
 
     return {
@@ -3255,7 +3284,7 @@ function getDemoTutorSchedule() {
             tutorPhone: "0123456789",
             tutorName: "Thầy Trần Hoàng Nam",
             studentName: "Phạm Hải Đăng",
-            subject: "Vật Lý 11",
+            subject: "Ielts 6.5+",
             color: "#F59E0B",
             fee: 200000,
             mon: "",
@@ -3336,13 +3365,13 @@ function getDemoSubmissionsForTutor(maBaiTap, studentName) {
             rowIndex: 5,
             studentName: "Phạm Hải Đăng",
             studentPhone: "0905123456",
-            lessonName: "Phiếu 02: Bài tập định luật Cu-lông nâng cao",
+            lessonName: "IELTS Writing Task 1: Line Graph & Bar Chart Practice",
             timestamp: "02/10/2026 20:30:00",
             submissionDate: "02/10/2026",
             fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
-            fileName: "phamhaidang_dinh_luat_coulomb.pdf",
-            score: "9.5",
-            comment: "Giải quyết bài toán 3 điện tích cân bằng rất xuất sắc!",
+            fileName: "phamhaidang_ielts_writing_task1.pdf",
+            score: "8.5",
+            comment: "Phân tích số liệu và nhóm biểu đồ rất tốt, cấu trúc Band 7.5 đa dạng và chính xác!",
             status: "Active"
         }
     ];
@@ -3405,9 +3434,9 @@ function getTutorDemoDashboardData() {
                 phone: "0987654321",
                 name: "Lê Minh Thư",
                 parentName: "Cô Thư",
-                subject: "Lý",
-                subjects: "Lý",
-                monHoc: "Lý",
+                subject: "Toán & Lý",
+                subjects: "Toán & Lý",
+                monHoc: "Toán & Lý",
                 classLevel: "Lớp 12",
                 gender: "Nữ",
                 tuition: 200000,
@@ -3425,14 +3454,14 @@ function getTutorDemoDashboardData() {
                 subject: "Ielts",
                 subjects: "Ielts",
                 monHoc: "Ielts",
-                classLevel: "Lớp 11",
+                classLevel: "Lớp 11 (Ielts)",
                 gender: "Nam",
                 tuition: 200000,
                 tuition_fee: 200000,
                 billing_type: "session",
                 billingType: "session",
                 maBaiTap: "0905123456",
-                thongBao: "Điểm kiểm tra định kỳ 9.5 rất tốt.",
+                thongBao: "Bài tập IELTS Writing Task 1 tuần này đã chấm xong (Band 7.5).",
                 logs: s3Logs
             }
         ],
@@ -3465,13 +3494,13 @@ function getDemoStudentLoginResult(phone) {
             tenHocSinh: name,
             tenGiaSu: "Thầy Trần Hoàng Nam (0123456789)",
             thongBaoHocSinh: "Chào mừng bạn đến với Cổng tra cứu tiến trình học tập ZunTutor!",
-            monHoc: isNam ? "Toán" : (isDang ? "Ielts" : "Lý"),
-            lop: isNam ? "Lớp 9" : (isDang ? "Lớp 11" : "Lớp 12"),
+            monHoc: isNam ? "Toán" : (isDang ? "Ielts" : "Toán & Lý"),
+            lop: isNam ? "Lớp 9" : (isDang ? "Lớp 11 (Ielts)" : "Lớp 12"),
             lichSuHocTap: logs,
             baiTap: [
                 {
-                    mon: isNam ? "Toán" : (isDang ? "Ielts" : "Lý"),
-                    tenBai: isNam ? "Phiếu 01: Hệ thức lượng trong tam giác vuông" : (isDang ? "IELTS Reading Practice Test 01" : "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị"),
+                    mon: isNam ? "Toán" : (isDang ? "Ielts" : "Toán & Lý"),
+                    tenBai: isNam ? "Phiếu 01: Hệ thức lượng trong tam giác vuông" : (isDang ? "IELTS Writing Task 1: Line Graph & Bar Chart Practice" : "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị"),
                     link: "homework.html?code=" + p
                 }
             ]
@@ -3480,7 +3509,7 @@ function getDemoStudentLoginResult(phone) {
 }
 if (typeof window !== 'undefined') window.getDemoStudentLoginResult = getDemoStudentLoginResult;
 
-// HELPER DEMO: Dữ liệu mẫu dùng thử 1 chạm cho Nộp bài / Xem đề Bài tập (BT101, Lê Minh Thư, Hoàng Nam)
+// HELPER DEMO: Dữ liệu mẫu dùng thử 1 chạm cho Nộp bài / Xem đề Bài tập (BT101, Lê Minh Thư, Hoàng Nam, Hải Đăng)
 function getDemoHomeworkResult(rawCode) {
     const rawUpper = String(rawCode || '').toUpperCase();
     const isNam = (rawUpper.includes('0912345678') || rawUpper.includes('912345678'));
@@ -3497,20 +3526,20 @@ function getDemoHomeworkResult(rawCode) {
                 hwId: "HW_01",
                 rowIndex: 1,
                 studentName: studentName,
-                title: "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị",
+                title: isDang ? "IELTS Writing Task 1: Phân tích biểu đồ Bar Chart" : (isNam ? "Chuyên đề: Hệ thức lượng trong tam giác vuông" : "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị"),
                 deadline: "20/10/2026",
                 fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
-                fileName: "phieu_01_dao_ham_cuc_tri.pdf",
+                fileName: isDang ? "ielts_writing_task1_bar_chart.pdf" : (isNam ? "he_thuc_luong.pdf" : "phieu_01_dao_ham_cuc_tri.pdf"),
                 externalLink: ""
             },
             {
                 hwId: "HW_02",
                 rowIndex: 2,
                 studentName: studentName,
-                title: "Chuyên đề: Giao thoa sóng cơ học nâng cao (40 câu)",
+                title: isDang ? "IELTS Reading: Matching Headings Practice Test 02" : (isNam ? "Đề ôn tập căn bậc hai và rút gọn biểu thức chứa căn" : "Chuyên đề: Giao thoa sóng cơ học nâng cao (40 câu)"),
                 deadline: "22/10/2026",
                 fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
-                fileName: "giao_thoa_song_nang_cao.pdf",
+                fileName: isDang ? "ielts_reading_practice_02.pdf" : (isNam ? "can_bac_hai.pdf" : "giao_thoa_song_nang_cao.pdf"),
                 externalLink: ""
             }
         ],
@@ -3518,13 +3547,13 @@ function getDemoHomeworkResult(rawCode) {
             {
                 subId: "SUB_01",
                 studentName: studentName,
-                lessonName: "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị",
+                lessonName: isDang ? "IELTS Writing Task 1: Line Graph & Bar Chart Practice" : (isNam ? "Phiếu 01: Hệ thức lượng trong tam giác vuông" : "Phiếu 01: 50 Câu Trắc Nghiệm Đạo Hàm & Cực Trị"),
                 fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
                 timestamp: "03/10/2026 21:15:30",
                 submissionDate: "03/10/2026",
                 status: "Đã chấm",
-                score: "9.5",
-                comment: "Bài giải rất chuẩn xác, trình bày sạch đẹp. Chú ý thêm câu 48.",
+                score: isDang ? "8.5" : (isNam ? "9.0" : "9.5"),
+                comment: isDang ? "Phân tích số liệu và nhóm biểu đồ rất tốt, cấu trúc Band 7.5 đa dạng và chính xác!" : (isNam ? "Áp dụng định lý đúng, trình bày các bước chứng minh hình học sạch sẽ." : "Bài giải rất chuẩn xác, trình bày sạch đẹp. Chú ý thêm câu 48."),
                 rowIndex: 1
             }
         ],

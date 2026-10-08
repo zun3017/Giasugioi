@@ -78,7 +78,7 @@ function generateInitialGiaSuDemoData() {
                 maBaiTap: "0987654321",
                 name: "Lê Minh Thư",
                 classLevel: "Lớp 12",
-                subject: "Lý",
+                subject: "Toán & Lý",
                 tutorName: "Thầy Trần Hoàng Nam",
                 tutorPhone: "0123456789",
                 parentName: "Cô Thư",
@@ -110,13 +110,13 @@ function generateInitialGiaSuDemoData() {
                 phone: "0905123456",
                 maBaiTap: "0905123456",
                 name: "Phạm Hải Đăng",
-                classLevel: "Lớp 11",
+                classLevel: "Lớp 11 (Ielts)",
                 subject: "Ielts",
                 tutorName: "Thầy Trần Hoàng Nam",
                 tutorPhone: "0123456789",
                 parentName: "Chú Đăng",
                 gpa: "9.2",
-                totalSessions: 9,
+                totalSessions: 10,
                 absentSessions: 0,
                 hwRate: "100%",
                 fee: "200.000đ/buổi",
@@ -125,17 +125,18 @@ function generateInitialGiaSuDemoData() {
                 billing_type: "session",
                 billingType: "session",
                 feeStatus: "Chưa đóng",
-                thongBao: "Điểm kiểm tra định kỳ 9.5 rất tốt.",
+                thongBao: "Bài tập IELTS Writing Task 1 tuần này đã chấm xong (Band 7.5).",
                 logs: (typeof getDemoStudentLogs === 'function') ? getDemoStudentLogs('0905123456') : [
-                    { tuan: 9, ngay: "04/10/2026", topic: "Tụ điện & Ghép bộ tụ điện song song, nối tiếp nâng cao", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.5", diemDK: "9.5", nhanXet: "Giải đề chuyên nhanh và chuẩn xác. Tính toán điện dung bộ tụ rất thông minh.", tienDong: "Chưa đóng" },
-                    { tuan: 8, ngay: "02/10/2026", topic: "Điện thế, Hiệu điện thế & Công của lực điện trường", chuyenCan: "Có mặt", btvn: "Hoàn thành 100%", diemDG: "9.0", diemDK: "9.0", nhanXet: "Nắm vững công thức A = qEd, phân biệt rõ điện thế và thế năng tĩnh điện.", tienDong: "Chưa đóng" },
-                    { tuan: 7, ngay: "25/09/2026", topic: "Điện trường đều & Bài toán chuyển động của hạt mang điện", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.0", diemDK: "9.5", nhanXet: "Áp dụng định lý động năng và phân tích quỹ đạo parabol hạt điện tích xuất sắc.", tienDong: "Chưa đóng" },
-                    { tuan: 6, ngay: "22/09/2026", topic: "Cường độ điện trường & Nguyên lý chồng chất điện trường", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.0", diemDK: "9.0", nhanXet: "Kỹ năng cộng vector điện trường rất tốt, nắm chắc phương pháp hình học.", tienDong: "Đã đóng", ngayDongTien: "23/09/2026" },
-                    { tuan: 5, ngay: "18/09/2026", topic: "Thuyết electron & Định luật bảo toàn điện tích", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.5", diemDK: "9.0", nhanXet: "Hiểu sâu sắc các hiện tượng nhiễm điện do cọ xát, tiếp xúc và hưởng ứng.", tienDong: "Đã đóng", ngayDongTien: "23/09/2026" },
-                    { tuan: 4, ngay: "15/09/2026", topic: "Định luật Cu-lông và Cân bằng của hệ điện tích điểm", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.0", diemDK: "9.0", nhanXet: "Làm bài nhanh, biết cách xét cân bằng lực cho hệ 3 điện tích tự do.", tienDong: "Đã đóng", ngayDongTien: "23/09/2026" },
-                    { tuan: 3, ngay: "11/09/2026", topic: "Luyện tập: Lực tương tác tĩnh điện giữa các quả cầu nhỏ", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "8.5", diemDK: "9.0", nhanXet: "Chăm chỉ, chủ động tìm kiếm các bài tập nâng cao.", tienDong: "Đã đóng", ngayDongTien: "12/09/2026" },
-                    { tuan: 2, ngay: "08/09/2026", topic: "Tổng ôn tập cơ học lớp 10: Động lượng và Năng lượng", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.0", diemDK: "9.0", nhanXet: "Nền tảng Vật lý 10 rất vững, sẵn sàng học tốt chương trình 11.", tienDong: "Đã đóng", ngayDongTien: "12/09/2026" },
-                    { tuan: 1, ngay: "04/09/2026", topic: "Khởi động năm học: Phương pháp học Vật Lý 11 theo SGK mới", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.0", diemDK: "9.0", nhanXet: "Ý thức học tập tự giác cao, tiếp thu bài nhanh chóng.", tienDong: "Đã đóng", ngayDongTien: "12/09/2026" }
+                    { tuan: 10, ngay: "04/10/2026", topic: "IELTS Speaking Part 2: Chiến lược ghi chú 1 phút và làm chủ bài nói 2 phút chủ đề Person & Event", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.5", diemDK: "9.5", nhanXet: "Phát âm chuẩn IPA, biết dùng linking words mượt mà, phản xạ tự nhiên đạt Band 7.0+ Speaking.", tienDong: "Chưa đóng" },
+                    { tuan: 9, ngay: "02/10/2026", topic: "IELTS Writing Task 1: Phân tích biểu đồ cột (Bar Chart) & Kỹ thuật so sánh số liệu tĩnh/động", chuyenCan: "Có mặt", btvn: "Hoàn thành 100%", diemDG: "9.0", diemDK: "9.0", nhanXet: "Overview viết rất sắc bén, nhóm thông tin logic và dùng từ vựng tăng giảm (fluctuate, plateau) chuẩn xác.", tienDong: "Chưa đóng" },
+                    { tuan: 8, ngay: "29/09/2026", topic: "IELTS Reading: Dạng bài Matching Headings (Nối tiêu đề đoạn văn) & Summary Completion", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.0", diemDK: "9.5", nhanXet: "Nắm vững kỹ thuật Skim & Scan, không bị phân tâm bởi từ gây nhiễu trong đoạn văn học thuật.", tienDong: "Chưa đóng" },
+                    { tuan: 7, ngay: "25/09/2026", topic: "IELTS Listening Section 3: Bẫy đánh lạc hướng trong hội thoại học thuật và bắt từ khóa paraphrasing", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.0", diemDK: "9.5", nhanXet: "Nghe bắt keyword tốt, nhận diện chính xác các từ đồng nghĩa và cấu trúc đảo ngữ.", tienDong: "Chưa đóng" },
+                    { tuan: 6, ngay: "22/09/2026", topic: "IELTS Writing Task 2: Dạng bài Opinion Essay (Agree or Disagree) - Lập dàn ý & Luận điểm phản biện", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.0", diemDK: "9.0", nhanXet: "Cấu trúc bài viết chặt chẽ, luận điểm rõ ràng, dùng tốt các cụm từ học thuật C1 (academic collocations).", tienDong: "Đã đóng", ngayDongTien: "23/09/2026" },
+                    { tuan: 5, ngay: "18/09/2026", topic: "IELTS Speaking Part 1: Phát triển câu trả lời theo công thức AREA (Answer - Reason - Example)", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.5", diemDK: "9.0", nhanXet: "Ngữ điệu tự nhiên, mở rộng câu trả lời đầy đủ, làm chủ thì hoàn thành và câu điều kiện loại 2.", tienDong: "Đã đóng", ngayDongTien: "23/09/2026" },
+                    { tuan: 4, ngay: "15/09/2026", topic: "IELTS Reading: Chiến thuật xử lý dạng bài True / False / Not Given & Yes / No / Not Given", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.0", diemDK: "9.0", nhanXet: "Phân biệt rạch ròi giữa False và Not Given, tốc độ đọc hiểu cải thiện vượt bậc.", tienDong: "Đã đóng", ngayDongTien: "23/09/2026" },
+                    { tuan: 3, ngay: "11/09/2026", topic: "IELTS Writing Task 1: Cấu trúc Overview và cách nhóm thông tin biểu đồ đường (Line Graph)", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "8.5", diemDK: "9.0", nhanXet: "Viết câu phức rất chuẩn, từ vựng mô tả xu hướng đa dạng (soared, plummeted, leveled off).", tienDong: "Đã đóng", ngayDongTien: "12/09/2026" },
+                    { tuan: 2, ngay: "08/09/2026", topic: "IELTS Listening Section 1 & 2: Dạng Form Completion, bắt số điện thoại, ngày tháng và tên riêng", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.0", diemDK: "9.0", nhanXet: "Không mắc lỗi chính tả (spelling) hay số nhiều (-s/-es), phản xạ nghe âm đuôi rất tốt.", tienDong: "Đã đóng", ngayDongTien: "12/09/2026" },
+                    { tuan: 1, ngay: "04/09/2026", topic: "Khảo sát trình độ đầu vào & Lập lộ trình mục tiêu IELTS 6.5+ (4 kỹ năng)", chuyenCan: "Có mặt", btvn: "Hoàn thành", diemDG: "9.0", diemDK: "9.0", nhanXet: "Nền tảng ngữ pháp và từ vựng B2 rất vững, phát âm tự nhiên, quyết tâm học tập cao.", tienDong: "Đã đóng", ngayDongTien: "12/09/2026" }
                 ]
             }
         ],
@@ -381,13 +382,13 @@ function generateInitialGiaSuDemoData() {
                 rowIndex: 16,
                 studentName: "Phạm Hải Đăng",
                 studentPhone: "0905123456",
-                lessonName: "Bài tập 03: Khúc xạ ánh sáng & Lăng kính",
+                lessonName: "IELTS Writing Task 1: Line Graph & Bar Chart Practice",
                 timestamp: getGiaSuDemoDate(0) + " 19:30:00",
                 submissionDate: getGiaSuDemoDate(0),
                 fileUrl: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=1200&auto=format&fit=crop",
-                fileName: "phamhaidang_vatly.jpg",
-                score: "",
-                comment: "",
+                fileName: "phamhaidang_ielts_writing_task1.pdf",
+                score: "8.5",
+                comment: "Phân tích số liệu và nhóm biểu đồ rất tốt, cấu trúc Band 7.5 đa dạng và chính xác!",
                 status: "Active"
             }
         ],
@@ -396,7 +397,7 @@ function generateInitialGiaSuDemoData() {
         schedules: [
             { day: "Thứ 2 (" + getGiaSuDemoShortDate(2) + ")", time: "18:00 - 19:30", student: "Lê Minh Thư", subject: "Toán 12", topic: "Đạo hàm & Cực trị", status: "Đã dạy" },
             { day: "Thứ 4 (" + getGiaSuDemoShortDate(0) + ")", time: "19:30 - 21:00", student: "Nguyễn Hoàng Nam", subject: "Toán 9", topic: "Hệ thức lượng trong tam giác", status: "Đã dạy" },
-            { day: "Thứ 6 (" + getGiaSuDemoShortDate(-2) + ")", time: "18:00 - 19:30", student: "Phạm Hải Đăng", subject: "Vật Lý 11", topic: "Điện tích & Cu-lông", status: "Sắp tới" },
+            { day: "Thứ 6 (" + getGiaSuDemoShortDate(-2) + ")", time: "18:00 - 19:30", student: "Phạm Hải Đăng", subject: "Ielts 6.5+", topic: "IELTS Speaking Part 2", status: "Sắp tới" },
             { day: "Chủ Nhật (" + getGiaSuDemoShortDate(-4) + ")", time: "08:30 - 10:00", student: "Lê Minh Thư", subject: "Vật Lý 12", topic: "Giao thoa sóng cơ", status: "Sắp tới" }
         ],
 
@@ -436,7 +437,7 @@ function generateInitialGiaSuDemoData() {
                 tutorPhone: "0123456789",
                 tutorName: "Thầy Trần Hoàng Nam",
                 studentName: "Phạm Hải Đăng",
-                subject: "Vật Lý 11",
+                subject: "Ielts 6.5+",
                 color: "#F59E0B",
                 fee: 200000,
                 mon: "",
@@ -499,10 +500,10 @@ function generateInitialGiaSuDemoData() {
                 studentName: "Phạm Hải Đăng",
                 tutorPhone: "0123456789",
                 homework_code: "0905123456",
-                title: "Bài tập 03: Khúc xạ ánh sáng & Lăng kính",
+                title: "IELTS Writing Task 1: Phân tích biểu đồ Bar Chart",
                 releaseDate: getGiaSuDemoDate(3),
                 fileUrl: "https://drive.google.com/file/d/1BxiMVs0XRA5nFMdKvBdBZjgmUUqptlbs74OgvE2upms/preview",
-                fileName: "khuc_xa_anh_sang.pdf",
+                fileName: "ielts_writing_task1_bar_chart.pdf",
                 externalLink: "",
                 status: "Active",
                 deleted_date: null
@@ -529,15 +530,19 @@ const INITIAL_GIASU_DEMO_DATA = generateInitialGiaSuDemoData();
 
 // Quản lý sessionStorage cho phiên demo Gia Sư
 function getGiaSuDemoStore() {
-    var key = "DEMO_GIASU_DATA_V6";
+    var key = "DEMO_GIASU_DATA_V7";
     var data = sessionStorage.getItem(key);
     if (!data) {
-        var oldV5 = sessionStorage.getItem("DEMO_GIASU_DATA_V5");
-        if (oldV5) {
+        var oldV6 = sessionStorage.getItem("DEMO_GIASU_DATA_V6") || sessionStorage.getItem("DEMO_GIASU_DATA_V5");
+        if (oldV6) {
             try {
-                var parsedOld = JSON.parse(oldV5);
+                var parsedOld = JSON.parse(oldV6);
                 var fresh = generateInitialGiaSuDemoData();
-                parsedOld.assignedHomework = parsedOld.assignedHomework || fresh.assignedHomework;
+                parsedOld.assignedHomework = fresh.assignedHomework;
+                parsedOld.students = fresh.students;
+                parsedOld.tutorSchedule = fresh.tutorSchedule;
+                parsedOld.schedules = fresh.schedules;
+                parsedOld.submissions = fresh.submissions;
                 sessionStorage.setItem(key, JSON.stringify(parsedOld));
                 return parsedOld;
             } catch(e) {}
